@@ -1,21 +1,21 @@
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
-import { codeInspectorPlugin } from 'code-inspector-plugin'
-import { resolve, normalize, dirname } from 'node:path'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig, externalizeDepsPlugin } from "electron-vite";
+import { codeInspectorPlugin } from "code-inspector-plugin";
+import { resolve, normalize, dirname } from "node:path";
+import tailwindcss from "@tailwindcss/vite";
 
-import injectProcessEnvPlugin from 'rollup-plugin-inject-process-env'
-import tsconfigPathsPlugin from 'vite-tsconfig-paths'
-import reactPlugin from '@vitejs/plugin-react'
+import injectProcessEnvPlugin from "rollup-plugin-inject-process-env";
+import tsconfigPathsPlugin from "vite-tsconfig-paths";
+import react from "@vitejs/plugin-react";
 
-import { settings } from './src/lib/electron-router-dom'
-import { main, resources } from './package.json'
+import { settings } from "./src/lib/electron-router-dom";
+import { main, resources } from "./package.json";
 
-const [nodeModules, devFolder] = normalize(dirname(main)).split(/\/|\\/g)
-const devPath = [nodeModules, devFolder].join('/')
+const [nodeModules, devFolder] = normalize(dirname(main)).split(/\/|\\/g);
+const devPath = [nodeModules, devFolder].join("/");
 
 const tsconfigPaths = tsconfigPathsPlugin({
-  projects: [resolve('tsconfig.json')],
-})
+  projects: [resolve("tsconfig.json")],
+});
 
 export default defineConfig({
   main: {
@@ -24,11 +24,11 @@ export default defineConfig({
     build: {
       rollupOptions: {
         input: {
-          index: resolve('src/main/index.ts'),
+          index: resolve("src/main/index.ts"),
         },
 
         output: {
-          dir: resolve(devPath, 'main'),
+          dir: resolve(devPath, "main"),
         },
       },
     },
@@ -38,14 +38,14 @@ export default defineConfig({
     plugins: [tsconfigPaths, externalizeDepsPlugin()],
 
     build: {
-      outDir: resolve(devPath, 'preload'),
+      outDir: resolve(devPath, "preload"),
     },
   },
 
   renderer: {
     define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.platform': JSON.stringify(process.platform),
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+      "process.platform": JSON.stringify(process.platform),
     },
 
     server: {
@@ -55,36 +55,36 @@ export default defineConfig({
     plugins: [
       tsconfigPaths,
       tailwindcss(),
-      reactPlugin(),
+      react(),
 
       codeInspectorPlugin({
-        bundler: 'vite',
-        hotKeys: ['altKey'],
+        bundler: "vite",
+        hotKeys: ["altKey"],
         hideConsole: true,
       }),
     ],
 
-    publicDir: resolve(resources, 'public'),
+    publicDir: resolve(resources, "public"),
 
     build: {
-      outDir: resolve(devPath, 'renderer'),
+      outDir: resolve(devPath, "renderer"),
 
       rollupOptions: {
         plugins: [
           injectProcessEnvPlugin({
-            NODE_ENV: 'production',
+            NODE_ENV: "production",
             platform: process.platform,
           }),
         ],
 
         input: {
-          index: resolve('src/renderer/index.html'),
+          index: resolve("src/renderer/index.html"),
         },
 
         output: {
-          dir: resolve(devPath, 'renderer'),
+          dir: resolve(devPath, "renderer"),
         },
       },
     },
   },
-})
+});

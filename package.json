@@ -63,13 +63,13 @@
     "rimraf": "^6.0.1",
     "rollup-plugin-inject-process-env": "^1.3.1",
     "semver": "^7.5.4",
-    "tsx": "^4.19.3",
-    "typescript": "^5.1.6",
-    "vite": "^6.3.3",
-    "vite-tsconfig-paths": "^5.1.4",
     "tailwind-merge": "^3.2.0",
     "tailwind-variants": "^1.0.0",
     "tailwindcss": "^4.1.4",
-    "tw-animate-css": "^1.2.5"
+    "tsx": "^4.19.3",
+    "tw-animate-css": "^1.2.5",
+    "typescript": "^5.1.6",
+    "vite": "^6.3.3",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
