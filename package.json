@@ -1,16 +1,13 @@
 {
-  "displayName": "My Electron App",
-  "name": "my-electron-app",
-  "description": "Your awesome app description",
-  "version": "0.0.0",
+  "displayName": "ChatChat App",
+  "name": "chat-chat-app",
+  "description": "ChatChat",
+  "version": "0.0.1",
   "main": "./node_modules/.dev/main/index.js",
   "resources": "src/resources",
-  "author": {
-    "name": "Dalton Menezes",
-    "email": "daltonmenezes@outlook.com"
-  },
+  "author": "302 <admin@302.ai>",
   "license": "MIT",
-  "packageManager": "pnpm@10.0.0",
+  "packageManager": "pnpm@10.9.0",
   "pnpm": {
     "onlyBuiltDependenciesFile": "./trusted-dependencies-scripts.json"
   },
