@@ -6,5 +6,8 @@
     "bradlc.vscode-tailwindcss",
     "biomejs.biome"
   ],
-  "unwantedRecommendations": []
+  "unwantedRecommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ]
 }
