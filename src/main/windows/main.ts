@@ -20,6 +20,8 @@ export async function MainWindow() {
       sandbox: false,
       devTools: is.dev,
     },
+    frame: false,
+    titleBarStyle: "hiddenInset",
   });
 
   window.webContents.on("did-finish-load", () => {

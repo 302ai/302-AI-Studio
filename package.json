@@ -28,6 +28,7 @@
     "lint:fix": "biome lint --write --no-errors-on-unmatched"
   },
   "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
     "@intentui/icons": "^1.10.33",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -39,11 +40,12 @@
     "react-aria-components": "^1.8.0",
     "react-dom": "^19.1.0",
     "react-i18next": "^15.4.1",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.2.0",
     "tailwindcss-react-aria-components": "^2.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "2.0.0-beta.1",
     "@electron-toolkit/utils": "^4.0.0",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/vite": "^4.1.4",

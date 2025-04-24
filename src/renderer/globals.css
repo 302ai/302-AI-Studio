@@ -36,6 +36,9 @@
   --color-danger: var(--danger);
   --color-danger-fg: var(--danger-fg);
 
+  --color-destructive: var(--destructive);
+  --color-destructive-fg: var(--destructive-fg);
+
   --color-warning: var(--warning);
   --color-warning-fg: var(--warning-fg);
 
@@ -86,6 +89,9 @@
 
     --danger: oklch(0.577 0.245 27.325);
     --danger-fg: oklch(0.971 0.013 17.38);
+
+    --destructive: oklch(0.67 0.24 25.76);
+    --destructive-fg: oklch(0.98 0 0);
 
     --border: oklch(0.909 0.005 56.366);
     --input: oklch(0.869 0.005 56.366);
@@ -140,6 +146,9 @@
 
     --danger: oklch(0.577 0.245 27.325);
     --danger-fg: oklch(0.971 0.013 17.38);
+
+    --destructive: oklch(0.61 0.25 25.9);
+    --destructive-fg: oklch(0.98 0 0);
 
     --border: oklch(0.274 0.01 67.558);
     --input: oklch(0.324 0.01 67.558);
