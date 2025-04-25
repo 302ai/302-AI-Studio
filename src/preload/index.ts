@@ -1,43 +1,26 @@
-import { IpcChannel } from "@shared/ipc-channel";
-import { exposeElectronAPI } from "@electron-toolkit/preload";
-import { contextBridge, ipcRenderer } from "electron";
+import { electronAPI } from "@electron-toolkit/preload";
+import { contextBridge } from "electron";
 
 const api = {
   sayHelloFromBridge: () => console.log("\nHello from bridgeAPI! 👋\n\n"),
 
-  username: process.env.USER,
-
   // Platform info
   platform: process.platform,
-
-  // Window
-  window: {
-    minimize: () => ipcRenderer.invoke(IpcChannel.WINDOW_MINIMIZE),
-    maximize: () => ipcRenderer.invoke(IpcChannel.WINDOW_MAXIMIZE),
-    close: () => ipcRenderer.invoke(IpcChannel.WINDOW_CLOSE),
-    isMaximized: () => ipcRenderer.invoke(IpcChannel.WINDOW_IS_MAXIMIZED),
-
-    onMaximizeChange: (callback: (isMaximized: boolean) => void) => {
-      const maximizedListener = () => callback(true);
-      const unmaximizedListener = () => callback(false);
-
-      ipcRenderer.on(IpcChannel.WINDOW_MAXIMIZED, maximizedListener);
-      ipcRenderer.on(IpcChannel.WINDOW_UNMAXIMIZED, unmaximizedListener);
-
-      // Return a cleanup function
-      return () => {
-        ipcRenderer.removeListener(
-          IpcChannel.WINDOW_MAXIMIZED,
-          maximizedListener
-        );
-        ipcRenderer.removeListener(
-          IpcChannel.WINDOW_UNMAXIMIZED,
-          unmaximizedListener
-        );
-      };
-    },
-  },
 };
 
-exposeElectronAPI();
-contextBridge.exposeInMainWorld("api", api);
+// Use `contextBridge` APIs to expose Electron APIs to
+// renderer only if context isolation is enabled, otherwise
+// just add to the DOM global.
+if (process.contextIsolated) {
+  try {
+    contextBridge.exposeInMainWorld("electron", electronAPI);
+    contextBridge.exposeInMainWorld("api", api);
+  } catch (error) {
+    console.error(error);
+  }
+} else {
+  // @ts-ignore (define in dts)
+  window.electron = electronAPI;
+  // @ts-ignore (define in dts)
+  window.api = api;
+}

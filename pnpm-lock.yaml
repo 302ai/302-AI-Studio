@@ -23,6 +23,9 @@ importers:
       electron-router-dom:
         specifier: ^2.1.0
         version: 2.1.0(electron@35.2.1)(react-router-dom@7.2.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      electron-window-state:
+        specifier: ^5.0.3
+        version: 5.0.3
       i18next:
         specifier: ^25.0.0
         version: 25.0.1(typescript@5.8.2)
@@ -2263,6 +2266,10 @@ packages:
     peerDependenciesMeta:
       '@swc/core':
         optional: true
+
+  electron-window-state@5.0.3:
+    resolution: {integrity: sha512-1mNTwCfkolXl3kMf50yW3vE2lZj0y92P/HYWFBrb+v2S/pCka5mdwN3cagKm458A7NjndSwijynXgcLWRodsVg==}
+    engines: {node: '>=8.0.0'}
 
   electron@35.2.1:
     resolution: {integrity: sha512-LO4xXLpzkPPUVLvAbdHMlW7N9Z+Qqz+7QsmSWXluTIQMeJk+v7o36nUTZghyA2I1s//tlMvuaCtle6Qo2W0Ktg==}
@@ -6617,6 +6624,11 @@ snapshots:
       vite: 6.3.3(@types/node@22.13.8)(jiti@2.4.2)(lightningcss@1.29.2)(sass@1.85.1)(terser@5.39.0)(tsx@4.19.3)
     transitivePeerDependencies:
       - supports-color
+
+  electron-window-state@5.0.3:
+    dependencies:
+      jsonfile: 4.0.0
+      mkdirp: 0.5.6
 
   electron@35.2.1:
     dependencies:

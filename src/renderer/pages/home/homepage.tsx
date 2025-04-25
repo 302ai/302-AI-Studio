@@ -1,13 +1,10 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { AppBar } from "@renderer/components/app-bar";
+import { Navbar } from "@renderer/pages/home/nav-bar/nav-bar";
 
 // The "api" comes from the context bridge in preload/index.ts
 const { api } = window;
 
-export function MainScreen() {
-  const { t } = useTranslation();
-
+export function HomePage() {
   useEffect(() => {
     // check the console on dev tools
     api.sayHelloFromBridge();
@@ -15,7 +12,7 @@ export function MainScreen() {
 
   return (
     <main className="flex h-screen flex-col">
-      <AppBar />
+      <Navbar />
     </main>
   );
 }
