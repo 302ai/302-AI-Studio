@@ -8,7 +8,7 @@ import { tv } from "tailwind-variants";
 const buttonStyles = tv({
   base: [
     "relative isolate inline-flex items-center justify-center gap-x-2 font-medium",
-    "outline-0 outline-offset-2 hover:no-underline focus-visible:outline-2",
+    "outline-0 hover:no-underline focus-visible:outline-2",
     "inset-ring inset-ring-fg/20 bg-(--btn-bg) pressed:bg-(--btn-overlay) text-(--btn-fg) shadow-[shadow:inset_0_2px_--theme(--color-white/15%)] hover:bg-(--btn-overlay) dark:inset-ring-fg/15 dark:shadow-none",
     "forced-colors:outline-[Highlight] forced-colors:[--btn-icon:ButtonText] forced-colors:hover:[--btn-icon:ButtonText]",
     "*:data-[slot=icon]:-mx-0.5 *:data-[slot=icon]:my-1 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-current/60 pressed:*:data-[slot=icon]:text-current *:data-[slot=icon]:transition hover:*:data-[slot=icon]:text-current/90",
