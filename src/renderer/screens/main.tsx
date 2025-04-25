@@ -1,15 +1,16 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AppBar } from "@/renderer/components/app-bar";
-// The "App" comes from the context bridge in preload/index.ts
-const { App } = window;
+
+// The "api" comes from the context bridge in preload/index.ts
+const { api } = window;
 
 export function MainScreen() {
   const { t } = useTranslation();
 
   useEffect(() => {
     // check the console on dev tools
-    App.sayHelloFromBridge();
+    api.sayHelloFromBridge();
   }, []);
 
   return (

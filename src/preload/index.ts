@@ -1,12 +1,12 @@
 import { IpcChannel } from "@/shared/ipc-channel";
-import { electronAPI } from "@electron-toolkit/preload";
+import { exposeElectronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
 declare global {
   interface Window {
     electron: ElectronAPI;
-    App: {
+    api: {
       sayHelloFromBridge: () => void;
 
       username: string;
@@ -26,7 +26,7 @@ declare global {
   }
 }
 
-const App = {
+const api = {
   sayHelloFromBridge: () => console.log("\nHello from bridgeAPI! 👋\n\n"),
   username: process.env.USER,
 
@@ -62,5 +62,5 @@ const App = {
   },
 };
 
-contextBridge.exposeInMainWorld("electron", electronAPI);
-contextBridge.exposeInMainWorld("App", App);
+exposeElectronAPI();
+contextBridge.exposeInMainWorld("api", api);

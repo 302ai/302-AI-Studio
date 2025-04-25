@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaRegWindowRestore } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaMinus } from "react-icons/fa6";
-import { FaRegSquare } from "react-icons/fa6";
+import { BiSquareRounded } from "react-icons/bi";
 import { Button } from "@/renderer/components/ui/button";
 import clsx from "clsx";
 
@@ -16,12 +16,12 @@ export function AppBar() {
 
   useEffect(() => {
     // Check if running on macOS
-    setIsMacOS(window.App.platform === "darwin");
+    setIsMacOS(window.api.platform === "darwin");
 
     // Initial check for maximized state
     const checkMaximized = async () => {
       try {
-        const maximized = await window.App.window.isMaximized();
+        const maximized = await window.api.window.isMaximized();
         setIsMaximized(maximized);
       } catch (error) {
         console.error("Failed to check if window is maximized:", error);
@@ -31,7 +31,7 @@ export function AppBar() {
     checkMaximized();
 
     // Setup listeners for maximize/unmaximize events
-    const cleanup = window.App.window.onMaximizeChange(setIsMaximized);
+    const cleanup = window.api.window.onMaximizeChange(setIsMaximized);
 
     return () => {
       if (cleanup) cleanup();
@@ -39,15 +39,15 @@ export function AppBar() {
   }, []);
 
   function minimizeWindow() {
-    window.App.window.minimize();
+    window.api.window.minimize();
   }
 
   function toggleMaximize() {
-    window.App.window.maximize();
+    window.api.window.maximize();
   }
 
   function closeWindow() {
-    window.App.window.close();
+    window.api.window.close();
   }
 
   // CSS classes for drag region
@@ -93,7 +93,7 @@ export function AppBar() {
             style={noDragRegion}
           >
             {!isMaximized ? (
-              <FaRegSquare className="h-4 w-4" />
+              <BiSquareRounded className="h-4 w-4" />
             ) : (
               <FaRegWindowRestore className="h-4 w-4" />
             )}
