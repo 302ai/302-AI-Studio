@@ -6,8 +6,8 @@ import {
 } from "electron-extension-installer";
 
 import { ignoreConsoleWarnings } from "../../utils/ignore-console-warnings";
-import { PLATFORM, ENVIRONMENT } from "@/shared/constants";
-import { makeAppId } from "@/shared/utils";
+import { PLATFORM, ENVIRONMENT } from "@shared/constants";
+import { makeAppId } from "@shared/utils";
 
 ignoreConsoleWarnings(["Manifest version 2 is deprecated"]);
 

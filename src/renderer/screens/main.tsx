@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { AppBar } from "@/renderer/components/app-bar";
+import { AppBar } from "@renderer/components/app-bar";
 
 // The "api" comes from the context bridge in preload/index.ts
 const { api } = window;

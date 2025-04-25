@@ -28,7 +28,6 @@
     "lint:fix": "biome lint --write --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@electron-toolkit/preload": "^3.0.2",
     "@intentui/icons": "^1.10.33",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -47,6 +46,8 @@
   "devDependencies": {
     "@biomejs/biome": "2.0.0-beta.1",
     "@electron-toolkit/utils": "^4.0.0",
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/tsconfig": "^1.0.1",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/vite": "^4.1.4",
     "@types/node": "^22.13.8",

@@ -1,6 +1,6 @@
 import { BrowserWindow } from "electron";
 import { join } from "node:path";
-import { createWindow } from "@/lib/electron-app/factories/windows/create";
+import { createWindow } from "@lib/electron-app/factories/windows/create";
 import { displayName } from "~/package.json";
 import { is } from "@electron-toolkit/utils";
 

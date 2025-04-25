@@ -3,12 +3,14 @@ import { FaRegWindowRestore } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaMinus } from "react-icons/fa6";
 import { BiSquareRounded } from "react-icons/bi";
-import { Button } from "@/renderer/components/ui/button";
-import clsx from "clsx";
+import { Button } from "@renderer/components/ui/button";
+import { cn } from "../lib/utils";
 
-// 添加一个特殊的CSS类来覆盖Button的焦点样式
 const windowControlButtonClass =
   "focus:outline-none focus-visible:outline-none focus-visible:ring-0";
+// CSS classes for drag region
+const dragRegion = { WebkitAppRegion: "drag" } as React.CSSProperties;
+const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function AppBar() {
   const [isMacOS, setIsMacOS] = useState(false);
@@ -50,15 +52,11 @@ export function AppBar() {
     window.api.window.close();
   }
 
-  // CSS classes for drag region
-  const dragRegion = { WebkitAppRegion: "drag" } as React.CSSProperties;
-  const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
-
   return (
     <div className="flex h-9 w-full flex-shrink-0 select-none items-center justify-between border-b bg-background">
       {/* App title/content in center */}
       <div
-        className={clsx(
+        className={cn(
           "flex-1 text-center font-medium text-sm",
           isMacOS ? "px-20" : "px-4",
         )}
@@ -71,7 +69,7 @@ export function AppBar() {
       {!isMacOS ? (
         <div className="flex h-9">
           <Button
-            className={clsx(
+            className={cn(
               "inline-flex items-center justify-center",
               windowControlButtonClass,
             )}
@@ -83,7 +81,7 @@ export function AppBar() {
             <FaMinus className="h-4 w-4" />
           </Button>
           <Button
-            className={clsx(
+            className={cn(
               "inline-flex items-center justify-center",
               windowControlButtonClass,
             )}
@@ -99,7 +97,7 @@ export function AppBar() {
             )}
           </Button>
           <Button
-            className={clsx(
+            className={cn(
               "inline-flex items-center justify-center hover:bg-destructive/80 hover:text-destructive-fg",
               windowControlButtonClass,
             )}

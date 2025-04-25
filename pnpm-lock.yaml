@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@electron-toolkit/preload':
-        specifier: ^3.0.2
-        version: 3.0.2(electron@35.2.1)
       '@intentui/icons':
         specifier: ^1.10.33
         version: 1.10.34(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -57,6 +54,12 @@ importers:
       '@biomejs/biome':
         specifier: 2.0.0-beta.1
         version: 2.0.0-beta.1
+      '@electron-toolkit/preload':
+        specifier: ^3.0.2
+        version: 3.0.2(electron@35.2.1)
+      '@electron-toolkit/tsconfig':
+        specifier: ^1.0.1
+        version: 1.0.1(@types/node@22.13.8)
       '@electron-toolkit/utils':
         specifier: ^4.0.0
         version: 4.0.0(electron@35.2.1)
@@ -339,6 +342,11 @@ packages:
     resolution: {integrity: sha512-TWWPToXd8qPRfSXwzf5KVhpXMfONaUuRAZJHsKthKgZR/+LqX1dZVSSClQ8OTAEduvLGdecljCsoT2jSshfoUg==}
     peerDependencies:
       electron: '>=13.0.0'
+
+  '@electron-toolkit/tsconfig@1.0.1':
+    resolution: {integrity: sha512-M0Mol3odspvtCuheyujLNAW7bXq7KFNYVMRtpjFa4ZfES4MuklXBC7Nli/omvc+PRKlrklgAGx3l4VakjNo8jg==}
+    peerDependencies:
+      '@types/node': '*'
 
   '@electron-toolkit/utils@4.0.0':
     resolution: {integrity: sha512-qXSntwEzluSzKl4z5yFNBknmPGjPa3zFhE4mp9+h0cgokY5ornAeP+CJQDBhKsL1S58aOQfcwkD3NwLZCl+64g==}
@@ -4247,6 +4255,10 @@ snapshots:
   '@electron-toolkit/preload@3.0.2(electron@35.2.1)':
     dependencies:
       electron: 35.2.1
+
+  '@electron-toolkit/tsconfig@1.0.1(@types/node@22.13.8)':
+    dependencies:
+      '@types/node': 22.13.8
 
   '@electron-toolkit/utils@4.0.0(electron@35.2.1)':
     dependencies:

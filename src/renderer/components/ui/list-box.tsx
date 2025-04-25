@@ -1,22 +1,21 @@
-import { IconCheck, IconHamburger } from '@intentui/icons'
+import { IconCheck, IconHamburger } from "@intentui/icons";
 import type {
   ListBoxItemProps as ListBoxItemPrimitiveProps,
   ListBoxProps,
-} from 'react-aria-components'
+} from "react-aria-components";
 import {
   ListBoxItem as ListBoxItemPrimitive,
   ListBox as ListBoxPrimitive,
   composeRenderProps,
-} from 'react-aria-components'
-
-import { composeTailwindRenderProps } from './primitive'
-import { twMerge } from 'tailwind-merge'
+} from "react-aria-components";
+import { composeTailwindRenderProps } from "./primitive";
+import { twMerge } from "tailwind-merge";
 import {
   DropdownItemDetails,
   DropdownLabel,
   DropdownSection,
   dropdownItemStyles,
-} from './dropdown'
+} from "./dropdown";
 
 const ListBox = <T extends object>({
   className,
@@ -26,14 +25,14 @@ const ListBox = <T extends object>({
     {...props}
     className={composeTailwindRenderProps(
       className,
-      "grid max-h-96 w-full min-w-56 grid-cols-[auto_1fr] flex-col gap-y-1 overflow-auto overflow-y-auto rounded-xl border p-1 shadow-lg outline-hidden [scrollbar-width:thin] [&::-webkit-scrollbar]:size-0.5 *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1"
+      "grid max-h-96 w-full min-w-56 grid-cols-[auto_1fr] flex-col gap-y-1 overflow-auto overflow-y-auto rounded-xl border p-1 shadow-lg outline-hidden [scrollbar-width:thin] [&::-webkit-scrollbar]:size-0.5 *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1",
     )}
   />
-)
+);
 
 interface ListBoxItemProps<T extends object>
   extends ListBoxItemPrimitiveProps<T> {
-  className?: string
+  className?: string;
 }
 
 const ListBoxItem = <T extends object>({
@@ -42,7 +41,7 @@ const ListBoxItem = <T extends object>({
   ...props
 }: ListBoxItemProps<T>) => {
   const textValue =
-    props.textValue || (typeof children === 'string' ? children : undefined)
+    props.textValue || (typeof children === "string" ? children : undefined);
 
   return (
     <ListBoxItemPrimitive
@@ -52,57 +51,57 @@ const ListBoxItem = <T extends object>({
         dropdownItemStyles({
           ...renderProps,
           className,
-        })
+        }),
       )}
     >
-      {renderProps => {
+      {(renderProps) => {
         const { allowsDragging, isSelected, isFocused, isDragging } =
-          renderProps
+          renderProps;
 
         return (
           <>
             {allowsDragging && (
               <IconHamburger
                 className={twMerge(
-                  'size-4 shrink-0 text-muted-fg transition',
-                  isFocused && 'text-fg',
-                  isDragging && 'text-fg',
-                  isSelected && 'text-accent-fg/70'
+                  "size-4 shrink-0 text-muted-fg transition",
+                  isFocused && "text-fg",
+                  isDragging && "text-fg",
+                  isSelected && "text-accent-fg/70",
                 )}
               />
             )}
             {isSelected && (
               <IconCheck className="-mx-0.5 mr-2" data-slot="checked-icon" />
             )}
-            {typeof children === 'function' ? (
+            {typeof children === "function" ? (
               children(renderProps)
-            ) : typeof children === 'string' ? (
+            ) : typeof children === "string" ? (
               <DropdownLabel>{children}</DropdownLabel>
             ) : (
               children
             )}
           </>
-        )
+        );
       }}
     </ListBoxItemPrimitive>
-  )
-}
+  );
+};
 
-type ListBoxSectionProps = React.ComponentProps<typeof DropdownSection>
+type ListBoxSectionProps = React.ComponentProps<typeof DropdownSection>;
 const ListBoxSection = ({ className, ...props }: ListBoxSectionProps) => {
   return (
     <DropdownSection
-      className={twMerge('[&_.lbi:last-child]:-mb-1.5 gap-y-1', className)}
+      className={twMerge("[&_.lbi:last-child]:-mb-1.5 gap-y-1", className)}
       {...props}
     />
-  )
-}
+  );
+};
 
-const ListBoxItemDetails = DropdownItemDetails
+const ListBoxItemDetails = DropdownItemDetails;
 
-ListBox.Section = ListBoxSection
-ListBox.ItemDetails = ListBoxItemDetails
-ListBox.Item = ListBoxItem
+ListBox.Section = ListBoxSection;
+ListBox.ItemDetails = ListBoxItemDetails;
+ListBox.Item = ListBoxItem;
 
-export type { ListBoxItemProps, ListBoxSectionProps }
-export { ListBox, ListBoxSection, ListBoxItem }
+export type { ListBoxItemProps, ListBoxSectionProps };
+export { ListBox, ListBoxSection, ListBoxItem };
