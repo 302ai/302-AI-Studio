@@ -15,7 +15,7 @@ export async function MainWindow() {
   });
 
   const window = createWindow({
-    id: "main",
+    id: "home",
     x: mainWindowState.x,
     y: mainWindowState.y,
     width: mainWindowState.width,

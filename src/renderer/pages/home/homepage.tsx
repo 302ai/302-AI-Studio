@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navbar } from "@renderer/pages/home/nav-bar/nav-bar";
+import { BasicNavBar } from "@renderer/components/business/app/nav-bar/basic-nav-bar";
 
 // The "api" comes from the context bridge in preload/index.ts
 const { api } = window;
@@ -11,8 +11,11 @@ export function HomePage() {
   }, []);
 
   return (
-    <main className="flex h-screen flex-col">
-      <Navbar />
-    </main>
+    <div className="flex h-screen flex-col">
+      <BasicNavBar />
+      <div className="flex flex-col">
+        <h1>Home</h1>
+      </div>
+    </div>
   );
 }
