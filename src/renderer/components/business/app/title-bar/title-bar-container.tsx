@@ -11,8 +11,8 @@ export function TitlebarContainer({ children, ...props }: Props) {
     <div
       className={cn(
         "flex min-w-full flex-row items-center",
-        "max-h-[40px] min-h-[40px]",
-        isMac ? "ml-[-50px)] pl-[50px]" : "",
+        "max-h-[var(--title-bar-height)] min-h-[var(--title-bar-height)]",
+        isMac ? "ml-[-var(--sidebar-width)] pl-[var(--sidebar-width)]" : "",
       )}
       style={dragRegion}
       {...props}
