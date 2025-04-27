@@ -3,17 +3,16 @@ import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { Button } from "@renderer/components/ui/button";
 import {
-  NavbarLeft,
-  NavbarCenter,
-  NavbarRight,
-} from "@renderer/components/business/app/nav-bar/nav-bar-container";
+  TitlebarLeft,
+  TitlebarCenter,
+  TitlebarRight,
+  TitlebarContainer,
+} from "@renderer/components/business/app/title-bar/title-bar-container";
 import { useNavigate } from "react-router-dom";
 
-// CSS classes for drag region
-const dragRegion = { WebkitAppRegion: "drag" } as React.CSSProperties;
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
-export function BasicNavBar() {
+export function BasicTitleBar() {
   const navigate = useNavigate();
 
   const handleSettingsClick = () => {
@@ -21,11 +20,8 @@ export function BasicNavBar() {
   };
 
   return (
-    <div
-      className="flex h-9 flex-shrink-0 select-none flex-row items-center justify-between border-b bg-background"
-      style={dragRegion}
-    >
-      <NavbarLeft className="flex flex-row items-center">
+    <TitlebarContainer>
+      <TitlebarLeft className="flex flex-row items-center">
         <Button intent="plain" size="square-petite" style={noDragRegion}>
           <LuPanelLeftClose className="h-4 w-4" />
         </Button>
@@ -35,13 +31,13 @@ export function BasicNavBar() {
         <Button intent="plain" size="square-petite" style={noDragRegion}>
           <FaRegSquarePlus className="h-4 w-4" />
         </Button>
-      </NavbarLeft>
+      </TitlebarLeft>
 
-      <NavbarCenter>
+      <TitlebarCenter>
         <h1>Title</h1>
-      </NavbarCenter>
+      </TitlebarCenter>
 
-      <NavbarRight>
+      <TitlebarRight>
         <Button
           intent="plain"
           size="square-petite"
@@ -50,7 +46,7 @@ export function BasicNavBar() {
         >
           <FiSettings className="h-4 w-4" />
         </Button>
-      </NavbarRight>
-    </div>
+      </TitlebarRight>
+    </TitlebarContainer>
   );
 }
