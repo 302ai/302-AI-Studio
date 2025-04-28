@@ -28,7 +28,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   return (
     <>
       <SidebarProvider>
-        <Sidebar className="mt-[var(--title-bar-height)]" {...props}>
+        <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
           <SidebarContent>
             <SidebarSectionGroup>
               <SidebarSection title="Last 5 Articles">

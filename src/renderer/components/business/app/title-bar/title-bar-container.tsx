@@ -10,9 +10,9 @@ export function TitlebarContainer({ children, ...props }: Props) {
   return (
     <div
       className={cn(
-        "flex min-w-full flex-row items-center",
+        "flex min-w-full flex-row items-center bg-navbar",
         "max-h-[var(--title-bar-height)] min-h-[var(--title-bar-height)]",
-        isMac ? "ml-[-var(--sidebar-width)] pl-[var(--sidebar-width)]" : "",
+        isMac ? "pl-[140px]" : "",
       )}
       style={dragRegion}
       {...props}
@@ -24,10 +24,7 @@ export function TitlebarContainer({ children, ...props }: Props) {
 
 export function TitlebarLeft({ children, ...props }: Props) {
   return (
-    <div
-      className="flex min-w-[275px] flex-row items-center px-2.5 font-bold"
-      {...props}
-    >
+    <div className="flex min-w-[275px] flex-row items-center px-2.5" {...props}>
       {children}
     </div>
   );
@@ -51,7 +48,7 @@ export function TitlebarRight({ children, ...props }: Props) {
   return (
     <div
       className={cn(
-        "flex min-w-[275px] items-center justify-end pl-3",
+        "flex items-center justify-end pl-3",
         isWindows ? "pr-[140px]" : "pr-3",
       )}
       {...props}
