@@ -10,7 +10,7 @@ export function TitlebarContainer({ children, ...props }: Props) {
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center bg-navbar",
+        "flex w-full flex-row items-center border-b border-b-border bg-navbar",
         "max-h-[var(--title-bar-height)] min-h-[var(--title-bar-height)]",
         isMac ? "pl-[140px]" : "",
       )}
