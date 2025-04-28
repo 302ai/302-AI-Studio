@@ -23,7 +23,11 @@ const articles = [
   { label: "AI in Everyday Life" },
 ];
 
-export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  children: React.ReactNode;
+}
+
+export function AppSidebar(props: AppSidebarProps) {
   return (
     <>
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
@@ -65,9 +69,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset>
-        <div className="p-4 lg:p-6">123</div>
-      </SidebarInset>
+      <SidebarInset>{props.children}</SidebarInset>
     </>
   );
 }
