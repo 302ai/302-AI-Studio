@@ -189,6 +189,7 @@
     --title-bar-height: 40px;
     --sidebar-width: 280px;
     --sidebar-width-dock: 178px;
+    --sidebar-width-collapsed: 75px;
   }
 
   html {

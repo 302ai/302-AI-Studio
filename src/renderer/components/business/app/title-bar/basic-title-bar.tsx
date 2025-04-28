@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSidebar } from "@renderer/components/ui/sidebar";
 import { cn } from "@renderer/lib/utils";
+import { isMac } from "@renderer/config/constant";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
@@ -30,7 +31,9 @@ export function BasicTitleBar() {
           "transition-[width] duration-200 ease-linear",
           state === "expanded"
             ? "w-[var(--sidebar-width)]"
-            : "w-[var(--sidebar-width-dock)]",
+            : isMac
+              ? "w-[var(--sidebar-width-dock)]"
+              : "w-[var(--sidebar-width-collapsed)]",
         )}
       >
         <Button
