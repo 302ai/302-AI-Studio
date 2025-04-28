@@ -130,7 +130,7 @@ const SidebarProvider = ({
           "dark:[--sidebar-border:color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]",
           "[--sidebar-accent:color-mix(in_oklab,var(--color-sidebar)_95%,black_5%)]",
           "dark:[--sidebar-accent:color-mix(in_oklab,var(--color-sidebar)_90%,white_10%)]",
-          "flex min-h-svh w-full text-sidebar-fg",
+          "min-h-svh w-full text-sidebar-fg",
           "group/sidebar-root has-data-[sidebar-intent=inset]:bg-sidebar dark:has-data-[sidebar-intent=inset]:bg-bg",
           className,
         )}

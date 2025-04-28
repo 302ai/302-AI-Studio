@@ -9,11 +9,14 @@ import {
   TitlebarContainer,
 } from "@renderer/components/business/app/title-bar/title-bar-container";
 import { useNavigate } from "react-router-dom";
+import { useSidebar } from "@renderer/components/ui/sidebar";
+import { cn } from "@renderer/lib/utils";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function BasicTitleBar() {
   const navigate = useNavigate();
+  const { toggleSidebar, state } = useSidebar();
 
   const handleSettingsClick = () => {
     navigate("/settings");
@@ -21,12 +24,26 @@ export function BasicTitleBar() {
 
   return (
     <TitlebarContainer>
-      <TitlebarLeft className="flex flex-row items-center">
-        <Button intent="plain" size="square-petite" style={noDragRegion}>
-          <LuPanelLeftClose className="h-4 w-4" />
-        </Button>
-        <Button intent="plain" size="square-petite" style={noDragRegion}>
-          <LuPanelLeftOpen className="h-4 w-4" />
+      <TitlebarLeft
+        className={cn(
+          "flex flex-row items-center justify-end",
+          "transition-[width] duration-200 ease-linear",
+          state === "expanded"
+            ? "w-[var(--sidebar-width)]"
+            : "w-[var(--sidebar-width-dock)]",
+        )}
+      >
+        <Button
+          intent="plain"
+          size="square-petite"
+          style={noDragRegion}
+          onClick={toggleSidebar}
+        >
+          {state === "collapsed" ? (
+            <LuPanelLeftOpen className="h-4 w-4" />
+          ) : (
+            <LuPanelLeftClose className="h-4 w-4" />
+          )}
         </Button>
         <Button intent="plain" size="square-petite" style={noDragRegion}>
           <FaRegSquarePlus className="h-4 w-4" />

@@ -188,6 +188,7 @@
   * {
     --title-bar-height: 40px;
     --sidebar-width: 280px;
+    --sidebar-width-dock: 178px;
   }
 
   html {

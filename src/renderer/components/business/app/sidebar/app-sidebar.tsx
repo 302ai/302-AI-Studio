@@ -10,7 +10,6 @@ import {
   SidebarInset,
   SidebarItem,
   SidebarLabel,
-  SidebarProvider,
   SidebarSection,
   SidebarSectionGroup,
 } from "@renderer/components/ui/sidebar";
@@ -27,50 +26,48 @@ const articles = [
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   return (
     <>
-      <SidebarProvider>
-        <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
-          <SidebarContent>
-            <SidebarSectionGroup>
-              <SidebarSection title="Last 5 Articles">
-                {articles.map((item) => (
-                  <SidebarItem key={item.label}>
-                    {({ isCollapsed }) => (
-                      <>
-                        <SidebarLabel>{item.label}</SidebarLabel>
-                        {!isCollapsed && (
-                          <Menu>
-                            <MenuTrigger aria-label="Manage">
-                              <MoreHorizontal className="mr-2 h-4 w-4" />
-                            </MenuTrigger>
-                            <MenuContent offset={0} placement="right top">
-                              <MenuItem>
-                                <Pencil className="mr-2 h-4 w-4" />
-                                Rename
-                              </MenuItem>
-                              <MenuItem>
-                                <Eraser className="mr-2 h-4 w-4" />
-                                Clean Messages
-                              </MenuItem>
-                              <MenuItem isDanger={true}>
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </MenuItem>
-                            </MenuContent>
-                          </Menu>
-                        )}
-                      </>
-                    )}
-                  </SidebarItem>
-                ))}
-              </SidebarSection>
-            </SidebarSectionGroup>
-          </SidebarContent>
-        </Sidebar>
+      <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
+        <SidebarContent>
+          <SidebarSectionGroup>
+            <SidebarSection title="Last 5 Articles">
+              {articles.map((item) => (
+                <SidebarItem key={item.label}>
+                  {({ isCollapsed }) => (
+                    <>
+                      <SidebarLabel>{item.label}</SidebarLabel>
+                      {!isCollapsed && (
+                        <Menu>
+                          <MenuTrigger aria-label="Manage">
+                            <MoreHorizontal className="mr-2 h-4 w-4" />
+                          </MenuTrigger>
+                          <MenuContent offset={0} placement="right top">
+                            <MenuItem>
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Rename
+                            </MenuItem>
+                            <MenuItem>
+                              <Eraser className="mr-2 h-4 w-4" />
+                              Clean Messages
+                            </MenuItem>
+                            <MenuItem isDanger={true}>
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </MenuItem>
+                          </MenuContent>
+                        </Menu>
+                      )}
+                    </>
+                  )}
+                </SidebarItem>
+              ))}
+            </SidebarSection>
+          </SidebarSectionGroup>
+        </SidebarContent>
+      </Sidebar>
 
-        <SidebarInset>
-          <div className="p-4 lg:p-6">123</div>
-        </SidebarInset>
-      </SidebarProvider>
+      <SidebarInset>
+        <div className="p-4 lg:p-6">123</div>
+      </SidebarInset>
     </>
   );
 }
