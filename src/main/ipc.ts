@@ -1,5 +1,10 @@
 import { IpcChannel } from "@shared/ipc-channel";
-import logger from "@shared/logger";
 import { type BrowserWindow, ipcMain } from "electron";
+import { configManager } from "./services/config-service";
 
-export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {}
+export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {
+  // Language
+  ipcMain.handle(IpcChannel.APP_SET_LANGUAGE, (_, lang) => {
+    configManager.setLanguage(lang);
+  });
+}

@@ -5,6 +5,10 @@ declare global {
     electron: ElectronAPI;
     api: {
       sayHelloFromBridge: () => void;
+      // Language
+      setLanguage: (lang: string) => void;
+      // Platform
+      platform: string;
     };
   }
 }

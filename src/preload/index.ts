@@ -1,9 +1,12 @@
 import { electronAPI } from "@electron-toolkit/preload";
-import { contextBridge } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
+import { IpcChannel } from "../shared/ipc-channel";
 
 const api = {
   sayHelloFromBridge: () => console.log("\nHello from bridgeAPI! 👋\n\n"),
-
+  // Language
+  setLanguage: (lang: string) =>
+    ipcRenderer.invoke(IpcChannel.APP_SET_LANGUAGE, lang),
   // Platform info
   platform: process.platform,
 };

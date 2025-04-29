@@ -17,6 +17,7 @@ export function LanguageSwitcher({
     const newLang = key.toString();
 
     // Change the language
+    window.api.setLanguage(newLang);
     void i18n.changeLanguage(newLang);
   };
 

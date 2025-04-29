@@ -33,6 +33,7 @@
     "clsx": "^2.1.1",
     "electron-log": "^5.3.4",
     "electron-router-dom": "^2.1.0",
+    "electron-store": "^8.2.0",
     "electron-window-state": "^5.0.3",
     "i18next": "^25.0.0",
     "lucide-react": "^0.477.0",

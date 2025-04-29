@@ -1,4 +1,4 @@
 export enum IpcChannel {
-  // Settings
-  SETTINGS_OPEN = "settings:open",
+  // Language
+  APP_SET_LANGUAGE = "app:set-language",
 }
