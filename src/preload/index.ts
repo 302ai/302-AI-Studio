@@ -1,6 +1,19 @@
-import { electronAPI } from "@electron-toolkit/preload";
+import { ElectronAPI, electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { IpcChannel } from "../shared/ipc-channel";
+
+declare global {
+  interface Window {
+    electron: ElectronAPI;
+    api: {
+      sayHelloFromBridge: () => void;
+      // Language
+      setLanguage: (lang: string) => void;
+      // Platform
+      platform: string;
+    };
+  }
+}
 
 const api = {
   sayHelloFromBridge: () => console.log("\nHello from bridgeAPI! 👋\n\n"),

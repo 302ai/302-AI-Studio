@@ -1,5 +1,7 @@
 {
-  "main": {
-    "greet": "Welcome to"
+  "settings": {
+    "general-settings": "General Settings",
+    "model-settings": "Model Settings",
+    "help-panel": "Help"
   }
 }

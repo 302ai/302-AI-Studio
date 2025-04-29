@@ -1,5 +1,7 @@
 {
-  "main": {
-    "greet": "欢迎来到"
+  "settings": {
+    "general-settings": "通用设置",
+    "model-settings": "模型设置",
+    "help-panel": "帮助"
   }
 }

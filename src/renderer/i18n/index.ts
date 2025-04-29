@@ -7,7 +7,7 @@ import zh from "./messages/zh.json";
 
 // Initialize i18next
 i18n.use(initReactI18next).init({
-  fallbackLng: "en",
+  fallbackLng: "zh",
   resources: {
     en: {
       translation: en,
