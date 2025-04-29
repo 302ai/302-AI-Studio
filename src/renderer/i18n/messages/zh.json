@@ -1,7 +1,16 @@
 {
   "settings": {
-    "general-settings": "通用设置",
-    "model-settings": "模型设置",
-    "help-panel": "帮助"
+    "general-settings": {
+      "name": "通用设置",
+      "language": {
+        "label": "语言"
+      }
+    },
+    "help-panel": {
+      "name": "帮助"
+    },
+    "model-settings": {
+      "name": "模型设置"
+    }
   }
 }

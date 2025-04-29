@@ -1,7 +1,16 @@
 {
   "settings": {
-    "general-settings": "一般設定",
-    "model-settings": "モデル設定",
-    "help-panel": "ヘルプ"
+    "general-settings": {
+      "name": "一般設定",
+      "language": {
+        "label": "言語"
+      }
+    },
+    "help-panel": {
+      "name": "ヘルプ"
+    },
+    "model-settings": {
+      "name": "モデル設定"
+    }
   }
 }

@@ -11,9 +11,10 @@ declare global {
   interface Window {
     electron: ElectronAPI;
     api: {
-      sayHelloFromBridge: () => void;
+      sayHelloFromBridge: () => Promise<void>;
       // Language
-      setLanguage: (lang: string) => void;
+      setLanguage: (lang: string) => Promise<void>;
+      getLanguage: () => Promise<string>;
       // Platform
       platform: string;
     };
@@ -25,6 +26,7 @@ const api = {
   // Language
   setLanguage: (lang: string) =>
     ipcRenderer.invoke(IpcChannel.APP_SET_LANGUAGE, lang),
+  getLanguage: () => ipcRenderer.invoke(IpcChannel.APP_GET_LANGUAGE),
   // Platform info
   platform: process.platform,
 };

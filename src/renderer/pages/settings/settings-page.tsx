@@ -15,17 +15,17 @@ export function SettingsPage() {
       {
         name: "general-settings",
         path: "/settings/general-settings",
-        label: t("settings.general-settings"),
+        label: t("settings.general-settings.name"),
       },
       {
         name: "model-settings",
         path: "/settings/model-settings",
-        label: t("settings.model-settings"),
+        label: t("settings.model-settings.name"),
       },
       {
         name: "help-panel",
         path: "/settings/help-panel",
-        label: t("settings.help-panel"),
+        label: t("settings.help-panel.name"),
       },
     ],
     [t],

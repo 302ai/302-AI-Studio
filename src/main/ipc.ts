@@ -7,4 +7,7 @@ export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {
   ipcMain.handle(IpcChannel.APP_SET_LANGUAGE, (_, lang) => {
     configManager.setLanguage(lang);
   });
+  ipcMain.handle(IpcChannel.APP_GET_LANGUAGE, () => {
+    return configManager.getLanguage();
+  });
 }
