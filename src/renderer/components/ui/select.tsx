@@ -1,49 +1,52 @@
-import { IconChevronLgDown } from '@intentui/icons'
+import { IconChevronLgDown } from "@intentui/icons";
 import type {
   ListBoxProps,
   PopoverProps,
   SelectProps as SelectPrimitiveProps,
   ValidationResult,
-} from 'react-aria-components'
+} from "react-aria-components";
 import {
   Button,
   Select as SelectPrimitive,
   SelectValue,
   composeRenderProps,
-} from 'react-aria-components'
-import { tv } from 'tailwind-variants'
+} from "react-aria-components";
+import { tv } from "tailwind-variants";
 import {
   DropdownItem,
   DropdownItemDetails,
   DropdownLabel,
   DropdownSection,
   DropdownSeparator,
-} from './dropdown'
-import { Description, FieldError, Label } from './field'
-import { ListBox } from './list-box'
-import { PopoverContent, type PopoverContentProps } from './popover'
-import { composeTailwindRenderProps, focusStyles } from './primitive'
+} from "./dropdown";
+import { Description, FieldError, Label } from "./field";
+import { ListBox } from "./list-box";
+import { PopoverContent, type PopoverContentProps } from "./popover";
+import {
+  composeTailwindRenderProps,
+  focusStyles,
+} from "@renderer/lib/primitive";
 
 const selectTriggerStyles = tv({
   extend: focusStyles,
   base: [
-    'btr flex h-10 w-full cursor-default items-center gap-4 gap-x-2 rounded-lg border border-input py-2 pr-2 pl-3 text-start shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] transition group-disabled:opacity-50 **:data-[slot=icon]:size-4 dark:shadow-none',
-    'group-data-open:border-ring/70 group-data-open:ring-4 group-data-open:ring-ring/20',
-    'text-fg group-invalid:border-danger group-invalid:ring-danger/20 forced-colors:group-invalid:border-[Mark]',
+    "btr flex h-10 w-full cursor-default items-center gap-4 gap-x-2 rounded-lg border border-input py-2 pr-2 pl-3 text-start shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] transition group-disabled:opacity-50 **:data-[slot=icon]:size-4 dark:shadow-none",
+    "group-data-open:border-ring/70 group-data-open:ring-4 group-data-open:ring-ring/20",
+    "text-fg group-invalid:border-danger group-invalid:ring-danger/20 forced-colors:group-invalid:border-[Mark]",
   ],
   variants: {
     isDisabled: {
-      true: 'opacity-50 forced-colors:border-[GrayText] forced-colors:text-[GrayText]',
+      true: "opacity-50 forced-colors:border-[GrayText] forced-colors:text-[GrayText]",
     },
   },
-})
+});
 
 interface SelectProps<T extends object> extends SelectPrimitiveProps<T> {
-  label?: string
-  description?: string
-  errorMessage?: string | ((validation: ValidationResult) => string)
-  items?: Iterable<T>
-  className?: string
+  label?: string;
+  description?: string;
+  errorMessage?: string | ((validation: ValidationResult) => string);
+  items?: Iterable<T>;
+  className?: string;
 }
 
 const Select = <T extends object>({
@@ -58,13 +61,13 @@ const Select = <T extends object>({
       {...props}
       className={composeTailwindRenderProps(
         className,
-        'group flex w-full flex-col gap-y-1.5'
+        "group flex w-full flex-col gap-y-1.5",
       )}
     >
-      {values => (
+      {(values) => (
         <>
           {label && <Label>{label}</Label>}
-          {typeof props.children === 'function'
+          {typeof props.children === "function"
             ? props.children(values)
             : props.children}
           {description && <Description>{description}</Description>}
@@ -72,14 +75,14 @@ const Select = <T extends object>({
         </>
       )}
     </SelectPrimitive>
-  )
-}
+  );
+};
 
 interface SelectListProps<T extends object>
-  extends Omit<ListBoxProps<T>, 'layout' | 'orientation'>,
-    Pick<PopoverProps, 'placement'> {
-  items?: Iterable<T>
-  popoverClassName?: PopoverContentProps['className']
+  extends Omit<ListBoxProps<T>, "layout" | "orientation">,
+    Pick<PopoverProps, "placement"> {
+  items?: Iterable<T>;
+  popoverClassName?: PopoverContentProps["className"];
 }
 
 const SelectList = <T extends object>({
@@ -95,7 +98,7 @@ const SelectList = <T extends object>({
       respectScreen={false}
       className={composeTailwindRenderProps(
         popoverClassName,
-        'sm:min-w-(--trigger-width)'
+        "sm:min-w-(--trigger-width)",
       )}
       placement={props.placement}
     >
@@ -104,7 +107,7 @@ const SelectList = <T extends object>({
         orientation="vertical"
         className={composeTailwindRenderProps(
           className,
-          'border-0 shadow-none'
+          "border-0 shadow-none",
         )}
         items={items}
         {...props}
@@ -112,12 +115,12 @@ const SelectList = <T extends object>({
         {children}
       </ListBox>
     </PopoverContent>
-  )
-}
+  );
+};
 
 interface SelectTriggerProps extends React.ComponentProps<typeof Button> {
-  prefix?: React.ReactNode
-  className?: string
+  prefix?: React.ReactNode;
+  className?: string;
 }
 
 const SelectTrigger = ({ className, ...props }: SelectTriggerProps) => {
@@ -127,7 +130,7 @@ const SelectTrigger = ({ className, ...props }: SelectTriggerProps) => {
         selectTriggerStyles({
           ...renderProps,
           className,
-        })
+        }),
       )}
     >
       {props.prefix && <span className="-mr-1">{props.prefix}</span>}
@@ -140,24 +143,24 @@ const SelectTrigger = ({ className, ...props }: SelectTriggerProps) => {
         className="size-4 shrink-0 text-muted-fg duration-300 group-disabled:opacity-50 group-data-open:rotate-180 group-data-open:text-fg forced-colors:text-[ButtonText] forced-colors:group-disabled:text-[GrayText]"
       />
     </Button>
-  )
-}
+  );
+};
 
 // Define individual components based on the dropdown components
-const SelectSection = DropdownSection
-const SelectSeparator = DropdownSeparator
-const SelectLabel = DropdownLabel
-const SelectOptionDetails = DropdownItemDetails
-const SelectOption = DropdownItem
+const SelectSection = DropdownSection;
+const SelectSeparator = DropdownSeparator;
+const SelectLabel = DropdownLabel;
+const SelectOptionDetails = DropdownItemDetails;
+const SelectOption = DropdownItem;
 
 // Maintain the nested components for backward compatibility
-Select.OptionDetails = SelectOptionDetails
-Select.Option = SelectOption
-Select.Label = SelectLabel
-Select.Separator = SelectSeparator
-Select.Section = SelectSection
-Select.Trigger = SelectTrigger
-Select.List = SelectList
+Select.OptionDetails = SelectOptionDetails;
+Select.Option = SelectOption;
+Select.Label = SelectLabel;
+Select.Separator = SelectSeparator;
+Select.Section = SelectSection;
+Select.Trigger = SelectTrigger;
+Select.List = SelectList;
 
 // Export all components individually as well as the compound component
 export {
@@ -169,5 +172,5 @@ export {
   SelectSeparator,
   SelectLabel,
   SelectOptionDetails,
-}
-export type { SelectProps, SelectTriggerProps, SelectListProps }
+};
+export type { SelectProps, SelectTriggerProps, SelectListProps };

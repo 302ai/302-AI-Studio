@@ -36,7 +36,7 @@ import { tv } from "tailwind-variants";
 import { Badge } from "./badge";
 import { Button } from "./button";
 import { Tooltip } from "./tooltip";
-import { cn } from "@renderer/lib/utils";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -572,7 +572,10 @@ const SidebarDisclosureGroup = ({
     <DisclosureGroup
       data-sidebar-disclosure-group="true"
       allowsMultipleExpanded={allowsMultipleExpanded}
-      className={cn(className, "col-span-full flex flex-col gap-y-6")}
+      className={composeTailwindRenderProps(
+        className,
+        "col-span-full flex flex-col gap-y-6",
+      )}
       {...props}
     />
   );
@@ -591,7 +594,7 @@ const SidebarDisclosure = ({
     <Disclosure
       ref={ref}
       data-sidebar-disclosure="true"
-      className={cn(
+      className={composeTailwindRenderProps(
         className,
         twMerge(state === "expanded" ? "px-2.5" : "col-span-full"),
       )}

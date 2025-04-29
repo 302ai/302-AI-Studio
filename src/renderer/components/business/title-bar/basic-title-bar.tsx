@@ -7,7 +7,7 @@ import {
   TitlebarCenter,
   TitlebarRight,
   TitlebarContainer,
-} from "@renderer/components/business/app/title-bar/title-bar-container";
+} from "@renderer/components/business/title-bar/title-bar-container";
 import { useNavigate } from "react-router-dom";
 import { useSidebar } from "@renderer/components/ui/sidebar";
 import { cn } from "@renderer/lib/utils";

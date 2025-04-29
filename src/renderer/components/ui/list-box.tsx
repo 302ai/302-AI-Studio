@@ -8,7 +8,7 @@ import {
   ListBox as ListBoxPrimitive,
   composeRenderProps,
 } from "react-aria-components";
-import { composeTailwindRenderProps } from "./primitive";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import { twMerge } from "tailwind-merge";
 import {
   DropdownItemDetails,

@@ -7,7 +7,7 @@
   "resources": "src/resources",
   "author": "302 <admin@302.ai>",
   "license": "MIT",
-  "packageManager": "pnpm@10.9.0",
+  "packageManager": "pnpm@10.10.0",
   "pnpm": {
     "onlyBuiltDependenciesFile": "./trusted-dependencies-scripts.json"
   },
@@ -36,6 +36,7 @@
     "electron-window-state": "^5.0.3",
     "i18next": "^25.0.0",
     "lucide-react": "^0.477.0",
+    "motion": "^12.9.2",
     "react": "^19.1.0",
     "react-aria-components": "^1.8.0",
     "react-dom": "^19.1.0",
@@ -46,9 +47,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.0-beta.1",
-    "@electron-toolkit/utils": "^4.0.0",
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/vite": "^4.1.4",
     "@types/node": "^22.13.8",
