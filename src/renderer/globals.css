@@ -53,6 +53,15 @@
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-fg: var(--sidebar-fg);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-fg: var(--sidebar-accent-fg);
+
+  --color-setting-tab-list: var(--setting-tab-list);
+  --color-setting-tab-list-fg: var(--setting-tab-list-fg);
+  --color-setting-tab-hover: var(--setting-tab-hover);
+  --color-setting-tab-accent: var(--setting-tab-accent);
+  --color-setting-tab-accent-fg: var(--setting-tab-accent-fg);
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -102,6 +111,15 @@
 
     --sidebar: oklch(0.97 0.001 106.424);
     --sidebar-fg: oklch(0.147 0.004 49.25);
+    --sidebar-hover: oklch(0.958 0 none);
+    --sidebar-accent: oklch(0.966 0.017 290);
+    --sidebar-accent-fg: oklch(0.606 0.25 292.717);
+
+    --setting-tab-list: oklch(0.97 0.001 106.424);
+    --setting-tab-list-fg: oklch(0.147 0.004 49.25);
+    --setting-tab-hover: oklch(0.958 0 none);
+    --setting-tab-accent: oklch(0.966 0.017 290);
+    --setting-tab-accent-fg: oklch(0.606 0.25 292.717);
 
     --chart-1: oklch(0.541 0.281 293.009);
     --chart-2: oklch(0.702 0.183 293.541);
@@ -154,11 +172,20 @@
     --input: oklch(0.324 0.01 67.558);
     --ring: oklch(0.541 0.281 293.009);
 
-    --navbar: oklch(0.176 0.006 56.043);
+    --navbar: oklch(0.166 0.006 56.043);
     --navbar-fg: oklch(0.985 0.001 106.423);
 
     --sidebar: oklch(0.166 0.006 56.043);
     --sidebar-fg: oklch(0.985 0.001 106.423);
+    --sidebar-hover: oklch(0.606 0.25 292.717);
+    --sidebar-accent: oklch(0.606 0.25 292.717);
+    --sidebar-accent-fg: oklch(1 0 0);
+
+    --setting-tab-list: oklch(0.166 0.006 56.043);
+    --setting-tab-list-fg: oklch(0.985 0.001 106.423);
+    --setting-tab-hover: oklch(0.606 0.25 292.717);
+    --setting-tab-accent: oklch(0.606 0.25 292.717);
+    --setting-tab-accent-fg: oklch(1 0 0);
 
     --chart-1: oklch(0.491 0.27 292.581);
     --chart-2: oklch(0.606 0.25 292.717);

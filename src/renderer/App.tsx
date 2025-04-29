@@ -10,6 +10,7 @@ export function App() {
       <HashRouter>
         <Layout>
           <Routes>
+            <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
           </Routes>

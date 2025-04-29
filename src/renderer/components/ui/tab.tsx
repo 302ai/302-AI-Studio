@@ -51,7 +51,7 @@ const tabListStyles = tv({
   variants: {
     orientation: {
       horizontal: "flex-row gap-x-5 border-border border-b",
-      vertical: "flex-col items-start gap-y-4 border-l",
+      vertical: "flex-col items-start border-l",
     },
   },
 });
@@ -80,18 +80,21 @@ const TabList = <T extends object>({
 
 const tabStyles = tv({
   base: [
-    "relative flex cursor-default items-center whitespace-nowrap rounded-full font-medium text-sm outline-hidden transition hover:text-fg *:data-[slot=icon]:mr-2 *:data-[slot=icon]:size-4",
-    "group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:py-0 group-data-[orientation=vertical]/tabs:pr-2 group-data-[orientation=vertical]/tabs:pl-4",
+    "relative flex cursor-default items-center whitespace-nowrap rounded-lg font-medium text-sm outline-hidden transition *:data-[slot=icon]:mr-2 *:data-[slot=icon]:size-4",
+    "group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:py-2 group-data-[orientation=vertical]/tabs:px-4",
     "group-data-[orientation=horizontal]/tabs:pb-3",
   ],
   variants: {
     isSelected: {
-      false: "text-muted-fg",
-      true: "text-fg",
+      false: "text-setting-tab-list-fg hover:bg-setting-tab-hover",
+      true: "text-setting-tab-accent-fg bg-setting-tab-accent hover:bg-setting-tab-accent",
     },
-    isFocused: { false: "ring-0", true: "text-fg" },
+    isFocused: {
+      false: "ring-0",
+      true: "text-setting-tab-accent-fg",
+    },
     isDisabled: {
-      true: "text-muted-fg/50",
+      true: "text-muted-fg/50 hover:bg-transparent",
     },
   },
 });
@@ -120,11 +123,11 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
             <motion.span
               data-slot="selected-indicator"
               className={twMerge(
-                "absolute rounded bg-fg",
+                "absolute rounded bg-setting-tab-accent-fg",
                 // horizontal
                 "group-data-[orientation=horizontal]/tabs:-bottom-px group-data-[orientation=horizontal]/tabs:inset-x-0 group-data-[orientation=horizontal]/tabs:h-0.5 group-data-[orientation=horizontal]/tabs:w-full",
                 // vertical
-                "group-data-[orientation=vertical]/tabs:left-0 group-data-[orientation=vertical]/tabs:h-[calc(100%-10%)] group-data-[orientation=vertical]/tabs:w-0.5 group-data-[orientation=vertical]/tabs:transform",
+                "group-data-[orientation=vertical]/tabs:right-0 group-data-[orientation=vertical]/tabs:h-[calc(50%)] group-data-[orientation=vertical]/tabs:w-[2px] group-data-[orientation=vertical]/tabs:transform",
               )}
               layoutId="current-selected"
               transition={{ type: "spring", stiffness: 500, damping: 40 }}
