@@ -2,6 +2,11 @@ import { ElectronAPI, electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { IpcChannel } from "../shared/ipc-channel";
 
+/**
+ * ! This should be declared in index.d.ts,
+ * ! but declaring it in index.d.ts would result in an error: Property 'api' does not exist on type 'Window & typeof globalThis'.
+ * ! For now, let's declare here that optimization is needed in the future
+ */
 declare global {
   interface Window {
     electron: ElectronAPI;

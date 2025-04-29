@@ -9,11 +9,11 @@ import zh from "./messages/zh.json";
 i18n.use(initReactI18next).init({
   fallbackLng: "zh",
   resources: {
-    en: {
-      translation: en,
-    },
     zh: {
       translation: zh,
+    },
+    en: {
+      translation: en,
     },
     ja: {
       translation: ja,
