@@ -7,7 +7,6 @@ import {
 } from "@renderer/components/ui/select";
 import langs from "@renderer/i18n/langs";
 import { IconTranslate } from "@intentui/icons";
-import logger from "@shared/logger";
 
 export function LanguageSwitcher({
   ...props
@@ -16,10 +15,6 @@ export function LanguageSwitcher({
 
   const handleLanguageChange = (key: React.Key) => {
     const newLang = key.toString();
-    const prevLang = i18n.language;
-
-    // Log the language change
-    logger.info(`Language changed from ${prevLang} to ${newLang}`);
 
     // Change the language
     void i18n.changeLanguage(newLang);

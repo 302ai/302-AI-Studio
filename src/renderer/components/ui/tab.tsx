@@ -152,9 +152,5 @@ const TabPanel = ({ className, ref, ...props }: TabPanelProps) => {
   );
 };
 
-Tabs.List = TabList;
-Tabs.Tab = Tab;
-Tabs.Panel = TabPanel;
-
 export type { TabsProps, TabListProps, TabProps, TabPanelProps };
-export { Tabs };
+export { Tabs, TabList, Tab, TabPanel };

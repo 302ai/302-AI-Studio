@@ -29,7 +29,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   return (
-    <>
+    <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
         <SidebarContent>
           <SidebarSectionGroup>
@@ -69,7 +69,9 @@ export function AppSidebar(props: AppSidebarProps) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset>{props.children}</SidebarInset>
-    </>
+      <SidebarInset className="min-h-[calc(100vh-var(--title-bar-height))] p-4">
+        {props.children}
+      </SidebarInset>
+    </div>
   );
 }

@@ -1,51 +1,47 @@
-import { ListBox, ListBoxItem } from "@renderer/components/ui/list-box";
-import { useState } from "react";
-import type { Selection } from "react-aria-components";
+import { Routes, Route, Link } from "react-router-dom";
+import { GeneralSettings } from "./general-settings";
+import { ModelSettings } from "./model-settings";
+import { HelpPanel } from "./help";
+import { Tab } from "@renderer/components/ui/tab";
+import { TabList } from "@renderer/components/ui/tab";
+import { Tabs } from "@renderer/components/ui/tab";
 
-const roles = [
-  { id: 1, name: "Admin", description: "Has full access to all resources" },
+const settingTabs = [
+  { id: 1, name: "general settings", path: "/settings/general-settings" },
   {
     id: 2,
-    name: "Editor",
-    description: "Can edit content but has limited access to settings",
+    name: "model settings",
+    path: "/settings/model-settings",
   },
   {
     id: 3,
-    name: "Viewer",
-    description: "Can view content but cannot make changes",
-  },
-  {
-    id: 4,
-    name: "Contributor",
-    description: "Can contribute content for review",
-  },
-  {
-    id: 5,
-    name: "Guest",
-    description: "Limited access, mostly for viewing purposes",
+    name: "help panel",
+    path: "/settings/help-panel",
   },
 ];
 
 export function SettingsPage() {
-  const [selected, setSelected] = useState<Selection>(new Set([1]));
-
   return (
-    <div className="flex h-screen flex-col">
-      <div className="flex flex-col">
-        <ListBox
-          selectedKeys={selected}
-          onSelectionChange={setSelected}
-          items={roles}
-          aria-label="Settings"
-        >
-          {(item) => (
-            <ListBoxItem key={item.id}>
-              <div className="flex flex-col">
-                <h3>{item.name}</h3>
-              </div>
-            </ListBoxItem>
-          )}
-        </ListBox>
+    <div className="flex flex-row">
+      <Tabs
+        orientation="vertical"
+        aria-label="Setting Tabs"
+        className="w-[var(--setting-tabs-width)]"
+      >
+        <TabList aria-label="Setting Tab List">
+          {settingTabs.map((tab) => (
+            <Tab key={tab.id}>
+              <Link to={tab.path}>{tab.name}</Link>
+            </Tab>
+          ))}
+        </TabList>
+      </Tabs>
+      <div className="h-full flex-1">
+        <Routes>
+          <Route path="/general-settings" element={<GeneralSettings />} />
+          <Route path="/model-settings" element={<ModelSettings />} />
+          <Route path="/help-panel" element={<HelpPanel />} />
+        </Routes>
       </div>
     </div>
   );

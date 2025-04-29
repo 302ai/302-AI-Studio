@@ -1,5 +1,5 @@
-import { BasicTitleBar } from "@renderer/components/business/title-bar/basic-title-bar";
-import { AppSidebar } from "@renderer/components/business/sidebar/app-sidebar";
+import { BasicTitleBar } from "@renderer/components/business/title-bar";
+import { AppSidebar } from "@renderer/components/business/sidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
