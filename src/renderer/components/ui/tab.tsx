@@ -86,7 +86,7 @@ const tabStyles = tv({
 	],
 	variants: {
 		isSelected: {
-			false: "text-setting-tab-list-fg hover:bg-hover",
+			false: "text-setting-tab-list-fg hover:bg-hover-primary",
 			true: "text-accent-fg bg-accent hover:bg-accent",
 		},
 		isFocused: {
@@ -123,7 +123,7 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
 						<motion.span
 							data-slot="selected-indicator"
 							className={twMerge(
-								"absolute rounded bg-accent-fg",
+								"absolute rounded bg-primary",
 								// horizontal
 								"group-data-[orientation=horizontal]/tabs:-bottom-px group-data-[orientation=horizontal]/tabs:inset-x-0 group-data-[orientation=horizontal]/tabs:h-0.5 group-data-[orientation=horizontal]/tabs:w-full",
 								// vertical

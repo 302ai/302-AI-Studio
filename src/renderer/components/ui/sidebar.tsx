@@ -414,7 +414,7 @@ const sidebarItemStyles = tv({
 			true: "bg-accent text-fg hover:bg-accent/90 hover:text-fg **:data-[slot=menu-trigger]:from-(--accent) **:data-[slot=icon]:text-fg [&_.text-muted-fg]:text-fg/80",
 		},
 		isActive: {
-			true: "bg-hover text-hover-fg **:data-[slot=menu-trigger]:flex",
+			true: "bg-hover-primary text-hover-primary-fg **:data-[slot=menu-trigger]:flex",
 		},
 		isDisabled: {
 			true: "cursor-default opacity-50",

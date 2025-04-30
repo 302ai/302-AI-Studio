@@ -36,8 +36,8 @@ export function LanguageSwitcher({
         {...props}
       >
         <SelectTrigger
-          className="cursor-pointer"
-          prefix={<BsGlobe className="mr-1 size-5 text-muted-fg" />}
+          className="cursor-pointer text-muted-fg"
+          prefix={<BsGlobe className="mr-1 size-5" />}
         />
         <SelectList className="min-w-32">
           {langs.map((lang) => (

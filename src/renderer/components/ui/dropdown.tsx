@@ -33,13 +33,13 @@ const dropdownItemStyles = tv({
       true: "text-muted-fg forced-colors:text-[GrayText]",
     },
     isSelected: {
-      true: "",
+      true: "text-accent-fg hover:bg-bg hover:text-accent-fg",
     },
-    isFocused: {
+    isHovered: {
       false: "data-danger:text-danger",
       true: [
         "**:data-[slot=icon]:text-accent-fg **:[kbd]:text-accent-fg",
-        "bg-hover text-hover-fg forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]",
+        "bg-hover-secondary text-hover-secondary-fg forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]",
         "data-danger:bg-danger/10 data-danger:text-danger",
         "data-[slot=description]:text-accent-fg data-[slot=label]:text-accent-fg [&_.text-muted-fg]:text-accent-fg/80",
       ],
