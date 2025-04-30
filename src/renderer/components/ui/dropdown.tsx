@@ -1,10 +1,10 @@
-import { IconCheck } from '@intentui/icons'
+import { IconCheck } from "@intentui/icons";
 import type {
   ListBoxItemProps,
   SectionProps,
   SeparatorProps,
   TextProps,
-} from 'react-aria-components'
+} from "react-aria-components";
 import {
   Collection,
   Header,
@@ -13,52 +13,52 @@ import {
   Separator,
   Text,
   composeRenderProps,
-} from 'react-aria-components'
-import { twMerge } from 'tailwind-merge'
-import { tv } from 'tailwind-variants'
-import { Keyboard } from './keyboard'
+} from "react-aria-components";
+import { twMerge } from "tailwind-merge";
+import { tv } from "tailwind-variants";
+import { Keyboard } from "./keyboard";
 
 const dropdownItemStyles = tv({
   base: [
-    'col-span-full grid grid-cols-[auto_1fr_auto] items-center',
-    'group relative cursor-default select-none rounded-[calc(var(--radius-lg)-1px)] px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] forced-color:text-[Highlight] text-base text-fg outline-0 forced-color-adjust-none sm:text-sm/6 forced-colors:text-[LinkText]',
-    '**:data-[slot=avatar]:*:mr-2 **:data-[slot=avatar]:*:size-6 **:data-[slot=avatar]:mr-2 **:data-[slot=avatar]:size-6 sm:**:data-[slot=avatar]:*:size-5 sm:**:data-[slot=avatar]:size-5',
-    'data-danger:**:data-[slot=icon]:text-danger/60 **:data-[slot=icon]:size-4 **:data-[slot=icon]:shrink-0 **:data-[slot=icon]:text-muted-fg focus:data-danger:**:data-[slot=icon]:text-danger',
-    'data-[slot=menu-radio]:*:data-[slot=icon]:size-3 *:data-[slot=icon]:mr-2',
-    'forced-colors:**:data-[slot=icon]:text-[CanvasText] forced-colors:group-focus:**:data-[slot=icon]:text-[Canvas] ',
-    '**:data-[slot=checked-icon]:ml-auto **:data-[slot=checked-icon]:size-4',
+    "col-span-full grid grid-cols-[auto_1fr_auto] items-center",
+    "group relative cursor-default select-none rounded-[calc(var(--radius-lg)-1px)] px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] forced-color:text-[Highlight] text-base text-fg outline-0 forced-color-adjust-none sm:text-sm/6 forced-colors:text-[LinkText]",
+    "**:data-[slot=avatar]:*:mr-2 **:data-[slot=avatar]:*:size-6 **:data-[slot=avatar]:mr-2 **:data-[slot=avatar]:size-6 sm:**:data-[slot=avatar]:*:size-5 sm:**:data-[slot=avatar]:size-5",
+    "data-danger:**:data-[slot=icon]:text-danger/60 **:data-[slot=icon]:size-4 **:data-[slot=icon]:shrink-0 **:data-[slot=icon]:text-muted-fg focus:data-danger:**:data-[slot=icon]:text-danger",
+    "data-[slot=menu-radio]:*:data-[slot=icon]:size-3 *:data-[slot=icon]:mr-2",
+    "forced-colors:**:data-[slot=icon]:text-[CanvasText] forced-colors:group-focus:**:data-[slot=icon]:text-[Canvas] ",
+    "**:data-[slot=checked-icon]:ml-auto **:data-[slot=checked-icon]:size-4",
   ],
   variants: {
     isDisabled: {
-      true: 'text-muted-fg forced-colors:text-[GrayText]',
+      true: "text-muted-fg forced-colors:text-[GrayText]",
     },
     isSelected: {
-      true: '',
+      true: "",
     },
     isFocused: {
-      false: 'data-danger:text-danger',
+      false: "data-danger:text-danger",
       true: [
-        '**:data-[slot=icon]:text-accent-fg **:[kbd]:text-accent-fg',
-        'bg-accent text-accent-fg forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]',
-        'data-danger:bg-danger/10 data-danger:text-danger',
-        'data-[slot=description]:text-accent-fg data-[slot=label]:text-accent-fg [&_.text-muted-fg]:text-accent-fg/80',
+        "**:data-[slot=icon]:text-accent-fg **:[kbd]:text-accent-fg",
+        "bg-hover text-hover-fg forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]",
+        "data-danger:bg-danger/10 data-danger:text-danger",
+        "data-[slot=description]:text-accent-fg data-[slot=label]:text-accent-fg [&_.text-muted-fg]:text-accent-fg/80",
       ],
     },
   },
-})
+});
 
 const dropdownSectionStyles = tv({
   slots: {
-    section: 'col-span-full grid grid-cols-[auto_1fr]',
+    section: "col-span-full grid grid-cols-[auto_1fr]",
     header:
-      'col-span-full px-2.5 py-1 font-medium text-muted-fg text-sm sm:text-xs',
+      "col-span-full px-2.5 py-1 font-medium text-muted-fg text-sm sm:text-xs",
   },
-})
+});
 
-const { section, header } = dropdownSectionStyles()
+const { section, header } = dropdownSectionStyles();
 
 interface DropdownSectionProps<T> extends SectionProps<T> {
-  title?: string
+  title?: string;
 }
 
 const DropdownSection = <T extends object>({
@@ -67,29 +67,29 @@ const DropdownSection = <T extends object>({
 }: DropdownSectionProps<T>) => {
   return (
     <ListBoxSection className={section({ className })}>
-      {'title' in props && <Header className={header()}>{props.title}</Header>}
+      {"title" in props && <Header className={header()}>{props.title}</Header>}
       <Collection items={props.items}>{props.children}</Collection>
     </ListBoxSection>
-  )
-}
+  );
+};
 
-type DropdownItemProps = ListBoxItemProps
+type DropdownItemProps = ListBoxItemProps;
 
 const DropdownItem = ({ className, ...props }: DropdownItemProps) => {
   const textValue =
     props.textValue ||
-    (typeof props.children === 'string' ? props.children : undefined)
+    (typeof props.children === "string" ? props.children : undefined);
   return (
     <ListBoxItemPrimitive
       textValue={textValue}
       className={composeRenderProps(className, (className, renderProps) =>
-        dropdownItemStyles({ ...renderProps, className })
+        dropdownItemStyles({ ...renderProps, className }),
       )}
       {...props}
     >
       {composeRenderProps(props.children, (children, { isSelected }) => (
         <>
-          {typeof children === 'string' ? (
+          {typeof children === "string" ? (
             <DropdownLabel>{children}</DropdownLabel>
           ) : (
             children
@@ -98,16 +98,16 @@ const DropdownItem = ({ className, ...props }: DropdownItemProps) => {
         </>
       ))}
     </ListBoxItemPrimitive>
-  )
-}
+  );
+};
 
 interface DropdownItemDetailProps extends TextProps {
-  label?: TextProps['children']
-  description?: TextProps['children']
+  label?: TextProps["children"];
+  description?: TextProps["children"];
   classNames?: {
-    label?: TextProps['className']
-    description?: TextProps['className']
-  }
+    label?: TextProps["className"];
+    description?: TextProps["className"];
+  };
 }
 
 const DropdownItemDetails = ({
@@ -116,7 +116,7 @@ const DropdownItemDetails = ({
   classNames,
   ...props
 }: DropdownItemDetailProps) => {
-  const { slot, children, title, ...restProps } = props
+  const { slot, children, title, ...restProps } = props;
 
   return (
     <div
@@ -126,8 +126,8 @@ const DropdownItemDetails = ({
     >
       {label && (
         <Text
-          slot={slot ?? 'label'}
-          className={twMerge('font-medium sm:text-sm', classNames?.label)}
+          slot={slot ?? "label"}
+          className={twMerge("font-medium sm:text-sm", classNames?.label)}
           {...restProps}
         >
           {label}
@@ -135,8 +135,8 @@ const DropdownItemDetails = ({
       )}
       {description && (
         <Text
-          slot={slot ?? 'description'}
-          className={twMerge('text-muted-fg text-xs', classNames?.description)}
+          slot={slot ?? "description"}
+          className={twMerge("text-muted-fg text-xs", classNames?.description)}
           {...restProps}
         >
           {description}
@@ -144,29 +144,29 @@ const DropdownItemDetails = ({
       )}
       {!title && children}
     </div>
-  )
-}
+  );
+};
 
 interface DropdownLabelProps extends TextProps {
-  ref?: React.Ref<HTMLDivElement>
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 const DropdownLabel = ({ className, ref, ...props }: DropdownLabelProps) => (
   <Text
     slot="label"
     ref={ref}
-    className={twMerge('col-start-2', className)}
+    className={twMerge("col-start-2", className)}
     {...props}
   />
-)
+);
 
 const DropdownSeparator = ({ className, ...props }: SeparatorProps) => (
   <Separator
     orientation="horizontal"
-    className={twMerge('-mx-1 col-span-full my-1 h-px bg-border', className)}
+    className={twMerge("-mx-1 col-span-full my-1 h-px bg-border", className)}
     {...props}
   />
-)
+);
 
 const DropdownKeyboard = ({
   className,
@@ -176,14 +176,14 @@ const DropdownKeyboard = ({
     <Keyboard
       classNames={{
         base: twMerge(
-          'absolute right-2 group-hover:text-primary-fg group-focus:text-primary-fg pl-2',
-          className
+          "absolute right-2 group-hover:text-primary-fg group-focus:text-primary-fg pl-2",
+          className,
         ),
       }}
       {...props}
     />
-  )
-}
+  );
+};
 
 /**
  * Note: This is not exposed component, but it's used in other components to render dropdowns.
@@ -194,7 +194,7 @@ export type {
   DropdownLabelProps,
   DropdownItemProps,
   DropdownItemDetailProps,
-}
+};
 export {
   DropdownSeparator,
   DropdownItem,
@@ -204,4 +204,4 @@ export {
   DropdownItemDetails,
   DropdownSection,
   dropdownSectionStyles,
-}
+};

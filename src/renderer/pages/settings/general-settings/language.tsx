@@ -6,8 +6,8 @@ import {
   SelectTrigger,
 } from "@renderer/components/ui/select";
 import langs from "@renderer/i18n/langs";
-import { IconTranslate } from "@intentui/icons";
 import { Label } from "react-aria-components";
+import { BsGlobe } from "react-icons/bs";
 
 export function LanguageSwitcher({
   ...props
@@ -29,18 +29,20 @@ export function LanguageSwitcher({
     <div className="flex flex-col gap-2">
       <Label>{t("settings.general-settings.language.label")}</Label>
       <Select
+        className="w-auto min-w-0"
         selectedKey={currentLang.key}
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
-        className="w-auto min-w-0"
         {...props}
       >
         <SelectTrigger
-          prefix={<IconTranslate className="mr-1 size-4 text-muted-fg" />}
+          className="cursor-pointer"
+          prefix={<BsGlobe className="mr-1 size-5 text-muted-fg" />}
         />
         <SelectList className="min-w-32">
           {langs.map((lang) => (
             <SelectOption
+              className="cursor-pointer"
               key={lang.key}
               id={lang.key}
               textValue={lang.nativeName}
