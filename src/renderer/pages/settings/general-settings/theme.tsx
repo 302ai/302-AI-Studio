@@ -74,7 +74,7 @@ export function ThemeSwitcher() {
         className="relative flex h-9 w-[250px] overflow-hidden rounded-[10px] border border-border bg-bg p-1"
       >
         <div
-          className="absolute h-[25.2px] rounded-[8px] bg-accent transition-all duration-200 ease-out"
+          className="absolute h-[25.2px] rounded-[8px] bg-accent transition-all duration-400 ease-out"
           style={thumbStyle}
         />
 
@@ -83,12 +83,12 @@ export function ThemeSwitcher() {
             key={option.key}
             ref={setItemRef(index)}
             className={cn(
-              "relative flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-[8px] text-sm transition-colors",
+              "relative flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-[8px] text-sm",
               theme === option.key
                 ? "text-accent-fg"
-                : "text-secondary-fg hover:bg-hover-primary",
+                : "text-secondary-fg hover:bg-hover-secondary",
             )}
-            onClick={() => handleThemeChange(option.key as ThemeMode)}
+            onMouseDown={() => handleThemeChange(option.key as ThemeMode)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleThemeChange(option.key as ThemeMode);
