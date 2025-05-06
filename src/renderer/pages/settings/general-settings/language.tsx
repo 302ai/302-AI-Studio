@@ -9,7 +9,7 @@ import langs from "@renderer/i18n/langs";
 import { Label } from "react-aria-components";
 import { BsGlobe } from "react-icons/bs";
 
-export function LanguageSwitcher({
+export function LanguageSelector({
   ...props
 }: React.ComponentProps<typeof Select>) {
   const { t, i18n } = useTranslation();
@@ -36,7 +36,7 @@ export function LanguageSwitcher({
         {...props}
       >
         <SelectTrigger
-          className="cursor-pointer text-muted-fg"
+          className="h-9 cursor-pointer border-border text-muted-fg"
           prefix={<BsGlobe className="mr-1 size-5" />}
         />
         <SelectList className="min-w-32">

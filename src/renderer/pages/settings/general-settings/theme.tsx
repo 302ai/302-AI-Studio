@@ -1,0 +1,105 @@
+import { Label } from "react-aria-components";
+import { useTranslation } from "react-i18next";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { ThemeMode } from "@renderer/types";
+import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
+import { cn } from "~/src/renderer/lib/utils";
+
+export function ThemeSwitcher() {
+  const { t } = useTranslation();
+  const [theme, setTheme] = useState<ThemeMode>(ThemeMode.System);
+  const [thumbStyle, setThumbStyle] = useState({});
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleThemeChange = (newTheme: ThemeMode) => {
+    setTheme(newTheme);
+    // Here you would typically call an API to change the theme system-wide
+    // For example: window.api.setTheme(newTheme);
+  };
+
+  useEffect(() => {
+    const currentIndex = themeOptions.findIndex(
+      (option) => option.key === theme,
+    );
+    if (
+      currentIndex === -1 ||
+      !itemsRef.current[currentIndex] ||
+      !containerRef.current
+    ) {
+      return;
+    }
+
+    const item = itemsRef.current[currentIndex];
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+
+    setThumbStyle({
+      left: itemRect.left - containerRect.left + "px",
+      width: itemRect.width + "px",
+      height: itemRect.height + "px",
+    });
+  }, [theme]);
+
+  const themeOptions = useMemo(
+    () => [
+      {
+        key: ThemeMode.Light,
+        icon: <BsSun className="size-4" />,
+        label: t("settings.general-settings.theme.light"),
+      },
+      {
+        key: ThemeMode.Dark,
+        icon: <BsMoon className="size-4" />,
+        label: t("settings.general-settings.theme.dark"),
+      },
+      {
+        key: ThemeMode.System,
+        icon: <BsLaptop className="size-4" />,
+        label: t("settings.general-settings.theme.system"),
+      },
+    ],
+    [t],
+  );
+
+  const setItemRef = (index: number) => (el: HTMLDivElement | null) => {
+    itemsRef.current[index] = el;
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <Label>{t("settings.general-settings.theme.label")}</Label>
+      <div
+        ref={containerRef}
+        className="relative flex h-9 w-[260px] overflow-hidden rounded-[10px] border border-border bg-bg p-1"
+      >
+        <div
+          className="absolute h-[25px] rounded-[8px] bg-accent transition-all duration-200 ease-out"
+          style={thumbStyle}
+        />
+
+        {themeOptions.map((option, index) => (
+          <div
+            key={option.key}
+            ref={setItemRef(index)}
+            className={cn(
+              "relative flex flex-1 cursor-pointer items-center justify-center gap-1 text-sm transition-colors",
+              theme === option.key ? "text-accent-fg" : "text-secondary-fg",
+            )}
+            onClick={() => handleThemeChange(option.key as ThemeMode)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleThemeChange(option.key as ThemeMode);
+              }
+            }}
+            aria-pressed={theme === option.key}
+          >
+            {option.icon}
+            <span>{option.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

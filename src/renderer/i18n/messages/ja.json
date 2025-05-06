@@ -1,9 +1,15 @@
 {
   "settings": {
     "general-settings": {
-      "name": "一般設定",
       "language": {
         "label": "言語"
+      },
+      "name": "一般設定",
+      "theme": {
+        "dark": "暗い",
+        "label": "テーマ",
+        "light": "明るい色",
+        "system": "システム"
       }
     },
     "help-panel": {

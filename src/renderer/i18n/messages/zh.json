@@ -1,9 +1,15 @@
 {
   "settings": {
     "general-settings": {
-      "name": "通用设置",
       "language": {
         "label": "语言"
+      },
+      "name": "通用设置",
+      "theme": {
+        "dark": "深色",
+        "label": "主题",
+        "light": "浅色",
+        "system": "系统"
       }
     },
     "help-panel": {

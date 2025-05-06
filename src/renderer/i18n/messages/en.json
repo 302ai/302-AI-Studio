@@ -1,9 +1,15 @@
 {
   "settings": {
     "general-settings": {
-      "name": "General Settings",
       "language": {
         "label": "Language"
+      },
+      "name": "General Settings",
+      "theme": {
+        "dark": "Dark",
+        "label": "Theme",
+        "light": "Light",
+        "system": "System"
       }
     },
     "help-panel": {

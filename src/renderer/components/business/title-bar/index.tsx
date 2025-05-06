@@ -3,10 +3,10 @@ import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { Button } from "@renderer/components/ui/button";
 import {
-	TitlebarLeft,
-	TitlebarCenter,
-	TitlebarRight,
-	TitlebarContainer,
+  TitlebarLeft,
+  TitlebarCenter,
+  TitlebarRight,
+  TitlebarContainer,
 } from "@renderer/components/business/title-bar/title-bar-container";
 import { useNavigate } from "react-router-dom";
 import { useSidebar } from "@renderer/components/ui/sidebar";
@@ -17,65 +17,65 @@ import { Separator } from "@renderer/components/ui/separator";
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function BasicTitleBar() {
-	const navigate = useNavigate();
-	const { toggleSidebar, state } = useSidebar();
+  const navigate = useNavigate();
+  const { toggleSidebar, state } = useSidebar();
 
-	const handleSettingsClick = () => {
-		navigate("/settings");
-	};
+  const handleSettingsClick = () => {
+    navigate("/settings");
+  };
 
-	return (
-		<TitlebarContainer>
-			<TitlebarLeft
-				className={cn(
-					"flex flex-row items-center justify-end",
-					"transition-[width] duration-200 ease-linear",
-					state === "expanded"
-						? "w-[var(--sidebar-width)] border-r border-r-border"
-						: isMac
-							? "w-[var(--sidebar-width-dock)]"
-							: "w-[var(--sidebar-width-collapsed)]",
-				)}
-			>
-				<Button
-					intent="plain"
-					size="square-petite"
-					style={noDragRegion}
-					onClick={toggleSidebar}
-				>
-					{state === "collapsed" ? (
-						<LuPanelLeftOpen className="h-4 w-4" />
-					) : (
-						<LuPanelLeftClose className="h-4 w-4" />
-					)}
-				</Button>
-				<Button intent="plain" size="square-petite" style={noDragRegion}>
-					<FaRegSquarePlus className="h-4 w-4" />
-				</Button>
-			</TitlebarLeft>
+  return (
+    <TitlebarContainer>
+      <TitlebarLeft
+        className={cn(
+          "flex flex-row items-center justify-end",
+          "transition-[width] duration-200 ease-linear",
+          state === "expanded"
+            ? "w-[var(--sidebar-width)] border-r border-r-border"
+            : isMac
+              ? "w-[var(--sidebar-width-dock)]"
+              : "w-[var(--sidebar-width-collapsed)]",
+        )}
+      >
+        <Button
+          intent="plain"
+          size="square-petite"
+          style={noDragRegion}
+          onClick={toggleSidebar}
+        >
+          {state === "collapsed" ? (
+            <LuPanelLeftOpen className="h-4 w-4" />
+          ) : (
+            <LuPanelLeftClose className="h-4 w-4" />
+          )}
+        </Button>
+        <Button intent="plain" size="square-petite" style={noDragRegion}>
+          <FaRegSquarePlus className="h-4 w-4" />
+        </Button>
+      </TitlebarLeft>
 
-			<Separator
-				orientation="vertical"
-				className={cn(
-					"w-[1.53px] h-[16.88px]",
-					state === "expanded" ? "hidden" : "",
-				)}
-			/>
+      <Separator
+        orientation="vertical"
+        className={cn(
+          "h-[16.88px] w-[1.53px]",
+          state === "expanded" ? "hidden" : "",
+        )}
+      />
 
-			<TitlebarCenter>
-				<h1>Title</h1>
-			</TitlebarCenter>
+      <TitlebarCenter>
+        <h1>Title</h1>
+      </TitlebarCenter>
 
-			<TitlebarRight>
-				<Button
-					intent="plain"
-					size="square-petite"
-					style={noDragRegion}
-					onClick={handleSettingsClick}
-				>
-					<FiSettings className="h-4 w-4" />
-				</Button>
-			</TitlebarRight>
-		</TitlebarContainer>
-	);
+      <TitlebarRight>
+        <Button
+          intent="plain"
+          size="square-petite"
+          style={noDragRegion}
+          onClick={handleSettingsClick}
+        >
+          <FiSettings className="h-4 w-4" />
+        </Button>
+      </TitlebarRight>
+    </TitlebarContainer>
+  );
 }
