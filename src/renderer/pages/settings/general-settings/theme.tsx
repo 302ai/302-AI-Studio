@@ -18,29 +18,9 @@ export function ThemeSwitcher() {
     // For example: window.api.setTheme(newTheme);
   };
 
-  useEffect(() => {
-    const currentIndex = themeOptions.findIndex(
-      (option) => option.key === theme,
-    );
-    if (
-      currentIndex === -1 ||
-      !itemsRef.current[currentIndex] ||
-      !containerRef.current
-    ) {
-      return;
-    }
-
-    const item = itemsRef.current[currentIndex];
-    const container = containerRef.current;
-    const containerRect = container.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-
-    setThumbStyle({
-      left: itemRect.left - containerRect.left + "px",
-      width: itemRect.width + "px",
-      height: itemRect.height + "px",
-    });
-  }, [theme]);
+  const setItemRef = (index: number) => (el: HTMLDivElement | null) => {
+    itemsRef.current[index] = el;
+  };
 
   const themeOptions = useMemo(
     () => [
@@ -63,19 +43,38 @@ export function ThemeSwitcher() {
     [t],
   );
 
-  const setItemRef = (index: number) => (el: HTMLDivElement | null) => {
-    itemsRef.current[index] = el;
-  };
+  useEffect(() => {
+    const currentIndex = themeOptions.findIndex(
+      (option) => option.key === theme,
+    );
+    if (
+      currentIndex === -1 ||
+      !itemsRef.current[currentIndex] ||
+      !containerRef.current
+    ) {
+      return;
+    }
+
+    const item = itemsRef.current[currentIndex];
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+
+    setThumbStyle({
+      left: itemRect.left - containerRect.left + "px",
+      width: itemRect.width + "px",
+    });
+  }, [theme, themeOptions]);
 
   return (
     <div className="flex flex-col gap-2">
       <Label>{t("settings.general-settings.theme.label")}</Label>
       <div
         ref={containerRef}
-        className="relative flex h-9 w-[260px] overflow-hidden rounded-[10px] border border-border bg-bg p-1"
+        className="relative flex h-9 w-[250px] overflow-hidden rounded-[10px] border border-border bg-bg p-1"
       >
         <div
-          className="absolute h-[25px] rounded-[8px] bg-accent transition-all duration-200 ease-out"
+          className="absolute h-[25.2px] rounded-[8px] bg-accent transition-all duration-200 ease-out"
           style={thumbStyle}
         />
 
@@ -84,8 +83,10 @@ export function ThemeSwitcher() {
             key={option.key}
             ref={setItemRef(index)}
             className={cn(
-              "relative flex flex-1 cursor-pointer items-center justify-center gap-1 text-sm transition-colors",
-              theme === option.key ? "text-accent-fg" : "text-secondary-fg",
+              "relative flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-[8px] text-sm transition-colors",
+              theme === option.key
+                ? "text-accent-fg"
+                : "text-secondary-fg hover:bg-hover-primary",
             )}
             onClick={() => handleThemeChange(option.key as ThemeMode)}
             onKeyDown={(e) => {

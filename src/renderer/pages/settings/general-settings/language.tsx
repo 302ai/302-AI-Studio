@@ -29,7 +29,7 @@ export function LanguageSelector({
     <div className="flex flex-col gap-2">
       <Label>{t("settings.general-settings.language.label")}</Label>
       <Select
-        className="w-auto min-w-0"
+        className="w-[240px] min-w-0"
         selectedKey={currentLang.key}
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
