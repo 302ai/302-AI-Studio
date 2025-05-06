@@ -8,22 +8,25 @@ import {
 import langs from "@renderer/i18n/langs";
 import { Label } from "react-aria-components";
 import { BsGlobe } from "react-icons/bs";
+import { useAtom } from "jotai";
+import { languageAtom, setLanguage } from "@renderer/store/settings";
 
 export function LanguageSelector({
   ...props
 }: React.ComponentProps<typeof Select>) {
   const { t, i18n } = useTranslation();
 
+  const [language] = useAtom(languageAtom);
+  const [, applyLanguage] = useAtom(setLanguage);
+
   const handleLanguageChange = (key: React.Key) => {
     const newLang = key.toString();
-
-    // Change the language
-    window.api.setLanguage(newLang);
+    applyLanguage(newLang);
     i18n.changeLanguage(newLang);
+    window.api.setLanguage(newLang);
   };
 
-  const currentLang =
-    langs.find((lang) => lang.key === i18n.language) ?? langs[0];
+  const currentLang = langs.find((lang) => lang.key === language) ?? langs[0];
 
   return (
     <div className="flex flex-col gap-2">
@@ -36,7 +39,7 @@ export function LanguageSelector({
         {...props}
       >
         <SelectTrigger
-          className="h-9 cursor-pointer border-border text-muted-fg"
+          className="h-9 cursor-pointer border-border text-secondary-fg"
           prefix={<BsGlobe className="mr-1 size-5" />}
         />
         <SelectList className="min-w-32">

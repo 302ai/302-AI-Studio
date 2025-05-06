@@ -4,7 +4,8 @@ import { createWindow } from "@lib/electron-app/factories/windows/create";
 import { is } from "@electron-toolkit/utils";
 import { isLinux, isMac } from "../constant";
 import windowStateKeeper from "electron-window-state";
-import { titleBarOverlayLight } from "../config";
+import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
+import { configManager } from "../services/config-service";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -13,6 +14,8 @@ export async function MainWindow() {
     fullScreen: false,
     maximize: false,
   });
+
+  const theme = configManager.getTheme();
 
   const window = createWindow({
     id: "home",
@@ -26,8 +29,13 @@ export async function MainWindow() {
     transparent: isMac,
     visualEffectState: "active",
     titleBarStyle: isLinux ? "default" : "hidden",
-    titleBarOverlay: titleBarOverlayLight,
-    // backgroundColor: isMac ? undefined : theme === 'dark' ? '#181818' : '#FFFFFF',
+    titleBarOverlay:
+      theme === "dark" ? titleBarOverlayDark : titleBarOverlayLight,
+    backgroundColor: isMac
+      ? undefined
+      : theme === "dark"
+      ? "#181818"
+      : "#FFFFFF",
     trafficLightPosition: { x: 8, y: 12 },
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),

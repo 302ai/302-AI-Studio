@@ -32,6 +32,9 @@ importers:
       i18next:
         specifier: ^25.0.0
         version: 25.0.1(typescript@5.8.2)
+      jotai:
+        specifier: ^2.12.4
+        version: 2.12.4(@types/react@19.0.10)(react@19.1.0)
       lucide-react:
         specifier: ^0.477.0
         version: 0.477.0(react@19.1.0)
@@ -2879,6 +2882,18 @@ packages:
   jiti@2.4.2:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
+
+  jotai@2.12.4:
+    resolution: {integrity: sha512-eFXLJol4oOLM8BS1+QV+XwaYQITG8n1tatBCFl4F5HE3zR5j2WIK8QpMt7VJIYmlogNUZfvB7wjwLoVk+umB9Q==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -7508,6 +7523,11 @@ snapshots:
       minimatch: 3.1.2
 
   jiti@2.4.2: {}
+
+  jotai@2.12.4(@types/react@19.0.10)(react@19.1.0):
+    optionalDependencies:
+      '@types/react': 19.0.10
+      react: 19.1.0
 
   js-tokens@4.0.0: {}
 

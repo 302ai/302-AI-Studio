@@ -15,6 +15,9 @@ declare global {
       // Language
       setLanguage: (lang: string) => Promise<void>;
       getLanguage: () => Promise<string>;
+      // Theme
+      setTheme: (theme: string) => Promise<void>;
+      getTheme: () => Promise<string>;
       // Platform
       platform: string;
     };
@@ -27,6 +30,10 @@ const api = {
   setLanguage: (lang: string) =>
     ipcRenderer.invoke(IpcChannel.APP_SET_LANGUAGE, lang),
   getLanguage: () => ipcRenderer.invoke(IpcChannel.APP_GET_LANGUAGE),
+  // Theme
+  setTheme: (theme: string) =>
+    ipcRenderer.invoke(IpcChannel.APP_SET_THEME, theme),
+  getTheme: () => ipcRenderer.invoke(IpcChannel.APP_GET_THEME),
   // Platform info
   platform: process.platform,
 };

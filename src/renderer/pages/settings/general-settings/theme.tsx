@@ -4,18 +4,24 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { ThemeMode } from "@renderer/types";
 import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
 import { cn } from "~/src/renderer/lib/utils";
+import { useAtom } from "jotai";
+import { themeAtom, setTheme } from "@renderer/store/settings";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation();
-  const [theme, setTheme] = useState<ThemeMode>(ThemeMode.System);
+
+  const [theme, setThemeValue] = useAtom(themeAtom);
+  const [, applyTheme] = useAtom(setTheme);
+
   const [thumbStyle, setThumbStyle] = useState({});
+
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleThemeChange = (newTheme: ThemeMode) => {
-    setTheme(newTheme);
-    // Here you would typically call an API to change the theme system-wide
-    // For example: window.api.setTheme(newTheme);
+    setThemeValue(newTheme);
+    applyTheme(newTheme);
+    window.api.setTheme(newTheme);
   };
 
   const setItemRef = (index: number) => (el: HTMLDivElement | null) => {
@@ -95,6 +101,8 @@ export function ThemeSwitcher() {
               }
             }}
             aria-pressed={theme === option.key}
+            // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
+            tabIndex={0}
           >
             {option.icon}
             <span>{option.label}</span>

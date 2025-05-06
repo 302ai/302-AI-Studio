@@ -10,4 +10,11 @@ export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {
   ipcMain.handle(IpcChannel.APP_GET_LANGUAGE, () => {
     return configManager.getLanguage();
   });
+  // Theme
+  ipcMain.handle(IpcChannel.APP_SET_THEME, (_, theme) => {
+    configManager.setTheme(theme);
+  });
+  ipcMain.handle(IpcChannel.APP_GET_THEME, () => {
+    return configManager.getTheme();
+  });
 }

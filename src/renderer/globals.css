@@ -170,9 +170,9 @@
     --input: oklch(0.324 0.01 67.558);
     --ring: oklch(0.541 0.281 293.009);
 
-    --hover-primary: oklch(0.606 0.25 292.717);
+    --hover-primary: rgba(102, 102, 102, 1);
     --hover-primary-fg: oklch(0.985 0.001 106.423);
-    --hover-secondary: oklch(0.606 0.25 292.717);
+    --hover-secondary:rgba(102, 102, 102, 1);
     --hover-secondary-fg: oklch(0.985 0.001 106.423);
 
     --navbar: oklch(0.166 0.006 56.043);
