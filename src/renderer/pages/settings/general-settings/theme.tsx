@@ -77,7 +77,7 @@ export function ThemeSwitcher() {
       <Label>{t("settings.general-settings.theme.label")}</Label>
       <div
         ref={containerRef}
-        className="relative flex h-9 w-[250px] overflow-hidden rounded-[10px] border border-border bg-bg p-1"
+        className="relative flex h-9 w-[280px] overflow-hidden rounded-[10px] border border-border bg-bg p-1"
       >
         <div
           className="absolute h-[25.2px] rounded-[8px] bg-accent transition-all duration-400 ease-out"
