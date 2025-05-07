@@ -5,12 +5,15 @@ import { ThemeMode } from "@renderer/types";
 import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
 import { cn } from "~/src/renderer/lib/utils";
 import { useAtom } from "jotai";
-import { themeAtom, setTheme } from "@renderer/store/settings";
+import {
+  settingsAtom,
+  setTheme,
+} from "~/src/renderer/store/settings/general-settings-store";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation();
 
-  const [theme, setThemeValue] = useAtom(themeAtom);
+  const [settings] = useAtom(settingsAtom);
   const [, applyTheme] = useAtom(setTheme);
 
   const [thumbStyle, setThumbStyle] = useState({});
@@ -19,7 +22,6 @@ export function ThemeSwitcher() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleThemeChange = (newTheme: ThemeMode) => {
-    setThemeValue(newTheme);
     applyTheme(newTheme);
     window.api.setTheme(newTheme);
   };
@@ -51,7 +53,7 @@ export function ThemeSwitcher() {
 
   useEffect(() => {
     const currentIndex = themeOptions.findIndex(
-      (option) => option.key === theme,
+      (option) => option.key === settings.theme,
     );
     if (
       currentIndex === -1 ||
@@ -70,7 +72,7 @@ export function ThemeSwitcher() {
       left: itemRect.left - containerRect.left + "px",
       width: itemRect.width + "px",
     });
-  }, [theme, themeOptions]);
+  }, [settings.theme, themeOptions]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -90,7 +92,7 @@ export function ThemeSwitcher() {
             ref={setItemRef(index)}
             className={cn(
               "relative flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-[8px] text-sm",
-              theme === option.key
+              settings.theme === option.key
                 ? "text-accent-fg"
                 : "text-secondary-fg hover:bg-hover-secondary",
             )}
@@ -100,7 +102,7 @@ export function ThemeSwitcher() {
                 handleThemeChange(option.key as ThemeMode);
               }
             }}
-            aria-pressed={theme === option.key}
+            aria-pressed={settings.theme === option.key}
             // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
             tabIndex={0}
           >

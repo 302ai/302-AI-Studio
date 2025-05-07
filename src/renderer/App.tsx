@@ -3,7 +3,7 @@ import { HomePage } from "./pages/home/homepage";
 import { SettingsPage } from "./pages/settings/settings-page";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { Layout } from "./layout/app-layout";
-import { initializeTheme } from "./store/settings";
+import { initializeTheme } from "./store/settings/general-settings-store";
 import { useEffect } from "react";
 
 export function App() {
