@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { GeneralSettings } from "./general-settings";
 import { ModelSettings } from "./model-settings";
 import { HelpPanel } from "./help";
@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 export function SettingsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const settingTabs = [
     {
@@ -27,6 +28,13 @@ export function SettingsPage() {
     },
   ];
 
+  const selectedTabKey = () => {
+    const currentTab = settingTabs.find((tab) =>
+      location.pathname.includes(tab.name),
+    );
+    return currentTab?.name || settingTabs[0].name;
+  };
+
   const handleTabSelect = (key: React.Key) => {
     const tab = settingTabs.find((tab) => tab.name === key);
     if (tab) {
@@ -41,6 +49,7 @@ export function SettingsPage() {
         orientation="vertical"
         aria-label="Setting Tabs"
         onSelectionChange={handleTabSelect}
+        selectedKey={selectedTabKey()}
       >
         <TabList
           className="w-full border-none"
