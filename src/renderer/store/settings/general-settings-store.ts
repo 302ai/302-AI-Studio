@@ -43,6 +43,8 @@ export const setTheme = atom(null, (_get, set, newTheme: ThemeMode) => {
         : ThemeMode.Light
       : newTheme;
 
+  window.api.setTheme(actualTheme);
+
   if (actualTheme === ThemeMode.Dark) {
     document.documentElement.classList.add("dark");
   } else {
@@ -52,6 +54,8 @@ export const setTheme = atom(null, (_get, set, newTheme: ThemeMode) => {
 
 export const setLanguage = atom(null, (_get, set, newLanguage: string) => {
   set(settingsAtom, (prev) => ({ ...prev, language: newLanguage }));
+
+  window.api.setLanguage(newLanguage);
 });
 
 if (typeof window !== "undefined") {

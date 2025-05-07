@@ -1,14 +1,14 @@
 import { Label } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { ThemeMode } from "@renderer/types";
+import { ThemeMode } from "@types";
 import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
-import { cn } from "~/src/renderer/lib/utils";
+import { cn } from "@renderer/lib/utils";
 import { useAtom } from "jotai";
 import {
   settingsAtom,
   setTheme,
-} from "~/src/renderer/store/settings/general-settings-store";
+} from "@renderer/store/settings/general-settings-store";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation();
@@ -23,7 +23,6 @@ export function ThemeSwitcher() {
 
   const handleThemeChange = (newTheme: ThemeMode) => {
     applyTheme(newTheme);
-    window.api.setTheme(newTheme);
   };
 
   const setItemRef = (index: number) => (el: HTMLDivElement | null) => {

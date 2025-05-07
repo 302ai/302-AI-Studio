@@ -5,7 +5,7 @@ import { is } from "@electron-toolkit/utils";
 import { isLinux, isMac } from "../constant";
 import windowStateKeeper from "electron-window-state";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
-import { configManager } from "../services/config-service";
+import { configService } from "../services/config-service";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -15,7 +15,7 @@ export async function MainWindow() {
     maximize: false,
   });
 
-  const theme = configManager.getTheme();
+  const theme = configService.getTheme();
 
   const window = createWindow({
     id: "home",

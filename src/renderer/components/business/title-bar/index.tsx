@@ -21,7 +21,7 @@ export function BasicTitleBar() {
   const { toggleSidebar, state } = useSidebar();
 
   const handleSettingsClick = () => {
-    navigate("/settings");
+    navigate("/settings/general-settings");
   };
 
   return (

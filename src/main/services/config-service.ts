@@ -49,4 +49,4 @@ export class ConfigService {
   }
 }
 
-export const configManager = new ConfigService();
+export const configService = new ConfigService();

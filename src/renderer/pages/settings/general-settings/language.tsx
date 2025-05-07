@@ -26,7 +26,6 @@ export function LanguageSelector({
     const newLang = key.toString();
     applyLanguage(newLang);
     i18n.changeLanguage(newLang);
-    window.api.setLanguage(newLang);
   };
 
   const currentLang =

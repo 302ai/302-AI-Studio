@@ -1,20 +1,24 @@
 import { IpcChannel } from "@shared/ipc-channel";
 import { type BrowserWindow, ipcMain } from "electron";
-import { configManager } from "./services/config-service";
+import { configService } from "./services/config-service";
+import { windowService } from "./services/window-service";
 
 export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {
   // Language
   ipcMain.handle(IpcChannel.APP_SET_LANGUAGE, (_, lang) => {
-    configManager.setLanguage(lang);
+    configService.setLanguage(lang);
   });
   ipcMain.handle(IpcChannel.APP_GET_LANGUAGE, () => {
-    return configManager.getLanguage();
+    return configService.getLanguage();
   });
   // Theme
   ipcMain.handle(IpcChannel.APP_SET_THEME, (_, theme) => {
-    configManager.setTheme(theme);
+    if (theme === configService.getTheme()) return;
+
+    configService.setTheme(theme);
+    windowService.setTitleBarOverlay(mainWindow, theme);
   });
   ipcMain.handle(IpcChannel.APP_GET_THEME, () => {
-    return configManager.getTheme();
+    return configService.getTheme();
   });
 }
