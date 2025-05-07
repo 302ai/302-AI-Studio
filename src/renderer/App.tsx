@@ -12,11 +12,9 @@ export function App() {
         <HashRouter>
           <Layout>
             <Routes>
-              <Route path="/main">
-                <Route index element={<HomePage />} />
-                <Route path="home" element={<HomePage />} />
-                <Route path="settings/*" element={<SettingsPage />} />
-              </Route>
+              <Route index element={<HomePage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/settings/*" element={<SettingsPage />} />
             </Routes>
           </Layout>
         </HashRouter>
