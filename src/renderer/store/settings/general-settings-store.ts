@@ -1,102 +1,48 @@
-import { atom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { ThemeMode } from "@renderer/types";
 
 const SETTINGS_STORAGE_KEY = "app-settings";
 
-export interface Settings {
+interface SettingsStore {
   theme: ThemeMode;
+  setTheme: (newTheme: ThemeMode) => void;
   language: string;
+  setLanguage: (newLanguage: string) => void;
 }
 
-const defaultSettings: Settings = {
-  theme: ThemeMode.System,
-  language: navigator.language || "en",
-};
+export const useSettingsStore = create<SettingsStore>()(
+  persist(
+    (set) => ({
+      theme: ThemeMode.System,
+      setTheme: (newTheme: ThemeMode) => {
+        set({ theme: newTheme });
 
-export const settingsAtom = atomWithStorage<Settings>(
-  SETTINGS_STORAGE_KEY,
-  defaultSettings
-);
+        const actualTheme =
+          newTheme === ThemeMode.System
+            ? window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? ThemeMode.Dark
+              : ThemeMode.Light
+            : newTheme;
 
-export const actualThemeAtom = atom<ThemeMode.Light | ThemeMode.Dark>((get) => {
-  const settings = get(settingsAtom);
-  const themePreference = settings.theme;
+        window.api.setTheme(actualTheme);
 
-  if (themePreference === ThemeMode.System) {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    return prefersDark ? ThemeMode.Dark : ThemeMode.Light;
-  }
-
-  return themePreference;
-});
-
-export const setTheme = atom(null, (_get, set, newTheme: ThemeMode) => {
-  set(settingsAtom, (prev) => ({ ...prev, theme: newTheme }));
-
-  const actualTheme =
-    newTheme === ThemeMode.System
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? ThemeMode.Dark
-        : ThemeMode.Light
-      : newTheme;
-
-  window.api.setTheme(actualTheme);
-
-  if (actualTheme === ThemeMode.Dark) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-});
-
-export const setLanguage = atom(null, (_get, set, newLanguage: string) => {
-  set(settingsAtom, (prev) => ({ ...prev, language: newLanguage }));
-
-  window.api.setLanguage(newLanguage);
-});
-
-if (typeof window !== "undefined") {
-  const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-  darkModeMediaQuery.addEventListener("change", (e) => {
-    try {
-      const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
-      if (savedSettings) {
-        const settings = JSON.parse(savedSettings) as Settings;
-        if (settings.theme === ThemeMode.System) {
-          if (e.matches) {
-            document.documentElement.classList.add("dark");
-          } else {
-            document.documentElement.classList.remove("dark");
-          }
+        if (actualTheme === ThemeMode.Dark) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
         }
-      }
-    } catch (error) {
-      console.error("Failed to handle theme change:", error);
-    }
-  });
-}
+      },
 
-export const initializeTheme = () => {
-  try {
-    const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings) as Settings;
-
-      if (
-        settings.theme === ThemeMode.Dark ||
-        (settings.theme === ThemeMode.System &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
+      language: navigator.language || "en",
+      setLanguage: (newLanguage: string) => {
+        set({ language: newLanguage });
+        window.api.setLanguage(newLanguage);
+      },
+    }),
+    {
+      name: SETTINGS_STORAGE_KEY,
+      storage: createJSONStorage(() => localStorage),
     }
-  } catch (error) {
-    console.error("Failed to initialize theme:", error);
-  }
-};
+  )
+);

@@ -8,28 +8,23 @@ import {
 import langs from "@renderer/i18n/langs";
 import { Label } from "react-aria-components";
 import { BsGlobe } from "react-icons/bs";
-import { useAtom } from "jotai";
-import {
-  settingsAtom,
-  setLanguage,
-} from "~/src/renderer/store/settings/general-settings-store";
+import { useSettingsStore } from "@renderer/store/settings/general-settings-store";
 
 export function LanguageSelector({
   ...props
 }: React.ComponentProps<typeof Select>) {
   const { t, i18n } = useTranslation();
 
-  const [settings] = useAtom(settingsAtom);
-  const [, applyLanguage] = useAtom(setLanguage);
+  const language = useSettingsStore((state) => state.language);
+  const setLanguage = useSettingsStore((state) => state.setLanguage);
 
   const handleLanguageChange = (key: React.Key) => {
     const newLang = key.toString();
-    applyLanguage(newLang);
+    setLanguage(newLang);
     i18n.changeLanguage(newLang);
   };
 
-  const currentLang =
-    langs.find((lang) => lang.key === settings.language) ?? langs[0];
+  const currentLang = langs.find((lang) => lang.key === language) ?? langs[0];
 
   return (
     <div className="flex flex-col gap-2">

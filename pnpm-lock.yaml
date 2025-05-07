@@ -32,9 +32,6 @@ importers:
       i18next:
         specifier: ^25.0.0
         version: 25.0.1(typescript@5.8.2)
-      jotai:
-        specifier: ^2.12.4
-        version: 2.12.4(@types/react@19.0.10)(react@19.1.0)
       lucide-react:
         specifier: ^0.477.0
         version: 0.477.0(react@19.1.0)
@@ -62,6 +59,9 @@ importers:
       tailwindcss-react-aria-components:
         specifier: ^2.0.0
         version: 2.0.0(tailwindcss@4.1.4)
+      zustand:
+        specifier: ^5.0.4
+        version: 5.0.4(@types/react@19.0.10)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
     devDependencies:
       '@biomejs/biome':
         specifier: 2.0.0-beta.1
@@ -2883,18 +2883,6 @@ packages:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
 
-  jotai@2.12.4:
-    resolution: {integrity: sha512-eFXLJol4oOLM8BS1+QV+XwaYQITG8n1tatBCFl4F5HE3zR5j2WIK8QpMt7VJIYmlogNUZfvB7wjwLoVk+umB9Q==}
-    engines: {node: '>=12.20.0'}
-    peerDependencies:
-      '@types/react': '>=17.0.0'
-      react: '>=17.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react:
-        optional: true
-
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -4149,6 +4137,24 @@ packages:
   zip-stream@4.1.1:
     resolution: {integrity: sha512-9qv4rlDiopXg4E69k+vMHjNN63YFMe9sZMrdlvKnCjlCRWeCBswPPMPUfx+ipsAWq1LXHe70RcbaHdJJpS6hyQ==}
     engines: {node: '>= 10'}
+
+  zustand@5.0.4:
+    resolution: {integrity: sha512-39VFTN5InDtMd28ZhjLyuTnlytDr9HfwO512Ai4I8ZABCoyAj4F1+sr7sD1jP/+p7k77Iko0Pb5NhgBFDCX0kQ==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -7524,11 +7530,6 @@ snapshots:
 
   jiti@2.4.2: {}
 
-  jotai@2.12.4(@types/react@19.0.10)(react@19.1.0):
-    optionalDependencies:
-      '@types/react': 19.0.10
-      react: 19.1.0
-
   js-tokens@4.0.0: {}
 
   js-yaml@4.1.0:
@@ -8929,3 +8930,9 @@ snapshots:
       archiver-utils: 3.0.4
       compress-commons: 4.1.2
       readable-stream: 3.6.2
+
+  zustand@5.0.4(@types/react@19.0.10)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0)):
+    optionalDependencies:
+      '@types/react': 19.0.10
+      react: 19.1.0
+      use-sync-external-store: 1.5.0(react@19.1.0)

@@ -4,17 +4,13 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { ThemeMode } from "@types";
 import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
 import { cn } from "@renderer/lib/utils";
-import { useAtom } from "jotai";
-import {
-  settingsAtom,
-  setTheme,
-} from "@renderer/store/settings/general-settings-store";
+import { useSettingsStore } from "@renderer/store/settings/general-settings-store";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation();
 
-  const [settings] = useAtom(settingsAtom);
-  const [, applyTheme] = useAtom(setTheme);
+  const theme = useSettingsStore((state) => state.theme);
+  const setTheme = useSettingsStore((state) => state.setTheme);
 
   const [thumbStyle, setThumbStyle] = useState({});
 
@@ -22,7 +18,7 @@ export function ThemeSwitcher() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleThemeChange = (newTheme: ThemeMode) => {
-    applyTheme(newTheme);
+    setTheme(newTheme);
   };
 
   const setItemRef = (index: number) => (el: HTMLDivElement | null) => {
@@ -52,7 +48,7 @@ export function ThemeSwitcher() {
 
   useEffect(() => {
     const currentIndex = themeOptions.findIndex(
-      (option) => option.key === settings.theme,
+      (option) => option.key === theme,
     );
     if (
       currentIndex === -1 ||
@@ -71,7 +67,7 @@ export function ThemeSwitcher() {
       left: itemRect.left - containerRect.left + "px",
       width: itemRect.width + "px",
     });
-  }, [settings.theme, themeOptions]);
+  }, [theme, themeOptions]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -91,7 +87,7 @@ export function ThemeSwitcher() {
             ref={setItemRef(index)}
             className={cn(
               "relative z-2 flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-[8px] text-sm",
-              settings.theme === option.key
+              theme === option.key
                 ? "text-accent-fg"
                 : "z-1 text-secondary-fg hover:bg-hover-secondary",
             )}
@@ -101,7 +97,7 @@ export function ThemeSwitcher() {
                 handleThemeChange(option.key as ThemeMode);
               }
             }}
-            aria-pressed={settings.theme === option.key}
+            aria-pressed={theme === option.key}
             // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
             tabIndex={0}
           >
