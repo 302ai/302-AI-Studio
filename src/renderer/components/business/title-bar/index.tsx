@@ -13,15 +13,35 @@ import { useSidebar } from "@renderer/components/ui/sidebar";
 import { cn } from "@renderer/lib/utils";
 import { isMac } from "@renderer/config/constant";
 import { Separator } from "@renderer/components/ui/separator";
+import { BrowserTabs } from "../browser-tab";
+import {
+  useBrowserTabStore,
+  TabType,
+} from "@renderer/store/browser-tab/browser-tab-store";
+import { v4 as uuidv4 } from "uuid";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function BasicTitleBar() {
   const navigate = useNavigate();
   const { toggleSidebar, state } = useSidebar();
+  const { addTab, addSettingsTab } = useBrowserTabStore();
 
   const handleSettingsClick = () => {
     navigate("/settings/general-settings");
+    addSettingsTab();
+  };
+
+  const handleAddNewTab = async () => {
+    const newId = uuidv4();
+    const newTab = {
+      id: newId,
+      title: "New Tab",
+      message: "This is a new tab content",
+      type: TabType.thread,
+    };
+
+    addTab(newTab);
   };
 
   return (
@@ -49,7 +69,12 @@ export function BasicTitleBar() {
             <LuPanelLeftClose className="h-4 w-4" />
           )}
         </Button>
-        <Button intent="plain" size="square-petite" style={noDragRegion}>
+        <Button
+          intent="plain"
+          size="square-petite"
+          style={noDragRegion}
+          onClick={handleAddNewTab}
+        >
           <FaRegSquarePlus className="h-4 w-4" />
         </Button>
       </TitlebarLeft>
@@ -63,7 +88,7 @@ export function BasicTitleBar() {
       />
 
       <TitlebarCenter>
-        <h1>Title</h1>
+        <BrowserTabs />
       </TitlebarCenter>
 
       <TitlebarRight>

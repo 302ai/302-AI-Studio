@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 import { ThemeMode } from "@renderer/types";
 
 const SETTINGS_STORAGE_KEY = "app-settings";
@@ -13,7 +14,7 @@ interface SettingsStore {
 
 export const useSettingsStore = create<SettingsStore>()(
   persist(
-    (set) => ({
+    immer((set) => ({
       theme: ThemeMode.System,
       setTheme: (newTheme: ThemeMode) => {
         set({ theme: newTheme });
@@ -39,7 +40,7 @@ export const useSettingsStore = create<SettingsStore>()(
         set({ language: newLanguage });
         window.api.setLanguage(newLanguage);
       },
-    }),
+    })),
     {
       name: SETTINGS_STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),

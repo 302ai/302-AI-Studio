@@ -18,7 +18,7 @@ export async function MainWindow() {
   const theme = configService.getTheme();
 
   const window = createWindow({
-    id: "home",
+    id: "main",
     x: mainWindowState.x,
     y: mainWindowState.y,
     width: mainWindowState.width,

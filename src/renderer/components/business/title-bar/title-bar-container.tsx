@@ -29,7 +29,7 @@ export function TitlebarLeft({ children, className, ...props }: TitlebarProps) {
   return (
     <div
       className={cn(
-        "flex h-[var(--title-bar-height)] flex-row items-center",
+        "flex h-[var(--title-bar-height)] shrink-0 flex-row items-center",
         className,
       )}
       {...props}
