@@ -1,8 +1,8 @@
 import ElectronStore from "electron-store";
 import { LanguageVarious, ThemeMode } from "@types";
 import { app } from "electron";
-import { locales } from "../utils/locales";
-import { defaultLanguage } from "../constant";
+import { locales } from "@main/utils/locales";
+import { defaultLanguage } from "@main/constant";
 
 enum ConfigKeys {
   Language = "language",

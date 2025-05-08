@@ -1,5 +1,5 @@
 import { ThemeMode } from "@types";
-import { titleBarOverlayLight, titleBarOverlayDark } from "../config";
+import { titleBarOverlayLight, titleBarOverlayDark } from "@main/config";
 import { BrowserWindow } from "electron";
 
 export class WindowService {

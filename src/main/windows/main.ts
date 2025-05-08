@@ -5,7 +5,7 @@ import { is } from "@electron-toolkit/utils";
 import { isLinux, isMac } from "../constant";
 import windowStateKeeper from "electron-window-state";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
-import { configService } from "../services/config-service";
+import { configService } from "@main/services/config-service";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
