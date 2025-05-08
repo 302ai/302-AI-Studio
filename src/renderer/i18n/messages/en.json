@@ -17,6 +17,10 @@
     },
     "model-settings": {
       "name": "Model Settings"
-    }
+    },
+    "tab-title": "Settings"
+  },
+  "thread": {
+    "new-thread-title": "New Conversation"
   }
 }

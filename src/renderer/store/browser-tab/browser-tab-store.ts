@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { nanoid } from "nanoid";
 
 const BROWSER_TAB_STORAGE_KEY = "browser-tab";
 
@@ -23,6 +22,8 @@ interface BrowserTabStore {
   activeTabId: string;
   setActiveTabId: (id: string) => void;
 
+  activeTabHistory: string[];
+
   isLoaded: boolean;
   setIsLoaded: (isLoaded: boolean) => void;
 
@@ -31,7 +32,7 @@ interface BrowserTabStore {
   removeTab: (id: string) => void;
   moveTab: (fromIndex: number, toIndex: number) => void;
 
-  addSettingsTab: () => void;
+  addSettingsTab: (settingsTab: TabItem) => void;
 }
 
 export const useBrowserTabStore = create<BrowserTabStore>()(
@@ -41,7 +42,22 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
       setTabs: (tabs) => set({ tabs }),
 
       activeTabId: "",
-      setActiveTabId: (id) => set({ activeTabId: id }),
+      setActiveTabId: (id) =>
+        set((state) => {
+          if (state.activeTabId && state.activeTabId !== id) {
+            if (state.activeTabHistory.at(-1) !== state.activeTabId) {
+              state.activeTabHistory.push(state.activeTabId);
+            }
+
+            if (state.activeTabHistory.length > 20) {
+              state.activeTabHistory.shift();
+            }
+          }
+          state.activeTabId = id;
+          return state;
+        }),
+
+      activeTabHistory: [],
 
       isLoaded: false,
       setIsLoaded: (isLoaded) => set({ isLoaded }),
@@ -49,6 +65,13 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
       addTab: (tab) =>
         set((state) => {
           state.tabs.push(tab);
+
+          if (state.activeTabId) {
+            if (state.activeTabHistory.at(-1) !== tab.id) {
+              state.activeTabHistory.push(tab.id);
+            }
+          }
+
           state.activeTabId = tab.id;
           return state;
         }),
@@ -69,7 +92,19 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
 
           if (id === state.activeTabId && newTabs.length > 0) {
             state.activeTabId = newTabs[0].id;
+
+            let nextActiveId: string | null = null;
+            while (state.activeTabHistory.length > 0) {
+              const previousId = state.activeTabHistory.pop();
+              if (previousId && newTabs.some((tab) => tab.id === previousId)) {
+                nextActiveId = previousId;
+                break;
+              }
+            }
+
+            state.activeTabId = nextActiveId ?? newTabs[0].id;
           }
+
           return state;
         }),
 
@@ -81,24 +116,26 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
           return state;
         }),
 
-      addSettingsTab: () =>
+      addSettingsTab: (settingsTab) =>
         set((state) => {
           const existingSettingsTab = state.tabs.find(
             (tab) => tab.type === TabType.settings
           );
           if (existingSettingsTab) {
+            if (
+              state.activeTabId &&
+              state.activeTabId !== existingSettingsTab.id
+            ) {
+              if (state.activeTabHistory.at(-1) !== state.activeTabId) {
+                state.activeTabHistory.push(state.activeTabId);
+              }
+            }
             state.activeTabId = existingSettingsTab.id;
             return state;
           }
 
-          const newTab = {
-            id: nanoid(),
-            title: "Settings",
-            message: "",
-            type: TabType.settings,
-          };
-          state.tabs.push(newTab);
-          state.activeTabId = newTab.id;
+          state.tabs.push(settingsTab);
+          state.activeTabId = settingsTab.id;
           return state;
         }),
     })),

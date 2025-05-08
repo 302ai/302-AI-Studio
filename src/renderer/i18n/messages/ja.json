@@ -17,6 +17,10 @@
     },
     "model-settings": {
       "name": "モデル設定"
-    }
+    },
+    "tab-title": "設定"
+  },
+  "thread": {
+    "new-thread-title": "新しい会話"
   }
 }

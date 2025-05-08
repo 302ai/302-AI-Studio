@@ -19,29 +19,33 @@ import {
   TabType,
 } from "@renderer/store/browser-tab/browser-tab-store";
 import { nanoid } from "nanoid";
+import { useTranslation } from "react-i18next";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function BasicTitleBar() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toggleSidebar, state } = useSidebar();
   const { addTab, addSettingsTab } = useBrowserTabStore();
 
   const handleSettingsClick = () => {
     navigate("/settings/general-settings");
-    addSettingsTab();
+    addSettingsTab({
+      id: nanoid(),
+      title: t("settings.tab-title"),
+      message: "",
+      type: TabType.settings,
+    });
   };
 
-  const handleAddNewTab = async () => {
-    const newId = nanoid();
-    const newTab = {
-      id: newId,
-      title: "New Tab",
-      message: "This is a new tab content",
+  const handleAddNewTab = () => {
+    addTab({
+      id: nanoid(),
+      title: t("thread.new-thread-title"),
+      message: "",
       type: TabType.thread,
-    };
-
-    addTab(newTab);
+    });
   };
 
   return (

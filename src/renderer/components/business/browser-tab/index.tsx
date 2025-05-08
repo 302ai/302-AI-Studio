@@ -16,52 +16,27 @@ export function BrowserTabs() {
     tabs,
     activeTabId,
     isLoaded,
-    setTabs,
-    setActiveTabId,
     addTab,
     removeTab,
     moveTab,
+    setActiveTabId,
     setIsLoaded,
   } = useBrowserTabStore();
 
   const navigate = useNavigate();
 
   const [tabWidth, setTabWidth] = useState<number>(200);
+
   const tabsContainerRef = useRef<HTMLDivElement>(null);
 
-  const activeTab = tabs.find((tab) => tab.id === activeTabId);
-
   useEffect(() => {
-    const loadTabsFromDB = async () => {
-      if (!isLoaded) {
-        const defaultTabs = [
-          {
-            id: "1",
-            title: "Google",
-            message: "",
-            type: TabType.thread,
-          },
-          {
-            id: "2",
-            title: "GitHub",
-            message: "",
-            type: TabType.thread,
-          },
-          {
-            id: "3",
-            title: "Vercel",
-            message: "",
-            type: TabType.thread,
-          },
-        ];
-        setTabs(defaultTabs);
-        setActiveTabId("1");
-        setIsLoaded(true);
+    if (!isLoaded) {
+      if (tabs.length > 0 && !activeTabId) {
+        setActiveTabId(tabs[0].id);
       }
-    };
-
-    loadTabsFromDB();
-  }, [isLoaded, setActiveTabId, setIsLoaded, setTabs]);
+      setIsLoaded(true);
+    }
+  }, [isLoaded, tabs, activeTabId, setActiveTabId, setIsLoaded]);
 
   const calculateTabWidth = useCallback(() => {
     if (!tabsContainerRef.current) return;
@@ -83,7 +58,18 @@ export function BrowserTabs() {
     setTabWidth(newTabWidth);
   }, [tabs.length]);
 
-  const handleTabClick = (id: string) => {
+  // useEffect(() => {
+  //   calculateTabWidth();
+  //   window.addEventListener("resize", calculateTabWidth);
+  //   return () => window.removeEventListener("resize", calculateTabWidth);
+  // }, [calculateTabWidth]);
+
+  const handleTabClick = (id: string, type: TabType) => {
+    if (type === TabType.settings) {
+      navigate("/settings/general-settings");
+    } else {
+      navigate("/");
+    }
     setActiveTabId(id);
   };
 
@@ -104,10 +90,10 @@ export function BrowserTabs() {
             index={index}
             title={tab.title}
             isActive={tab.id === activeTabId}
-            onClick={() => handleTabClick(tab.id)}
+            onClick={() => handleTabClick(tab.id, tab.type)}
             onClose={() => handleTabClose(tab.id, tab.type)}
             width={tabWidth}
-            moveTab={() => {}}
+            moveTab={moveTab}
           />
         ))}
       </div>

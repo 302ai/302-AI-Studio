@@ -17,6 +17,10 @@
     },
     "model-settings": {
       "name": "模型设置"
-    }
+    },
+    "tab-title": "设置"
+  },
+  "thread": {
+    "new-thread-title": "新会话"
   }
 }
