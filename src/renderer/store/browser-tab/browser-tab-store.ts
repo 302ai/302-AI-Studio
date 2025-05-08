@@ -33,6 +33,9 @@ interface BrowserTabStore {
   moveTab: (fromIndex: number, toIndex: number) => void;
 
   addSettingsTab: (settingsTab: TabItem) => void;
+
+  draggingTabId: string | null;
+  setDraggingTabId: (id: string | null) => void;
 }
 
 export const useBrowserTabStore = create<BrowserTabStore>()(
@@ -138,6 +141,9 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
           state.activeTabId = settingsTab.id;
           return state;
         }),
+
+      draggingTabId: null,
+      setDraggingTabId: (id) => set({ draggingTabId: id }),
     })),
     {
       name: BROWSER_TAB_STORAGE_KEY,

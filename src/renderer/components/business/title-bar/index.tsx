@@ -49,16 +49,18 @@ export function BasicTitleBar() {
     <TitlebarContainer>
       <TitlebarLeft
         className={cn(
-          "flex flex-row items-center justify-end",
+          "flex flex-row items-center justify-end gap-2 px-2",
           "transition-[width] duration-200 ease-linear",
+          "border border-t-0 border-r-0 border-b-0 border-l-0",
           state === "expanded"
-            ? "w-[var(--sidebar-width)] border-r border-r-border"
+            ? "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
             : isMac
               ? "w-[var(--sidebar-width-dock)]"
               : "w-[var(--sidebar-width-collapsed)]",
         )}
       >
         <Button
+          className="size-8"
           intent="plain"
           size="square-petite"
           style={noDragRegion}
@@ -71,6 +73,7 @@ export function BasicTitleBar() {
           )}
         </Button>
         <Button
+          className="size-8"
           intent="plain"
           size="square-petite"
           style={noDragRegion}
@@ -82,10 +85,7 @@ export function BasicTitleBar() {
 
       <Separator
         orientation="vertical"
-        className={cn(
-          "h-[16.88px] w-[1.53px]",
-          state === "expanded" ? "hidden" : "",
-        )}
+        className={cn("h-[20px] w-[1px]", state === "expanded" ? "hidden" : "")}
       />
 
       <TitlebarCenter>
@@ -94,6 +94,7 @@ export function BasicTitleBar() {
 
       <TitlebarRight>
         <Button
+          className="size-8"
           intent="plain"
           size="square-petite"
           style={noDragRegion}

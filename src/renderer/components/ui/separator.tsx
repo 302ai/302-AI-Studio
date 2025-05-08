@@ -14,6 +14,8 @@ const Separator = ({ className, ...props }: SeparatorProps) => {
       {...props}
       className={twMerge(
         "shrink-0 bg-border forced-colors:bg-[ButtonBorder]",
+        "bg-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)]",
+        "dark:bg-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]",
         props.orientation === "horizontal" ? "h-px w-full" : "w-px",
         className,
       )}

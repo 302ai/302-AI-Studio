@@ -6,6 +6,10 @@ import {
 } from "@renderer/store/browser-tab/browser-tab-store";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { Separator } from "@renderer/components/ui/separator";
+import { cn } from "@renderer/lib/utils";
 
 export type TabItem = {
   id: string;
@@ -50,6 +54,13 @@ export function BrowserTabs() {
     setTabWidth(newTabWidth);
   }, [tabs.length]);
 
+  const handleMoveTab = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      moveTab(dragIndex, hoverIndex);
+    },
+    [moveTab],
+  );
+
   // useEffect(() => {
   //   calculateTabWidth();
   //   window.addEventListener("resize", calculateTabWidth);
@@ -77,26 +88,40 @@ export function BrowserTabs() {
   }, [activeTabId, navigate, tabs]);
 
   return (
-    <div className="flex h-full flex-row">
-      <div ref={tabsContainerRef} className="relative flex flex-1">
-        {tabs.map((tab, index) => (
-          <Tab
-            key={tab.id}
-            id={tab.id}
-            index={index}
-            title={
-              tab.type === TabType.settings
-                ? t("settings.tab-title")
-                : tab.title
-            }
-            isActive={tab.id === activeTabId}
-            onClick={() => setActiveTabId(tab.id)}
-            onClose={() => removeTab(tab.id)}
-            width={tabWidth}
-            moveTab={moveTab}
-          />
-        ))}
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex h-full flex-row px-2">
+        <div ref={tabsContainerRef} className="relative flex flex-1">
+          {tabs.map((tab, index) => (
+            <div key={tab.id} className="flex items-center">
+              {index > 0 && (
+                <Separator
+                  orientation="vertical"
+                  className={cn(
+                    "h-[20px] w-[1px] self-center transition-opacity duration-200",
+                    tabs[index - 1].id === activeTabId || tab.id === activeTabId
+                      ? "opacity-0"
+                      : "opacity-100",
+                  )}
+                />
+              )}
+              <Tab
+                id={tab.id}
+                index={index}
+                title={
+                  tab.type === TabType.settings
+                    ? t("settings.tab-title")
+                    : tab.title
+                }
+                isActive={tab.id === activeTabId}
+                onClick={() => setActiveTabId(tab.id)}
+                onClose={() => removeTab(tab.id)}
+                width={tabWidth}
+                moveTab={handleMoveTab}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </DndProvider>
   );
 }
