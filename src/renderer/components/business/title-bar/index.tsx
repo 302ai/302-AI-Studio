@@ -8,7 +8,6 @@ import {
   TitlebarRight,
   TitlebarContainer,
 } from "@renderer/components/business/title-bar/title-bar-container";
-import { useNavigate } from "react-router-dom";
 import { useSidebar } from "@renderer/components/ui/sidebar";
 import { cn } from "@renderer/lib/utils";
 import { isMac } from "@renderer/config/constant";
@@ -25,12 +24,10 @@ const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function BasicTitleBar() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toggleSidebar, state } = useSidebar();
   const { addTab, addSettingsTab } = useBrowserTabStore();
 
   const handleSettingsClick = () => {
-    navigate("/settings/general-settings");
     addSettingsTab({
       id: nanoid(),
       title: t("settings.tab-title"),

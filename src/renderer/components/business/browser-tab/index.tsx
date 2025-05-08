@@ -16,7 +16,6 @@ export function BrowserTabs() {
     tabs,
     activeTabId,
     isLoaded,
-    addTab,
     removeTab,
     moveTab,
     setActiveTabId,
@@ -28,15 +27,6 @@ export function BrowserTabs() {
   const [tabWidth, setTabWidth] = useState<number>(200);
 
   const tabsContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!isLoaded) {
-      if (tabs.length > 0 && !activeTabId) {
-        setActiveTabId(tabs[0].id);
-      }
-      setIsLoaded(true);
-    }
-  }, [isLoaded, tabs, activeTabId, setActiveTabId, setIsLoaded]);
 
   const calculateTabWidth = useCallback(() => {
     if (!tabsContainerRef.current) return;
@@ -64,21 +54,25 @@ export function BrowserTabs() {
   //   return () => window.removeEventListener("resize", calculateTabWidth);
   // }, [calculateTabWidth]);
 
-  const handleTabClick = (id: string, type: TabType) => {
-    if (type === TabType.settings) {
-      navigate("/settings/general-settings");
-    } else {
-      navigate("/");
+  useEffect(() => {
+    if (!isLoaded) {
+      if (tabs.length > 0 && !activeTabId) {
+        setActiveTabId(tabs[0].id);
+      }
+      setIsLoaded(true);
     }
-    setActiveTabId(id);
-  };
+  }, [isLoaded, tabs, activeTabId, setActiveTabId, setIsLoaded]);
 
-  const handleTabClose = async (id: string, type: TabType) => {
-    if (type === TabType.settings) {
-      navigate("/");
+  useEffect(() => {
+    if (activeTabId) {
+      const tab = tabs.find((tab) => tab.id === activeTabId);
+      if (tab) {
+        navigate(
+          tab.type === TabType.settings ? "/settings/general-settings" : "/",
+        );
+      }
     }
-    removeTab(id);
-  };
+  }, [activeTabId, navigate, tabs]);
 
   return (
     <div className="flex rounded-t-lg bg-gray-200">
@@ -90,8 +84,8 @@ export function BrowserTabs() {
             index={index}
             title={tab.title}
             isActive={tab.id === activeTabId}
-            onClick={() => handleTabClick(tab.id, tab.type)}
-            onClose={() => handleTabClose(tab.id, tab.type)}
+            onClick={() => setActiveTabId(tab.id)}
+            onClose={() => removeTab(tab.id)}
             width={tabWidth}
             moveTab={moveTab}
           />
