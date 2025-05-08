@@ -4,7 +4,12 @@ import { Button } from "@renderer/components/ui/button";
 import { useDrag, useDrop } from "react-dnd";
 import type { Identifier, XYCoord } from "dnd-core";
 import { useRef } from "react";
-import { useBrowserTabStore } from "@renderer/store/browser-tab/browser-tab-store";
+import {
+  TabType,
+  useBrowserTabStore,
+} from "@renderer/store/browser-tab/browser-tab-store";
+import placeholder from "@renderer/assets/images/provider/302ai.png";
+import { Settings2 } from "lucide-react";
 
 /**
  * * The implementation of Drag and Drop Tab is referenced https://react-dnd.github.io/react-dnd/examples/sortable/simple
@@ -14,11 +19,13 @@ interface TabProps {
   id: string;
   index: number;
   title: string;
+  favicon?: string;
   isActive: boolean;
   onClick: () => void;
   onClose: () => void;
   moveTab: (dragIndex: number, hoverIndex: number) => void;
   width: number;
+  type: TabType;
 }
 
 interface DragItem {
@@ -31,11 +38,13 @@ export function Tab({
   id,
   index,
   title,
+  favicon,
   isActive,
   onClick,
   onClose,
   moveTab,
   width,
+  type,
 }: TabProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { draggingTabId, setDraggingTabId, setActiveTabId } =
@@ -144,6 +153,15 @@ export function Tab({
         } as React.CSSProperties
       }
     >
+      {type === TabType.settings ? (
+        <Settings2 className="mr-2 h-4 w-4 flex-shrink-0" />
+      ) : (
+        <img
+          src={favicon || placeholder}
+          alt="favicon"
+          className="mr-2 h-4 w-4 flex-shrink-0"
+        />
+      )}
       <span
         className={cn(
           "truncate text-xs",

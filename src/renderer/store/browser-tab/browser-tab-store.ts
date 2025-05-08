@@ -13,6 +13,7 @@ export type TabItem = {
   title: string;
   message: string;
   type: TabType;
+  favicon?: string;
 };
 
 interface BrowserTabStore {

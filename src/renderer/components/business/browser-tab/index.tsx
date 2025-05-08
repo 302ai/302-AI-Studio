@@ -14,9 +14,12 @@ import { cn } from "@renderer/lib/utils";
 export type TabItem = {
   id: string;
   title: string;
+  favicon?: string;
 };
 
 export function BrowserTabs() {
+  const { t } = useTranslation();
+
   const {
     tabs,
     activeTabId,
@@ -26,7 +29,6 @@ export function BrowserTabs() {
     setActiveTabId,
     setIsLoaded,
   } = useBrowserTabStore();
-  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -47,9 +49,6 @@ export function BrowserTabs() {
     const containerWidth = tabsContainerRef.current.clientWidth;
     const bufferSpace = 10;
     const availableWidth = containerWidth - bufferSpace;
-
-    console.log("containerWidth", containerWidth);
-    console.log("availableWidth", availableWidth);
 
     const minTabWidth = 50;
     const maxTabWidth = 200;
@@ -133,6 +132,8 @@ export function BrowserTabs() {
                 onClose={() => removeTab(tab.id)}
                 width={tabWidth}
                 moveTab={handleMoveTab}
+                favicon={tab.favicon}
+                type={tab.type}
               />
             </div>
           ))}

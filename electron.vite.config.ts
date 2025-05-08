@@ -21,6 +21,17 @@ export default defineConfig({
   main: {
     plugins: [tsconfigPaths, externalizeDepsPlugin()],
 
+    resolve: {
+      alias: {
+        "@": resolve("."),
+        "@lib": resolve("src/lib"),
+        "@main": resolve("src/main"),
+        "@renderer": resolve("src/renderer"),
+        "@shared": resolve("src/shared"),
+        "@types": resolve("src/renderer/types/index.ts"),
+      },
+    },
+
     build: {
       rollupOptions: {
         input: {
@@ -46,6 +57,14 @@ export default defineConfig({
     define: {
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
       "process.platform": JSON.stringify(process.platform),
+    },
+
+    resolve: {
+      alias: {
+        "@renderer": resolve("src/renderer"),
+        "@shared": resolve("src/shared"),
+        "@lib": resolve("src/lib"),
+      },
     },
 
     server: {

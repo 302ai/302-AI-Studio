@@ -19,7 +19,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": [
+      "@/*": [
         "./*"
       ],
       "@lib/*": [
