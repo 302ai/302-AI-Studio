@@ -29,8 +29,10 @@
   },
   "dependencies": {
     "@intentui/icons": "^1.10.33",
+    "better-sqlite3": "^11.9.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.43.1",
     "electron-log": "^5.3.4",
     "electron-router-dom": "^2.1.0",
     "electron-store": "^8.2.0",
@@ -39,6 +41,7 @@
     "immer": "^10.1.1",
     "lucide-react": "^0.477.0",
     "motion": "^12.9.2",
+    "nanoid": "^5.1.5",
     "react": "^19.1.0",
     "react-aria-components": "^1.8.0",
     "react-dom": "^19.1.0",
@@ -46,7 +49,6 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.2.0",
     "tailwindcss-react-aria-components": "^2.0.0",
-    "uuid": "^11.1.0",
     "zustand": "^5.0.4"
   },
   "devDependencies": {
@@ -56,6 +58,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/vite": "^4.1.4",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.13.8",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
@@ -63,6 +66,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "code-inspector-plugin": "^0.20.1",
     "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.31.1",
     "electron": "^35.1.5",
     "electron-builder": "^25.1.8",
     "electron-extension-installer": "^1.2.0",

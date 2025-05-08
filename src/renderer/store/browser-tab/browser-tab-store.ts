@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 const BROWSER_TAB_STORAGE_KEY = "browser-tab";
 
@@ -92,7 +92,7 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
           }
 
           const newTab = {
-            id: uuidv4(),
+            id: nanoid(),
             title: "Settings",
             message: "",
             type: TabType.settings,

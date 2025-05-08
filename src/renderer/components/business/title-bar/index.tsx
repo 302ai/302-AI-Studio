@@ -18,7 +18,7 @@ import {
   useBrowserTabStore,
   TabType,
 } from "@renderer/store/browser-tab/browser-tab-store";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
@@ -33,7 +33,7 @@ export function BasicTitleBar() {
   };
 
   const handleAddNewTab = async () => {
-    const newId = uuidv4();
+    const newId = nanoid();
     const newTab = {
       id: newId,
       title: "New Tab",
