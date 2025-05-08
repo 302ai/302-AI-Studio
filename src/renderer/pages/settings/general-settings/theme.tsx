@@ -89,7 +89,7 @@ export function ThemeSwitcher() {
               "relative z-2 flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-[8px] text-sm",
               theme === option.key
                 ? "text-accent-fg"
-                : "z-1 text-secondary-fg hover:bg-hover-secondary",
+                : "z-1 text-secondary-fg hover:bg-hover-primary",
             )}
             onMouseDown={() => handleThemeChange(option.key as ThemeMode)}
             onKeyDown={(e) => {

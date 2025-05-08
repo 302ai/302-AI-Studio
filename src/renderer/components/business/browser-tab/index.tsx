@@ -5,6 +5,7 @@ import {
   useBrowserTabStore,
 } from "@renderer/store/browser-tab/browser-tab-store";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export type TabItem = {
   id: string;
@@ -21,6 +22,7 @@ export function BrowserTabs() {
     setActiveTabId,
     setIsLoaded,
   } = useBrowserTabStore();
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -75,14 +77,18 @@ export function BrowserTabs() {
   }, [activeTabId, navigate, tabs]);
 
   return (
-    <div className="flex rounded-t-lg bg-gray-200">
+    <div className="flex h-full flex-row">
       <div ref={tabsContainerRef} className="relative flex flex-1">
         {tabs.map((tab, index) => (
           <Tab
             key={tab.id}
             id={tab.id}
             index={index}
-            title={tab.title}
+            title={
+              tab.type === TabType.settings
+                ? t("settings.tab-title")
+                : tab.title
+            }
             isActive={tab.id === activeTabId}
             onClick={() => setActiveTabId(tab.id)}
             onClose={() => removeTab(tab.id)}

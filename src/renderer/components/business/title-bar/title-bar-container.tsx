@@ -47,7 +47,7 @@ export function TitlebarCenter({
   return (
     <div
       className={cn(
-        "flex h-[var(--title-bar-height)] flex-1 items-center font-bold",
+        "flex h-[var(--title-bar-height)] flex-1 items-center",
         isMac ? "px-5" : "px-0",
         className,
       )}

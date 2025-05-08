@@ -39,7 +39,7 @@ const dropdownItemStyles = tv({
       false: "data-danger:text-danger",
       true: [
         "**:data-[slot=icon]:text-accent-fg **:[kbd]:text-accent-fg",
-        "bg-hover-secondary text-hover-secondary-fg forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]",
+        "bg-hover-primary text-hover-primary-fg forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]",
         "data-danger:bg-danger/10 data-danger:text-danger",
         "data-[slot=description]:text-accent-fg data-[slot=label]:text-accent-fg [&_.text-muted-fg]:text-accent-fg/80",
       ],

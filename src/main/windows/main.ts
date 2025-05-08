@@ -9,8 +9,8 @@ import { configService } from "@main/services/config-service";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
-    defaultWidth: 1080,
-    defaultHeight: 670,
+    defaultWidth: 1280,
+    defaultHeight: 910,
     fullScreen: false,
     maximize: false,
   });
