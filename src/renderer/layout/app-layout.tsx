@@ -1,19 +1,22 @@
 import { BasicTitleBar } from "@renderer/components/business/title-bar";
 import { AppSidebar } from "@renderer/components/business/sidebar";
+import { Outlet } from "react-router-dom";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
+// interface LayoutProps {
+//   children: React.ReactNode;
+// }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout() {
   return (
-    <div className="flex h-screen flex-col overflow-hidden">
+    <main className="flex h-screen flex-col overflow-hidden">
       <BasicTitleBar />
       <div className="flex min-h-0 flex-1">
         <AppSidebar>
-          <main className="flex-1">{children}</main>
+          <div className="flex-1">
+            <Outlet />
+          </div>
         </AppSidebar>
       </div>
-    </div>
+    </main>
   );
 }
