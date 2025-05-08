@@ -34,14 +34,24 @@ export function BrowserTabs() {
 
   const tabsContainerRef = useRef<HTMLDivElement>(null);
 
+  const handleMoveTab = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      moveTab(dragIndex, hoverIndex);
+    },
+    [moveTab],
+  );
+
   const calculateTabWidth = useCallback(() => {
     if (!tabsContainerRef.current) return;
 
     const containerWidth = tabsContainerRef.current.clientWidth;
-    const buttonWidth = 80;
-    const availableWidth = containerWidth - buttonWidth;
+    const bufferSpace = 10;
+    const availableWidth = containerWidth - bufferSpace;
 
-    const minTabWidth = 100;
+    console.log("containerWidth", containerWidth);
+    console.log("availableWidth", availableWidth);
+
+    const minTabWidth = 50;
     const maxTabWidth = 200;
 
     const idealWidth = availableWidth / tabs.length;
@@ -54,18 +64,21 @@ export function BrowserTabs() {
     setTabWidth(newTabWidth);
   }, [tabs.length]);
 
-  const handleMoveTab = useCallback(
-    (dragIndex: number, hoverIndex: number) => {
-      moveTab(dragIndex, hoverIndex);
-    },
-    [moveTab],
-  );
+  useEffect(() => {
+    calculateTabWidth();
 
-  // useEffect(() => {
-  //   calculateTabWidth();
-  //   window.addEventListener("resize", calculateTabWidth);
-  //   return () => window.removeEventListener("resize", calculateTabWidth);
-  // }, [calculateTabWidth]);
+    const resizeObserver = new ResizeObserver(() => {
+      calculateTabWidth();
+    });
+
+    if (tabsContainerRef.current) {
+      resizeObserver.observe(tabsContainerRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [calculateTabWidth]);
 
   useEffect(() => {
     if (!isLoaded) {
@@ -89,8 +102,11 @@ export function BrowserTabs() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex h-full flex-row px-2">
-        <div ref={tabsContainerRef} className="relative flex flex-1">
+      <div className="flex size-full flex-row px-2">
+        <div
+          ref={tabsContainerRef}
+          className="relative flex flex-1 overflow-hidden"
+        >
           {tabs.map((tab, index) => (
             <div key={tab.id} className="flex items-center">
               {index > 0 && (

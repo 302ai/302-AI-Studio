@@ -47,7 +47,7 @@ export function TitlebarCenter({
   return (
     <div
       className={cn(
-        "flex h-[var(--title-bar-height)] flex-1 items-center",
+        "flex h-[var(--title-bar-height)] flex-1 items-center overflow-hidden",
         isMac ? "px-5" : "px-0",
         className,
       )}
@@ -66,7 +66,7 @@ export function TitlebarRight({
   return (
     <div
       className={cn(
-        "flex h-[var(--title-bar-height)] items-center justify-end pl-3",
+        "flex h-[var(--title-bar-height)] items-center justify-end",
         isWindows ? "pr-[140px]" : "pr-3",
         className,
       )}

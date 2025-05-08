@@ -124,7 +124,7 @@ export function Tab({
       ref={ref}
       data-handler-id={handlerId}
       className={cn(
-        "group relative mt-[5px] flex h-full cursor-pointer select-none items-center rounded-t-[10px] px-3",
+        "group relative mt-[5px] flex h-full cursor-pointer select-none items-center justify-between rounded-t-[10px] px-3",
         isActive ? "bg-bg" : "bg-transparent hover:bg-hover-primary",
         draggingTabId === id || isDragging ? "opacity-50" : "opacity-100",
       )}
