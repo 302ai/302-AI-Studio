@@ -14,6 +14,7 @@ import {
   SidebarSectionGroup,
 } from "@renderer/components/ui/sidebar";
 import { MoreHorizontal, Pencil, Eraser, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const articles = [
   { label: "How to" },
@@ -28,6 +29,8 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar(props: AppSidebarProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
@@ -47,15 +50,15 @@ export function AppSidebar(props: AppSidebarProps) {
                           <MenuContent offset={0} placement="right top">
                             <MenuItem>
                               <Pencil className="mr-2 h-4 w-4" />
-                              Rename
+                              {t("sidebar.menu-item.rename")}
                             </MenuItem>
                             <MenuItem>
                               <Eraser className="mr-2 h-4 w-4" />
-                              Clean Messages
+                              {t("sidebar.menu-item.clean-messages")}
                             </MenuItem>
                             <MenuItem isDanger={true}>
                               <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
+                              {t("sidebar.menu-item.delete")}
                             </MenuItem>
                           </MenuContent>
                         </Menu>

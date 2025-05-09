@@ -23,6 +23,13 @@
       "name": "工具设置"
     }
   },
+  "sidebar": {
+    "menu-item": {
+      "clean-messages": "清空消息",
+      "delete": "删除",
+      "rename": "重命名"
+    }
+  },
   "thread": {
     "new-thread-title": "新会话"
   }

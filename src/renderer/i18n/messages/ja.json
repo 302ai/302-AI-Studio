@@ -23,6 +23,13 @@
       "name": "ツール設定"
     }
   },
+  "sidebar": {
+    "menu-item": {
+      "clean-messages": "メッセージをクリアします",
+      "delete": "消去",
+      "rename": "名前を変更"
+    }
+  },
   "thread": {
     "new-thread-title": "新しい会話"
   }
