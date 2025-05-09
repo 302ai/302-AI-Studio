@@ -1,5 +1,8 @@
 {
   "settings": {
+    "assistant-settings": {
+      "name": "Assistant Settings"
+    },
     "general-settings": {
       "language": {
         "label": "Language"
@@ -12,13 +15,13 @@
         "system": "OS"
       }
     },
-    "help-panel": {
-      "name": "Help"
-    },
     "model-settings": {
       "name": "Model Settings"
     },
-    "tab-title": "Settings"
+    "tab-title": "Settings",
+    "tool-settings": {
+      "name": "Tool Settings"
+    }
   },
   "thread": {
     "new-thread-title": "New Conversation"

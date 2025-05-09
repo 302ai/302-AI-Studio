@@ -1,5 +1,8 @@
 {
   "settings": {
+    "assistant-settings": {
+      "name": "助手设置"
+    },
     "general-settings": {
       "language": {
         "label": "语言"
@@ -12,13 +15,13 @@
         "system": "系统"
       }
     },
-    "help-panel": {
-      "name": "帮助"
-    },
     "model-settings": {
       "name": "模型设置"
     },
-    "tab-title": "设置"
+    "tab-title": "设置",
+    "tool-settings": {
+      "name": "工具设置"
+    }
   },
   "thread": {
     "new-thread-title": "新会话"
