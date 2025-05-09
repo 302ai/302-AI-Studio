@@ -383,6 +383,7 @@ const SidebarSection = ({
         state === "expanded" && "px-2.5",
         className,
       )}
+      title=""
       {...props}
     >
       {state !== "collapsed" && "title" in props && (

@@ -15,6 +15,7 @@
         "system": "系统"
       }
     },
+    "icon-tooltip": "打开设置",
     "model-settings": {
       "name": "模型设置"
     },

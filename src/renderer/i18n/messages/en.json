@@ -15,6 +15,7 @@
         "system": "OS"
       }
     },
+    "icon-tooltip": "Open Settings",
     "model-settings": {
       "name": "Model Settings"
     },

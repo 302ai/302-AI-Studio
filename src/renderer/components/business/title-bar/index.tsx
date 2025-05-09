@@ -3,6 +3,11 @@ import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { Button } from "@renderer/components/ui/button";
 import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@renderer/components/ui/tooltip";
+import {
   TitlebarLeft,
   TitlebarCenter,
   TitlebarRight,
@@ -95,15 +100,20 @@ export function BasicTitleBar() {
       <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
 
       <TitlebarRight>
-        <Button
-          className="size-8"
-          intent="plain"
-          size="square-petite"
-          style={noDragRegion}
-          onClick={handleSettingsClick}
-        >
-          <FiSettings className="h-4 w-4" />
-        </Button>
+        <Tooltip delay={0}>
+          <TooltipTrigger
+            className="size-8"
+            intent="plain"
+            size="square-petite"
+            style={noDragRegion}
+            onClick={handleSettingsClick}
+          >
+            <FiSettings className="h-4 w-4" />
+          </TooltipTrigger>
+          <TooltipContent showArrow={false} intent="inverse">
+            {t("settings.icon-tooltip")}
+          </TooltipContent>
+        </Tooltip>
       </TitlebarRight>
     </TitlebarContainer>
   );

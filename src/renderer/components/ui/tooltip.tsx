@@ -1,6 +1,5 @@
 import type { TooltipProps as TooltipPrimitiveProps } from "react-aria-components";
 import {
-  Button,
   OverlayArrow,
   Tooltip as TooltipPrimitive,
   TooltipTrigger as TooltipTriggerPrimitive,
@@ -8,6 +7,7 @@ import {
 } from "react-aria-components";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
+import { Button } from "./button";
 
 const tooltipStyles = tv({
   base: [
@@ -91,4 +91,4 @@ Tooltip.Trigger = TooltipTrigger;
 Tooltip.Content = TooltipContent;
 
 export type { TooltipProps, TooltipContentProps };
-export { Tooltip };
+export { Tooltip, TooltipTrigger, TooltipContent };
