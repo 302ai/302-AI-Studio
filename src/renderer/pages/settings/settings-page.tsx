@@ -68,7 +68,7 @@ export function SettingsPage() {
         >
           {(tab) => (
             <Tab className="cursor-pointer" key={tab.name} id={tab.name}>
-              {tab.label}
+              <span className="w-full text-right">{tab.label}</span>
             </Tab>
           )}
         </TabList>
