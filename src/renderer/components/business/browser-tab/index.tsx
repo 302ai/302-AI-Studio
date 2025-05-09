@@ -36,12 +36,18 @@ export function BrowserTabs() {
 
   const tabsContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleMoveTab = useCallback(
-    (dragIndex: number, hoverIndex: number) => {
-      moveTab(dragIndex, hoverIndex);
-    },
-    [moveTab],
-  );
+  const handleMoveTab = (dragIndex: number, hoverIndex: number) => {
+    moveTab(dragIndex, hoverIndex);
+  };
+
+  const handleCloseTab = (id: string) => {
+    removeTab(id);
+
+    const newTabsLength = useBrowserTabStore.getState().tabs.length;
+    if (newTabsLength === 0) {
+      navigate("/");
+    }
+  };
 
   const calculateTabWidth = useCallback(() => {
     if (!tabsContainerRef.current) return;
@@ -127,7 +133,7 @@ export function BrowserTabs() {
               }
               isActive={id === activeTabId}
               onClick={() => setActiveTabId(id)}
-              onClose={() => removeTab(id)}
+              onClose={() => handleCloseTab(id)}
               width={tabWidth}
               moveTab={handleMoveTab}
               favicon={favicon}
