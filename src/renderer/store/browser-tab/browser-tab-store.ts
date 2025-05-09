@@ -53,7 +53,7 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
               state.activeTabHistory.push(state.activeTabId);
             }
 
-            if (state.activeTabHistory.length > 20) {
+            if (state.activeTabHistory.length > 30) {
               state.activeTabHistory.shift();
             }
           }

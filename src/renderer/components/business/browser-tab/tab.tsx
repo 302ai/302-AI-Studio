@@ -126,14 +126,17 @@ export function Tab({
 
   drag(drop(ref));
 
-  const isCompressed = width < 150;
+  const isCompressedOne = width <= 100;
+  const isCompressedTwo = width <= 80;
+  const isCompressedThree = width <= 50;
 
   return (
     <div
       ref={ref}
       data-handler-id={handlerId}
       className={cn(
-        "group relative mt-[5px] flex h-full cursor-pointer select-none items-center justify-between rounded-t-[10px] px-3",
+        "relative mt-[5px] flex h-full cursor-pointer select-none items-center rounded-t-[10px] px-3",
+        isCompressedThree ? "justify-center px-0" : "justify-between px-2",
         isActive ? "bg-bg" : "bg-transparent hover:bg-hover-primary",
         draggingTabId === id || isDragging ? "opacity-50" : "opacity-100",
       )}
@@ -153,31 +156,72 @@ export function Tab({
         } as React.CSSProperties
       }
     >
-      {type === TabType.settings ? (
-        <Settings2 className="mr-2 h-4 w-4 flex-shrink-0" />
+      {isCompressedThree ? (
+        <div className="relative flex items-center justify-center">
+          {!isActive ? (
+            type === TabType.settings ? (
+              <Settings2 className="h-4 w-4 flex-shrink-0" />
+            ) : (
+              <img
+                src={favicon || placeholder}
+                alt="favicon"
+                className="h-4 w-4 flex-shrink-0"
+              />
+            )
+          ) : (
+            <Button
+              className="absolute size-5"
+              intent="plain"
+              size="square-petite"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
       ) : (
-        <img
-          src={favicon || placeholder}
-          alt="favicon"
-          className="mr-2 h-4 w-4 flex-shrink-0"
-        />
+        <>
+          {type === TabType.settings ? (
+            <Settings2
+              className={cn(
+                "h-4 w-4 flex-shrink-0",
+                isCompressedTwo ? "mr-0" : "mr-2",
+              )}
+            />
+          ) : (
+            <img
+              src={favicon || placeholder}
+              alt="favicon"
+              className={cn(
+                "h-4 w-4 flex-shrink-0",
+                isCompressedTwo ? "mr-0" : "mr-2",
+              )}
+            />
+          )}
+          <span
+            className={cn(
+              "truncate text-xs",
+              isCompressedOne ? "flex-shrink" : "flex-1",
+            )}
+          >
+            {title}
+          </span>
+          <Button
+            className={cn(isCompressedTwo ? "size-5" : "size-6")}
+            intent="plain"
+            size="square-petite"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+          >
+            <X className={cn(isCompressedTwo ? "h-3 w-3" : "h-4 w-4")} />
+          </Button>
+        </>
       )}
-      <span
-        className={cn(
-          "truncate text-xs",
-          isCompressed ? "flex-shrink" : "flex-1",
-        )}
-      >
-        {title}
-      </span>
-      <Button
-        className="size-6"
-        intent="plain"
-        size="square-petite"
-        onClick={onClose}
-      >
-        <X className="h-4 w-4" />
-      </Button>
     </div>
   );
 }

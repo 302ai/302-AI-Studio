@@ -38,7 +38,7 @@ export function LanguageSelector({
       >
         <SelectTrigger
           className="h-9 cursor-pointer border-border text-secondary-fg"
-          prefix={<BsGlobe className="mr-1 size-5" />}
+          prefix={<BsGlobe className="mr-1 size-4" />}
         />
         <SelectList className="min-w-32">
           {langs.map((lang) => (

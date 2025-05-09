@@ -47,10 +47,10 @@ export function BrowserTabs() {
     if (!tabsContainerRef.current) return;
 
     const containerWidth = tabsContainerRef.current.clientWidth;
-    const bufferSpace = 10;
+    const bufferSpace = 20;
     const availableWidth = containerWidth - bufferSpace;
 
-    const minTabWidth = 50;
+    const minTabWidth = 32;
     const maxTabWidth = 200;
 
     const idealWidth = availableWidth / tabs.length;
@@ -101,7 +101,7 @@ export function BrowserTabs() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex size-full flex-row px-2">
+      <div className="flex size-full flex-row">
         <div
           ref={tabsContainerRef}
           className="relative flex flex-1 overflow-hidden"
