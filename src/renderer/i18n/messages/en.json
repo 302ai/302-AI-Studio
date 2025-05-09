@@ -1,4 +1,8 @@
 {
+  "chat": {
+    "input-label": "Enter Messages",
+    "input-placeholder": "Just Ask..."
+  },
   "settings": {
     "assistant-settings": {
       "name": "Assistant Settings"
@@ -25,10 +29,19 @@
     }
   },
   "sidebar": {
+    "close-sidebar": {
+      "tooltip": "Close Sidebar"
+    },
     "menu-item": {
       "clean-messages": "Clear Messages",
       "delete": "Delete",
       "rename": "Rename"
+    },
+    "new-thread": {
+      "tooltip": "New Chat"
+    },
+    "open-sidebar": {
+      "tooltip": "Open Sidebar"
     }
   },
   "thread": {

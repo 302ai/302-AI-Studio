@@ -1,4 +1,8 @@
 {
+  "chat": {
+    "input-label": "メッセージを入力します",
+    "input-placeholder": "気軽に聞く..."
+  },
   "settings": {
     "assistant-settings": {
       "name": "助手設定"
@@ -25,10 +29,19 @@
     }
   },
   "sidebar": {
+    "close-sidebar": {
+      "tooltip": "サイドバーを閉じる"
+    },
     "menu-item": {
       "clean-messages": "メッセージをクリアします",
       "delete": "消去",
       "rename": "名前を変更"
+    },
+    "new-thread": {
+      "tooltip": "新しいチャット"
+    },
+    "open-sidebar": {
+      "tooltip": "サイドバーを開く"
     }
   },
   "thread": {

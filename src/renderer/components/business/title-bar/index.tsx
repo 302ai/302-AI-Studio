@@ -1,7 +1,6 @@
 import { FiSettings } from "react-icons/fi";
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { FaRegSquarePlus } from "react-icons/fa6";
-import { Button } from "@renderer/components/ui/button";
 import {
   Tooltip,
   TooltipTrigger,
@@ -31,6 +30,8 @@ export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
   const { addTab, addSettingsTab } = useBrowserTabStore();
+
+  const isSidebarCollapsed = state === "collapsed";
 
   const handleSettingsClick = () => {
     addSettingsTab({
@@ -64,28 +65,42 @@ export function BasicTitleBar() {
               : "w-[var(--sidebar-width-collapsed)]",
         )}
       >
-        <Button
-          className="size-8"
-          intent="plain"
-          size="square-petite"
-          style={noDragRegion}
-          onClick={toggleSidebar}
-        >
-          {state === "collapsed" ? (
-            <LuPanelLeftOpen className="h-4 w-4" />
-          ) : (
-            <LuPanelLeftClose className="h-4 w-4" />
-          )}
-        </Button>
-        <Button
-          className="size-8"
-          intent="plain"
-          size="square-petite"
-          style={noDragRegion}
-          onClick={handleAddNewTab}
-        >
-          <FaRegSquarePlus className="h-4 w-4" />
-        </Button>
+        <Tooltip delay={0}>
+          <TooltipTrigger
+            className="size-8"
+            intent="plain"
+            size="square-petite"
+            style={noDragRegion}
+            onClick={toggleSidebar}
+          >
+            <LuPanelLeftOpen
+              className={cn("h-4 w-4", !isSidebarCollapsed && "hidden")}
+            />
+            <LuPanelLeftClose
+              className={cn("h-4 w-4", isSidebarCollapsed && "hidden")}
+            />
+          </TooltipTrigger>
+          <TooltipContent showArrow={false} intent="inverse">
+            {isSidebarCollapsed
+              ? t("sidebar.open-sidebar.tooltip")
+              : t("sidebar.close-sidebar.tooltip")}
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip delay={0}>
+          <TooltipTrigger
+            className="size-8"
+            intent="plain"
+            size="square-petite"
+            style={noDragRegion}
+            onClick={handleAddNewTab}
+          >
+            <FaRegSquarePlus className="h-4 w-4" />
+          </TooltipTrigger>
+          <TooltipContent showArrow={false} intent="inverse">
+            {t("sidebar.new-thread.tooltip")}
+          </TooltipContent>
+        </Tooltip>
       </TitlebarLeft>
 
       <Separator

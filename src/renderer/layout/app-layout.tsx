@@ -10,9 +10,9 @@ export function Layout() {
   return (
     <main className="flex h-screen flex-col overflow-hidden">
       <BasicTitleBar />
-      <div className="flex min-h-0 flex-1">
+      <div className="flex flex-1">
         <AppSidebar>
-          <div className="flex-1">
+          <div className="size-full">
             <Outlet />
           </div>
         </AppSidebar>

@@ -25,6 +25,7 @@ interface TextareaProps extends TextFieldPrimitiveProps {
   description?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
   className?: string;
+  resize?: "none" | "vertical" | "horizontal" | "both";
 }
 
 const Textarea = ({
@@ -33,6 +34,7 @@ const Textarea = ({
   label,
   description,
   errorMessage,
+  resize = "vertical",
   ...props
 }: TextareaProps) => {
   return (
@@ -52,6 +54,7 @@ const Textarea = ({
             className,
           }),
         )}
+        style={{ resize: resize }}
       />
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>

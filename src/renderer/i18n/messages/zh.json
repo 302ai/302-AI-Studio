@@ -1,4 +1,8 @@
 {
+  "chat": {
+    "input-label": "输入消息",
+    "input-placeholder": "随便问问..."
+  },
   "settings": {
     "assistant-settings": {
       "name": "助手设置"
@@ -25,10 +29,19 @@
     }
   },
   "sidebar": {
+    "close-sidebar": {
+      "tooltip": "关闭边栏"
+    },
     "menu-item": {
       "clean-messages": "清空消息",
       "delete": "删除",
       "rename": "重命名"
+    },
+    "new-thread": {
+      "tooltip": "新聊天"
+    },
+    "open-sidebar": {
+      "tooltip": "打开边栏"
     }
   },
   "thread": {
