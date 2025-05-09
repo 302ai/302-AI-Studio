@@ -92,7 +92,7 @@ export function BasicTitleBar() {
         <BrowserTabs />
       </TitlebarCenter>
 
-      <Separator orientation="vertical" className="h-[20px] w-[1px]" />
+      <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
 
       <TitlebarRight>
         <Button

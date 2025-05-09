@@ -101,43 +101,40 @@ export function BrowserTabs() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex size-full flex-row">
-        <div
-          ref={tabsContainerRef}
-          className="relative flex flex-1 overflow-hidden"
-        >
-          {tabs.map((tab, index) => (
-            <div key={tab.id} className="flex items-center">
-              {index > 0 && (
-                <Separator
-                  orientation="vertical"
-                  className={cn(
-                    "h-[20px] w-[1px] self-center transition-opacity duration-200",
-                    tabs[index - 1].id === activeTabId || tab.id === activeTabId
-                      ? "opacity-0"
-                      : "opacity-100",
-                  )}
-                />
+      <div
+        className="flex h-full flex-1 flex-row overflow-hidden"
+        ref={tabsContainerRef}
+      >
+        {tabs.map(({ id, title, favicon, type }, index) => (
+          <div key={id} className="flex items-center">
+            <Separator
+              orientation="vertical"
+              className={cn(
+                "h-[20px] w-[1px] self-center transition-opacity duration-200",
+                index === 0 ||
+                  tabs[index - 1].id === activeTabId ||
+                  id === activeTabId
+                  ? "opacity-0"
+                  : "opacity-100",
               )}
-              <Tab
-                id={tab.id}
-                index={index}
-                title={
-                  tab.type === TabType.settings
-                    ? t("settings.tab-title")
-                    : tab.title
-                }
-                isActive={tab.id === activeTabId}
-                onClick={() => setActiveTabId(tab.id)}
-                onClose={() => removeTab(tab.id)}
-                width={tabWidth}
-                moveTab={handleMoveTab}
-                favicon={tab.favicon}
-                type={tab.type}
-              />
-            </div>
-          ))}
-        </div>
+            />
+
+            <Tab
+              id={id}
+              index={index}
+              title={
+                type === TabType.settings ? t("settings.tab-title") : title
+              }
+              isActive={id === activeTabId}
+              onClick={() => setActiveTabId(id)}
+              onClose={() => removeTab(id)}
+              width={tabWidth}
+              moveTab={handleMoveTab}
+              favicon={favicon}
+              type={type}
+            />
+          </div>
+        ))}
       </div>
     </DndProvider>
   );
