@@ -20,7 +20,7 @@ import { BrowserTabs } from "../browser-tab";
 import {
   useBrowserTabStore,
   TabType,
-} from "@renderer/store/browser-tab/browser-tab-store";
+} from "@/src/renderer/store/browser-tab-store";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 

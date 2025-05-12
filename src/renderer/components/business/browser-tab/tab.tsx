@@ -7,7 +7,7 @@ import { useRef } from "react";
 import {
   TabType,
   useBrowserTabStore,
-} from "@renderer/store/browser-tab/browser-tab-store";
+} from "@/src/renderer/store/browser-tab-store";
 import placeholder from "@renderer/assets/images/provider/302ai.png";
 import { Settings2 } from "lucide-react";
 

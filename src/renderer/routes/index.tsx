@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
-import { HomePage } from "../pages/home/homepage";
-import { SettingsPage } from "../pages/settings/settings-page";
+import { HomePage } from "../pages/homepage";
+import { SettingsPage } from "../pages/settings-page";
 import { Layout } from "../layout/app-layout";
 import { Router } from "@lib/electron-router-dom";
 

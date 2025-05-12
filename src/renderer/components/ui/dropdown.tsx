@@ -33,7 +33,7 @@ const dropdownItemStyles = tv({
       true: "text-muted-fg forced-colors:text-[GrayText]",
     },
     isSelected: {
-      true: "text-accent-fg hover:bg-bg hover:text-accent-fg",
+      true: "text-accent-fg hover:bg-transparent hover:text-accent-fg",
     },
     isHovered: {
       false: "data-danger:text-danger",

@@ -3,7 +3,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@renderer/components/ui/tooltip";
-import { IconPaperclip3 } from "@intentui/icons";
+import { Paperclip } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function AttachmentUploader() {
@@ -17,7 +17,7 @@ export function AttachmentUploader() {
         size="square-petite"
         onClick={() => {}}
       >
-        <IconPaperclip3 className="h-4 w-4" />
+        <Paperclip className="size-4" />
       </TooltipTrigger>
       <TooltipContent>
         <span>{t("chat.tool-bar.attach-file")}</span>

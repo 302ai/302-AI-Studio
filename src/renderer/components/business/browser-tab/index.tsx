@@ -3,7 +3,7 @@ import { Tab } from "./tab";
 import {
   TabType,
   useBrowserTabStore,
-} from "@renderer/store/browser-tab/browser-tab-store";
+} from "@/src/renderer/store/browser-tab-store";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { DndProvider } from "react-dnd";
