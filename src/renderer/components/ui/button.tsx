@@ -45,7 +45,7 @@ const buttonStyles = tv({
       "square-petite": "size-9 shrink-0",
     },
     shape: {
-      square: "rounded-lg",
+      square: "rounded-[10px]",
       circle: "rounded-full",
     },
     isDisabled: {

@@ -3,7 +3,7 @@ import type {
   DialogTriggerProps,
   ModalOverlayProps,
   PopoverProps as PopoverPrimitiveProps,
-} from 'react-aria-components'
+} from "react-aria-components";
 import {
   DialogTrigger,
   OverlayArrow,
@@ -11,85 +11,85 @@ import {
   Popover as PopoverPrimitive,
   composeRenderProps,
   useSlottedContext,
-} from 'react-aria-components'
-import { tv } from 'tailwind-variants'
-import { twMerge } from 'tailwind-merge'
+} from "react-aria-components";
+import { tv } from "tailwind-variants";
+import { twMerge } from "tailwind-merge";
 import type {
   DialogBodyProps,
   DialogFooterProps,
   DialogHeaderProps,
   DialogTitleProps,
-} from './dialog'
-import { Dialog } from './dialog'
+} from "./dialog";
+import { Dialog } from "./dialog";
 
-type PopoverProps = DialogTriggerProps
+type PopoverProps = DialogTriggerProps;
 const Popover = (props: PopoverProps) => {
-  return <DialogTrigger {...props} />
-}
+  return <DialogTrigger {...props} />;
+};
 
 const PopoverTitle = ({ level = 2, className, ...props }: DialogTitleProps) => (
   <Dialog.Title
     className={twMerge(
-      'sm:leading-none',
-      level === 2 && 'sm:text-lg',
-      className
+      "sm:leading-none",
+      level === 2 && "sm:text-lg",
+      className,
     )}
     {...props}
   />
-)
+);
 
 const PopoverHeader = ({ className, ...props }: DialogHeaderProps) => (
-  <Dialog.Header className={twMerge('sm:p-4', className)} {...props} />
-)
+  <Dialog.Header className={twMerge("sm:p-4", className)} {...props} />
+);
 
 const PopoverFooter = ({ className, ...props }: DialogFooterProps) => (
-  <Dialog.Footer className={twMerge('sm:p-4', className)} {...props} />
-)
+  <Dialog.Footer className={twMerge("sm:p-4", className)} {...props} />
+);
 
 const PopoverBody = ({ className, ref, ...props }: DialogBodyProps) => (
   <Dialog.Body
     ref={ref}
-    className={twMerge('sm:px-4 sm:pt-0', className)}
+    className={twMerge("sm:px-4 sm:pt-0", className)}
     {...props}
   />
-)
+);
 
 const content = tv({
   base: [
-    'peer/popover-content max-w-xs rounded-xl border bg-overlay bg-clip-padding text-overlay-fg shadow-xs transition-transform [scrollbar-width:thin] sm:max-w-3xl sm:text-sm dark:backdrop-saturate-200 forced-colors:bg-[Canvas] [&::-webkit-scrollbar]:size-0.5',
+    "peer/popover-content max-w-xs rounded-xl border bg-overlay bg-clip-padding text-overlay-fg shadow-xs transition-transform [scrollbar-width:thin] sm:max-w-3xl sm:text-sm dark:backdrop-saturate-200 forced-colors:bg-[Canvas] [&::-webkit-scrollbar]:size-0.5",
   ],
   variants: {
     isPicker: {
-      true: 'max-h-72 min-w-(--trigger-width) overflow-y-auto',
-      false: 'min-w-80',
+      true: "max-h-72 min-w-(--trigger-width) overflow-y-auto",
+      false: "min-w-80",
     },
     isMenu: {
-      true: '',
+      true: "",
     },
     isEntering: {
       true: [
-        'fade-in animate-in duration-150 ease-out',
-        'data-[placement=left]:slide-in-from-right-1 data-[placement=right]:slide-in-from-left-1 data-[placement=top]:slide-in-from-bottom-1 data-[placement=bottom]:slide-in-from-top-1',
+        "fade-in animate-in duration-150 ease-out",
+        "data-[placement=left]:slide-in-from-right-1 data-[placement=right]:slide-in-from-left-1 data-[placement=top]:slide-in-from-bottom-1 data-[placement=bottom]:slide-in-from-top-1",
       ],
     },
     isExiting: {
       true: [
-        'fade-out animate-out duration-100 ease-in',
-        'data-[placement=left]:slide-out-to-right-1 data-[placement=right]:slide-out-to-left-1 data-[placement=top]:slide-out-to-bottom-1 data-[placement=bottom]:slide-out-to-top-1',
+        "fade-out animate-out duration-100 ease-in",
+        "data-[placement=left]:slide-out-to-right-1 data-[placement=right]:slide-out-to-left-1 data-[placement=top]:slide-out-to-bottom-1 data-[placement=bottom]:slide-out-to-top-1",
       ],
     },
   },
-})
+});
 
 interface PopoverContentProps
-  extends Omit<PopoverPrimitiveProps, 'children' | 'className'>,
-    Omit<ModalOverlayProps, 'className'>,
-    Pick<DialogProps, 'aria-label' | 'aria-labelledby'> {
-  children: React.ReactNode
-  showArrow?: boolean
-  style?: React.CSSProperties
-  respectScreen?: boolean
-  className?: string | ((values: { defaultClassName?: string }) => string)
+  extends Omit<PopoverPrimitiveProps, "children" | "className">,
+    Omit<ModalOverlayProps, "className">,
+    Pick<DialogProps, "aria-label" | "aria-labelledby"> {
+  children: React.ReactNode;
+  showArrow?: boolean;
+  style?: React.CSSProperties;
+  respectScreen?: boolean;
+  className?: string | ((values: { defaultClassName?: string }) => string);
 }
 
 const PopoverContent = ({
@@ -99,11 +99,11 @@ const PopoverContent = ({
   className,
   ...props
 }: PopoverContentProps) => {
-  const popoverContext = useSlottedContext(PopoverContext)
-  const isSubmenuTrigger = popoverContext?.trigger === 'SubmenuTrigger'
-  const isComboBoxTrigger = popoverContext?.trigger === 'ComboBox'
-  const offset = showArrow ? 12 : 8
-  const effectiveOffset = isSubmenuTrigger ? offset - 5 : offset
+  const popoverContext = useSlottedContext(PopoverContext);
+  const isSubmenuTrigger = popoverContext?.trigger === "SubmenuTrigger";
+  const isComboBoxTrigger = popoverContext?.trigger === "ComboBox";
+  const offset = showArrow ? 12 : 8;
+  const effectiveOffset = isSubmenuTrigger ? offset - 5 : offset;
   return (
     <PopoverPrimitive
       offset={effectiveOffset}
@@ -111,7 +111,7 @@ const PopoverContent = ({
         content({
           ...renderProps,
           className,
-        })
+        }),
       )}
       {...props}
     >
@@ -130,29 +130,28 @@ const PopoverContent = ({
         </OverlayArrow>
       )}
       {!isComboBoxTrigger ? (
-        // biome-ignore lint/a11y/useSemanticElements: <explanation>
-        <Dialog role="dialog" aria-label={props['aria-label'] ?? 'List item'}>
+        <Dialog role="dialog" aria-label={props["aria-label"] ?? "List item"}>
           {children}
         </Dialog>
       ) : (
         children
       )}
     </PopoverPrimitive>
-  )
-}
+  );
+};
 
-const PopoverTrigger = Dialog.Trigger
-const PopoverClose = Dialog.Close
-const PopoverDescription = Dialog.Description
+const PopoverTrigger = Dialog.Trigger;
+const PopoverClose = Dialog.Close;
+const PopoverDescription = Dialog.Description;
 
-Popover.Trigger = PopoverTrigger
-Popover.Close = PopoverClose
-Popover.Description = PopoverDescription
-Popover.Content = PopoverContent
-Popover.Body = PopoverBody
-Popover.Footer = PopoverFooter
-Popover.Header = PopoverHeader
-Popover.Title = PopoverTitle
+Popover.Trigger = PopoverTrigger;
+Popover.Close = PopoverClose;
+Popover.Description = PopoverDescription;
+Popover.Content = PopoverContent;
+Popover.Body = PopoverBody;
+Popover.Footer = PopoverFooter;
+Popover.Header = PopoverHeader;
+Popover.Title = PopoverTitle;
 
-export type { PopoverProps, PopoverContentProps }
-export { Popover, PopoverContent }
+export type { PopoverProps, PopoverContentProps };
+export { Popover, PopoverContent };
