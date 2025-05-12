@@ -28,7 +28,7 @@ export function ChatInput({ className }: ChatInputProps) {
         resize="none"
       />
 
-      <ToolBar />
+      <ToolBar className="mb-2" />
     </div>
   );
 }
