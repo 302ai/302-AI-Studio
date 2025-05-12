@@ -6,7 +6,7 @@ import {
   ReactNode,
 } from "react";
 import { ThemeMode } from "@renderer/types";
-import { useSettingsStore } from "@renderer/store/settings";
+import { useSettingsStore } from "@/src/renderer/store/settings-store";
 
 type ThemeContextType = {
   theme: ThemeMode;
