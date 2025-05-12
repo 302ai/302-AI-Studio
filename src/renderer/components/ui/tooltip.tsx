@@ -39,7 +39,9 @@ const tooltipStyles = tv({
 });
 
 type TooltipProps = React.ComponentProps<typeof TooltipTriggerPrimitive>;
-const Tooltip = (props: TooltipProps) => <TooltipTriggerPrimitive {...props} />;
+const Tooltip = (props: TooltipProps) => (
+  <TooltipTriggerPrimitive {...props} delay={props.delay ?? 300} />
+);
 
 interface TooltipContentProps
   extends Omit<TooltipPrimitiveProps, "children">,
@@ -50,8 +52,8 @@ interface TooltipContentProps
 
 const TooltipContent = ({
   offset = 10,
-  showArrow = true,
-  intent = "default",
+  showArrow = false,
+  intent = "inverse",
   children,
   ...props
 }: TooltipContentProps) => {

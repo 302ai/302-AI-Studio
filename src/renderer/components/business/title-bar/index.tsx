@@ -65,7 +65,7 @@ export function BasicTitleBar() {
               : "w-[var(--sidebar-width-collapsed)]",
         )}
       >
-        <Tooltip delay={300}>
+        <Tooltip>
           <TooltipTrigger
             className="size-8"
             intent="plain"
@@ -80,14 +80,14 @@ export function BasicTitleBar() {
               className={cn("h-4 w-4", isSidebarCollapsed && "hidden")}
             />
           </TooltipTrigger>
-          <TooltipContent showArrow={false} intent="inverse">
+          <TooltipContent>
             {isSidebarCollapsed
               ? t("sidebar.open-sidebar.tooltip")
               : t("sidebar.close-sidebar.tooltip")}
           </TooltipContent>
         </Tooltip>
 
-        <Tooltip delay={300}>
+        <Tooltip>
           <TooltipTrigger
             className="size-8"
             intent="plain"
@@ -97,9 +97,7 @@ export function BasicTitleBar() {
           >
             <FaRegSquarePlus className="h-4 w-4" />
           </TooltipTrigger>
-          <TooltipContent showArrow={false} intent="inverse">
-            {t("sidebar.new-thread.tooltip")}
-          </TooltipContent>
+          <TooltipContent>{t("sidebar.new-thread.tooltip")}</TooltipContent>
         </Tooltip>
       </TitlebarLeft>
 
@@ -115,7 +113,7 @@ export function BasicTitleBar() {
       <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
 
       <TitlebarRight>
-        <Tooltip delay={300}>
+        <Tooltip>
           <TooltipTrigger
             className="size-8"
             intent="plain"
@@ -125,9 +123,7 @@ export function BasicTitleBar() {
           >
             <FiSettings className="h-4 w-4" />
           </TooltipTrigger>
-          <TooltipContent showArrow={false} intent="inverse">
-            {t("settings.icon-tooltip")}
-          </TooltipContent>
+          <TooltipContent>{t("settings.icon-tooltip")}</TooltipContent>
         </Tooltip>
       </TitlebarRight>
     </TitlebarContainer>
