@@ -8,7 +8,7 @@ import {
 import langs from "@renderer/i18n/langs";
 import { Label } from "react-aria-components";
 import { BsGlobe } from "react-icons/bs";
-import { useSettingsStore } from "@renderer/store/settings/general-settings-store";
+import { useSettingsStore } from "@renderer/store/settings";
 
 export function LanguageSelector({
   ...props

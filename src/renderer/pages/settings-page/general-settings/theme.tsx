@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { ThemeMode } from "@types";
 import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
 import { cn } from "@renderer/lib/utils";
-import { useSettingsStore } from "@renderer/store/settings/general-settings-store";
+import { useSettingsStore } from "@renderer/store/settings";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation();
