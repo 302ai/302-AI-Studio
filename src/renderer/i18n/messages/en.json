@@ -1,7 +1,10 @@
 {
   "chat": {
     "input-label": "Enter Messages",
-    "input-placeholder": "Just Ask..."
+    "input-placeholder": "Just Ask...",
+    "tool-bar": {
+      "attach-file": "Upload Attachments"
+    }
   },
   "settings": {
     "assistant-settings": {

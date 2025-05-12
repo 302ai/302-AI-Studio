@@ -1,7 +1,10 @@
 {
   "chat": {
     "input-label": "メッセージを入力します",
-    "input-placeholder": "気軽に聞く..."
+    "input-placeholder": "気軽に聞く...",
+    "tool-bar": {
+      "attach-file": "添付ファイルのアップロード"
+    }
   },
   "settings": {
     "assistant-settings": {

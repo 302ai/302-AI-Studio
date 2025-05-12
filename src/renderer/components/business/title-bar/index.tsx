@@ -65,7 +65,7 @@ export function BasicTitleBar() {
               : "w-[var(--sidebar-width-collapsed)]",
         )}
       >
-        <Tooltip delay={0}>
+        <Tooltip delay={300}>
           <TooltipTrigger
             className="size-8"
             intent="plain"
@@ -87,7 +87,7 @@ export function BasicTitleBar() {
           </TooltipContent>
         </Tooltip>
 
-        <Tooltip delay={0}>
+        <Tooltip delay={300}>
           <TooltipTrigger
             className="size-8"
             intent="plain"
@@ -115,7 +115,7 @@ export function BasicTitleBar() {
       <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
 
       <TitlebarRight>
-        <Tooltip delay={0}>
+        <Tooltip delay={300}>
           <TooltipTrigger
             className="size-8"
             intent="plain"

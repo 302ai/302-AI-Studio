@@ -1,7 +1,10 @@
 {
   "chat": {
     "input-label": "输入消息",
-    "input-placeholder": "随便问问..."
+    "input-placeholder": "随便问问...",
+    "tool-bar": {
+      "attach-file": "上传附件"
+    }
   },
   "settings": {
     "assistant-settings": {

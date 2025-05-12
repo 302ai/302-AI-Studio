@@ -15,7 +15,7 @@ import { Description, FieldError, Label } from "./field";
 
 const textareaStyles = tv({
   extend: focusStyles,
-  base: "field-sizing-content max-h-96 min-h-16 w-full min-w-0 rounded-lg border border-input px-2.5 py-2 text-base shadow-xs outline-hidden transition duration-200 disabled:opacity-50 sm:text-sm",
+  base: "field-sizing-content max-h-96 min-h-16 w-full min-w-0 border border-input px-2.5 py-2 text-base shadow-xs outline-hidden transition duration-200 disabled:opacity-50 sm:text-sm",
 });
 
 interface TextareaProps extends TextFieldPrimitiveProps {
