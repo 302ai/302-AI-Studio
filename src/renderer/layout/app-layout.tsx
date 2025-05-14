@@ -1,5 +1,5 @@
 import { BasicTitleBar } from "@renderer/components/business/title-bar";
-import { AppSidebar } from "@renderer/components/business/sidebar";
+import { AppSidebar } from "@/src/renderer/components/business/sidebar";
 import { Outlet } from "react-router-dom";
 
 // interface LayoutProps {

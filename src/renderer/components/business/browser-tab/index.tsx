@@ -63,7 +63,7 @@ export function BrowserTabs() {
 
     const newTabWidth = Math.max(
       minTabWidth,
-      Math.min(maxTabWidth, idealWidth),
+      Math.min(maxTabWidth, idealWidth)
     );
 
     setTabWidth(newTabWidth);
@@ -99,7 +99,7 @@ export function BrowserTabs() {
       const tab = tabs.find((tab) => tab.id === activeTabId);
       if (tab) {
         navigate(
-          tab.type === TabType.settings ? "/settings/general-settings" : "/",
+          tab.type === TabType.settings ? "/settings/general-settings" : "/"
         );
       }
     }
@@ -121,7 +121,7 @@ export function BrowserTabs() {
                   tabs[index - 1].id === activeTabId ||
                   id === activeTabId
                   ? "opacity-0"
-                  : "opacity-100",
+                  : "opacity-100"
               )}
             />
 

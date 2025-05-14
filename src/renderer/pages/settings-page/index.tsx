@@ -35,12 +35,12 @@ export function SettingsPage() {
         label: t("settings.assistant-settings.name"),
       },
     ],
-    [t],
+    [t]
   );
 
   const selectedTabKey = () => {
     const currentTab = settingTabs.find((tab) =>
-      location.pathname.includes(tab.name),
+      location.pathname.includes(tab.name)
     );
     return currentTab?.name || settingTabs[0].name;
   };

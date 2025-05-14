@@ -1,10 +1,8 @@
 import { app, BrowserWindow } from "electron";
-
 import {
   installExtension,
   REACT_DEVELOPER_TOOLS,
 } from "electron-extension-installer";
-
 import { ignoreConsoleWarnings } from "../../utils/ignore-console-warnings";
 import { PLATFORM, ENVIRONMENT } from "@shared/constants";
 import { makeAppId } from "@shared/utils";

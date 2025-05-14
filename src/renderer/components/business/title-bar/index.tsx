@@ -61,8 +61,8 @@ export function BasicTitleBar() {
           state === "expanded"
             ? "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
             : isMac
-              ? "w-[var(--sidebar-width-dock)]"
-              : "w-[var(--sidebar-width-collapsed)]",
+            ? "w-[var(--sidebar-width-dock)]"
+            : "w-[var(--sidebar-width-collapsed)]"
         )}
       >
         <Tooltip>

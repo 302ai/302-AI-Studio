@@ -138,7 +138,7 @@ export function Tab({
         "relative mt-[5px] flex h-full cursor-pointer select-none items-center rounded-t-[10px] px-3",
         isCompressedThree ? "justify-center px-0" : "justify-between px-2",
         isActive ? "bg-bg" : "bg-transparent hover:bg-hover-primary",
-        draggingTabId === id || isDragging ? "opacity-50" : "opacity-100",
+        draggingTabId === id || isDragging ? "opacity-50" : "opacity-100"
       )}
       onClick={onClick}
       onKeyDown={(e) => {
@@ -188,7 +188,7 @@ export function Tab({
             <Settings2
               className={cn(
                 "h-4 w-4 flex-shrink-0",
-                isCompressedTwo ? "mr-0" : "mr-2",
+                isCompressedTwo ? "mr-0" : "mr-2"
               )}
             />
           ) : (
@@ -197,14 +197,14 @@ export function Tab({
               alt="favicon"
               className={cn(
                 "h-4 w-4 flex-shrink-0",
-                isCompressedTwo ? "mr-0" : "mr-2",
+                isCompressedTwo ? "mr-0" : "mr-2"
               )}
             />
           )}
           <span
             className={cn(
               "truncate text-xs",
-              isCompressedOne ? "flex-shrink" : "flex-1",
+              isCompressedOne ? "flex-shrink" : "flex-1"
             )}
           >
             {title}
