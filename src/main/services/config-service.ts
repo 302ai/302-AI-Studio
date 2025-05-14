@@ -8,6 +8,7 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
+import { WindowService } from "./window-service";
 
 enum ConfigKeys {
   Language = "language",
@@ -18,6 +19,12 @@ const electronStore: ElectronStore = new ElectronStore();
 
 @ServiceRegister("configService")
 export class ConfigService {
+  private windowService: WindowService;
+
+  constructor() {
+    this.windowService = new WindowService();
+  }
+
   @ServiceHandler()
   getLanguage() {
     const currentLocale = app.getLocale();
@@ -36,5 +43,6 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   setTheme(_event: Electron.IpcMainEvent, theme: ThemeMode) {
     electronStore.set(ConfigKeys.Theme, theme);
+    this.windowService.setTitleBarOverlay(theme);
   }
 }

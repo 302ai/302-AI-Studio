@@ -12,9 +12,6 @@ declare global {
     electron: ElectronAPI;
     api: WindowApiType;
     service: {
-      windowService: {
-        setTitleBarOverlay: (theme: ThemeMode) => void;
-      };
       configService: {
         getLanguage: () => Promise<LanguageVarious>;
         setLanguage: (language: LanguageVarious) => void;

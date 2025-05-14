@@ -13,7 +13,7 @@ interface SettingsStore {
   setLanguage: (newLanguage: string) => void;
 }
 
-const { windowService, configService } = window.service;
+const { configService } = window.service;
 
 export const useSettingsStore = create<SettingsStore>()(
   persist(
@@ -30,7 +30,6 @@ export const useSettingsStore = create<SettingsStore>()(
             : newTheme;
 
         configService.setTheme(actualTheme);
-        windowService.setTitleBarOverlay(actualTheme);
 
         if (actualTheme === ThemeMode.Dark) {
           document.documentElement.classList.add("dark");

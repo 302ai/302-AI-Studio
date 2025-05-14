@@ -5,7 +5,14 @@ import { ipcMain, ipcRenderer } from "electron";
 
 export function initMainBridge(): void {
   services?.forEach((service) => {
-    const { service: name, handlers } = getMetadata(service.name);
+    const serviceInstance = new service();
+    const metadata = getMetadata(service.name);
+    const { service: name, handlers } = metadata;
+
+    if (!metadata) {
+      console.warn(`No metadata found for service: ${service.name}`);
+      return;
+    }
 
     if (!handlers) {
       console.warn(`No handlers found for service: ${name}`);
@@ -19,9 +26,9 @@ export function initMainBridge(): void {
       };
 
       if (way === CommunicationWay.RENDERER_TO_MAIN__ONE_WAY) {
-        ipcMain.on(`${name}:${methodName}`, handle);
+        ipcMain.on(`${name}:${methodName}`, handle.bind(serviceInstance));
       } else if (way === CommunicationWay.RENDERER_TO_MAIN__TWO_WAY) {
-        ipcMain.handle(`${name}:${methodName}`, handle);
+        ipcMain.handle(`${name}:${methodName}`, handle.bind(serviceInstance));
       }
     });
   });
