@@ -43,5 +43,6 @@ export function ServiceHandler(communicationWay?: CommunicationWay) {
   };
 }
 
-export const getMetadata = (className: string) =>
-  Reflect.getMetadata(`${className}`, _metadata);
+export function getMetadata(className: string) {
+  return Reflect.getMetadata(`${className}`, _metadata);
+}

@@ -1,9 +1,11 @@
 import { ThemeMode } from "@types";
 import { titleBarOverlayLight, titleBarOverlayDark } from "@main/config";
 import { BrowserWindow } from "electron";
-import { ServiceHandler } from "../shared/reflect";
-import { CommunicationWay } from "../shared/reflect";
-import { ServiceRegister } from "../shared/reflect";
+import {
+  ServiceHandler,
+  CommunicationWay,
+  ServiceRegister,
+} from "../shared/reflect";
 
 @ServiceRegister("windowService")
 export default class WindowService {
