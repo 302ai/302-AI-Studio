@@ -7,12 +7,13 @@ export function initMainBridge(): void {
   services?.forEach((service) => {
     const serviceInstance = new service();
     const metadata = getMetadata(service.name);
-    const { service: name, handlers } = metadata;
 
     if (!metadata) {
       console.warn(`No metadata found for service: ${service.name}`);
       return;
     }
+
+    const { service: name, handlers } = metadata;
 
     if (!handlers) {
       console.warn(`No handlers found for service: ${name}`);
