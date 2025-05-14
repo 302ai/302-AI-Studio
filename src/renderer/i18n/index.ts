@@ -5,10 +5,12 @@ import ja from "./messages/ja.json";
 import zh from "./messages/zh.json";
 import { defaultLanguage } from "@main/constant";
 
+const { configService } = window.service;
+
 // Initialize i18next
 i18n.use(initReactI18next).init({
   fallbackLng: "zh",
-  lng: ((await window.api.getLanguage()) || defaultLanguage).split("-")[0],
+  lng: ((await configService.getLanguage()) || defaultLanguage).split("-")[0],
   resources: {
     zh: {
       translation: zh,

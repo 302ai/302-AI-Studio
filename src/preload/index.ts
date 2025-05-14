@@ -1,7 +1,7 @@
 import { ElectronAPI, electronAPI } from "@electron-toolkit/preload";
-import { contextBridge, ipcRenderer } from "electron";
-import { IpcChannel } from "../shared/ipc-channel";
-
+import { contextBridge } from "electron";
+import { initPreloadBridge } from "../main/bridge";
+import { LanguageVarious, ThemeMode } from "../renderer/types";
 /**
  * ! This should be declared in index.d.ts,
  * ! but declaring it in index.d.ts would result in an error: Property 'api' does not exist on type 'Window & typeof globalThis'.
@@ -11,20 +11,20 @@ declare global {
   interface Window {
     electron: ElectronAPI;
     api: WindowApiType;
+    service: {
+      windowService: {
+        setTitleBarOverlay: (theme: ThemeMode) => void;
+      };
+      configService: {
+        getLanguage: () => Promise<LanguageVarious>;
+        setLanguage: (language: LanguageVarious) => void;
+        setTheme: (theme: ThemeMode) => void;
+      };
+    };
   }
 }
 
 const api = {
-  sayHelloFromBridge: () => console.log("\nHello from bridgeAPI! 👋\n\n"),
-  // Language
-  setLanguage: (lang: string) =>
-    ipcRenderer.invoke(IpcChannel.APP_SET_LANGUAGE, lang),
-  getLanguage: () => ipcRenderer.invoke(IpcChannel.APP_GET_LANGUAGE),
-  // Theme
-  setTheme: (theme: string) =>
-    ipcRenderer.invoke(IpcChannel.APP_SET_THEME, theme),
-  getTheme: () => ipcRenderer.invoke(IpcChannel.APP_GET_THEME),
-  // Platform info
   platform: process.platform,
 };
 
@@ -35,8 +35,9 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
+    contextBridge.exposeInMainWorld("service", initPreloadBridge());
   } catch (error) {
-    console.error(error);
+    console.error("Error exposing services:", error);
   }
 } else {
   // @ts-ignore (define in dts)

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { ThemeMode } from "@renderer/types";
+import { ThemeMode, LanguageVarious } from "@renderer/types";
 
 const SETTINGS_STORAGE_KEY = "app-settings";
 
@@ -11,6 +11,8 @@ interface SettingsStore {
   language: string;
   setLanguage: (newLanguage: string) => void;
 }
+
+const { windowService, configService } = window.service;
 
 export const useSettingsStore = create<SettingsStore>()(
   persist(
@@ -26,7 +28,8 @@ export const useSettingsStore = create<SettingsStore>()(
               : ThemeMode.Light
             : newTheme;
 
-        window.api.setTheme(actualTheme);
+        configService.setTheme(actualTheme);
+        windowService.setTitleBarOverlay(actualTheme);
 
         if (actualTheme === ThemeMode.Dark) {
           document.documentElement.classList.add("dark");
@@ -38,7 +41,7 @@ export const useSettingsStore = create<SettingsStore>()(
       language: navigator.language || "en",
       setLanguage: (newLanguage: string) => {
         set({ language: newLanguage });
-        window.api.setLanguage(newLanguage);
+        configService.setLanguage(newLanguage as LanguageVarious);
       },
     })),
     {

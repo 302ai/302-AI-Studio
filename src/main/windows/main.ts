@@ -5,7 +5,7 @@ import { is } from "@electron-toolkit/utils";
 import { isLinux, isMac } from "../constant";
 import windowStateKeeper from "electron-window-state";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
-import { configService } from "@main/services/config-service";
+import ElectronStore from "electron-store";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -15,7 +15,7 @@ export async function MainWindow() {
     maximize: false,
   });
 
-  const theme = configService.getTheme();
+  const theme = new ElectronStore().get("theme", "light");
 
   const window = createWindow({
     id: "main",
@@ -40,6 +40,7 @@ export async function MainWindow() {
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
+      contextIsolation: true,
       devTools: is.dev,
       webSecurity: false,
       webviewTag: true,

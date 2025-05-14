@@ -6,7 +6,6 @@
     "src/lib/**/*",
     "src/resources/**/*",
     "src/preload/**/*",
-    "src/preload/*.d.ts",
     "src/renderer/**/*",
     "src/shared/**/*"
   ],
@@ -16,6 +15,8 @@
       "electron-vite/node"
     ],
     "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {

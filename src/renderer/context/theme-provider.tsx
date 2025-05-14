@@ -16,10 +16,12 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const { windowService } = window.service;
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useSettingsStore();
   const [isSystemDark, setIsSystemDark] = useState(
-    window.matchMedia("(prefers-color-scheme: dark)").matches,
+    window.matchMedia("(prefers-color-scheme: dark)").matches
   );
 
   useEffect(() => {
@@ -43,8 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       if (theme === ThemeMode.System) {
         const actualTheme = e.matches ? ThemeMode.Dark : ThemeMode.Light;
 
-        // Add this line to notify the main process
-        window.api.setTheme(actualTheme);
+        windowService.setTheme(actualTheme);
 
         if (e.matches) {
           document.documentElement.classList.add("dark");
