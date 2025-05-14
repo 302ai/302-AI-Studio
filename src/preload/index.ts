@@ -10,17 +10,7 @@ import { IpcChannel } from "../shared/ipc-channel";
 declare global {
   interface Window {
     electron: ElectronAPI;
-    api: {
-      sayHelloFromBridge: () => Promise<void>;
-      // Language
-      setLanguage: (lang: string) => Promise<void>;
-      getLanguage: () => Promise<string>;
-      // Theme
-      setTheme: (theme: string) => Promise<void>;
-      getTheme: () => Promise<string>;
-      // Platform
-      platform: string;
-    };
+    api: WindowApiType;
   }
 }
 
@@ -54,3 +44,5 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = api;
 }
+
+export type WindowApiType = typeof api;
