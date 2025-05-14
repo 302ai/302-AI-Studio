@@ -17,7 +17,7 @@ enum ConfigKeys {
 const electronStore: ElectronStore = new ElectronStore();
 
 @ServiceRegister("configService")
-export default class ConfigService {
+export class ConfigService {
   @ServiceHandler()
   getLanguage() {
     const currentLocale = app.getLocale();

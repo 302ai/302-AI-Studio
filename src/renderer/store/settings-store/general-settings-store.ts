@@ -8,6 +8,7 @@ const SETTINGS_STORAGE_KEY = "app-settings";
 interface SettingsStore {
   theme: ThemeMode;
   setTheme: (newTheme: ThemeMode) => void;
+
   language: string;
   setLanguage: (newLanguage: string) => void;
 }

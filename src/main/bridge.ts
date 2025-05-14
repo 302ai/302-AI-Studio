@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
-import services from "./services";
+import { services } from "./services";
 import { CommunicationWay, getMetadata } from "./shared/reflect";
 import { ipcMain, ipcRenderer } from "electron";
 

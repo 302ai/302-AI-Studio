@@ -8,9 +8,17 @@ import {
 } from "../shared/reflect";
 
 @ServiceRegister("windowService")
-export default class WindowService {
+export class WindowService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   setTitleBarOverlay(_event: Electron.IpcMainEvent, theme: ThemeMode) {
+    BrowserWindow.getAllWindows().forEach((window) => {
+      window.setTitleBarOverlay(
+        theme === ThemeMode.Dark ? titleBarOverlayDark : titleBarOverlayLight
+      );
+    });
+  }
+
+  setTitleBarOverlay1(theme: ThemeMode) {
     BrowserWindow.getAllWindows().forEach((window) => {
       window.setTitleBarOverlay(
         theme === ThemeMode.Dark ? titleBarOverlayDark : titleBarOverlayLight
