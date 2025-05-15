@@ -7,9 +7,9 @@ const SETTINGS_STORAGE_KEY = "app-settings";
 
 interface SettingsStore {
   theme: ThemeMode;
-  setTheme: (newTheme: ThemeMode) => void;
-
   language: string;
+
+  setTheme: (newTheme: ThemeMode) => void;
   setLanguage: (newLanguage: string) => void;
 }
 
@@ -19,6 +19,8 @@ export const useSettingsStore = create<SettingsStore>()(
   persist(
     immer((set) => ({
       theme: ThemeMode.System,
+      language: navigator.language || "en",
+
       setTheme: (newTheme: ThemeMode) => {
         set({ theme: newTheme });
 
@@ -38,7 +40,6 @@ export const useSettingsStore = create<SettingsStore>()(
         }
       },
 
-      language: navigator.language || "en",
       setLanguage: (newLanguage: string) => {
         set({ language: newLanguage });
         configService.setLanguage(newLanguage as LanguageVarious);

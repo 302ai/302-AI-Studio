@@ -2,10 +2,6 @@ import { BasicTitleBar } from "@renderer/components/business/title-bar";
 import { AppSidebar } from "@/src/renderer/components/business/sidebar";
 import { Outlet } from "react-router-dom";
 
-// interface LayoutProps {
-//   children: React.ReactNode;
-// }
-
 export function Layout() {
   return (
     <main className="flex h-screen flex-col overflow-hidden">

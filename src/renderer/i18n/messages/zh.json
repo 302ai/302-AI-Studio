@@ -45,6 +45,13 @@
     },
     "open-sidebar": {
       "tooltip": "打开边栏"
+    },
+    "section": {
+      "earlier": "更早",
+      "last30Days": "过去30天",
+      "last7Days": "过去7天",
+      "today": "今天",
+      "yesterday": "昨天"
     }
   },
   "thread": {

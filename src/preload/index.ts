@@ -17,6 +17,9 @@ declare global {
         setLanguage: (language: LanguageVarious) => void;
         setTheme: (theme: ThemeMode) => void;
       };
+      threadsService: {
+        setActiveThread: (threadId: string) => void;
+      };
     };
   }
 }

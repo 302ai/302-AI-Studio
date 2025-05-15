@@ -18,24 +18,19 @@ export type TabItem = {
 
 interface BrowserTabStore {
   tabs: TabItem[];
-  setTabs: (tabs: TabItem[]) => void;
-
   activeTabId: string;
-  setActiveTabId: (id: string) => void;
-
   activeTabHistory: string[];
-
   isLoaded: boolean;
-  setIsLoaded: (isLoaded: boolean) => void;
+  draggingTabId: string | null;
 
+  setActiveTabId: (id: string) => void;
+  setIsLoaded: (isLoaded: boolean) => void;
+  addSettingsTab: (settingsTab: TabItem) => void;
+  setTabs: (tabs: TabItem[]) => void;
   addTab: (tab: TabItem) => void;
   updateTab: (id: string, data: Partial<TabItem>) => void;
   removeTab: (id: string) => void;
   moveTab: (fromIndex: number, toIndex: number) => void;
-
-  addSettingsTab: (settingsTab: TabItem) => void;
-
-  draggingTabId: string | null;
   setDraggingTabId: (id: string | null) => void;
 }
 
@@ -43,9 +38,13 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
   persist(
     immer((set) => ({
       tabs: [],
+      activeTabId: "",
+      activeTabHistory: [],
+      isLoaded: false,
+      draggingTabId: null,
+
       setTabs: (tabs) => set({ tabs }),
 
-      activeTabId: "",
       setActiveTabId: (id) =>
         set((state) => {
           if (state.activeTabId && state.activeTabId !== id) {
@@ -60,10 +59,6 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
           state.activeTabId = id;
           return state;
         }),
-
-      activeTabHistory: [],
-
-      isLoaded: false,
       setIsLoaded: (isLoaded) => set({ isLoaded }),
 
       addTab: (tab) =>
@@ -143,7 +138,6 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
           return state;
         }),
 
-      draggingTabId: null,
       setDraggingTabId: (id) => set({ draggingTabId: id }),
     })),
     {

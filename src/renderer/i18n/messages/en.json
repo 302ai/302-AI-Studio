@@ -45,6 +45,13 @@
     },
     "open-sidebar": {
       "tooltip": "Open Sidebar"
+    },
+    "section": {
+      "earlier": "Earlier",
+      "last30Days": "Last 30 days",
+      "last7Days": "Last 7 days",
+      "today": "Today",
+      "yesterday": "Yesterday"
     }
   },
   "thread": {
