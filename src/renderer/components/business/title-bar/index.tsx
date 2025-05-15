@@ -17,11 +17,7 @@ import { cn } from "@renderer/lib/utils";
 import { isMac } from "@renderer/config/constant";
 import { Separator } from "@renderer/components/ui/separator";
 import { BrowserTabs } from "../browser-tab";
-import {
-  useBrowserTabStore,
-  TabType,
-} from "@/src/renderer/store/browser-tab-store";
-import { nanoid } from "nanoid";
+import { useBrowserTabStore } from "@renderer/store/browser-tab-store";
 import { useTranslation } from "react-i18next";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
@@ -34,21 +30,11 @@ export function BasicTitleBar() {
   const isSidebarCollapsed = state === "collapsed";
 
   const handleSettingsClick = () => {
-    addSettingsTab({
-      id: nanoid(),
-      title: t("settings.tab-title"),
-      message: "",
-      type: TabType.settings,
-    });
+    addSettingsTab({ title: t("settings.tab-title") });
   };
 
   const handleAddNewTab = () => {
-    addTab({
-      id: nanoid(),
-      title: t("thread.new-thread-title"),
-      message: "",
-      type: TabType.thread,
-    });
+    addTab({ title: t("thread.new-thread-title") });
   };
 
   return (

@@ -10,6 +10,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Separator } from "@renderer/components/ui/separator";
 import { cn } from "@renderer/lib/utils";
+import { useThreadsStore } from "@renderer/store/threads-store";
 
 export type TabItem = {
   id: string;
@@ -29,6 +30,7 @@ export function BrowserTabs() {
     setActiveTabId,
     setIsLoaded,
   } = useBrowserTabStore();
+  const { setActiveThreadId } = useThreadsStore();
 
   const navigate = useNavigate();
 
@@ -40,9 +42,15 @@ export function BrowserTabs() {
     moveTab(dragIndex, hoverIndex);
   };
 
+  const handleClickTab = (id: string) => {
+    setActiveTabId(id);
+    setActiveThreadId(id);
+  };
+
   const handleCloseTab = (id: string) => {
     removeTab(id);
 
+    // Get the new tabs length after removing the tab immediately
     const newTabsLength = useBrowserTabStore.getState().tabs.length;
     if (newTabsLength === 0) {
       navigate("/");
@@ -132,7 +140,7 @@ export function BrowserTabs() {
                 type === TabType.settings ? t("settings.tab-title") : title
               }
               isActive={id === activeTabId}
-              onClick={() => setActiveTabId(id)}
+              onClick={() => handleClickTab(id)}
               onClose={() => handleCloseTab(id)}
               width={tabWidth}
               moveTab={handleMoveTab}

@@ -34,7 +34,7 @@ export function AppSidebar(props: AppSidebarProps) {
             {groupedThreads.map((group) => (
               <SidebarSection key={group.section} title={group.section}>
                 {group.threads.map((thread) => (
-                  <SidebarItem key={thread.title}>
+                  <SidebarItem key={thread.id}>
                     {({ isCollapsed }) => (
                       <>
                         <SidebarLabel>{thread.title}</SidebarLabel>

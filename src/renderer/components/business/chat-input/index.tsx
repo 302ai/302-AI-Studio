@@ -15,13 +15,13 @@ export function ChatInput({ className }: ChatInputProps) {
       className={cn(
         "mx-auto flex max-h-60 min-h-36 w-full max-w-2xl flex-col rounded-[20px] border pt-2 pr-2 pb-0 pl-4",
         "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-1 focus-within:ring-ring/20",
-        className,
+        className
       )}
     >
       <Textarea
         className={cn(
           "h-full min-h-[calc(100%-var(--chat-input-toolbar-height))] w-full rounded-none border-0 bg-transparent p-0",
-          "shadow-none ring-0",
+          "shadow-none ring-0"
         )}
         placeholder={t("chat.input-placeholder")}
         aria-label={t("chat.input-label")}
