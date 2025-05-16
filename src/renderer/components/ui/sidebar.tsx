@@ -89,7 +89,7 @@ const SidebarProvider = ({
 
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
-    [setOpenProp, open],
+    [setOpenProp, open]
   );
 
   const toggleSidebar = useCallback(() => {
@@ -117,7 +117,7 @@ const SidebarProvider = ({
       setOpen,
       toggleSidebar,
     }),
-    [state, open, setOpen, toggleSidebar],
+    [state, open, setOpen, toggleSidebar]
   );
 
   return (
@@ -132,7 +132,7 @@ const SidebarProvider = ({
           "dark:[--accent:color-mix(in_oklab,var(--color-sidebar)_90%,white_10%)]",
           "min-h-svh w-full text-sidebar-fg",
           "group/sidebar-root has-data-[sidebar-intent=inset]:bg-sidebar dark:has-data-[sidebar-intent=inset]:bg-bg",
-          className,
+          className
         )}
         ref={ref}
         {...props}
@@ -218,7 +218,7 @@ const Sidebar = ({
         data-sidebar-collapsible="none"
         className={twMerge(
           "flex h-full w-(--sidebar-width) flex-col border-r bg-sidebar text-sidebar-fg",
-          className,
+          className
         )}
         {...props}
       />
@@ -248,7 +248,7 @@ const Sidebar = ({
           className={twJoin(
             "flex h-full w-full flex-col text-sidebar-fg",
             "group-data-[sidebar-intent=inset]/sidebar-container:bg-sidebar dark:group-data-[sidebar-intent=inset]/sidebar-container:bg-bg",
-            "group-data-[sidebar-intent=float]/sidebar-container:rounded-lg group-data-[sidebar-intent=float]/sidebar-container:border group-data-[sidebar-intent=float]/sidebar-container:border-(--sidebar-border) group-data-[sidebar-intent=float]/sidebar-container:bg-sidebar group-data-[sidebar-intent=float]/sidebar-container:shadow-xs",
+            "group-data-[sidebar-intent=float]/sidebar-container:rounded-lg group-data-[sidebar-intent=float]/sidebar-container:border group-data-[sidebar-intent=float]/sidebar-container:border-(--sidebar-border) group-data-[sidebar-intent=float]/sidebar-container:bg-sidebar group-data-[sidebar-intent=float]/sidebar-container:shadow-xs"
           )}
         >
           {props.children}
@@ -344,7 +344,7 @@ const SidebarContent = ({
       className={twMerge(
         "flex min-h-0 flex-1 scroll-mb-96 flex-col overflow-auto *:data-sidebar-section:border-l-0",
         state === "collapsed" && "items-center",
-        className,
+        className
       )}
       {...props}
     />
@@ -361,9 +361,9 @@ const SidebarSectionGroup = ({
     <section
       data-sidebar-section-group="true"
       className={twMerge(
-        "flex w-full flex-col gap-y-6",
+        "flex w-full flex-col gap-y-4",
         collapsed && "items-center justify-center",
-        className,
+        className
       )}
       {...props}
     />
@@ -381,7 +381,7 @@ const SidebarSection = ({
       className={twMerge(
         "col-span-full flex flex-col gap-y-0.5 **:data-sidebar-section:**:gap-y-0 **:data-sidebar-section:pr-0",
         state === "expanded" && "px-2.5",
-        className,
+        className
       )}
       title=""
       {...props}
@@ -433,7 +433,7 @@ interface SidebarItemProps
         values: LinkRenderProps & {
           defaultChildren: React.ReactNode;
           isCollapsed: boolean;
-        },
+        }
       ) => React.ReactNode);
   badge?: string | number | undefined;
 }
@@ -464,7 +464,7 @@ const SidebarItem = ({
             renderProps.isFocusVisible ||
             renderProps.isHovered,
           className: cls,
-        }),
+        })
       )}
       {...props}
     >
@@ -537,7 +537,7 @@ const SidebarLink = ({ className, ref, ...props }: SidebarLinkProps) => {
           ...renderProps,
           collapsed,
           className,
-        }),
+        })
       )}
       {...props}
     />
@@ -556,7 +556,7 @@ const SidebarInset = ({
         "relative flex min-h-svh w-full flex-1 flex-col peer-data-[sidebar-intent=inset]:border peer-data-[sidebar-intent=inset]:border-(--sidebar-border)",
         "bg-bg peer-data-[sidebar-intent=inset]:overflow-hidden dark:peer-data-[sidebar-intent=inset]:bg-sidebar",
         "peer-data-[sidebar-intent=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[sidebar-state=collapsed]:peer-data-[sidebar-intent=inset]:ml-2 md:peer-data-[sidebar-intent=inset]:m-2 md:peer-data-[sidebar-intent=inset]:ml-0 md:peer-data-[sidebar-intent=inset]:rounded-xl md:peer-data-[sidebar-intent=inset]:shadow-xs",
-        className,
+        className
       )}
       {...props}
     />
@@ -575,7 +575,7 @@ const SidebarDisclosureGroup = ({
       allowsMultipleExpanded={allowsMultipleExpanded}
       className={composeTailwindRenderProps(
         className,
-        "col-span-full flex flex-col gap-y-6",
+        "col-span-full flex flex-col gap-y-4"
       )}
       {...props}
     />
@@ -597,7 +597,7 @@ const SidebarDisclosure = ({
       data-sidebar-disclosure="true"
       className={composeTailwindRenderProps(
         className,
-        twMerge(state === "expanded" ? "px-2.5" : "col-span-full"),
+        twMerge(state === "expanded" ? "px-2.5" : "col-span-full")
       )}
       {...props}
     />
@@ -647,7 +647,7 @@ const SidebarDisclosureTrigger = ({
               renderProps.isFocusVisible ||
               renderProps.isHovered,
             className,
-          }),
+          })
         )}
         {...props}
       >
@@ -670,7 +670,7 @@ const SidebarDisclosureTrigger = ({
 };
 
 const SidebarDisclosurePanel = (
-  props: React.ComponentProps<typeof DisclosurePanel>,
+  props: React.ComponentProps<typeof DisclosurePanel>
 ) => {
   return (
     <DisclosurePanel
@@ -687,7 +687,7 @@ const SidebarSeparator = ({ className, ...props }: SidebarSeparatorProps) => {
       orientation="horizontal"
       className={twMerge(
         "col-span-full mx-auto my-2.5 h-px w-[calc(var(--sidebar-width)-theme(spacing.6))] bg-border",
-        className,
+        className
       )}
       {...props}
     />
@@ -744,7 +744,7 @@ const SidebarRail = ({
         "[[data-sidebar-side=left][data-sidebar-state=collapsed]_&]:cursor-e-resize [[data-sidebar-side=right][data-sidebar-state=collapsed]_&]:cursor-w-resize",
         "group-data-[sidebar-collapsible=hidden]/sidebar-container:translate-x-0 group-data-[sidebar-collapsible=hidden]/sidebar-container:hover:bg-secondary group-data-[sidebar-collapsible=hidden]/sidebar-container:after:left-full",
         "[[data-sidebar-side=left][data-sidebar-collapsible=hidden]_&]:-right-2 [[data-sidebar-side=right][data-sidebar-collapsible=hidden]_&]:-left-2",
-        className,
+        className
       )}
       {...props}
     />
@@ -764,7 +764,7 @@ const SidebarLabel = ({ className, ref, ...props }: SidebarLabelProps) => {
         slot="label"
         className={twMerge(
           "col-start-2 overflow-hidden whitespace-nowrap outline-hidden",
-          className,
+          className
         )}
         {...props}
       >

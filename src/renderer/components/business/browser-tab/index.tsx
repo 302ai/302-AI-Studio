@@ -10,7 +10,6 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Separator } from "@renderer/components/ui/separator";
 import { cn } from "@renderer/lib/utils";
-import { useThreadsStore } from "@renderer/store/threads-store";
 
 export type TabItem = {
   id: string;

@@ -10,8 +10,10 @@ import {
   SidebarInset,
   SidebarItem,
   SidebarLabel,
-  SidebarSection,
-  SidebarSectionGroup,
+  SidebarDisclosure,
+  SidebarDisclosureTrigger,
+  SidebarDisclosurePanel,
+  SidebarDisclosureGroup,
 } from "@renderer/components/ui/sidebar";
 import { MoreHorizontal, Pencil, Eraser, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -23,49 +25,64 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   const { t } = useTranslation();
-
-  const { groupedThreads } = useSidebar();
+  const { groupedThreads, handleClickThread } = useSidebar();
 
   return (
     <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
         <SidebarContent>
-          <SidebarSectionGroup>
+          <SidebarDisclosureGroup
+            defaultExpandedKeys={[
+              "today",
+              "yesterday",
+              "last7Days",
+              "last30Days",
+              "earlier",
+            ]}
+          >
             {groupedThreads.map((group) => (
-              <SidebarSection key={group.section} title={group.section}>
-                {group.threads.map((thread) => (
-                  <SidebarItem key={thread.id}>
-                    {({ isCollapsed }) => (
-                      <>
-                        <SidebarLabel>{thread.title}</SidebarLabel>
-                        {!isCollapsed && (
-                          <Menu>
-                            <MenuTrigger aria-label="Manage">
-                              <MoreHorizontal className="mr-2 h-4 w-4" />
-                            </MenuTrigger>
-                            <MenuContent offset={0} placement="right top">
-                              <MenuItem>
-                                <Pencil className="mr-2 h-4 w-4" />
-                                {t("sidebar.menu-item.rename")}
-                              </MenuItem>
-                              <MenuItem>
-                                <Eraser className="mr-2 h-4 w-4" />
-                                {t("sidebar.menu-item.clean-messages")}
-                              </MenuItem>
-                              <MenuItem isDanger={true}>
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </MenuItem>
-                            </MenuContent>
-                          </Menu>
-                        )}
-                      </>
-                    )}
-                  </SidebarItem>
-                ))}
-              </SidebarSection>
+              <SidebarDisclosure id={group.key} key={group.key}>
+                <SidebarDisclosureTrigger>
+                  <SidebarLabel> {group.label}</SidebarLabel>
+                </SidebarDisclosureTrigger>
+                <SidebarDisclosurePanel>
+                  {group.threads.map((thread) => (
+                    <SidebarItem
+                      key={thread.id}
+                      onClick={() => handleClickThread(thread.id)}
+                    >
+                      {({ isCollapsed }) => (
+                        <>
+                          <SidebarLabel>{thread.title}</SidebarLabel>
+                          {!isCollapsed && (
+                            <Menu>
+                              <MenuTrigger aria-label="Manage">
+                                <MoreHorizontal className="mr-2 h-4 w-4" />
+                              </MenuTrigger>
+                              <MenuContent offset={0} placement="right top">
+                                <MenuItem>
+                                  <Pencil className="mr-2 h-4 w-4" />
+                                  {t("sidebar.menu-item.rename")}
+                                </MenuItem>
+                                <MenuItem>
+                                  <Eraser className="mr-2 h-4 w-4" />
+                                  {t("sidebar.menu-item.clean-messages")}
+                                </MenuItem>
+                                <MenuItem isDanger={true}>
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  {t("sidebar.menu-item.delete")}
+                                </MenuItem>
+                              </MenuContent>
+                            </Menu>
+                          )}
+                        </>
+                      )}
+                    </SidebarItem>
+                  ))}
+                </SidebarDisclosurePanel>
+              </SidebarDisclosure>
             ))}
-          </SidebarSectionGroup>
+          </SidebarDisclosureGroup>
         </SidebarContent>
       </Sidebar>
 
