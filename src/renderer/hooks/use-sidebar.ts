@@ -110,6 +110,7 @@ export function useSidebar() {
       if (currentThread) {
         addTab({
           title: currentThread.title,
+          id: currentThread.id,
         });
       }
     }

@@ -28,7 +28,7 @@ interface BrowserTabStore {
   setIsLoaded: (isLoaded: boolean) => void;
   addSettingsTab: (data: { title: string }) => void;
   setTabs: (tabs: TabItem[]) => void;
-  addTab: (data: { title: string }) => void;
+  addTab: (data: { title: string; id?: string }) => void;
   updateTab: (id: string, data: Partial<TabItem>) => void;
   removeTab: (id: string) => void;
   moveTab: (fromIndex: number, toIndex: number) => void;
@@ -66,7 +66,7 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
       addTab: (data) =>
         set((state) => {
           const newTab = {
-            id: nanoid(),
+            id: data.id ?? nanoid(),
             title: data.title,
             message: "",
             type: TabType.thread,
