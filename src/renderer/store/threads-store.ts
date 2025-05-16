@@ -61,8 +61,10 @@ export const useThreadsStore = create<ThreadStore>()(
 
       setActiveThreadId: (id) =>
         set((state) => {
-          state.activeThreadId = id;
+          if (state.activeThreadId === id) return;
+
           threadsService.setActiveThread(id);
+          state.activeThreadId = id;
           return state;
         }),
     })),
