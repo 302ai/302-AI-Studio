@@ -10,7 +10,7 @@ interface ThreadStore {
   activeThreadId: string;
 
   setThreads: (threads: ThreadItem[]) => void;
-  addThread: (thread: Partial<ThreadItem>) => void;
+  addThread: (data: { id: string; title: string }) => void;
   updateThread: (id: string, data: Partial<ThreadItem>) => void;
   removeThread: (id: string) => void;
   setActiveThreadId: (id: string) => void;
@@ -26,19 +26,19 @@ export const useThreadsStore = create<ThreadStore>()(
 
       setThreads: (threads) => set({ threads }),
 
-      addThread: (thread) =>
+      addThread: (data) =>
         set((state) => {
           const now = new Date().toISOString();
-          return {
-            threads: [
-              ...state.threads,
-              {
-                ...thread,
-                createdAt: now,
-                updatedAt: now,
-              },
-            ],
+          const { id, title } = data;
+          const newThread = {
+            id,
+            title,
+            createdAt: now,
+            updatedAt: now,
           };
+          state.threads.push(newThread);
+          state.activeThreadId = newThread.id;
+          return state;
         }),
 
       updateThread: (id, data) =>

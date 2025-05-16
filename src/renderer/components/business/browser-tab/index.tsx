@@ -30,7 +30,6 @@ export function BrowserTabs() {
     setActiveTabId,
     setIsLoaded,
   } = useBrowserTabStore();
-  const { setActiveThreadId } = useThreadsStore();
 
   const navigate = useNavigate();
 
@@ -44,7 +43,6 @@ export function BrowserTabs() {
 
   const handleClickTab = (id: string) => {
     setActiveTabId(id);
-    setActiveThreadId(id);
   };
 
   const handleCloseTab = (id: string) => {

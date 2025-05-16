@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 export function useToolBar() {
   const { t } = useTranslation();
 
-  const { activeThreadId, setActiveThreadId, addThread } = useThreadsStore();
+  const { activeThreadId, addThread } = useThreadsStore();
   const { tabs, getActiveTab, addTab } = useBrowserTabStore();
 
   const handleSendMessage = () => {
@@ -19,7 +19,6 @@ export function useToolBar() {
     const activeTab = getActiveTab();
     const activeTabId = activeTab?.id ?? "";
     if (activeThreadId !== activeTabId) {
-      setActiveThreadId(activeTabId);
       addThread({
         id: activeTabId,
         title: activeTab?.title ?? t("thread.new-thread-title"),
