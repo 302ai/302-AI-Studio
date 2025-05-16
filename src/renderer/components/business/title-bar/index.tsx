@@ -60,10 +60,10 @@ export function BasicTitleBar() {
             onClick={toggleSidebar}
           >
             <LuPanelLeftOpen
-              className={cn("h-4 w-4", !isSidebarCollapsed && "hidden")}
+              className={cn("h-4 w-4", { hidden: !isSidebarCollapsed })}
             />
             <LuPanelLeftClose
-              className={cn("h-4 w-4", isSidebarCollapsed && "hidden")}
+              className={cn("h-4 w-4", { hidden: isSidebarCollapsed })}
             />
           </TooltipTrigger>
           <TooltipContent>

@@ -98,8 +98,8 @@ export function useSidebar() {
 
   /**
    * Handles the click event for a thread in the sidebar
-   * If the thread is already open, it will be set as the active tab
-   * Else if the thread is not open, it will be added to the tabs and set as the active tab
+   * * If the thread is already open, it will be set as the active tab
+   * * Else if the thread is not open, it will be added to the tabs and set as the active tab
    * @param threadId The id of the thread to be clicked
    */
   const handleClickThread = (threadId: string) => {

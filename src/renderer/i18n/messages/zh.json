@@ -56,5 +56,25 @@
   },
   "thread": {
     "new-thread-title": "新会话"
+  },
+  "thread-menu": {
+    "actions": {
+      "cancel": "取消",
+      "clean-messages": {
+        "confirmText": "清空",
+        "description": "清空消息会删除会话下所有消息和文件，确定要继续吗？",
+        "title": "清空会话消息"
+      },
+      "delete": {
+        "confirmText": "删除",
+        "description": "会话删除后无法恢复，请谨慎操作。",
+        "title": "确定要删除这个会话吗？"
+      },
+      "rename": {
+        "confirmText": "确定",
+        "description": "请输入新的会话名称。",
+        "title": "重命名会话"
+      }
+    }
   }
 }

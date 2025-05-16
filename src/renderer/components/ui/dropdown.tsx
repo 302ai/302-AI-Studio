@@ -83,7 +83,7 @@ const DropdownItem = ({ className, ...props }: DropdownItemProps) => {
     <ListBoxItemPrimitive
       textValue={textValue}
       className={composeRenderProps(className, (className, renderProps) =>
-        dropdownItemStyles({ ...renderProps, className }),
+        dropdownItemStyles({ ...renderProps, className })
       )}
       {...props}
     >
@@ -160,6 +160,23 @@ const DropdownLabel = ({ className, ref, ...props }: DropdownLabelProps) => (
   />
 );
 
+interface DropdownDescriptionProps extends TextProps {
+  ref?: React.Ref<HTMLDivElement>;
+}
+
+const DropdownDescription = ({
+  className,
+  ref,
+  ...props
+}: DropdownDescriptionProps) => (
+  <Text
+    slot="description"
+    ref={ref}
+    className={twMerge("col-start-2 text-muted-fg text-sm", className)}
+    {...props}
+  />
+);
+
 const DropdownSeparator = ({ className, ...props }: SeparatorProps) => (
   <Separator
     orientation="horizontal"
@@ -177,7 +194,7 @@ const DropdownKeyboard = ({
       classNames={{
         base: twMerge(
           "absolute right-2 group-hover:text-primary-fg group-focus:text-primary-fg pl-2",
-          className,
+          className
         ),
       }}
       {...props}
@@ -194,6 +211,7 @@ export type {
   DropdownLabelProps,
   DropdownItemProps,
   DropdownItemDetailProps,
+  DropdownDescriptionProps,
 };
 export {
   DropdownSeparator,
@@ -204,4 +222,5 @@ export {
   DropdownItemDetails,
   DropdownSection,
   dropdownSectionStyles,
+  DropdownDescription,
 };

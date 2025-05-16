@@ -56,5 +56,25 @@
   },
   "thread": {
     "new-thread-title": "新しい会話"
+  },
+  "thread-menu": {
+    "actions": {
+      "cancel": "キャンセル",
+      "clean-messages": {
+        "confirmText": "クリア",
+        "description": "メッセージをクリアすると、セッションの下ですべてのメッセージとファイルが削除されます。続けたいですか？",
+        "title": "セッションメッセージをクリアします"
+      },
+      "delete": {
+        "confirmText": "削除",
+        "description": "削除後にセッションを復元することはできません。注意してください。",
+        "title": "このチャットを削除してもよろしいですか？"
+      },
+      "rename": {
+        "confirmText": "もちろん",
+        "description": "新しいチャット名を入力してください。",
+        "title": "チャットの名前を変更"
+      }
+    }
   }
 }

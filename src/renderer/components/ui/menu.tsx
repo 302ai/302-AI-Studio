@@ -22,6 +22,7 @@ import {
 import { twMerge } from "tailwind-merge";
 import type { VariantProps } from "tailwind-variants";
 import {
+  DropdownDescription,
   DropdownItemDetails,
   DropdownKeyboard,
   DropdownLabel,
@@ -67,7 +68,7 @@ const MenuTrigger = ({ className, ref, ...props }: MenuTriggerProps) => (
     data-slot="menu-trigger"
     className={composeTailwindRenderProps(
       className,
-      "relative inline cursor-pointer text-left outline-hidden focus-visible:ring-1 focus-visible:ring-primary",
+      "relative inline cursor-pointer text-left outline-hidden focus-visible:ring-1 focus-visible:ring-primary"
     )}
     {...props}
   >
@@ -121,14 +122,14 @@ const MenuContent = <T extends object>({
       arrowBoundaryOffset={props.arrowBoundaryOffset}
       className={composeTailwindRenderProps(
         popoverClassName,
-        "z-50 p-0 shadow-xs outline-hidden sm:min-w-40",
+        "z-50 p-0 shadow-xs outline-hidden sm:min-w-40"
       )}
     >
       <MenuPrimitive
         data-slot="menu-content"
         className={composeTailwindRenderProps(
           className,
-          "grid max-h-[calc(var(--visual-viewport-height)-10rem)] grid-cols-[auto_1fr] overflow-auto rounded-xl p-1 outline-hidden [clip-path:inset(0_0_0_0_round_calc(var(--radius-lg)-2px))] sm:max-h-[inherit] *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1",
+          "grid max-h-[calc(var(--visual-viewport-height)-10rem)] grid-cols-[auto_1fr] overflow-auto rounded-xl p-1 outline-hidden [clip-path:inset(0_0_0_0_round_calc(var(--radius-lg)-2px))] sm:max-h-[inherit] *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1"
         )}
         {...props}
       />
@@ -163,7 +164,7 @@ const MenuItem = ({
                 className,
               ])
             : twMerge("cursor-pointer", className),
-        }),
+        })
       )}
       textValue={textValue}
       data-danger={isDanger ? "true" : undefined}
@@ -217,7 +218,7 @@ const MenuHeader = ({
     className={twMerge(
       "col-span-full px-2.5 py-2 font-semibold text-base sm:text-sm",
       separator && "-mx-1 mb-1 border-b sm:px-3 sm:pb-[0.625rem]",
-      className,
+      className
     )}
     {...props}
   />
@@ -251,6 +252,7 @@ const MenuSeparator = DropdownSeparator;
 const MenuItemDetails = DropdownItemDetails;
 const MenuKeyboard = DropdownKeyboard;
 const MenuLabel = DropdownLabel;
+const MenuDescription = DropdownDescription;
 
 export type {
   MenuProps,
@@ -271,4 +273,5 @@ export {
   MenuItemDetails,
   MenuLabel,
   MenuSubMenu,
+  MenuDescription,
 };
