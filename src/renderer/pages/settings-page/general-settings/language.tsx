@@ -37,7 +37,7 @@ export function LanguageSelector({
         {...props}
       >
         <SelectTrigger
-          className="h-9 cursor-pointer border-border text-secondary-fg"
+          className="h-9 cursor-pointer rounded-[10px] text-secondary-fg"
           prefix={<BsGlobe className="mr-1 size-4" />}
         />
         <SelectList className="min-w-32">

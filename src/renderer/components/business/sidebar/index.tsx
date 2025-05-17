@@ -44,14 +44,7 @@ export function AppSidebar(props: AppSidebarProps) {
                       key={thread.id}
                       onClick={() => handleClickThread(thread.id)}
                     >
-                      <ThreadMenu
-                        thread={thread}
-                        executeAction={(action) => {
-                          console.log(
-                            `Execute action: ${action} for thread: ${thread.id}`
-                          );
-                        }}
-                      />
+                      <ThreadMenu thread={thread} />
                     </SidebarItem>
                   ))}
                 </SidebarDisclosurePanel>

@@ -30,8 +30,8 @@ import {
 const selectTriggerStyles = tv({
   extend: focusStyles,
   base: [
-    "btr flex h-10 w-full cursor-default items-center gap-4 gap-x-2 rounded-[10px] border border-input py-2 pr-2 pl-3 text-start shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] transition group-disabled:opacity-50 **:data-[slot=icon]:size-4 dark:shadow-none",
-    "group-data-open:border-ring/70 group-data-open:ring-1 group-data-open:ring-ring/20",
+    "btr flex h-10 w-full cursor-default items-center gap-4 gap-x-2 rounded-lg border border-input py-2 pr-2 pl-3 text-start shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] transition group-disabled:opacity-50 **:data-[slot=icon]:size-4 dark:shadow-none",
+    "group-data-open:border-ring/70 group-data-open:ring-4 group-data-open:ring-ring/20",
     "text-fg group-invalid:border-danger group-invalid:ring-danger/20 forced-colors:group-invalid:border-[Mark]",
   ],
   variants: {
@@ -61,7 +61,7 @@ const Select = <T extends object>({
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "group flex w-full flex-col gap-y-1.5",
+        "group flex w-full flex-col gap-y-1.5"
       )}
     >
       {(values) => (
@@ -96,10 +96,7 @@ const SelectList = <T extends object>({
     <PopoverContent
       showArrow={false}
       respectScreen={false}
-      className={composeTailwindRenderProps(
-        popoverClassName,
-        "sm:min-w-(--trigger-width)",
-      )}
+      className={popoverClassName}
       placement={props.placement}
     >
       <ListBox
@@ -107,7 +104,7 @@ const SelectList = <T extends object>({
         orientation="vertical"
         className={composeTailwindRenderProps(
           className,
-          "border-0 shadow-none",
+          "max-h-[inherit] border-0 shadow-none"
         )}
         items={items}
         {...props}
@@ -130,7 +127,7 @@ const SelectTrigger = ({ className, ...props }: SelectTriggerProps) => {
         selectTriggerStyles({
           ...renderProps,
           className,
-        }),
+        })
       )}
     >
       {props.prefix && <span className="-mr-1">{props.prefix}</span>}

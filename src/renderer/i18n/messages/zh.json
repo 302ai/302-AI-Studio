@@ -37,6 +37,7 @@
     },
     "menu-item": {
       "clean-messages": "清空消息",
+      "collect-thread": "收藏",
       "delete": "删除",
       "rename": "重命名"
     },
@@ -73,6 +74,9 @@
       "rename": {
         "confirmText": "确定",
         "description": "请输入新的会话名称。",
+        "edit": {
+          "placeholder": "新的会话名称..."
+        },
         "title": "重命名会话"
       }
     }

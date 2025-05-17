@@ -37,6 +37,7 @@
     },
     "menu-item": {
       "clean-messages": "Clear Messages",
+      "collect-thread": "Collect",
       "delete": "Delete",
       "rename": "Rename"
     },
@@ -73,6 +74,9 @@
       "rename": {
         "confirmText": "Confirm",
         "description": "Please enter a new name for the conversation.",
+        "edit": {
+          "placeholder": "New conversation name..."
+        },
         "title": "Rename Conversation"
       }
     }

@@ -37,6 +37,7 @@
     },
     "menu-item": {
       "clean-messages": "メッセージをクリアします",
+      "collect-thread": "集める",
       "delete": "消去",
       "rename": "名前を変更"
     },
@@ -73,6 +74,9 @@
       "rename": {
         "confirmText": "もちろん",
         "description": "新しいチャット名を入力してください。",
+        "edit": {
+          "placeholder": "新しいセッション名..."
+        },
         "title": "チャットの名前を変更"
       }
     }

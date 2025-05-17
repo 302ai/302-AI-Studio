@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import open from "open";

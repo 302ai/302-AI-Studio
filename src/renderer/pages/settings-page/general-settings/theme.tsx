@@ -43,12 +43,12 @@ export function ThemeSwitcher() {
         label: t("settings.general-settings.theme.system"),
       },
     ],
-    [t],
+    [t]
   );
 
   useEffect(() => {
     const currentIndex = themeOptions.findIndex(
-      (option) => option.key === theme,
+      (option) => option.key === theme
     );
     if (
       currentIndex === -1 ||
@@ -74,7 +74,7 @@ export function ThemeSwitcher() {
       <Label>{t("settings.general-settings.theme.label")}</Label>
       <div
         ref={containerRef}
-        className="relative flex h-9 w-[280px] overflow-hidden rounded-[10px] border border-border bg-bg p-1"
+        className="relative flex h-9 w-[280px] overflow-hidden rounded-[10px] border border-input bg-bg p-1"
       >
         <div
           className="absolute z-2 h-[25.2px] rounded-[8px] bg-accent transition-all duration-400 ease-out"
@@ -89,7 +89,7 @@ export function ThemeSwitcher() {
               "relative z-2 flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-[8px] text-sm",
               theme === option.key
                 ? "text-accent-fg"
-                : "z-1 text-secondary-fg hover:bg-hover-primary",
+                : "z-1 text-secondary-fg hover:bg-hover-primary"
             )}
             onMouseDown={() => handleThemeChange(option.key as ThemeMode)}
             onKeyDown={(e) => {
