@@ -11,4 +11,17 @@ type Events = {
   };
 };
 
-export const emitter = mitt<Events>();
+const mittInstance = mitt<Events>();
+
+export const emitter = {
+  ...mittInstance,
+  on<Key extends keyof Events>(
+    type: Key,
+    handler: (event: Events[Key]) => void
+  ): () => void {
+    mittInstance.on(type, handler);
+    return () => mittInstance.off(type, handler);
+  },
+  // Original mitt instance
+  _mittInstance: mittInstance,
+};

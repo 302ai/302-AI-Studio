@@ -1,7 +1,8 @@
 import { useBrowserTabStore } from "../store/browser-tab-store";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import type { Identifier, XYCoord } from "dnd-core";
+import { emitter, EventNames } from "@renderer/services/event-service";
 
 /**
  * * The implementation of Drag and Drop Tab is referenced https://react-dnd.github.io/react-dnd/examples/sortable/simple
@@ -20,7 +21,8 @@ interface HookParams {
 }
 
 export function useBrowserTab({ id, index, moveTab }: HookParams) {
-  const { setDraggingTabId, setActiveTabId } = useBrowserTabStore();
+  const { tabs, setDraggingTabId, setActiveTabId, updateTab } =
+    useBrowserTabStore();
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -98,8 +100,28 @@ export function useBrowserTab({ id, index, moveTab }: HookParams) {
     },
   });
 
+  useEffect(() => {
+    const handleThreadRename = (event: {
+      threadId: string;
+      newTitle: string;
+    }) => {
+      const tabToUpdate = tabs.find((tab) => tab.id === event.threadId);
+      if (tabToUpdate) {
+        updateTab(tabToUpdate.id, { title: event.newTitle });
+      }
+    };
+
+    const unsubscribe = emitter.on(
+      EventNames.THREAD_RENAME,
+      handleThreadRename
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [tabs, updateTab]);
+
   return {
-    ref,
     handlerId,
     isDragging,
     dragDropRef: (node: HTMLDivElement | null) => {

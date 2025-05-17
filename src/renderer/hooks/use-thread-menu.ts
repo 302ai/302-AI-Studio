@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MenuModelAction } from "@renderer/components/business/sidebar/thread-menu";
 import { ThreadItem } from "../types/threads";
 import { useThreadsStore } from "../store/threads-store";
+import { EventNames, emitter } from "../services/event-service";
 
 export function useThreadMenu(thread: ThreadItem) {
   const { updateThread } = useThreadsStore();
@@ -17,6 +18,11 @@ export function useThreadMenu(thread: ThreadItem) {
 
   const handleRename = () => {
     updateThread(thread.id, { title: formattedTitle });
+
+    emitter.emit(EventNames.THREAD_RENAME, {
+      threadId: thread.id,
+      newTitle: formattedTitle,
+    });
 
     closeModal();
   };
