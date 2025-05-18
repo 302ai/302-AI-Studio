@@ -5,7 +5,7 @@ import { useThreadsStore } from "../store/threads-store";
 import { EventNames, emitter } from "../services/event-service";
 
 export function useThreadMenu(thread: ThreadItem) {
-  const { updateThread } = useThreadsStore();
+  const { updateThread, removeThread } = useThreadsStore();
 
   const [state, setState] = useState<MenuModelAction | null>(null);
   const [newTitle, setNewTitle] = useState(thread.title);
@@ -32,7 +32,12 @@ export function useThreadMenu(thread: ThreadItem) {
   };
 
   const handleDelete = () => {
-    console.log("delete");
+    removeThread(thread.id);
+
+    emitter.emit(EventNames.THREAD_DELETE, {
+      threadId: thread.id,
+    });
+
     closeModal();
   };
 

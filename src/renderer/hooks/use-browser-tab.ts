@@ -21,7 +21,7 @@ interface HookParams {
 }
 
 export function useBrowserTab({ id, index, moveTab }: HookParams) {
-  const { tabs, setDraggingTabId, setActiveTabId, updateTab } =
+  const { tabs, setDraggingTabId, setActiveTabId, updateTab, removeTab } =
     useBrowserTabStore();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -101,6 +101,10 @@ export function useBrowserTab({ id, index, moveTab }: HookParams) {
   });
 
   useEffect(() => {
+    /**
+     * Handle thread rename
+     * @param event The event object containing the threadId and newTitle
+     */
     const handleThreadRename = (event: {
       threadId: string;
       newTitle: string;
@@ -111,15 +115,26 @@ export function useBrowserTab({ id, index, moveTab }: HookParams) {
       }
     };
 
-    const unsubscribe = emitter.on(
-      EventNames.THREAD_RENAME,
-      handleThreadRename
-    );
+    /**
+     * Handle thread delete
+     * @param event The event object containing the threadId
+     */
+    const handleThreadDelete = (event: { threadId: string }) => {
+      const tabToDelete = tabs.find((tab) => tab.id === event.threadId);
+      if (tabToDelete) {
+        removeTab(tabToDelete.id);
+      }
+    };
+
+    const unsubscribes = [
+      emitter.on(EventNames.THREAD_RENAME, handleThreadRename),
+      emitter.on(EventNames.THREAD_DELETE, handleThreadDelete),
+    ];
 
     return () => {
-      unsubscribe();
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [tabs, updateTab]);
+  }, [tabs, updateTab, removeTab]);
 
   return {
     handlerId,
