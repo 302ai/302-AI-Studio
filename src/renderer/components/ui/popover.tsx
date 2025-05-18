@@ -32,7 +32,7 @@ const PopoverTitle = ({ level = 2, className, ...props }: DialogTitleProps) => (
     className={twMerge(
       "sm:leading-none",
       level === 2 && "sm:text-lg",
-      className,
+      className
     )}
     {...props}
   />
@@ -111,7 +111,7 @@ const PopoverContent = ({
         content({
           ...renderProps,
           className,
-        }),
+        })
       )}
       {...props}
     >

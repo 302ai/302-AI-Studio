@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useBrowserTabStore } from "@renderer/store/browser-tab-store";
 
 type SidebarSection =
+  | "collected"
   | "today"
   | "yesterday"
   | "last7Days"
@@ -25,7 +26,7 @@ export function useSidebar() {
   const collectedThreads = threads.filter((thread) => thread.isCollected);
 
   /**
-   * Returns the grouped threads for the sidebar based on the current date
+   * Returns the grouped threads for the sidebar including collected threads and date-based groups
    * @returns The grouped threads
    */
   const groupedThreads = useMemo<GroupedThreads[]>(() => {
@@ -34,14 +35,25 @@ export function useSidebar() {
 
     const groupConfigs = [
       {
+        key: "collected",
+        label: t("sidebar.section.collected"),
+        filter: (thread: ThreadItem) => thread.isCollected,
+      },
+      {
         key: "today",
         label: t("sidebar.section.today"),
-        filter: (date: Date) => date >= now,
+        filter: (thread: ThreadItem) => {
+          if (thread.isCollected) return false;
+          const date = new Date(thread.createdAt);
+          return date >= now;
+        },
       },
       {
         key: "yesterday",
         label: t("sidebar.section.yesterday"),
-        filter: (date: Date) => {
+        filter: (thread: ThreadItem) => {
+          if (thread.isCollected) return false;
+          const date = new Date(thread.createdAt);
           const yesterday = new Date(now);
           yesterday.setDate(now.getDate() - 1);
           return date >= yesterday && date < now;
@@ -50,7 +62,9 @@ export function useSidebar() {
       {
         key: "last7Days",
         label: t("sidebar.section.last7Days"),
-        filter: (date: Date) => {
+        filter: (thread: ThreadItem) => {
+          if (thread.isCollected) return false;
+          const date = new Date(thread.createdAt);
           const last7Days = new Date(now);
           const yesterday = new Date(now);
           yesterday.setDate(now.getDate() - 1);
@@ -61,7 +75,9 @@ export function useSidebar() {
       {
         key: "last30Days",
         label: t("sidebar.section.last30Days"),
-        filter: (date: Date) => {
+        filter: (thread: ThreadItem) => {
+          if (thread.isCollected) return false;
+          const date = new Date(thread.createdAt);
           const last30Days = new Date(now);
           const last7Days = new Date(now);
           last7Days.setDate(now.getDate() - 7);
@@ -72,7 +88,9 @@ export function useSidebar() {
       {
         key: "earlier",
         label: t("sidebar.section.earlier"),
-        filter: (date: Date) => {
+        filter: (thread: ThreadItem) => {
+          if (thread.isCollected) return false;
+          const date = new Date(thread.createdAt);
           const last30Days = new Date(now);
           last30Days.setDate(now.getDate() - 30);
           return date < last30Days;
@@ -80,12 +98,12 @@ export function useSidebar() {
       },
     ];
 
+    /**
+     * * Group threads according to the filters defined in groupConfigs
+     * * Each thread is only included in one group based on its filter criteria
+     */
     const groups = groupConfigs.reduce<GroupedThreads[]>((acc, config) => {
-      const filteredThreads = threads.filter((thread) => {
-        // * If the thread is collected, it will not be shown in the sidebar
-        if (thread.isCollected) return false;
-        return config.filter(new Date(thread.createdAt));
-      });
+      const filteredThreads = threads.filter(config.filter);
 
       return filteredThreads.length === 0
         ? acc

@@ -48,6 +48,12 @@
     "open-sidebar": {
       "tooltip": "打开边栏"
     },
+    "search": {
+      "placeholder": "搜索..."
+    },
+    "search-thread": {
+      "tooltip": "搜索会话"
+    },
     "section": {
       "collected": "收藏",
       "earlier": "更早",

@@ -30,7 +30,7 @@ export function LanguageSelector({
     <div className="flex flex-col gap-2">
       <Label>{t("settings.general-settings.language.label")}</Label>
       <Select
-        className="w-[240px] min-w-0"
+        className="w-[240px]"
         selectedKey={currentLang.key}
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
@@ -40,7 +40,7 @@ export function LanguageSelector({
           className="h-9 cursor-pointer rounded-[10px] text-secondary-fg"
           prefix={<BsGlobe className="mr-1 size-4" />}
         />
-        <SelectList className="min-w-32">
+        <SelectList popoverClassName="min-w-[240px]">
           {langs.map((lang) => (
             <SelectOption
               className="cursor-pointer"

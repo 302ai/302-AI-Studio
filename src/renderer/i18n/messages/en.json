@@ -48,6 +48,12 @@
     "open-sidebar": {
       "tooltip": "Open Sidebar"
     },
+    "search": {
+      "placeholder": "Search..."
+    },
+    "search-thread": {
+      "tooltip": "Search Conversation"
+    },
     "section": {
       "collected": "Collections",
       "earlier": "Earlier",

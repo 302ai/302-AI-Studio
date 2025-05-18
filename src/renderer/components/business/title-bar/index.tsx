@@ -1,4 +1,4 @@
-import { FiSettings } from "react-icons/fi";
+import { FiSettings, FiSearch } from "react-icons/fi";
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import {
@@ -19,6 +19,8 @@ import { Separator } from "@renderer/components/ui/separator";
 import { BrowserTabs } from "../browser-tab";
 import { useBrowserTabStore } from "@renderer/store/browser-tab-store";
 import { useTranslation } from "react-i18next";
+import { ThreadSearcher } from "./thread-searcher";
+import { useState } from "react";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
@@ -26,6 +28,8 @@ export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
   const { addTab, addSettingsTab } = useBrowserTabStore();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const isSidebarCollapsed = state === "collapsed";
 
@@ -37,81 +41,110 @@ export function BasicTitleBar() {
     addTab({ title: t("thread.new-thread-title") });
   };
 
+  const handleSearchThread = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <TitlebarContainer>
-      <TitlebarLeft
-        className={cn(
-          "flex flex-row items-center justify-end gap-2 px-2",
-          "transition-[width] duration-200 ease-linear",
-          "border border-t-0 border-r-0 border-b-0 border-l-0",
-          state === "expanded"
-            ? "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
-            : isMac
-            ? "w-[var(--sidebar-width-dock)]"
-            : "w-[var(--sidebar-width-collapsed)]"
-        )}
-      >
-        <Tooltip>
-          <TooltipTrigger
-            className="size-8"
-            intent="plain"
-            size="square-petite"
-            style={noDragRegion}
-            onClick={toggleSidebar}
-          >
-            <LuPanelLeftOpen
-              className={cn("h-4 w-4", { hidden: !isSidebarCollapsed })}
-            />
-            <LuPanelLeftClose
-              className={cn("h-4 w-4", { hidden: isSidebarCollapsed })}
-            />
-          </TooltipTrigger>
-          <TooltipContent>
-            {isSidebarCollapsed
-              ? t("sidebar.open-sidebar.tooltip")
-              : t("sidebar.close-sidebar.tooltip")}
-          </TooltipContent>
-        </Tooltip>
+    <>
+      <TitlebarContainer>
+        <TitlebarLeft
+          className={cn(
+            "flex flex-row items-center justify-end gap-2 px-2",
+            "transition-[width] duration-200 ease-linear",
+            "border border-t-0 border-r-0 border-b-0 border-l-0",
+            state === "expanded"
+              ? "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
+              : isMac
+              ? "w-[var(--sidebar-width-dock)]"
+              : "w-[var(--sidebar-width-collapsed)]"
+          )}
+        >
+          {/* Sidebar Toggle */}
+          <Tooltip>
+            <TooltipTrigger
+              className="size-8"
+              intent="plain"
+              size="square-petite"
+              style={noDragRegion}
+              onClick={toggleSidebar}
+            >
+              <LuPanelLeftOpen
+                className={cn("h-4 w-4", { hidden: !isSidebarCollapsed })}
+              />
+              <LuPanelLeftClose
+                className={cn("h-4 w-4", { hidden: isSidebarCollapsed })}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              {isSidebarCollapsed
+                ? t("sidebar.open-sidebar.tooltip")
+                : t("sidebar.close-sidebar.tooltip")}
+            </TooltipContent>
+          </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger
-            className="size-8"
-            intent="plain"
-            size="square-petite"
-            style={noDragRegion}
-            onClick={handleAddNewTab}
-          >
-            <FaRegSquarePlus className="h-4 w-4" />
-          </TooltipTrigger>
-          <TooltipContent>{t("sidebar.new-thread.tooltip")}</TooltipContent>
-        </Tooltip>
-      </TitlebarLeft>
+          {/* Search Thread */}
+          <Tooltip>
+            <TooltipTrigger
+              className={cn("size-8", { hidden: isSidebarCollapsed })}
+              intent="plain"
+              size="square-petite"
+              style={noDragRegion}
+              onClick={handleSearchThread}
+            >
+              <FiSearch className="h-4 w-4" />
+            </TooltipTrigger>
+            <TooltipContent>
+              {t("sidebar.search-thread.tooltip")}
+            </TooltipContent>
+          </Tooltip>
 
-      <Separator
-        orientation="vertical"
-        className={cn("h-[20px] w-[1px]", state === "expanded" ? "hidden" : "")}
-      />
+          {/* Add New Tab */}
+          <Tooltip>
+            <TooltipTrigger
+              className="size-8"
+              intent="plain"
+              size="square-petite"
+              style={noDragRegion}
+              onClick={handleAddNewTab}
+            >
+              <FaRegSquarePlus className="h-4 w-4" />
+            </TooltipTrigger>
+            <TooltipContent>{t("sidebar.new-thread.tooltip")}</TooltipContent>
+          </Tooltip>
+        </TitlebarLeft>
 
-      <TitlebarCenter>
-        <BrowserTabs />
-      </TitlebarCenter>
+        <Separator
+          orientation="vertical"
+          className={cn(
+            "h-[20px] w-[1px]",
+            state === "expanded" ? "hidden" : ""
+          )}
+        />
 
-      <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
+        <TitlebarCenter>
+          <BrowserTabs />
+        </TitlebarCenter>
 
-      <TitlebarRight>
-        <Tooltip>
-          <TooltipTrigger
-            className="size-8"
-            intent="plain"
-            size="square-petite"
-            style={noDragRegion}
-            onClick={handleSettingsClick}
-          >
-            <FiSettings className="h-4 w-4" />
-          </TooltipTrigger>
-          <TooltipContent>{t("settings.icon-tooltip")}</TooltipContent>
-        </Tooltip>
-      </TitlebarRight>
-    </TitlebarContainer>
+        <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
+
+        <TitlebarRight>
+          <Tooltip>
+            <TooltipTrigger
+              className="size-8"
+              intent="plain"
+              size="square-petite"
+              style={noDragRegion}
+              onClick={handleSettingsClick}
+            >
+              <FiSettings className="h-4 w-4" />
+            </TooltipTrigger>
+            <TooltipContent>{t("settings.icon-tooltip")}</TooltipContent>
+          </Tooltip>
+        </TitlebarRight>
+      </TitlebarContainer>
+
+      <ThreadSearcher isOpen={isOpen} onOpenChange={() => setIsOpen(!isOpen)} />
+    </>
   );
 }

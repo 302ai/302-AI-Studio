@@ -48,6 +48,12 @@
     "open-sidebar": {
       "tooltip": "サイドバーを開く"
     },
+    "search": {
+      "placeholder": "検索..."
+    },
+    "search-thread": {
+      "tooltip": "セッションの検索"
+    },
     "section": {
       "collected": "コレクション",
       "earlier": "以前",

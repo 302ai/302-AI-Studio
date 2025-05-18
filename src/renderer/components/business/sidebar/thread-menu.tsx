@@ -7,7 +7,7 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { Pencil, Eraser, Package, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ModalAction } from "./model-action";
+import { ModalAction } from "./modal-action";
 import { ThreadItem } from "@/src/renderer/types/threads";
 import { TextField } from "@renderer/components/ui/text-field";
 import { useThreadMenu } from "@/src/renderer/hooks/use-thread-menu";

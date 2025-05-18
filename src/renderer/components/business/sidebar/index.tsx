@@ -20,7 +20,6 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   const { t } = useTranslation();
-
   const { groupedThreads, collectedThreads, handleClickThread } = useSidebar();
 
   const handleSidebarItemClick = (threadId: string) => {
@@ -31,35 +30,11 @@ export function AppSidebar(props: AppSidebarProps) {
     <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
         <SidebarContent>
-          {/* Collected Threads */}
-          <SidebarDisclosureGroup defaultExpandedKeys={["collected"]}>
-            <SidebarDisclosure id="collected" key="collected">
-              <SidebarDisclosureTrigger>
-                <SidebarLabel>{t("sidebar.section.collected")}</SidebarLabel>
-              </SidebarDisclosureTrigger>
-              <SidebarDisclosurePanel>
-                {collectedThreads.map((collectedThread) => (
-                  <SidebarItem
-                    className="flex flex-1"
-                    key={collectedThread.id}
-                    onClick={() => handleSidebarItemClick(collectedThread.id)}
-                  >
-                    <img
-                      src={collectedThread.favicon || placeholder}
-                      alt="favicon"
-                      className="h-4 w-4 flex-shrink-0"
-                    />
-                    <ThreadMenu thread={collectedThread} />
-                  </SidebarItem>
-                ))}
-              </SidebarDisclosurePanel>
-            </SidebarDisclosure>
-          </SidebarDisclosureGroup>
-
-          {/* Threads by date */}
+          {/* All Threads */}
           <SidebarDisclosureGroup
             className="gap-y-0"
             defaultExpandedKeys={[
+              "collected",
               "today",
               "yesterday",
               "last7Days",
@@ -67,6 +42,15 @@ export function AppSidebar(props: AppSidebarProps) {
               "earlier",
             ]}
           >
+            {/* If there are no collected threads, the collected section will will also be displayed */}
+            {collectedThreads.length === 0 && (
+              <SidebarDisclosure id="collected" key="collected">
+                <SidebarDisclosureTrigger>
+                  <SidebarLabel>{t("sidebar.section.collected")}</SidebarLabel>
+                </SidebarDisclosureTrigger>
+              </SidebarDisclosure>
+            )}
+
             {groupedThreads.map((group) => (
               <SidebarDisclosure id={group.key} key={group.key}>
                 <SidebarDisclosureTrigger>

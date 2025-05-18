@@ -217,6 +217,15 @@ const DialogCloseIcon = ({
   ) : null;
 };
 
+Dialog.Header = DialogHeader;
+Dialog.Title = DialogTitle;
+Dialog.Description = DialogDescription;
+Dialog.Body = DialogBody;
+Dialog.Footer = DialogFooter;
+Dialog.Close = DialogClose;
+Dialog.CloseIcon = DialogCloseIcon;
+Dialog.Trigger = DialogTrigger;
+
 export type {
   DialogHeaderProps,
   DialogTitleProps,
