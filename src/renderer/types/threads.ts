@@ -5,4 +5,5 @@ export type ThreadItem = {
   createdAt: string;
   updatedAt: string;
   isCollected: boolean;
+  favicon?: string;
 };
