@@ -39,7 +39,8 @@
       "clean-messages": "清空消息",
       "collect-thread": "收藏",
       "delete": "删除",
-      "rename": "重命名"
+      "rename": "重命名",
+      "uncollect-thread": "取消收藏"
     },
     "new-thread": {
       "tooltip": "新聊天"
@@ -48,6 +49,7 @@
       "tooltip": "打开边栏"
     },
     "section": {
+      "collected": "收藏",
       "earlier": "更早",
       "last30Days": "过去30天",
       "last7Days": "过去7天",

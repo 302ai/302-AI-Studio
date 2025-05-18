@@ -39,7 +39,8 @@
       "clean-messages": "Clear Messages",
       "collect-thread": "Collect",
       "delete": "Delete",
-      "rename": "Rename"
+      "rename": "Rename",
+      "uncollect-thread": "Cancel Collection"
     },
     "new-thread": {
       "tooltip": "New Chat"
@@ -48,6 +49,7 @@
       "tooltip": "Open Sidebar"
     },
     "section": {
+      "collected": "Collections",
       "earlier": "Earlier",
       "last30Days": "Last 30 days",
       "last7Days": "Last 7 days",

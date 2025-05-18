@@ -22,6 +22,8 @@ export function useSidebar() {
   const { threads } = useThreadsStore();
   const { tabs, setActiveTabId, addTab } = useBrowserTabStore();
 
+  const collectedThreads = threads.filter((thread) => thread.isCollected);
+
   /**
    * Returns the grouped threads for the sidebar based on the current date
    * @returns The grouped threads
@@ -80,7 +82,8 @@ export function useSidebar() {
 
     const groups = groupConfigs.reduce<GroupedThreads[]>((acc, config) => {
       const filteredThreads = threads.filter((thread) => {
-        if (!thread.createdAt) return false;
+        // * If the thread is collected, it will not be shown in the sidebar
+        if (thread.isCollected) return false;
         return config.filter(new Date(thread.createdAt));
       });
 
@@ -116,5 +119,5 @@ export function useSidebar() {
     }
   };
 
-  return { groupedThreads, handleClickThread };
+  return { groupedThreads, collectedThreads, handleClickThread };
 }

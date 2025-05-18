@@ -4,4 +4,5 @@ export type ThreadItem = {
   title: string;
   createdAt: string;
   updatedAt: string;
+  isCollected: boolean;
 };

@@ -35,6 +35,7 @@ export const useThreadsStore = create<ThreadStore>()(
             title,
             createdAt: now,
             updatedAt: now,
+            isCollected: false,
           };
           state.threads.push(newThread);
           state.activeThreadId = newThread.id;

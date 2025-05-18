@@ -105,7 +105,9 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           </ContextMenuItem>
           <ContextMenuItem onAction={handleCollectThread}>
             <Package className="mr-2 h-4 w-4" />
-            {t("sidebar.menu-item.collect-thread")}
+            {thread.isCollected
+              ? t("sidebar.menu-item.uncollect-thread")
+              : t("sidebar.menu-item.collect-thread")}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem

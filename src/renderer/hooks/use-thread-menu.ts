@@ -42,7 +42,8 @@ export function useThreadMenu(thread: ThreadItem) {
   };
 
   const handleCollectThread = () => {
-    console.log("collect thread");
+    updateThread(thread.id, { isCollected: !thread.isCollected });
+
     closeModal();
   };
 

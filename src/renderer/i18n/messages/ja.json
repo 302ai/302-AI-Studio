@@ -39,7 +39,8 @@
       "clean-messages": "メッセージをクリアします",
       "collect-thread": "集める",
       "delete": "消去",
-      "rename": "名前を変更"
+      "rename": "名前を変更",
+      "uncollect-thread": "コレクションキャンセル"
     },
     "new-thread": {
       "tooltip": "新しいチャット"
@@ -48,6 +49,7 @@
       "tooltip": "サイドバーを開く"
     },
     "section": {
+      "collected": "コレクション",
       "earlier": "以前",
       "last30Days": "過去30日間",
       "last7Days": "過去7日間",
