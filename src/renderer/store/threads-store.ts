@@ -20,7 +20,7 @@ const { threadsService } = window.service;
 
 export const useThreadsStore = create<ThreadStore>()(
   persist(
-    immer((set) => ({
+    immer((set, get) => ({
       threads: [],
       activeThreadId: "",
 
@@ -37,7 +37,12 @@ export const useThreadsStore = create<ThreadStore>()(
             updatedAt: now,
             isCollected: false,
           };
-          state.threads.push(newThread);
+          const newThreads = [...get().threads, newThread];
+          const sortedThreads = newThreads.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          state.threads = sortedThreads;
           state.activeThreadId = newThread.id;
           return state;
         }),
