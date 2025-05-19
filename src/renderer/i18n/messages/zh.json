@@ -24,6 +24,13 @@
     },
     "icon-tooltip": "打开设置",
     "model-settings": {
+      "model-list": {
+        "label": "模型列表"
+      },
+      "model-provider": {
+        "add-provider": "添加供应商",
+        "label": "模型提供商"
+      },
       "name": "模型设置"
     },
     "tab-title": "设置",

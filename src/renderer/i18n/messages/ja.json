@@ -24,6 +24,13 @@
     },
     "icon-tooltip": "設定を開く",
     "model-settings": {
+      "model-list": {
+        "label": "モデルリスト"
+      },
+      "model-provider": {
+        "add-provider": "ベンダーを追加します",
+        "label": "モデルプロバイダー"
+      },
       "name": "モデル設定"
     },
     "tab-title": "設定",

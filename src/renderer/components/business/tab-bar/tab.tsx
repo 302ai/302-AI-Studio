@@ -52,6 +52,7 @@ export function Tab({
     onClose,
   });
 
+  // * The three different compression states for the tab
   const isCompressedOne = width <= 100;
   const isCompressedTwo = width <= 80;
   const isCompressedThree = width <= 50;

@@ -24,6 +24,13 @@
     },
     "icon-tooltip": "Open Settings",
     "model-settings": {
+      "model-list": {
+        "label": "Model List"
+      },
+      "model-provider": {
+        "add-provider": "Add Provider",
+        "label": "Model Provider"
+      },
       "name": "Model Settings"
     },
     "tab-title": "Settings",
