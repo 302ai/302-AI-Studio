@@ -63,6 +63,12 @@
       "yesterday": "昨天"
     }
   },
+  "tab-bar": {
+    "menu-item": {
+      "close": "关闭",
+      "close-all": "关闭全部"
+    }
+  },
   "thread": {
     "new-thread-title": "新会话"
   },

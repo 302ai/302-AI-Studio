@@ -63,6 +63,12 @@
       "yesterday": "昨日"
     }
   },
+  "tab-bar": {
+    "menu-item": {
+      "close": "閉鎖",
+      "close-all": "すべて閉じる"
+    }
+  },
   "thread": {
     "new-thread-title": "新しい会話"
   },

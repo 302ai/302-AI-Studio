@@ -63,6 +63,12 @@
       "yesterday": "Yesterday"
     }
   },
+  "tab-bar": {
+    "menu-item": {
+      "close": "Close",
+      "close-all": "Close All"
+    }
+  },
   "thread": {
     "new-thread-title": "New Conversation"
   },

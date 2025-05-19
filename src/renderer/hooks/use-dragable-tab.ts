@@ -18,9 +18,10 @@ interface HookParams {
   id: string;
   index: number;
   moveTab: (dragIndex: number, hoverIndex: number) => void;
+  onClose: () => void;
 }
 
-export function useDragableTab({ id, index, moveTab }: HookParams) {
+export function useDragableTab({ id, index, moveTab, onClose }: HookParams) {
   const { tabs, setDraggingTabId, setActiveTabId, updateTab, removeTab } =
     useTabBarStore();
 
@@ -100,6 +101,22 @@ export function useDragableTab({ id, index, moveTab }: HookParams) {
     },
   });
 
+  /**
+   * Handle tab close
+   */
+  const handleTabClose = () => {
+    onClose();
+  };
+
+  /**
+   * Handle tab close all
+   */
+  const handleTabCloseAll = () => {
+    tabs.forEach((tab) => {
+      removeTab(tab.id);
+    });
+  };
+
   useEffect(() => {
     /**
      * Handle thread rename
@@ -143,5 +160,7 @@ export function useDragableTab({ id, index, moveTab }: HookParams) {
       drag(drop(node));
       ref.current = node;
     },
+    handleTabClose,
+    handleTabCloseAll,
   };
 }
