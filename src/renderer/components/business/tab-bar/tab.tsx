@@ -1,6 +1,5 @@
 import { VscClose, VscCloseAll } from "react-icons/vsc";
 import { cn } from "@renderer/lib/utils";
-import { Button } from "@renderer/components/ui/button";
 import { TabType, useTabBarStore } from "@/src/renderer/store/tab-bar-store";
 import placeholder from "@renderer/assets/images/provider/302ai.png";
 import { Settings2, X } from "lucide-react";
@@ -100,7 +99,10 @@ export function Tab({
               ) : (
                 <X
                   className="absolute size-5 shrink-0 rounded-full p-1 hover:bg-hover-primary"
-                  onClick={handleTabClose}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTabClose();
+                  }}
                 />
               )}
             </div>
@@ -125,7 +127,7 @@ export function Tab({
               )}
               <span
                 className={cn(
-                  "truncate text-xs",
+                  "truncate text-left text-xs",
                   isCompressedOne ? "flex-shrink" : "flex-1"
                 )}
               >
@@ -139,7 +141,10 @@ export function Tab({
                     : "hover:bg-hover-secondary",
                   isCompressedTwo ? "size-5" : "size-6"
                 )}
-                onClick={handleTabClose}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTabClose();
+                }}
               />
             </>
           )}

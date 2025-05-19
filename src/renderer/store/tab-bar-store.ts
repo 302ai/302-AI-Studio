@@ -159,6 +159,7 @@ export const useTabBarStore = create<TabBarStore>()(
       partialize: (state) => ({
         tabs: state.tabs,
         activeTabId: state.activeTabId,
+        activeTabHistory: state.activeTabHistory,
       }),
     }
   )
