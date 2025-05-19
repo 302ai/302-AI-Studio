@@ -13,6 +13,7 @@ import {
 import { useThread } from "@renderer/hooks/use-thread";
 import { useTranslation } from "react-i18next";
 import { emitter, EventNames } from "@renderer/services/event-service";
+import placeholder from "@renderer/assets/images/provider/302ai.png";
 
 interface ThreadSearcherProps {
   isOpen: boolean;
@@ -54,19 +55,24 @@ export function ThreadSearcher({ isOpen, onOpenChange }: ThreadSearcherProps) {
         >
           {groupedThreads.map(({ key, label, threads }) => (
             <ListBoxSection key={key} id={key} title={label}>
-              {threads.map(({ id, title }) => (
+              {threads.map(({ id, title, favicon }) => (
                 <ListBoxItem
                   className="flex cursor-pointer p-0"
                   key={id}
                   id={id}
                   textValue={title}
                 >
-                  <span
-                    className="w-full rounded-lg px-[9.2px] py-[5.2px] hover:bg-hover-primary"
+                  <div
+                    className="flex w-full items-center gap-2 rounded-lg px-[9.2px] py-[5.2px] hover:bg-hover-primary"
                     onPointerDown={() => handleThreadClick(id)}
                   >
+                    <img
+                      src={favicon || placeholder}
+                      alt={title}
+                      className="h-4 w-4"
+                    />
                     {title}
-                  </span>
+                  </div>
                 </ListBoxItem>
               ))}
             </ListBoxSection>
