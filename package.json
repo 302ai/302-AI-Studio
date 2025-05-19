@@ -40,6 +40,7 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "@intentui/icons": "^1.10.33",
     "better-sqlite3": "^11.10.0",
     "class-variance-authority": "^0.7.1",

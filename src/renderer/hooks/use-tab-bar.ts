@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { useThreadsStore } from "../store/threads-store";
 import { emitter } from "../services/event-service";
 import { EventNames } from "../services/event-service";
+import { DropResult } from "@hello-pangea/dnd";
 
 interface UseTabBarProps {
-  tabsContainerRef: React.RefObject<HTMLDivElement>;
+  tabBarRef: React.RefObject<HTMLDivElement>;
 }
 
-export function useTabBar({ tabsContainerRef }: UseTabBarProps) {
+export function useTabBar({ tabBarRef }: UseTabBarProps) {
   const {
     tabs,
     activeTabId,
@@ -30,7 +31,7 @@ export function useTabBar({ tabsContainerRef }: UseTabBarProps) {
     moveTab(dragIndex, hoverIndex);
   };
 
-  const handleClickTab = (id: string) => {
+  const activateTabId = (id: string) => {
     setActiveTabId(id);
   };
 
@@ -44,10 +45,16 @@ export function useTabBar({ tabsContainerRef }: UseTabBarProps) {
     }
   };
 
-  const calculateTabWidth = useCallback(() => {
-    if (!tabsContainerRef.current) return;
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
 
-    const containerWidth = tabsContainerRef.current.clientWidth;
+    handleMoveTab(result.source.index, result.destination.index);
+  };
+
+  const calculateTabWidth = useCallback(() => {
+    if (!tabBarRef.current) return;
+
+    const containerWidth = tabBarRef.current.clientWidth;
     const bufferSpace = 20;
     const availableWidth = containerWidth - bufferSpace;
 
@@ -62,7 +69,7 @@ export function useTabBar({ tabsContainerRef }: UseTabBarProps) {
     );
 
     setTabWidth(newTabWidth);
-  }, [tabs.length, tabsContainerRef.current]);
+  }, [tabs.length, tabBarRef.current]);
 
   useEffect(() => {
     calculateTabWidth();
@@ -71,14 +78,14 @@ export function useTabBar({ tabsContainerRef }: UseTabBarProps) {
       calculateTabWidth();
     });
 
-    if (tabsContainerRef.current) {
-      resizeObserver.observe(tabsContainerRef.current);
+    if (tabBarRef.current) {
+      resizeObserver.observe(tabBarRef.current);
     }
 
     return () => {
       resizeObserver.disconnect();
     };
-  }, [calculateTabWidth, tabsContainerRef.current]);
+  }, [calculateTabWidth, tabBarRef.current]);
 
   useEffect(() => {
     if (!isLoaded) {
@@ -129,9 +136,12 @@ export function useTabBar({ tabsContainerRef }: UseTabBarProps) {
   }, [tabs, addTab, setActiveTabId, threads]);
 
   return {
+    tabs,
+    activeTabId,
     tabWidth,
-    handleMoveTab,
-    handleClickTab,
+
+    activateTabId,
     handleCloseTab,
+    handleDragEnd,
   };
 }
