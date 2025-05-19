@@ -14,7 +14,6 @@ import {
 import { tv } from "tailwind-variants";
 import {
   DropdownItem,
-  DropdownItemDetails,
   DropdownLabel,
   DropdownSection,
   DropdownSeparator,
@@ -147,11 +146,9 @@ const SelectTrigger = ({ className, ...props }: SelectTriggerProps) => {
 const SelectSection = DropdownSection;
 const SelectSeparator = DropdownSeparator;
 const SelectLabel = DropdownLabel;
-const SelectOptionDetails = DropdownItemDetails;
 const SelectOption = DropdownItem;
 
 // Maintain the nested components for backward compatibility
-Select.OptionDetails = SelectOptionDetails;
 Select.Option = SelectOption;
 Select.Label = SelectLabel;
 Select.Separator = SelectSeparator;
@@ -168,6 +165,5 @@ export {
   SelectSection,
   SelectSeparator,
   SelectLabel,
-  SelectOptionDetails,
 };
 export type { SelectProps, SelectTriggerProps, SelectListProps };

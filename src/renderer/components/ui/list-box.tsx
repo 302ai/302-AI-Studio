@@ -1,21 +1,19 @@
 import { IconCheck, IconHamburger } from "@intentui/icons";
-import type {
-  ListBoxItemProps as ListBoxItemPrimitiveProps,
-  ListBoxProps,
-} from "react-aria-components";
+import type { ListBoxItemProps, ListBoxProps } from "react-aria-components";
 import {
   ListBoxItem as ListBoxItemPrimitive,
   ListBox as ListBoxPrimitive,
   composeRenderProps,
 } from "react-aria-components";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
-import { twMerge } from "tailwind-merge";
+
 import {
-  DropdownItemDetails,
+  DropdownDescription,
   DropdownLabel,
   DropdownSection,
   dropdownItemStyles,
-} from "./dropdown";
+} from "@renderer/components/ui/dropdown";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
+import { twMerge } from "tailwind-merge";
 
 const ListBox = <T extends object>({
   className,
@@ -25,24 +23,17 @@ const ListBox = <T extends object>({
     {...props}
     className={composeTailwindRenderProps(
       className,
-      "grid max-h-96 w-full min-w-56 grid-cols-[auto_1fr] flex-col gap-y-1 overflow-auto overflow-y-auto rounded-xl border p-1 shadow-lg outline-hidden [scrollbar-width:thin] [&::-webkit-scrollbar]:size-0.5 *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1",
+      "grid max-h-96 w-full min-w-56 scroll-py-1 grid-cols-[auto_1fr] flex-col gap-y-1 overflow-y-scroll overscroll-contain rounded-xl border p-1 shadow-lg outline-hidden [scrollbar-width:thin] [&::-webkit-scrollbar]:size-0.5 *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1"
     )}
   />
 );
-
-interface ListBoxItemProps<T extends object>
-  extends ListBoxItemPrimitiveProps<T> {
-  className?: string;
-}
 
 const ListBoxItem = <T extends object>({
   children,
   className,
   ...props
 }: ListBoxItemProps<T>) => {
-  const textValue =
-    props.textValue || (typeof children === "string" ? children : undefined);
-
+  const textValue = typeof children === "string" ? children : undefined;
   return (
     <ListBoxItemPrimitive
       textValue={textValue}
@@ -51,7 +42,7 @@ const ListBoxItem = <T extends object>({
         dropdownItemStyles({
           ...renderProps,
           className,
-        }),
+        })
       )}
     >
       {(renderProps) => {
@@ -66,7 +57,7 @@ const ListBoxItem = <T extends object>({
                   "size-4 shrink-0 text-muted-fg transition",
                   isFocused && "text-fg",
                   isDragging && "text-fg",
-                  isSelected && "text-accent-fg/70",
+                  isSelected && "text-accent-fg/70"
                 )}
               />
             )}
@@ -97,11 +88,19 @@ const ListBoxSection = ({ className, ...props }: ListBoxSectionProps) => {
   );
 };
 
-const ListBoxItemDetails = DropdownItemDetails;
+const ListBoxLabel = DropdownLabel;
+const ListBoxDescription = DropdownDescription;
 
 ListBox.Section = ListBoxSection;
-ListBox.ItemDetails = ListBoxItemDetails;
+ListBox.Label = ListBoxLabel;
+ListBox.Description = ListBoxDescription;
 ListBox.Item = ListBoxItem;
 
 export type { ListBoxItemProps, ListBoxSectionProps };
-export { ListBox, ListBoxSection, ListBoxItem };
+export {
+  ListBox,
+  ListBoxSection,
+  ListBoxItem,
+  ListBoxLabel,
+  ListBoxDescription,
+};

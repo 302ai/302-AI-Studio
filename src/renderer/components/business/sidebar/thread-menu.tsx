@@ -8,9 +8,9 @@ import {
 import { Pencil, Eraser, Package, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ModalAction } from "./modal-action";
-import { ThreadItem } from "@/src/renderer/types/threads";
+import { ThreadItem } from "@renderer/types/threads";
 import { TextField } from "@renderer/components/ui/text-field";
-import { useThreadMenu } from "@/src/renderer/hooks/use-thread-menu";
+import { useThreadMenu } from "@renderer/hooks/use-thread-menu";
 
 export enum MenuModelAction {
   Rename = "rename",

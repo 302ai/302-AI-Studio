@@ -43,7 +43,7 @@ export function LanguageSelector({
         <SelectList popoverClassName="min-w-[240px]">
           {langs.map((lang) => (
             <SelectOption
-              className="cursor-pointer"
+              className="flex cursor-pointer justify-between hover:bg-hover-primary focus:bg-hover-primary"
               key={lang.key}
               id={lang.key}
               textValue={lang.nativeName}

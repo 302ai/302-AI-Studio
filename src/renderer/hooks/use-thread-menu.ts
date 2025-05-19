@@ -51,6 +51,7 @@ export function useThreadMenu(thread: ThreadItem) {
     state,
     newTitle,
     formattedTitle,
+
     setState,
     setNewTitle,
     closeModal,

@@ -23,7 +23,6 @@ import { twMerge } from "tailwind-merge";
 import type { VariantProps } from "tailwind-variants";
 import {
   DropdownDescription,
-  DropdownItemDetails,
   DropdownKeyboard,
   DropdownLabel,
   DropdownSeparator,
@@ -249,7 +248,6 @@ const MenuSection = <T extends object>({
 };
 
 const MenuSeparator = DropdownSeparator;
-const MenuItemDetails = DropdownItemDetails;
 const MenuKeyboard = DropdownKeyboard;
 const MenuLabel = DropdownLabel;
 const MenuDescription = DropdownDescription;
@@ -270,7 +268,6 @@ export {
   MenuItem,
   MenuSection,
   MenuSeparator,
-  MenuItemDetails,
   MenuLabel,
   MenuSubMenu,
   MenuDescription,

@@ -1,20 +1,18 @@
 import { Autocomplete, useFilter } from "react-aria-components";
 import { SearchField } from "@renderer/components/ui/search-field";
-import { ListBox, ListBoxItem } from "@renderer/components/ui/list-box";
-import { ModalContent } from "@renderer/components/ui/modal";
-
-const languages = [
-  { id: "en", name: "English" },
-  { id: "es", name: "Spanish" },
-  { id: "fr", name: "French" },
-  { id: "de", name: "German" },
-  { id: "it", name: "Italian" },
-  { id: "pt", name: "Portuguese" },
-  { id: "ru", name: "Russian" },
-  { id: "ja", name: "Japanese" },
-  { id: "zh", name: "Chinese" },
-  { id: "ar", name: "Arabic" },
-];
+import {
+  ListBox,
+  ListBoxItem,
+  ListBoxSection,
+} from "@renderer/components/ui/list-box";
+import {
+  ModalContent,
+  ModalHeader,
+  ModalTitle,
+} from "@renderer/components/ui/modal";
+import { useThread } from "@renderer/hooks/use-thread";
+import { useState } from "react";
+import type { Selection } from "react-aria-components";
 
 interface ThreadSearcherProps {
   isOpen: boolean;
@@ -23,6 +21,9 @@ interface ThreadSearcherProps {
 
 export function ThreadSearcher({ isOpen, onOpenChange }: ThreadSearcherProps) {
   const { contains } = useFilter({ sensitivity: "base" });
+  const { groupedThreads } = useThread();
+
+  const [selected, setSelected] = useState<Selection>(new Set([1]));
 
   return (
     <ModalContent
@@ -31,12 +32,33 @@ export function ThreadSearcher({ isOpen, onOpenChange }: ThreadSearcherProps) {
       closeButton={false}
       isBlurred
     >
+      <ModalHeader className="hidden">
+        <ModalTitle />
+      </ModalHeader>
       <Autocomplete filter={contains}>
         <div className="border-b bg-muted p-2">
           <SearchField className="rounded-lg bg-bg" autoFocus />
         </div>
-        <ListBox className="border-0 shadow-none" items={languages}>
-          {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+        <ListBox
+          className="border-0 shadow-none"
+          aria-label="Thread Item"
+          items={groupedThreads}
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
+        >
+          {groupedThreads.map((group) => (
+            <ListBoxSection key={group.key} id={group.key} title={group.label}>
+              {group.threads.map((thread) => (
+                <ListBoxItem
+                  className="cursor-pointer focus:bg-hover-primary"
+                  key={thread.id}
+                  id={thread.id}
+                >
+                  {thread.title}
+                </ListBoxItem>
+              ))}
+            </ListBoxSection>
+          ))}
         </ListBox>
       </Autocomplete>
     </ModalContent>

@@ -13,18 +13,15 @@ import { useSidebar } from "@renderer/hooks/use-sidebar";
 import { ThreadMenu } from "./thread-menu";
 import { useTranslation } from "react-i18next";
 import placeholder from "@renderer/assets/images/provider/302ai.png";
-
+import { useThread } from "@renderer/hooks/use-thread";
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   children: React.ReactNode;
 }
 
 export function AppSidebar(props: AppSidebarProps) {
   const { t } = useTranslation();
-  const { groupedThreads, collectedThreads, handleClickThread } = useSidebar();
-
-  const handleSidebarItemClick = (threadId: string) => {
-    handleClickThread(threadId);
-  };
+  const { handleClickThread } = useSidebar();
+  const { groupedThreads, collectedThreads } = useThread();
 
   return (
     <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
@@ -61,7 +58,7 @@ export function AppSidebar(props: AppSidebarProps) {
                     <SidebarItem
                       className="flex flex-1"
                       key={thread.id}
-                      onClick={() => handleSidebarItemClick(thread.id)}
+                      onClick={() => handleClickThread(thread.id)}
                     >
                       <img
                         src={thread.favicon || placeholder}
