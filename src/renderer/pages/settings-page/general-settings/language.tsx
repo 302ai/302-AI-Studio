@@ -41,16 +41,16 @@ export function LanguageSelector({
           prefix={<BsGlobe className="mr-1 size-4" />}
         />
         <SelectList popoverClassName="min-w-[240px]">
-          {langs.map((lang) => (
+          {langs.map(({ key, prefix, nativeName }) => (
             <SelectOption
-              className="flex cursor-pointer justify-between hover:bg-hover-primary focus:bg-hover-primary"
-              key={lang.key}
-              id={lang.key}
-              textValue={lang.nativeName}
+              className="flex cursor-pointer justify-between focus:bg-hover-primary"
+              key={key}
+              id={key}
+              textValue={nativeName}
             >
               <span className="flex items-center gap-2">
-                <span className="text-base">{lang.prefix}</span>
-                <span>{lang.nativeName}</span>
+                <span className="text-base">{prefix}</span>
+                <span>{nativeName}</span>
               </span>
             </SelectOption>
           ))}

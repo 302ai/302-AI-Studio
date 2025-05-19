@@ -1,9 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Tab } from "./tab";
-import {
-  TabType,
-  useBrowserTabStore,
-} from "@/src/renderer/store/browser-tab-store";
+import { TabType, useTabBarStore } from "@/src/renderer/store/tab-bar-store";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { DndProvider } from "react-dnd";

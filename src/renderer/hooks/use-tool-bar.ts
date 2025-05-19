@@ -1,12 +1,12 @@
 import { useThreadsStore } from "@renderer/store/threads-store";
-import { useBrowserTabStore } from "@renderer/store/browser-tab-store";
+import { useTabBarStore } from "@/src/renderer/store/tab-bar-store";
 import { useTranslation } from "react-i18next";
 
 export function useToolBar() {
   const { t } = useTranslation();
 
   const { activeThreadId, addThread } = useThreadsStore();
-  const { tabs, getActiveTab, addTab } = useBrowserTabStore();
+  const { tabs, getActiveTab, addTab } = useTabBarStore();
 
   const handleSendMessage = () => {
     if (tabs.length === 0) {

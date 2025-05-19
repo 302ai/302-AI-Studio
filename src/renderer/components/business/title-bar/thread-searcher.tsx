@@ -11,8 +11,8 @@ import {
   ModalTitle,
 } from "@renderer/components/ui/modal";
 import { useThread } from "@renderer/hooks/use-thread";
-import { useState } from "react";
-import type { Selection } from "react-aria-components";
+import { useTranslation } from "react-i18next";
+import { emitter, EventNames } from "@renderer/services/event-service";
 
 interface ThreadSearcherProps {
   isOpen: boolean;
@@ -20,10 +20,14 @@ interface ThreadSearcherProps {
 }
 
 export function ThreadSearcher({ isOpen, onOpenChange }: ThreadSearcherProps) {
+  const { t } = useTranslation();
   const { contains } = useFilter({ sensitivity: "base" });
   const { groupedThreads } = useThread();
 
-  const [selected, setSelected] = useState<Selection>(new Set([1]));
+  const handleThreadClick = (id: string) => {
+    emitter.emit(EventNames.THREAD_OPEN, { threadId: id });
+    onOpenChange();
+  };
 
   return (
     <ModalContent
@@ -37,24 +41,32 @@ export function ThreadSearcher({ isOpen, onOpenChange }: ThreadSearcherProps) {
       </ModalHeader>
       <Autocomplete filter={contains}>
         <div className="border-b bg-muted p-2">
-          <SearchField className="rounded-lg bg-bg" autoFocus />
+          <SearchField
+            className="rounded-lg bg-bg"
+            placeholder={t("sidebar.search.placeholder")}
+            autoFocus
+          />
         </div>
         <ListBox
           className="border-0 shadow-none"
           aria-label="Thread Item"
           items={groupedThreads}
-          selectedKeys={selected}
-          onSelectionChange={setSelected}
         >
-          {groupedThreads.map((group) => (
-            <ListBoxSection key={group.key} id={group.key} title={group.label}>
-              {group.threads.map((thread) => (
+          {groupedThreads.map(({ key, label, threads }) => (
+            <ListBoxSection key={key} id={key} title={label}>
+              {threads.map(({ id, title }) => (
                 <ListBoxItem
-                  className="cursor-pointer focus:bg-hover-primary"
-                  key={thread.id}
-                  id={thread.id}
+                  className="flex cursor-pointer p-0"
+                  key={id}
+                  id={id}
+                  textValue={title}
                 >
-                  {thread.title}
+                  <span
+                    className="w-full rounded-lg px-[9.2px] py-[5.2px] hover:bg-hover-primary"
+                    onPointerDown={() => handleThreadClick(id)}
+                  >
+                    {title}
+                  </span>
                 </ListBoxItem>
               ))}
             </ListBoxSection>

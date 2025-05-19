@@ -9,7 +9,6 @@ import {
   SidebarDisclosurePanel,
   SidebarDisclosureGroup,
 } from "@renderer/components/ui/sidebar";
-import { useSidebar } from "@renderer/hooks/use-sidebar";
 import { ThreadMenu } from "./thread-menu";
 import { useTranslation } from "react-i18next";
 import placeholder from "@renderer/assets/images/provider/302ai.png";
@@ -20,8 +19,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   const { t } = useTranslation();
-  const { handleClickThread } = useSidebar();
-  const { groupedThreads, collectedThreads } = useThread();
+  const { groupedThreads, collectedThreads, handleClickThread } = useThread();
 
   return (
     <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
@@ -48,26 +46,29 @@ export function AppSidebar(props: AppSidebarProps) {
               </SidebarDisclosure>
             )}
 
-            {groupedThreads.map((group) => (
-              <SidebarDisclosure id={group.key} key={group.key}>
+            {groupedThreads.map(({ key, label, threads }) => (
+              <SidebarDisclosure id={key} key={key}>
                 <SidebarDisclosureTrigger>
-                  <SidebarLabel>{group.label}</SidebarLabel>
+                  <SidebarLabel>{label}</SidebarLabel>
                 </SidebarDisclosureTrigger>
                 <SidebarDisclosurePanel>
-                  {group.threads.map((thread) => (
-                    <SidebarItem
-                      className="flex flex-1"
-                      key={thread.id}
-                      onClick={() => handleClickThread(thread.id)}
-                    >
-                      <img
-                        src={thread.favicon || placeholder}
-                        alt="favicon"
-                        className="h-4 w-4 flex-shrink-0"
-                      />
-                      <ThreadMenu thread={thread} />
-                    </SidebarItem>
-                  ))}
+                  {threads.map((thread) => {
+                    const { id, favicon } = thread;
+                    return (
+                      <SidebarItem
+                        className="flex flex-1"
+                        key={id}
+                        onClick={() => handleClickThread(id)}
+                      >
+                        <img
+                          src={favicon || placeholder}
+                          alt="favicon"
+                          className="h-4 w-4 flex-shrink-0"
+                        />
+                        <ThreadMenu thread={thread} />
+                      </SidebarItem>
+                    );
+                  })}
                 </SidebarDisclosurePanel>
               </SidebarDisclosure>
             ))}

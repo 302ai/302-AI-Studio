@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { nanoid } from "nanoid";
 
-const BROWSER_TAB_STORAGE_KEY = "browser-tabs";
+const TAB_BAR_STORAGE_KEY = "tab-bar";
 
 export enum TabType {
   thread = "thread",
@@ -17,7 +17,7 @@ export type TabItem = {
   favicon?: string;
 };
 
-interface BrowserTabStore {
+interface TabBarStore {
   tabs: TabItem[];
   activeTabId: string;
   activeTabHistory: string[];
@@ -36,7 +36,7 @@ interface BrowserTabStore {
   getActiveTab: () => TabItem | null;
 }
 
-export const useBrowserTabStore = create<BrowserTabStore>()(
+export const useTabBarStore = create<TabBarStore>()(
   persist(
     immer((set, get) => ({
       tabs: [],
@@ -155,7 +155,7 @@ export const useBrowserTabStore = create<BrowserTabStore>()(
         get().tabs.find((tab) => tab.id === get().activeTabId) ?? null,
     })),
     {
-      name: BROWSER_TAB_STORAGE_KEY,
+      name: TAB_BAR_STORAGE_KEY,
       partialize: (state) => ({
         tabs: state.tabs,
         activeTabId: state.activeTabId,

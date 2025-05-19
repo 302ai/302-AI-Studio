@@ -1,4 +1,4 @@
-import { useBrowserTabStore } from "../store/browser-tab-store";
+import { useTabBarStore } from "../store/tab-bar-store";
 import { useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import type { Identifier, XYCoord } from "dnd-core";
@@ -20,9 +20,9 @@ interface HookParams {
   moveTab: (dragIndex: number, hoverIndex: number) => void;
 }
 
-export function useBrowserTab({ id, index, moveTab }: HookParams) {
+export function useDragableTab({ id, index, moveTab }: HookParams) {
   const { tabs, setDraggingTabId, setActiveTabId, updateTab, removeTab } =
-    useBrowserTabStore();
+    useTabBarStore();
 
   const ref = useRef<HTMLDivElement>(null);
 

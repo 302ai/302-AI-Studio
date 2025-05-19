@@ -1,13 +1,10 @@
 import { X } from "lucide-react";
 import { cn } from "@renderer/lib/utils";
 import { Button } from "@renderer/components/ui/button";
-import {
-  TabType,
-  useBrowserTabStore,
-} from "@/src/renderer/store/browser-tab-store";
+import { TabType, useTabBarStore } from "@/src/renderer/store/tab-bar-store";
 import placeholder from "@renderer/assets/images/provider/302ai.png";
 import { Settings2 } from "lucide-react";
-import { useBrowserTab } from "@/src/renderer/hooks/use-browser-tab";
+import { useDragableTab } from "@/src/renderer/hooks/use-dragable-tab";
 
 interface TabProps {
   id: string;
@@ -34,9 +31,9 @@ export function Tab({
   width,
   type,
 }: TabProps) {
-  const { draggingTabId } = useBrowserTabStore();
+  const { draggingTabId } = useTabBarStore();
 
-  const { handlerId, isDragging, dragDropRef } = useBrowserTab({
+  const { handlerId, isDragging, dragDropRef } = useDragableTab({
     id,
     index,
     moveTab,

@@ -3,6 +3,7 @@ import mitt from "mitt";
 export enum EventNames {
   THREAD_RENAME = "thread:rename",
   THREAD_DELETE = "thread:delete",
+  THREAD_OPEN = "thread:open",
 }
 
 type Events = {
@@ -11,6 +12,9 @@ type Events = {
     newTitle: string;
   };
   [EventNames.THREAD_DELETE]: {
+    threadId: string;
+  };
+  [EventNames.THREAD_OPEN]: {
     threadId: string;
   };
 };

@@ -16,8 +16,8 @@ import { useSidebar } from "@renderer/components/ui/sidebar";
 import { cn } from "@renderer/lib/utils";
 import { isMac } from "@renderer/config/constant";
 import { Separator } from "@renderer/components/ui/separator";
-import { BrowserTabs } from "../browser-tab";
-import { useBrowserTabStore } from "@renderer/store/browser-tab-store";
+import { TabBar } from "../tab-bar";
+import { useTabBarStore } from "@/src/renderer/store/tab-bar-store";
 import { useTranslation } from "react-i18next";
 import { ThreadSearcher } from "./thread-searcher";
 import { useState } from "react";
@@ -27,7 +27,7 @@ const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
-  const { addTab, addSettingsTab } = useBrowserTabStore();
+  const { addTab, addSettingsTab } = useTabBarStore();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -123,7 +123,7 @@ export function BasicTitleBar() {
         />
 
         <TitlebarCenter>
-          <BrowserTabs />
+          <TabBar />
         </TitlebarCenter>
 
         <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
@@ -144,7 +144,7 @@ export function BasicTitleBar() {
         </TitlebarRight>
       </TitlebarContainer>
 
-      <ThreadSearcher isOpen={isOpen} onOpenChange={() => setIsOpen(!isOpen)} />
+      <ThreadSearcher isOpen={isOpen} onOpenChange={handleSearchThread} />
     </>
   );
 }
