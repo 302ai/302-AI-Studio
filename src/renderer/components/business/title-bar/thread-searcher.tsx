@@ -33,7 +33,7 @@ export function ThreadSearcher({
     title: string;
     favicon: string;
   }) => {
-    emitter.emit(EventNames.THREAD_OPEN, thread);
+    emitter.emit(EventNames.THREAD_ACTIVE, thread);
     onOpenChange();
   };
 

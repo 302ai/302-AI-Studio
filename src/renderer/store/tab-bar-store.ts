@@ -30,7 +30,7 @@ interface TabBarStore {
   setTabs: (tabs: TabItem[]) => void;
   addTab: (data: { title: string; id?: string; favicon?: string }) => string;
   updateTab: (id: string, data: Partial<TabItem>) => void;
-  removeTab: (id: string) => void;
+  removeTab: (id: string) => string;
   moveTab: (fromIndex: number, toIndex: number) => void;
   setDraggingTabId: (id: string | null) => void;
 }
@@ -93,13 +93,14 @@ export const useTabBarStore = create<TabBarStore>()(
           return state;
         }),
 
-      removeTab: (id) =>
+      removeTab: (id) => {
+        let nextActiveId: string | null = null;
+
         set((state) => {
           const newTabs = state.tabs.filter((tab) => tab.id !== id);
           state.tabs = newTabs;
 
           if (id === state.activeTabId && newTabs.length > 0) {
-            let nextActiveId: string | null = null;
             while (state.activeTabHistory.length > 0) {
               const previousId = state.activeTabHistory.pop();
               if (previousId && newTabs.some((tab) => tab.id === previousId)) {
@@ -116,7 +117,10 @@ export const useTabBarStore = create<TabBarStore>()(
           }
 
           return state;
-        }),
+        });
+
+        return nextActiveId ?? "";
+      },
 
       moveTab: (fromIndex, toIndex) =>
         set((state) => {

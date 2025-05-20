@@ -20,7 +20,7 @@ interface TabProps {
   favicon?: string;
   isActive: boolean;
   onClick: () => void;
-  onClose: () => void;
+  // onClose: () => void;
   width: number;
   type: TabType;
 }
@@ -33,7 +33,6 @@ export function Tab({
   favicon,
   isActive,
   onClick,
-  onClose,
   width,
   type,
 }: TabProps) {
@@ -42,7 +41,6 @@ export function Tab({
   const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
     id,
     index,
-    onClose,
   });
 
   // * The three different compression states for the tab

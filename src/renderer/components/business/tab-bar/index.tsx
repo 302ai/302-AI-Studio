@@ -24,7 +24,6 @@ export function TabBar() {
     tabWidth,
 
     activateTabId,
-    handleCloseTab,
     handleDragEnd,
   } = useTabBar({
     tabBarRef: ref as React.RefObject<HTMLDivElement>,
@@ -67,7 +66,6 @@ export function TabBar() {
                   }
                   isActive={id === activeTabId}
                   onClick={() => activateTabId(id)}
-                  onClose={() => handleCloseTab(id)}
                   width={tabWidth}
                   favicon={favicon}
                   type={type}

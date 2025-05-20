@@ -1,11 +1,15 @@
 import mitt from "mitt";
 
 export enum EventNames {
+  // * Thread events
   THREAD_RENAME = "thread:rename",
   THREAD_DELETE = "thread:delete",
-  THREAD_OPEN = "thread:open",
+  THREAD_ACTIVE = "thread:active",
 
+  // * Tab events
   TAB_ACTIVE = "tab:active",
+  TAB_CLOSE = "tab:close",
+  TAB_CLOSE_ALL = "tab:close-all",
 }
 
 type Events = {
@@ -16,7 +20,7 @@ type Events = {
   [EventNames.THREAD_DELETE]: {
     threadId: string;
   };
-  [EventNames.THREAD_OPEN]: {
+  [EventNames.THREAD_ACTIVE]: {
     id: string;
     title: string;
     favicon: string;
@@ -24,6 +28,11 @@ type Events = {
   [EventNames.TAB_ACTIVE]: {
     tabId: string;
   };
+  [EventNames.TAB_CLOSE]: {
+    tabId: string;
+    nextActiveId: string;
+  };
+  [EventNames.TAB_CLOSE_ALL]: null;
 };
 
 const mittInstance = mitt<Events>();

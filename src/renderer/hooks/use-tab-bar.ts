@@ -9,7 +9,7 @@ interface UseTabBarProps {
 }
 
 export function useTabBar({ tabBarRef }: UseTabBarProps) {
-  const { tabs, activeTabId, addTab, removeTab, moveTab, setActiveTabId } =
+  const { tabs, activeTabId, addTab, moveTab, setActiveTabId } =
     useTabBarStore();
 
   const navigate = useNavigate();
@@ -19,16 +19,6 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
   const activateTabId = (id: string) => {
     setActiveTabId(id);
     emitter.emit(EventNames.TAB_ACTIVE, { tabId: id });
-  };
-
-  const handleCloseTab = (id: string) => {
-    removeTab(id);
-
-    // Get the new tabs length after removing the tab immediately
-    const newTabsLength = useTabBarStore.getState().tabs.length;
-    if (newTabsLength === 0) {
-      navigate("/");
-    }
   };
 
   const handleDragEnd = (result: DropResult) => {
@@ -72,22 +62,34 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     }
   }, []);
 
-  /**
-   * * This effect is used to navigate to the active tab
-   */
   useEffect(() => {
-    const unsub = useTabBarStore.subscribe((state, prevState) => {
-      if (state.activeTabId !== prevState.activeTabId) {
-        const tab = state.tabs.find((tab) => tab.id === state.activeTabId);
-        if (tab) {
-          navigate(
-            tab.type === TabType.settings ? "/settings/general-settings" : "/"
-          );
+    const unsubs = [
+      /**
+       * * This effect is used to navigate to the home page if the tabs are empty
+       */
+      useTabBarStore.subscribe((state, prevState) => {
+        if (state.tabs.length !== prevState.tabs.length) {
+          if (state.tabs.length === 0) {
+            navigate("/");
+          }
         }
-      }
-    });
+      }),
+      /**
+       * * This effect is used to navigate to the active tab
+       */
+      useTabBarStore.subscribe((state, prevState) => {
+        if (state.activeTabId !== prevState.activeTabId) {
+          const tab = state.tabs.find((tab) => tab.id === state.activeTabId);
+          if (tab) {
+            navigate(
+              tab.type === TabType.settings ? "/settings/general-settings" : "/"
+            );
+          }
+        }
+      }),
+    ];
 
-    return () => unsub();
+    return () => unsubs.forEach((unsub) => unsub());
   }, [navigate]);
 
   /**
@@ -135,7 +137,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
         });
       }
     };
-    const unsub = emitter.on(EventNames.THREAD_OPEN, handleClickThread);
+    const unsub = emitter.on(EventNames.THREAD_ACTIVE, handleClickThread);
 
     return () => unsub();
   }, [tabs, addTab, setActiveTabId]);
@@ -146,7 +148,6 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     tabWidth,
 
     activateTabId,
-    handleCloseTab,
     handleDragEnd,
   };
 }

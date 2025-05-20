@@ -128,22 +128,37 @@ export function useThread() {
     favicon: string;
   }) => {
     setActiveThreadId(thread.id);
-    emitter.emit(EventNames.THREAD_OPEN, thread);
+    emitter.emit(EventNames.THREAD_ACTIVE, thread);
   };
 
-  /**
-   * * Handles the active tab change event
-   * * If the active tab is a thread, it will be set as the active thread
-   */
   useEffect(() => {
+    /**
+     * Handles the active tab change event
+     */
     const handleTabActive = (event: { tabId: string }) => {
       const thread = threads.find((thread) => thread.id === event.tabId);
       setActiveThreadId(thread ? thread.id : "");
     };
+    /**
+     * Handles the tab close event
+     */
+    const handleTabClose = (event: { tabId: string; nextActiveId: string }) => {
+      setActiveThreadId(event.nextActiveId);
+    };
+    /**
+     * Handles the tab close all event
+     */
+    const handleTabCloseAll = () => {
+      setActiveThreadId("");
+    };
 
-    const unsub = emitter.on(EventNames.TAB_ACTIVE, handleTabActive);
+    const unsubs = [
+      emitter.on(EventNames.TAB_ACTIVE, handleTabActive),
+      emitter.on(EventNames.TAB_CLOSE, handleTabClose),
+      emitter.on(EventNames.TAB_CLOSE_ALL, handleTabCloseAll),
+    ];
 
-    return () => unsub();
+    return () => unsubs.forEach((unsub) => unsub());
   }, [threads, setActiveThreadId]);
 
   return {

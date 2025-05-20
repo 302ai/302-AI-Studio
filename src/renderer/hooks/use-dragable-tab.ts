@@ -5,23 +5,26 @@ import { emitter, EventNames } from "@renderer/services/event-service";
 interface HookParams {
   id: string;
   index: number;
-  onClose: () => void;
 }
 
-export function useDragableTab({ id, onClose }: HookParams) {
+export function useDragableTab({ id }: HookParams) {
   const { tabs, setDraggingTabId, setActiveTabId, updateTab, removeTab } =
     useTabBarStore();
 
   const ref = useRef<HTMLDivElement>(null);
 
   const handleTabClose = () => {
-    onClose();
+    const nextActiveId = removeTab(id);
+
+    emitter.emit(EventNames.TAB_CLOSE, { tabId: id, nextActiveId });
   };
 
   const handleTabCloseAll = () => {
     tabs.forEach((tab) => {
       removeTab(tab.id);
     });
+
+    emitter.emit(EventNames.TAB_CLOSE_ALL, null);
   };
 
   useEffect(() => {
