@@ -28,7 +28,10 @@
         "label": "Model List"
       },
       "model-provider": {
-        "add-provider": "Add Provider",
+        "add-provider": "Add",
+        "delete": "Delete",
+        "description": "Models",
+        "edit": "Edit",
         "label": "Model Provider"
       },
       "name": "Model Settings"

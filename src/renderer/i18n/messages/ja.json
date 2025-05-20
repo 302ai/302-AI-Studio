@@ -28,7 +28,10 @@
         "label": "モデルリスト"
       },
       "model-provider": {
-        "add-provider": "ベンダーを追加します",
+        "add-provider": "に追加",
+        "delete": "消去",
+        "description": "のモデル",
+        "edit": "編集",
         "label": "モデルプロバイダー"
       },
       "name": "モデル設定"

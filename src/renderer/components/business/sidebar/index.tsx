@@ -11,8 +11,9 @@ import {
 } from "@renderer/components/ui/sidebar";
 import { ThreadMenu } from "./thread-menu";
 import { useTranslation } from "react-i18next";
-import placeholder from "@renderer/assets/images/provider/302ai.png";
+import placeholder from "@renderer/assets/images/providers/302ai.png";
 import { useThread } from "@renderer/hooks/use-thread";
+
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   children: React.ReactNode;
 }
@@ -88,7 +89,7 @@ export function AppSidebar(props: AppSidebarProps) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset className="min-h-[calc(100vh-var(--title-bar-height))] p-2">
+      <SidebarInset className="min-h-[calc(100vh-var(--title-bar-height))] p-4">
         {props.children}
       </SidebarInset>
     </div>

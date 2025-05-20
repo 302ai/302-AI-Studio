@@ -1,9 +1,9 @@
 import { VscClose, VscCloseAll } from "react-icons/vsc";
 import { cn } from "@renderer/lib/utils";
 import { TabType, useTabBarStore } from "@/src/renderer/store/tab-bar-store";
-import placeholder from "@renderer/assets/images/provider/302ai.png";
+import placeholder from "@renderer/assets/images/providers/302ai.png";
 import { Settings2, X } from "lucide-react";
-import { useDragableTab } from "@/src/renderer/hooks/use-dragable-tab";
+import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { Draggable } from "@hello-pangea/dnd";
 import {
   ContextMenu,

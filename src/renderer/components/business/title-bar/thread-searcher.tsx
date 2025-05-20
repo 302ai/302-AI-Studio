@@ -13,7 +13,7 @@ import {
 import { useThread } from "@renderer/hooks/use-thread";
 import { useTranslation } from "react-i18next";
 import { emitter, EventNames } from "@renderer/services/event-service";
-import placeholder from "@renderer/assets/images/provider/302ai.png";
+import placeholder from "@renderer/assets/images/providers/302ai.png";
 
 interface ThreadSearcherProps {
   isOpenSearcher: boolean;

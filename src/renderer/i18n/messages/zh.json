@@ -28,7 +28,10 @@
         "label": "模型列表"
       },
       "model-provider": {
-        "add-provider": "添加供应商",
+        "add-provider": "添加",
+        "delete": "删除",
+        "description": "个模型",
+        "edit": "编辑",
         "label": "模型提供商"
       },
       "name": "模型设置"

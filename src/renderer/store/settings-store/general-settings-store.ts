@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { ThemeMode, LanguageVarious } from "@renderer/types";
 
@@ -47,7 +47,6 @@ export const useSettingsStore = create<SettingsStore>()(
     })),
     {
       name: SETTINGS_STORAGE_KEY,
-      storage: createJSONStorage(() => localStorage),
     }
   )
 );
