@@ -50,6 +50,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
   /**
    * * This effect is used to set the active tab id to the first tab if it is not set
    * * and to set the isLoaded to true
+   * * and to navigate to the active tab
    */
   useEffect(() => {
     const state = useTabBarStore.getState();
@@ -59,8 +60,17 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
         state.setActiveTabId(state.tabs[0].id);
       }
       state.setIsLoaded(true);
+
+      if (state.activeTabId) {
+        const tab = state.tabs.find((tab) => tab.id === state.activeTabId);
+        if (tab) {
+          navigate(
+            tab.type === TabType.settings ? "/settings/general-settings" : "/"
+          );
+        }
+      }
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const unsubs = [
