@@ -144,7 +144,10 @@ export function BasicTitleBar() {
         </TitlebarRight>
       </TitlebarContainer>
 
-      <ThreadSearcher isOpen={isOpen} onOpenChange={handleSearchThread} />
+      <ThreadSearcher
+        isOpenSearcher={isOpen}
+        onOpenChange={handleSearchThread}
+      />
     </>
   );
 }

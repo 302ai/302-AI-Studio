@@ -27,10 +27,6 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
 
   const [tabWidth, setTabWidth] = useState<number>(200);
 
-  const handleMoveTab = (dragIndex: number, hoverIndex: number) => {
-    moveTab(dragIndex, hoverIndex);
-  };
-
   const activateTabId = (id: string) => {
     setActiveTabId(id);
   };
@@ -48,7 +44,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    handleMoveTab(result.source.index, result.destination.index);
+    moveTab(result.source.index, result.destination.index);
   };
 
   const calculateTabWidth = useCallback(() => {

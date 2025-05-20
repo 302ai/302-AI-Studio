@@ -16,11 +16,14 @@ import { emitter, EventNames } from "@renderer/services/event-service";
 import placeholder from "@renderer/assets/images/provider/302ai.png";
 
 interface ThreadSearcherProps {
-  isOpen: boolean;
+  isOpenSearcher: boolean;
   onOpenChange: () => void;
 }
 
-export function ThreadSearcher({ isOpen, onOpenChange }: ThreadSearcherProps) {
+export function ThreadSearcher({
+  isOpenSearcher,
+  onOpenChange,
+}: ThreadSearcherProps) {
   const { t } = useTranslation();
   const { contains } = useFilter({ sensitivity: "base" });
   const { groupedThreads } = useThread();
@@ -32,7 +35,7 @@ export function ThreadSearcher({ isOpen, onOpenChange }: ThreadSearcherProps) {
 
   return (
     <ModalContent
-      isOpen={isOpen}
+      isOpen={isOpenSearcher}
       onOpenChange={onOpenChange}
       closeButton={false}
       isBlurred
