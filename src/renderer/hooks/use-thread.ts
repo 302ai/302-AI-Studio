@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { ThreadItem } from "../types/threads";
 import { useThreadsStore } from "../store/threads-store";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ export type GroupedThreads = {
 
 export function useThread() {
   const { t } = useTranslation();
-  const { activeThreadId, threads } = useThreadsStore();
+  const { activeThreadId, threads, setActiveThreadId } = useThreadsStore();
 
   const collectedThreads = threads.filter((thread) => thread.isCollected);
 
@@ -127,8 +127,24 @@ export function useThread() {
     title: string;
     favicon: string;
   }) => {
+    setActiveThreadId(thread.id);
     emitter.emit(EventNames.THREAD_OPEN, thread);
   };
+
+  /**
+   * * Handles the active tab change event
+   * * If the active tab is a thread, it will be set as the active thread
+   */
+  useEffect(() => {
+    const handleTabActive = (event: { tabId: string }) => {
+      const thread = threads.find((thread) => thread.id === event.tabId);
+      setActiveThreadId(thread ? thread.id : "");
+    };
+
+    const unsub = emitter.on(EventNames.TAB_ACTIVE, handleTabActive);
+
+    return () => unsub();
+  }, [threads, setActiveThreadId]);
 
   return {
     activeThreadId,

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { TabType, useTabBarStore } from "../store/tab-bar-store";
 import { useNavigate } from "react-router-dom";
-import { emitter } from "../services/event-service";
-import { EventNames } from "../services/event-service";
+import { emitter, EventNames } from "../services/event-service";
 import { DropResult } from "@hello-pangea/dnd";
 
 interface UseTabBarProps {
@@ -19,6 +18,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
 
   const activateTabId = (id: string) => {
     setActiveTabId(id);
+    emitter.emit(EventNames.TAB_ACTIVE, { tabId: id });
   };
 
   const handleCloseTab = (id: string) => {
@@ -137,9 +137,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     };
     const unsub = emitter.on(EventNames.THREAD_OPEN, handleClickThread);
 
-    return () => {
-      unsub();
-    };
+    return () => unsub();
   }, [tabs, addTab, setActiveTabId]);
 
   return {

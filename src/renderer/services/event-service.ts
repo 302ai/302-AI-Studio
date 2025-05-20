@@ -4,6 +4,8 @@ export enum EventNames {
   THREAD_RENAME = "thread:rename",
   THREAD_DELETE = "thread:delete",
   THREAD_OPEN = "thread:open",
+
+  TAB_ACTIVE = "tab:active",
 }
 
 type Events = {
@@ -18,6 +20,9 @@ type Events = {
     id: string;
     title: string;
     favicon: string;
+  };
+  [EventNames.TAB_ACTIVE]: {
+    tabId: string;
   };
 };
 
