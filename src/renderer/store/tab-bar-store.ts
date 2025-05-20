@@ -28,17 +28,16 @@ interface TabBarStore {
   setIsLoaded: (isLoaded: boolean) => void;
   addSettingsTab: (data: { title: string }) => void;
   setTabs: (tabs: TabItem[]) => void;
-  addTab: (data: { title: string; id?: string }) => void;
+  addTab: (data: { title: string; id?: string; favicon?: string }) => string;
   updateTab: (id: string, data: Partial<TabItem>) => void;
   removeTab: (id: string) => void;
   moveTab: (fromIndex: number, toIndex: number) => void;
   setDraggingTabId: (id: string | null) => void;
-  getActiveTab: () => TabItem | null;
 }
 
 export const useTabBarStore = create<TabBarStore>()(
   persist(
-    immer((set, get) => ({
+    immer((set) => ({
       tabs: [],
       activeTabId: "",
       activeTabHistory: [],
@@ -63,20 +62,27 @@ export const useTabBarStore = create<TabBarStore>()(
         }),
       setIsLoaded: (isLoaded) => set({ isLoaded }),
 
-      addTab: (data) =>
+      addTab: (data) => {
+        const id = data.id ?? nanoid();
+
         set((state) => {
           const newTab = {
-            id: data.id ?? nanoid(),
+            id,
             title: data.title,
             message: "",
             type: TabType.thread,
+            ...(data.favicon && { favicon: data.favicon }),
           };
+
           state.tabs.push(newTab);
-          state.activeTabHistory.push(newTab.id);
-          state.activeTabId = newTab.id;
+          state.activeTabHistory.push(id);
+          state.activeTabId = id;
 
           return state;
-        }),
+        });
+
+        return id;
+      },
 
       updateTab: (id, data) =>
         set((state) => {
@@ -150,9 +156,6 @@ export const useTabBarStore = create<TabBarStore>()(
         }),
 
       setDraggingTabId: (id) => set({ draggingTabId: id }),
-
-      getActiveTab: () =>
-        get().tabs.find((tab) => tab.id === get().activeTabId) ?? null,
     })),
     {
       name: TAB_BAR_STORAGE_KEY,

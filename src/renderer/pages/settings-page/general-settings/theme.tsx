@@ -8,9 +8,7 @@ import { useSettingsStore } from "@/src/renderer/store/settings-store";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation();
-
-  const theme = useSettingsStore((state) => state.theme);
-  const setTheme = useSettingsStore((state) => state.setTheme);
+  const { theme, setTheme } = useSettingsStore();
 
   const [thumbStyle, setThumbStyle] = useState({});
 

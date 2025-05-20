@@ -16,7 +16,7 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const { windowService } = window.service;
+const { configService } = window.service;
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useSettingsStore();
@@ -45,7 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       if (theme === ThemeMode.System) {
         const actualTheme = e.matches ? ThemeMode.Dark : ThemeMode.Light;
 
-        windowService.setTheme(actualTheme);
+        configService.setTheme(actualTheme);
 
         if (e.matches) {
           document.documentElement.classList.add("dark");

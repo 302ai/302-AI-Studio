@@ -28,8 +28,12 @@ export function ThreadSearcher({
   const { contains } = useFilter({ sensitivity: "base" });
   const { groupedThreads } = useThread();
 
-  const handleThreadClick = (id: string) => {
-    emitter.emit(EventNames.THREAD_OPEN, { threadId: id });
+  const handleThreadClick = (thread: {
+    id: string;
+    title: string;
+    favicon: string;
+  }) => {
+    emitter.emit(EventNames.THREAD_OPEN, thread);
     onOpenChange();
   };
 
@@ -67,7 +71,13 @@ export function ThreadSearcher({
                 >
                   <div
                     className="flex w-full items-center gap-2 rounded-lg px-[9.2px] py-[5.2px] hover:bg-hover-primary"
-                    onPointerDown={() => handleThreadClick(id)}
+                    onPointerDown={() =>
+                      handleThreadClick({
+                        id,
+                        title,
+                        favicon: favicon ?? placeholder,
+                      })
+                    }
                   >
                     <img
                       src={favicon || placeholder}

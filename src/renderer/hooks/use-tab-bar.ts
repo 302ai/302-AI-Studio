@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { TabType, useTabBarStore } from "../store/tab-bar-store";
 import { useNavigate } from "react-router-dom";
-import { useThreadsStore } from "../store/threads-store";
 import { emitter } from "../services/event-service";
 import { EventNames } from "../services/event-service";
 import { DropResult } from "@hello-pangea/dnd";
@@ -11,17 +10,8 @@ interface UseTabBarProps {
 }
 
 export function useTabBar({ tabBarRef }: UseTabBarProps) {
-  const {
-    tabs,
-    activeTabId,
-    isLoaded,
-    addTab,
-    removeTab,
-    moveTab,
-    setActiveTabId,
-    setIsLoaded,
-  } = useTabBarStore();
-  const { threads } = useThreadsStore();
+  const { tabs, activeTabId, addTab, removeTab, moveTab, setActiveTabId } =
+    useTabBarStore();
 
   const navigate = useNavigate();
 
@@ -67,6 +57,42 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     setTabWidth(newTabWidth);
   }, [tabs.length, tabBarRef.current]);
 
+  /**
+   * * This effect is used to set the active tab id to the first tab if it is not set
+   * * and to set the isLoaded to true
+   */
+  useEffect(() => {
+    const state = useTabBarStore.getState();
+
+    if (!state.isLoaded) {
+      if (state.tabs.length > 0 && !state.activeTabId) {
+        state.setActiveTabId(state.tabs[0].id);
+      }
+      state.setIsLoaded(true);
+    }
+  }, []);
+
+  /**
+   * * This effect is used to navigate to the active tab
+   */
+  useEffect(() => {
+    const unsub = useTabBarStore.subscribe((state, prevState) => {
+      if (state.activeTabId !== prevState.activeTabId) {
+        const tab = state.tabs.find((tab) => tab.id === state.activeTabId);
+        if (tab) {
+          navigate(
+            tab.type === TabType.settings ? "/settings/general-settings" : "/"
+          );
+        }
+      }
+    });
+
+    return () => unsub();
+  }, [navigate]);
+
+  /**
+   * * This effect is used to calculate the width of the tab
+   */
   useEffect(() => {
     calculateTabWidth();
 
@@ -83,26 +109,9 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     };
   }, [calculateTabWidth, tabBarRef.current]);
 
-  useEffect(() => {
-    if (!isLoaded) {
-      if (tabs.length > 0 && !activeTabId) {
-        setActiveTabId(tabs[0].id);
-      }
-      setIsLoaded(true);
-    }
-  }, [isLoaded, tabs, activeTabId, setActiveTabId, setIsLoaded]);
-
-  useEffect(() => {
-    if (activeTabId) {
-      const tab = tabs.find((tab) => tab.id === activeTabId);
-      if (tab) {
-        navigate(
-          tab.type === TabType.settings ? "/settings/general-settings" : "/"
-        );
-      }
-    }
-  }, [activeTabId, navigate, tabs]);
-
+  /**
+   * * This effect is used to handle the click event for a thread in the sidebar
+   */
   useEffect(() => {
     /**
      * Handles the click event for a thread in the sidebar
@@ -110,18 +119,20 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
      * * Else if the thread is not open, it will be added to the tabs and set as the active tab
      * @param threadId The id of the thread to be clicked
      */
-    const handleClickThread = (event: { threadId: string }) => {
-      const { threadId } = event;
-      if (tabs.find((tab) => tab.id === threadId)) {
-        setActiveTabId(threadId);
+    const handleClickThread = (event: {
+      id: string;
+      title: string;
+      favicon: string;
+    }) => {
+      const { id, title, favicon } = event;
+      if (tabs.find((tab) => tab.id === id)) {
+        setActiveTabId(id);
       } else {
-        const currentThread = threads.find((thread) => thread.id === threadId);
-        if (currentThread) {
-          addTab({
-            title: currentThread.title,
-            id: currentThread.id,
-          });
-        }
+        addTab({
+          title,
+          id,
+          favicon,
+        });
       }
     };
     const unsub = emitter.on(EventNames.THREAD_OPEN, handleClickThread);
@@ -129,7 +140,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     return () => {
       unsub();
     };
-  }, [tabs, addTab, setActiveTabId, threads]);
+  }, [tabs, addTab, setActiveTabId]);
 
   return {
     tabs,

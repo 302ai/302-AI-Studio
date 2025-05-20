@@ -15,7 +15,9 @@ type Events = {
     threadId: string;
   };
   [EventNames.THREAD_OPEN]: {
-    threadId: string;
+    id: string;
+    title: string;
+    favicon: string;
   };
 };
 

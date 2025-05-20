@@ -19,7 +19,12 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   const { t } = useTranslation();
-  const { groupedThreads, collectedThreads, handleClickThread } = useThread();
+  const {
+    activeThreadId,
+    groupedThreads,
+    collectedThreads,
+    handleClickThread,
+  } = useThread();
 
   return (
     <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
@@ -53,12 +58,19 @@ export function AppSidebar(props: AppSidebarProps) {
                 </SidebarDisclosureTrigger>
                 <SidebarDisclosurePanel>
                   {threads.map((thread) => {
-                    const { id, favicon } = thread;
+                    const { id, title, favicon } = thread;
                     return (
                       <SidebarItem
                         className="flex flex-1"
                         key={id}
-                        onClick={() => handleClickThread(id)}
+                        isCurrent={id === activeThreadId}
+                        onClick={() =>
+                          handleClickThread({
+                            id,
+                            title,
+                            favicon: favicon ?? placeholder,
+                          })
+                        }
                       >
                         <img
                           src={favicon || placeholder}

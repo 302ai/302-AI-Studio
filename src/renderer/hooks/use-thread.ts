@@ -20,7 +20,7 @@ export type GroupedThreads = {
 
 export function useThread() {
   const { t } = useTranslation();
-  const { threads } = useThreadsStore();
+  const { activeThreadId, threads } = useThreadsStore();
 
   const collectedThreads = threads.filter((thread) => thread.isCollected);
 
@@ -122,11 +122,16 @@ export function useThread() {
    * * Else if the thread is not open, it will be added to the tabs and set as the active tab
    * @param threadId The id of the thread to be clicked
    */
-  const handleClickThread = (threadId: string) => {
-    emitter.emit(EventNames.THREAD_OPEN, { threadId });
+  const handleClickThread = (thread: {
+    id: string;
+    title: string;
+    favicon: string;
+  }) => {
+    emitter.emit(EventNames.THREAD_OPEN, thread);
   };
 
   return {
+    activeThreadId,
     groupedThreads,
     collectedThreads,
     handleClickThread,
