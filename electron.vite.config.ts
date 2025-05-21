@@ -28,7 +28,6 @@ export default defineConfig({
         "@main": resolve("src/main"),
         "@renderer": resolve("src/renderer"),
         "@shared": resolve("src/shared"),
-        "@types": resolve("src/renderer/types/index.ts"),
       },
     },
 

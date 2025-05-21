@@ -1,4 +1,4 @@
-import { Model } from "@types";
+import { Model } from "@renderer/types/providers";
 
 export const SYSTEM_MODELS: Record<string, Model[]> = {
   aihubmix: [

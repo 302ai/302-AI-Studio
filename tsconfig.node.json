@@ -29,9 +29,6 @@
       "@main/*": [
         "src/main/*"
       ],
-      "@types": [
-        "src/renderer/types/index.ts"
-      ],
       "@shared/*": [
         "src/shared/*"
       ],

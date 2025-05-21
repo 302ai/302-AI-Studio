@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Avatar } from "@renderer/components/ui/avatar";
 import { DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
-import { ModelProvider } from "@types";
+import { ModelProvider } from "@renderer/types/providers";
 import { getProviderIcon } from "@renderer/config/providers";
 import {
   CardTitle,

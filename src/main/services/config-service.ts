@@ -1,5 +1,5 @@
 import ElectronStore from "electron-store";
-import { type LanguageVarious, ThemeMode } from "@types";
+import { type LanguageVarious, ThemeMode } from "@renderer/types/settings";
 import { app } from "electron";
 import { locales } from "@main/utils/locales";
 import { defaultLanguage } from "@main/constant";

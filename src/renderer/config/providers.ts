@@ -44,7 +44,7 @@ import XirangProviderIcon from "@renderer/assets/images/providers/xirang.png";
 import ZeroOneProviderIcon from "@renderer/assets/images/providers/zero-one.png";
 import ZhipuProviderIcon from "@renderer/assets/images/providers/zhipu.png";
 import { SYSTEM_MODELS } from "./models";
-import { ModelProvider } from "@types";
+import { ModelProvider } from "@renderer/types/providers";
 
 const PROVIDER_ICON_MAP = {
   "302ai": Ai302ProviderIcon,

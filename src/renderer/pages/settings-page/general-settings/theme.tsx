@@ -1,7 +1,7 @@
 import { Label } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { ThemeMode } from "@types";
+import { ThemeMode } from "@renderer/types/settings";
 import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
 import { cn } from "@renderer/lib/utils";
 import { useSettingsStore } from "@renderer/store/settings-store";
