@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Tab } from "./tab";
-import { TabType } from "@/src/renderer/store/tab-bar-store";
+import { TabType } from "@renderer/store/tab-bar-store";
 import { useTranslation } from "react-i18next";
 import { DragDropContext, DragStart, Droppable } from "@hello-pangea/dnd";
 import { Separator } from "@renderer/components/ui/separator";

@@ -25,6 +25,28 @@ export function ProviderList() {
     }
   };
 
+  useEffect(() => {
+    const updateHeight = () => {
+      if (listContainerRef.current) {
+        const height = listContainerRef.current.clientHeight;
+        setListHeight(height);
+      }
+    };
+
+    updateHeight();
+
+    const resizeObserver = new ResizeObserver(updateHeight);
+    if (listContainerRef.current) {
+      resizeObserver.observe(listContainerRef.current);
+    }
+
+    return () => {
+      if (listContainerRef.current) {
+        resizeObserver.unobserve(listContainerRef.current);
+      }
+    };
+  }, []);
+
   const Row = memo(function Row({
     index,
     style,
@@ -48,28 +70,6 @@ export function ProviderList() {
     );
   },
   areEqual);
-
-  useEffect(() => {
-    const updateHeight = () => {
-      if (listContainerRef.current) {
-        const height = listContainerRef.current.clientHeight;
-        setListHeight(height);
-      }
-    };
-
-    updateHeight();
-
-    const resizeObserver = new ResizeObserver(updateHeight);
-    if (listContainerRef.current) {
-      resizeObserver.observe(listContainerRef.current);
-    }
-
-    return () => {
-      if (listContainerRef.current) {
-        resizeObserver.unobserve(listContainerRef.current);
-      }
-    };
-  }, []);
 
   return (
     <div className="flex h-full flex-col">

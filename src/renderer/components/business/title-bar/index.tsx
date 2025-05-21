@@ -17,7 +17,7 @@ import { cn } from "@renderer/lib/utils";
 import { isMac } from "@renderer/config/constant";
 import { Separator } from "@renderer/components/ui/separator";
 import { TabBar } from "../tab-bar";
-import { useTabBarStore } from "@/src/renderer/store/tab-bar-store";
+import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useTranslation } from "react-i18next";
 import { ThreadSearcher } from "./thread-searcher";
 import { useState } from "react";

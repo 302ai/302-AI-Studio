@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardFooter,
 } from "@renderer/components/ui/card";
-import { cn } from "@/src/renderer/lib/utils";
+import { cn } from "@renderer/lib/utils";
 
 interface ProviderCardProps {
   snapshot: DraggableStateSnapshot;
