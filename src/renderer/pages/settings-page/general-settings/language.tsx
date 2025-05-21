@@ -10,9 +10,7 @@ import { Label } from "react-aria-components";
 import { BsGlobe } from "react-icons/bs";
 import { useSettingsStore } from "@renderer/store/settings-store";
 
-export function LanguageSelector({
-  ...props
-}: React.ComponentProps<typeof Select>) {
+export function LanguageSelector() {
   const { t, i18n } = useTranslation();
 
   const language = useSettingsStore((state) => state.language);
@@ -34,7 +32,6 @@ export function LanguageSelector({
         selectedKey={currentLang.key}
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
-        {...props}
       >
         <SelectTrigger
           className="h-9 cursor-pointer rounded-[10px] text-secondary-fg"
@@ -43,7 +40,7 @@ export function LanguageSelector({
         <SelectList popoverClassName="min-w-[240px]">
           {langs.map(({ key, prefix, nativeName }) => (
             <SelectOption
-              className="flex cursor-pointer justify-between focus:bg-hover-primary"
+              className="flex cursor-pointer justify-between"
               key={key}
               id={key}
               textValue={nativeName}

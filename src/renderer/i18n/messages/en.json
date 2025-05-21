@@ -29,6 +29,10 @@
       },
       "model-provider": {
         "add-provider": "Add",
+        "add-provider-form": {
+          "custom-provider": "Custom Provider",
+          "label": "Select Provider"
+        },
         "delete": "Delete",
         "description": "Models",
         "edit": "Edit",
@@ -99,6 +103,7 @@
         "description": "This will delete all messages and files in this conversation. Are you sure you want to continue?",
         "title": "Clear All Messages"
       },
+      "confirm": "Confirm",
       "delete": {
         "confirmText": "Delete",
         "description": "The conversation cannot be restored after deletion, please be cautious.",

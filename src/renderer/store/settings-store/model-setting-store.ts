@@ -2,7 +2,7 @@ import { INITIAL_PROVIDERS } from "@renderer/config/providers";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { ModelProvider } from "@types";
+import { ModelProvider } from "@renderer/types/providers";
 
 const MODEL_SETTING_STORAGE_KEY = "model-setting";
 

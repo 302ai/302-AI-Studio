@@ -29,6 +29,10 @@
       },
       "model-provider": {
         "add-provider": "に追加",
+        "add-provider-form": {
+          "custom-provider": "カスタムプロバイダー",
+          "label": "サプライヤーを選択します"
+        },
         "delete": "消去",
         "description": "のモデル",
         "edit": "編集",
@@ -99,6 +103,7 @@
         "description": "メッセージをクリアすると、セッションの下ですべてのメッセージとファイルが削除されます。続けたいですか？",
         "title": "セッションメッセージをクリアします"
       },
+      "confirm": "もちろん",
       "delete": {
         "confirmText": "削除",
         "description": "削除後にセッションを復元することはできません。注意してください。",

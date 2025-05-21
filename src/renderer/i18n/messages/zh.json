@@ -29,6 +29,10 @@
       },
       "model-provider": {
         "add-provider": "添加",
+        "add-provider-form": {
+          "custom-provider": "自定义提供商",
+          "label": "选择供应商"
+        },
         "delete": "删除",
         "description": "个模型",
         "edit": "编辑",
@@ -99,6 +103,7 @@
         "description": "清空消息会删除会话下所有消息和文件，确定要继续吗？",
         "title": "清空会话消息"
       },
+      "confirm": "确定",
       "delete": {
         "confirmText": "删除",
         "description": "会话删除后无法恢复，请谨慎操作。",

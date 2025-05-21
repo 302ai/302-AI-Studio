@@ -16,7 +16,7 @@ interface ModalActionProps {
   actionType: {
     title: string;
     descriptions: string[];
-    confirmText: string;
+    confirmText?: string;
     action: () => void;
     body?: React.ReactNode;
     disabled?: boolean;
@@ -52,7 +52,7 @@ export function ModalAction({
           isDisabled={actionType.disabled}
           onPress={actionType.action}
         >
-          {actionType.confirmText}
+          {actionType.confirmText ?? t("thread-menu.actions.confirm")}
         </Button>
       </ModalFooter>
     </ModalContent>

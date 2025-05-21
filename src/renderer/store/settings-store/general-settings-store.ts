@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { ThemeMode, LanguageVarious } from "@renderer/types";
+import { ThemeMode, LanguageVarious } from "@renderer/types/settings";
 
 const SETTINGS_STORAGE_KEY = "app-settings";
 

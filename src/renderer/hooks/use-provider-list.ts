@@ -1,13 +1,38 @@
 import { useState } from "react";
+import { useModelSettingStore } from "../store/settings-store/model-setting-store";
 
 export type ModelActionType = "add" | "edit" | "delete";
 
 export function useProviderList() {
+  const {
+    modelProvider,
+    selectedModelProvider,
+    moveModelProvider,
+    setSelectedModelProvider,
+    removeModelProvider,
+  } = useModelSettingStore();
+
   const [state, setState] = useState<ModelActionType | null>(null);
 
   const closeModal = () => {
     setState(null);
   };
 
-  return { state, setState, closeModal };
+  const handleDelete = () => {
+    if (!selectedModelProvider) return;
+
+    removeModelProvider(selectedModelProvider.id);
+    closeModal();
+  };
+
+  return {
+    modelProvider,
+    selectedModelProvider,
+    state,
+    setState,
+    closeModal,
+    handleDelete,
+    moveModelProvider,
+    setSelectedModelProvider,
+  };
 }

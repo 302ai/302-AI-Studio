@@ -8,7 +8,6 @@ import {
   Droppable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { FixedSizeList, areEqual } from "react-window";
 import { memo, useRef, useState, useEffect } from "react";
 import {
@@ -17,17 +16,19 @@ import {
 } from "@renderer/hooks/use-provider-list";
 import { ModalAction } from "../modal-action";
 import { ActionGroup } from "./action-group";
-
+import { AddProvider } from "./add-provider";
 export function ProviderList() {
   const { t } = useTranslation();
   const {
     modelProvider,
     selectedModelProvider,
+    state,
+    setState,
+    closeModal,
+    handleDelete,
     moveModelProvider,
     setSelectedModelProvider,
-    removeModelProvider,
-  } = useModelSettingStore();
-  const { state, setState, closeModal } = useProviderList();
+  } = useProviderList();
 
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
@@ -41,16 +42,27 @@ export function ProviderList() {
     };
 
     switch (action) {
-      // case "add":
-      //   return {
-      //     title: t(
-      //       "settings.model-settings.model-provider.modal-action.add-provider"
-      //     ),
-      //   };
-      // case "edit":
-      //   return {
-      //     title: t("settings.model-settings.model-provider.modal-action.edit"),
-      //   };
+      case "add":
+        return {
+          title: t(
+            "settings.model-settings.model-provider.modal-action.add-provider"
+          ),
+          descriptions: [],
+          body: (
+            <AddProvider
+              onValidate={() => {
+                console.log("validate");
+              }}
+            />
+          ),
+          action: () => {},
+        };
+      case "edit":
+        return {
+          title: t("settings.model-settings.model-provider.modal-action.edit"),
+          descriptions: [],
+          action: () => {},
+        };
       case "delete":
         return {
           title: t(
@@ -70,12 +82,7 @@ export function ProviderList() {
           confirmText: t(
             "settings.model-settings.model-provider.modal-action.delete-confirm"
           ),
-          action: () => {
-            if (selectedModelProvider) {
-              removeModelProvider(selectedModelProvider.id);
-            }
-            closeModal();
-          },
+          action: handleDelete,
         };
       default:
         return initialsState;
@@ -159,7 +166,12 @@ export function ProviderList() {
   return (
     <>
       <div className="flex h-full flex-col">
-        <Button className="w-fit" size="small" intent="outline">
+        <Button
+          className="w-fit"
+          size="small"
+          intent="outline"
+          onClick={() => setState("add")}
+        >
           <Plus className="size-4" />
           {t("settings.model-settings.model-provider.add-provider")}
         </Button>
