@@ -20,7 +20,6 @@ interface TabProps {
   favicon?: string;
   isActive: boolean;
   onClick: () => void;
-  // onClose: () => void;
   width: number;
   type: TabType;
 }
