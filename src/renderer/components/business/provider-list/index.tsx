@@ -2,8 +2,7 @@ import { ProviderCard } from "./provider-card";
 import { Plus } from "lucide-react";
 import { Button } from "@renderer/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { Droppable, DropResult } from "@hello-pangea/dnd";
-import { DragDropContext } from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 
 export function ProviderList() {
@@ -17,7 +16,7 @@ export function ProviderList() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-2 overflow-y-hidden">
+    <div className="flex h-full flex-col">
       <Button className="w-fit" size="small" intent="outline">
         <Plus className="size-4" />
         {t("settings.model-settings.model-provider.add-provider")}
@@ -26,7 +25,7 @@ export function ProviderList() {
         <Droppable droppableId="provider-list" direction="vertical">
           {(provided) => (
             <div
-              className="flex flex-1 flex-col overflow-y-auto"
+              className="mt-2 flex max-h-[calc(100%-68px)] flex-1 flex-col overflow-y-auto"
               ref={provided.innerRef}
               {...provided.droppableProps}
             >

@@ -12,7 +12,6 @@ import {
 } from "@renderer/components/ui/card";
 import { cn } from "@/src/renderer/lib/utils";
 
-// TODO: Use interface provider later
 interface ProviderCardProps {
   index: number;
   provider: ModelProvider;
