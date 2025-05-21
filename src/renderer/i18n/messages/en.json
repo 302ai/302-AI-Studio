@@ -30,6 +30,7 @@
       "model-provider": {
         "add-provider": "Add",
         "add-provider-form": {
+          "check-key": "Verify Key",
           "custom-provider": "Custom Provider",
           "label": "Select Provider"
         },

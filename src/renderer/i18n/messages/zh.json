@@ -30,6 +30,7 @@
       "model-provider": {
         "add-provider": "添加",
         "add-provider-form": {
+          "check-key": "验证密钥",
           "custom-provider": "自定义提供商",
           "label": "选择供应商"
         },

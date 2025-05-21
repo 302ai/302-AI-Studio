@@ -30,6 +30,7 @@
       "model-provider": {
         "add-provider": "に追加",
         "add-provider-form": {
+          "check-key": "キーを確認します",
           "custom-provider": "カスタムプロバイダー",
           "label": "サプライヤーを選択します"
         },

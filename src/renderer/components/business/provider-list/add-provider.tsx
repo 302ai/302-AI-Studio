@@ -9,6 +9,7 @@ import { INITIAL_PROVIDERS, getProviderIcon } from "@renderer/config/providers";
 import { Label } from "react-aria-components";
 import { TextField } from "@renderer/components/ui/text-field";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
+import { Button } from "@renderer/components/ui/button";
 
 interface AddProviderProps {
   onValidate: () => void;
@@ -25,7 +26,7 @@ export function AddProvider({ onValidate }: AddProviderProps) {
           {t("settings.model-settings.model-provider.add-provider-form.label")}
         </Label>
         <Select className="w-[300px]" aria-label="Select provider">
-          <SelectTrigger className="h-9 cursor-pointer rounded-[10px] text-secondary-fg" />
+          <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
           <SelectList popoverClassName="min-w-[300px]">
             {INITIAL_PROVIDERS.map((provider) => (
               <SelectOption
@@ -65,7 +66,14 @@ export function AddProvider({ onValidate }: AddProviderProps) {
       {/* Provider API Key Input */}
       <div className="flex flex-col gap-2">
         <Label>API Key</Label>
-        <TextField aria-label="API Key" />
+        <div className="flex flex-row items-center gap-2">
+          <TextField aria-label="API Key" />
+          <Button intent="outline" size="small">
+            {t(
+              "settings.model-settings.model-provider.add-provider-form.check-key"
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Provider Base URL Input */}

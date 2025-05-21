@@ -55,7 +55,7 @@ export function SettingsPage() {
   return (
     <div className="flex h-full flex-row gap-x-6">
       <Tabs
-        className="w-auto min-w-[var(--setting-tab-list-width)] justify-end rounded-[10px] bg-setting-tab-list"
+        className="w-auto min-w-[var(--setting-tab-list-width)] justify-end rounded-xl bg-setting-tab-list"
         orientation="vertical"
         aria-label="Setting Tabs"
         onSelectionChange={handleTabSelect}

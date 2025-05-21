@@ -34,7 +34,7 @@ export function LanguageSelector() {
         aria-label="Select language"
       >
         <SelectTrigger
-          className="h-9 cursor-pointer rounded-[10px] text-secondary-fg"
+          className="h-9 cursor-pointer rounded-xl text-secondary-fg"
           prefix={<BsGlobe className="mr-1 size-4" />}
         />
         <SelectList popoverClassName="min-w-[240px]">

@@ -31,7 +31,7 @@ export function ProviderCard({
   return (
     <div
       className={cn(
-        "group flex h-[60px] flex-row items-center justify-between rounded-[10px] border bg-bg py-4 hover:bg-hover-primary",
+        "group flex h-[60px] flex-row items-center justify-between rounded-xl border bg-bg py-4 hover:bg-hover-primary",
         snapshot.isDragging && "bg-hover-primary opacity-50"
       )}
       ref={provided.innerRef}
