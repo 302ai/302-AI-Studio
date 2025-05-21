@@ -8,15 +8,19 @@ const MODEL_SETTING_STORAGE_KEY = "model-setting";
 
 interface ModelSettingStore {
   modelProvider: ModelProvider[];
+  selectedModelProvider: ModelProvider | null;
 
   addModelProvider: (newProvider: ModelProvider) => void;
   moveModelProvider: (fromIndex: number, toIndex: number) => void;
+  removeModelProvider: (providerId: string) => void;
+  setSelectedModelProvider: (provider: ModelProvider) => void;
 }
 
 export const useModelSettingStore = create<ModelSettingStore>()(
   persist(
     immer((set, get) => ({
       modelProvider: INITIAL_PROVIDERS,
+      selectedModelProvider: null,
 
       addModelProvider: (newProvider) => {
         set({ modelProvider: [...get().modelProvider, newProvider] });
@@ -28,6 +32,18 @@ export const useModelSettingStore = create<ModelSettingStore>()(
           state.modelProvider.splice(fromIndex, 1);
           state.modelProvider.splice(toIndex, 0, provider);
           return state;
+        });
+      },
+
+      setSelectedModelProvider: (provider) => {
+        set({ selectedModelProvider: provider });
+      },
+
+      removeModelProvider: (providerId) => {
+        set((state) => {
+          state.modelProvider = state.modelProvider.filter(
+            (provider) => provider.id !== providerId
+          );
         });
       },
     })),

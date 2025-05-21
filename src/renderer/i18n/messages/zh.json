@@ -32,7 +32,16 @@
         "delete": "删除",
         "description": "个模型",
         "edit": "编辑",
-        "label": "模型提供商"
+        "label": "模型提供商",
+        "modal-action": {
+          "add-provider": "添加供应商",
+          "delete": "删除供应商",
+          "delete-confirm": "删除",
+          "delete-description": "请确认是否删除供应商",
+          "delete-description-2": "该供应商提供的所有模型将被删除，",
+          "delete-description-3": "同时配置了这些默认模型的助手将会被改为其他默认模型。",
+          "edit": "配置"
+        }
       },
       "name": "模型设置"
     },

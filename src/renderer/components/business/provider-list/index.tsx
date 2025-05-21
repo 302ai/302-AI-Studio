@@ -11,16 +11,76 @@ import {
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { FixedSizeList, areEqual } from "react-window";
 import { memo, useRef, useState, useEffect } from "react";
-// import { ModalAction } from "../modal-action";
-// import { useProviderList } from "@renderer/hooks/use-provider-list";
+import {
+  useProviderList,
+  ModelActionType,
+} from "@renderer/hooks/use-provider-list";
+import { ModalAction } from "../modal-action";
+import { ActionGroup } from "./action-group";
 
 export function ProviderList() {
   const { t } = useTranslation();
-  const { modelProvider, moveModelProvider } = useModelSettingStore();
-  // const { state, setState } = useProviderList();
+  const {
+    modelProvider,
+    selectedModelProvider,
+    moveModelProvider,
+    setSelectedModelProvider,
+    removeModelProvider,
+  } = useModelSettingStore();
+  const { state, setState, closeModal } = useProviderList();
 
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
+
+  const actionType = (action: ModelActionType | null) => {
+    const initialsState = {
+      title: "",
+      descriptions: [""],
+      confirmText: "",
+      action: () => {},
+    };
+
+    switch (action) {
+      // case "add":
+      //   return {
+      //     title: t(
+      //       "settings.model-settings.model-provider.modal-action.add-provider"
+      //     ),
+      //   };
+      // case "edit":
+      //   return {
+      //     title: t("settings.model-settings.model-provider.modal-action.edit"),
+      //   };
+      case "delete":
+        return {
+          title: t(
+            "settings.model-settings.model-provider.modal-action.delete"
+          ),
+          descriptions: [
+            `${t(
+              "settings.model-settings.model-provider.modal-action.delete-description"
+            )} ${selectedModelProvider?.name} ?`,
+            t(
+              "settings.model-settings.model-provider.modal-action.delete-description-2"
+            ),
+            t(
+              "settings.model-settings.model-provider.modal-action.delete-description-3"
+            ),
+          ],
+          confirmText: t(
+            "settings.model-settings.model-provider.modal-action.delete-confirm"
+          ),
+          action: () => {
+            if (selectedModelProvider) {
+              removeModelProvider(selectedModelProvider.id);
+            }
+            closeModal();
+          },
+        };
+      default:
+        return initialsState;
+    }
+  };
 
   const handleDragEnd = (result: DropResult) => {
     if (result.destination) {
@@ -58,14 +118,36 @@ export function ProviderList() {
     style: React.CSSProperties;
   }) {
     const provider = modelProvider[index];
+
+    const handleProviderSelect = () => {
+      setSelectedModelProvider(provider);
+    };
+
+    const handleEdit = () => {
+      handleProviderSelect();
+      setState("edit");
+    };
+
+    const handleDelete = () => {
+      handleProviderSelect();
+      setState("delete");
+    };
+
     return (
       <Draggable draggableId={provider.id} index={index} key={provider.id}>
         {(provided, snapshot) => (
-          <div style={style}>
+          <div
+            style={style}
+            onKeyDown={handleProviderSelect}
+            onClick={handleProviderSelect}
+          >
             <ProviderCard
               provided={provided}
               snapshot={snapshot}
               provider={provider}
+              actionGroup={
+                <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
+              }
             />
           </div>
         )}
@@ -92,6 +174,14 @@ export function ProviderList() {
                   provided={provided}
                   snapshot={snapshot}
                   provider={modelProvider[rubric.source.index]}
+                  actionGroup={
+                    <ActionGroup
+                      onEdit={() => {
+                        setState("edit");
+                      }}
+                      onDelete={() => setState("delete")}
+                    />
+                  }
                 />
               )}
             >
@@ -112,11 +202,11 @@ export function ProviderList() {
         </div>
       </div>
 
-      {/* <ModalAction
+      <ModalAction
         state={state}
         onOpenChange={closeModal}
         actionType={actionType(state)}
-      /> */}
+      />
     </>
   );
 }

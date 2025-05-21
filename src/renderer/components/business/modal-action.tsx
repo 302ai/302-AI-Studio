@@ -15,7 +15,7 @@ interface ModalActionProps {
   onOpenChange: () => void;
   actionType: {
     title: string;
-    description: string;
+    descriptions: string[];
     confirmText: string;
     action: () => void;
     body?: React.ReactNode;
@@ -36,7 +36,9 @@ export function ModalAction({
     <ModalContent isOpen={state !== null} onOpenChange={onOpenChange} isBlurred>
       <ModalHeader>
         <ModalTitle>{actionType.title}</ModalTitle>
-        <ModalDescription>{actionType.description}</ModalDescription>
+        {actionType.descriptions.map((description) => (
+          <ModalDescription key={description}>{description}</ModalDescription>
+        ))}
       </ModalHeader>
       {actionType.body && <ModalBody>{actionType.body}</ModalBody>}
       <ModalFooter>

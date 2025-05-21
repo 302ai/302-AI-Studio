@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { Avatar } from "@renderer/components/ui/avatar";
-import { ActionGroup } from "./action-group";
 import { DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import { ModelProvider } from "@types";
 import { getProviderIcon } from "@renderer/config/providers";
@@ -16,19 +15,23 @@ interface ProviderCardProps {
   snapshot: DraggableStateSnapshot;
   provided: DraggableProvided;
   provider: ModelProvider;
+  actionGroup: React.ReactNode;
+  onClick?: () => void;
 }
 
 export function ProviderCard({
   snapshot,
   provided,
   provider,
+  actionGroup,
+  onClick,
 }: ProviderCardProps) {
   const { t } = useTranslation();
 
   return (
     <div
       className={cn(
-        "flex h-[60px] flex-row items-center justify-between rounded-[10px] border bg-bg py-4 hover:bg-hover-primary",
+        "group flex h-[60px] flex-row items-center justify-between rounded-[10px] border bg-bg py-4 hover:bg-hover-primary",
         snapshot.isDragging && "bg-hover-primary opacity-50"
       )}
       ref={provided.innerRef}
@@ -38,8 +41,8 @@ export function ProviderCard({
         ...provided.draggableProps.style,
         cursor: "pointer",
         marginBottom: 5,
-        width: "100%",
       }}
+      onClick={onClick}
     >
       <CardHeader className="flex items-center gap-3 pl-4">
         <Avatar
@@ -55,8 +58,8 @@ export function ProviderCard({
           </CardDescription>
         </div>
       </CardHeader>
-      <CardFooter className="pr-2">
-        <ActionGroup />
+      <CardFooter className="pr-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        {actionGroup}
       </CardFooter>
     </div>
   );

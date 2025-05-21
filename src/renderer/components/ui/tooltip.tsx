@@ -66,7 +66,7 @@ const TooltipContent = ({
           ...renderProps,
           intent,
           className,
-        }),
+        })
       )}
     >
       {showArrow && (

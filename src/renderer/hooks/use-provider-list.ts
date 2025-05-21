@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-export enum ModelAction {
-  Add = "add",
-  Edit = "edit",
-  Delete = "delete",
-}
+export type ModelActionType = "add" | "edit" | "delete";
 
 export function useProviderList() {
-  const [state, setState] = useState<ModelAction | null>(null);
+  const [state, setState] = useState<ModelActionType | null>(null);
 
-  return { state, setState };
+  const closeModal = () => {
+    setState(null);
+  };
+
+  return { state, setState, closeModal };
 }

@@ -32,7 +32,16 @@
         "delete": "Delete",
         "description": "Models",
         "edit": "Edit",
-        "label": "Model Provider"
+        "label": "Model Provider",
+        "modal-action": {
+          "add-provider": "Add Provider",
+          "delete": "Delete Provider",
+          "delete-confirm": "Delete",
+          "delete-description": "Please confirm whether to delete the supplier",
+          "delete-description-2": "All models provided by this vendor will be removed,",
+          "delete-description-3": "Assistants who also configure these default models will be changed to other default models.",
+          "edit": "configure"
+        }
       },
       "name": "Model Settings"
     },

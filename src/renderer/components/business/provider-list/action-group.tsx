@@ -7,7 +7,12 @@ import {
 import { useTranslation } from "react-i18next";
 import { CardAction } from "@renderer/components/ui/card";
 
-export function ActionGroup() {
+interface ActionGroupProps {
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+export function ActionGroup({ onEdit, onDelete }: ActionGroupProps) {
   const { t } = useTranslation();
 
   return (
@@ -19,7 +24,7 @@ export function ActionGroup() {
             className="size-9"
             intent="plain"
             size="square-petite"
-            onClick={() => {}}
+            onClick={onEdit}
           >
             <PencilLine className="size-4" />
           </TooltipTrigger>
@@ -34,7 +39,7 @@ export function ActionGroup() {
             className="size-9"
             intent="plain"
             size="square-petite"
-            onClick={() => {}}
+            onClick={onDelete}
           >
             <CircleX className="size-4" />
           </TooltipTrigger>

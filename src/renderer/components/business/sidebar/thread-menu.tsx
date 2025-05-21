@@ -39,7 +39,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
   const actionType = (action: MenuModelActionType | null) => {
     const initialsState = {
       title: "",
-      description: "",
+      descriptions: [""],
       confirmText: "",
       action: () => {},
     };
@@ -48,7 +48,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
       case "rename":
         return {
           title: t("thread-menu.actions.rename.title"),
-          description: t("thread-menu.actions.rename.description"),
+          descriptions: [t("thread-menu.actions.rename.description")],
           confirmText: t("thread-menu.actions.rename.confirmText"),
           body: (
             <TextField
@@ -66,7 +66,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
       case "clean-messages":
         return {
           title: t("thread-menu.actions.clean-messages.title"),
-          description: t("thread-menu.actions.clean-messages.description"),
+          descriptions: [t("thread-menu.actions.clean-messages.description")],
           confirmText: t("thread-menu.actions.clean-messages.confirmText"),
           action: handleCleanMessages,
         };
@@ -74,7 +74,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
       case "delete":
         return {
           title: t("thread-menu.actions.delete.title"),
-          description: t("thread-menu.actions.delete.description"),
+          descriptions: [t("thread-menu.actions.delete.description")],
           confirmText: t("thread-menu.actions.delete.confirmText"),
           action: handleDelete,
         };

@@ -32,7 +32,16 @@
         "delete": "消去",
         "description": "のモデル",
         "edit": "編集",
-        "label": "モデルプロバイダー"
+        "label": "モデルプロバイダー",
+        "modal-action": {
+          "add-provider": "ベンダーを追加します",
+          "delete": "ベンダーを削除します",
+          "delete-confirm": "消去",
+          "delete-description": "サプライヤーを削除するかどうかを確認してください",
+          "delete-description-2": "このベンダーが提供するすべてのモデルは削除され、",
+          "delete-description-3": "これらのデフォルトモデルを構成するアシスタントは、他のデフォルトモデルに変更されます。",
+          "edit": "構成"
+        }
       },
       "name": "モデル設定"
     },
