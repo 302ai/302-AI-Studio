@@ -9,10 +9,9 @@ import {
 } from "@renderer/components/ui/modal";
 import { Button } from "@renderer/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { MenuModelAction } from "./thread-menu";
 
 interface ModalActionProps {
-  state: MenuModelAction | null;
+  state: string | null;
   onOpenChange: () => void;
   actionType: {
     title: string;
@@ -22,16 +21,16 @@ interface ModalActionProps {
     body?: React.ReactNode;
     disabled?: boolean;
   };
+  dangerActions?: string[];
 }
 
 export function ModalAction({
   state,
   onOpenChange,
   actionType,
+  dangerActions,
 }: ModalActionProps) {
   const { t } = useTranslation();
-
-  const dangerActions = [MenuModelAction.Delete, MenuModelAction.CleanMessages];
 
   return (
     <ModalContent isOpen={state !== null} onOpenChange={onOpenChange} isBlurred>
@@ -43,7 +42,9 @@ export function ModalAction({
       <ModalFooter>
         <ModalClose>{t("thread-menu.actions.cancel")}</ModalClose>
         <Button
-          intent={state && dangerActions.includes(state) ? "danger" : "primary"}
+          intent={
+            state && dangerActions?.includes(state) ? "danger" : "primary"
+          }
           className="min-w-24"
           size="small"
           isDisabled={actionType.disabled}

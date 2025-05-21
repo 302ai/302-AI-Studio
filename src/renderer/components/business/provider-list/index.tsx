@@ -11,10 +11,13 @@ import {
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { FixedSizeList, areEqual } from "react-window";
 import { memo, useRef, useState, useEffect } from "react";
+// import { ModalAction } from "../modal-action";
+// import { useProviderList } from "@renderer/hooks/use-provider-list";
 
 export function ProviderList() {
   const { t } = useTranslation();
   const { modelProvider, moveModelProvider } = useModelSettingStore();
+  // const { state, setState } = useProviderList();
 
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
@@ -72,40 +75,48 @@ export function ProviderList() {
   areEqual);
 
   return (
-    <div className="flex h-full flex-col">
-      <Button className="w-fit" size="small" intent="outline">
-        <Plus className="size-4" />
-        {t("settings.model-settings.model-provider.add-provider")}
-      </Button>
-      <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable
-            droppableId="provider-list"
-            mode="virtual"
-            direction="vertical"
-            renderClone={(provided, snapshot, rubric) => (
-              <ProviderCard
-                provided={provided}
-                snapshot={snapshot}
-                provider={modelProvider[rubric.source.index]}
-              />
-            )}
-          >
-            {(provided, _snapshot) => (
-              <FixedSizeList
-                height={listHeight}
-                itemCount={modelProvider.length}
-                itemSize={65}
-                width="100%"
-                outerRef={provided.innerRef}
-                itemData={modelProvider}
-              >
-                {Row}
-              </FixedSizeList>
-            )}
-          </Droppable>
-        </DragDropContext>
+    <>
+      <div className="flex h-full flex-col">
+        <Button className="w-fit" size="small" intent="outline">
+          <Plus className="size-4" />
+          {t("settings.model-settings.model-provider.add-provider")}
+        </Button>
+        <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable
+              droppableId="provider-list"
+              mode="virtual"
+              direction="vertical"
+              renderClone={(provided, snapshot, rubric) => (
+                <ProviderCard
+                  provided={provided}
+                  snapshot={snapshot}
+                  provider={modelProvider[rubric.source.index]}
+                />
+              )}
+            >
+              {(provided, _snapshot) => (
+                <FixedSizeList
+                  height={listHeight}
+                  itemCount={modelProvider.length}
+                  itemSize={65}
+                  width="100%"
+                  outerRef={provided.innerRef}
+                  itemData={modelProvider}
+                >
+                  {Row}
+                </FixedSizeList>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
       </div>
-    </div>
+
+      {/* <ModalAction
+        state={state}
+        onOpenChange={closeModal}
+        actionType={actionType(state)}
+      /> */}
+    </>
   );
 }

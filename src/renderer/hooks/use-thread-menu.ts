@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { MenuModelAction } from "@renderer/components/business/sidebar/thread-menu";
 import { ThreadItem } from "../types/threads";
 import { useThreadsStore } from "../store/threads-store";
 import { EventNames, emitter } from "../services/event-service";
 
+export type MenuModelActionType = "rename" | "clean-messages" | "delete";
+
 export function useThreadMenu(thread: ThreadItem) {
   const { updateThread, removeThread } = useThreadsStore();
 
-  const [state, setState] = useState<MenuModelAction | null>(null);
+  const [state, setState] = useState<MenuModelActionType | null>(null);
   const [newTitle, setNewTitle] = useState(thread.title);
 
   const formattedTitle = newTitle.trim();

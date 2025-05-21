@@ -7,16 +7,13 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { Pencil, Eraser, Package, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ModalAction } from "./modal-action";
+import { ModalAction } from "../modal-action";
 import { ThreadItem } from "@renderer/types/threads";
 import { TextField } from "@renderer/components/ui/text-field";
-import { useThreadMenu } from "@renderer/hooks/use-thread-menu";
-
-export enum MenuModelAction {
-  Rename = "rename",
-  CleanMessages = "clean-messages",
-  Delete = "delete",
-}
+import {
+  MenuModelActionType,
+  useThreadMenu,
+} from "@renderer/hooks/use-thread-menu";
 
 interface ThreadMenuProps {
   thread: ThreadItem;
@@ -39,7 +36,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
     handleCollectThread,
   } = useThreadMenu(thread);
 
-  const actionType = (action: MenuModelAction | null) => {
+  const actionType = (action: MenuModelActionType | null) => {
     const initialsState = {
       title: "",
       description: "",
@@ -48,7 +45,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
     };
 
     switch (action) {
-      case MenuModelAction.Rename:
+      case "rename":
         return {
           title: t("thread-menu.actions.rename.title"),
           description: t("thread-menu.actions.rename.description"),
@@ -66,7 +63,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           disabled: formattedTitle.length === 0,
         };
 
-      case MenuModelAction.CleanMessages:
+      case "clean-messages":
         return {
           title: t("thread-menu.actions.clean-messages.title"),
           description: t("thread-menu.actions.clean-messages.description"),
@@ -74,7 +71,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           action: handleCleanMessages,
         };
 
-      case MenuModelAction.Delete:
+      case "delete":
         return {
           title: t("thread-menu.actions.delete.title"),
           description: t("thread-menu.actions.delete.description"),
@@ -93,13 +90,11 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           {thread.title}
         </ContextMenuTrigger>
         <ContextMenuContent aria-label={`Thread options for ${thread.title}`}>
-          <ContextMenuItem onAction={() => setState(MenuModelAction.Rename)}>
+          <ContextMenuItem onAction={() => setState("rename")}>
             <Pencil className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.rename")}
           </ContextMenuItem>
-          <ContextMenuItem
-            onAction={() => setState(MenuModelAction.CleanMessages)}
-          >
+          <ContextMenuItem onAction={() => setState("clean-messages")}>
             <Eraser className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.clean-messages")}
           </ContextMenuItem>
@@ -110,10 +105,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
               : t("sidebar.menu-item.collect-thread")}
           </ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem
-            isDanger={true}
-            onAction={() => setState(MenuModelAction.Delete)}
-          >
+          <ContextMenuItem isDanger={true} onAction={() => setState("delete")}>
             <Trash2 className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.delete")}
           </ContextMenuItem>
