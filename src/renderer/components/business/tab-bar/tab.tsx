@@ -61,7 +61,7 @@ export function Tab({
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               className={cn(
-                "relative mt-[5px] flex h-full select-none items-center rounded-t-[10px] px-3",
+                "relative mt-1 flex h-full select-none items-center rounded-t-[10px] px-3",
                 isCompressedThree
                   ? "justify-center px-0"
                   : "justify-between px-2",
