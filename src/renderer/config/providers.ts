@@ -552,3 +552,11 @@ export const INITIAL_PROVIDERS: ModelProvider[] = [
     enabled: false,
   },
 ];
+
+export const PROVIDER_TYPES = [
+  { label: "OpenAI-Compatible", value: "openai-compatible" },
+  { label: "OpenAI-Response", value: "openai" },
+  { label: "Gemini", value: "gemini" },
+  { label: "Anthropic", value: "anthropic" },
+  { label: "Azure OpenAI", value: "azure-openai" },
+];

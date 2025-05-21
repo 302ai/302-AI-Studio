@@ -32,7 +32,11 @@
         "add-provider-form": {
           "check-key": "验证密钥",
           "custom-provider": "自定义提供商",
-          "label": "选择供应商"
+          "placeholder": "请选择一个供应商...",
+          "placeholder-2": "请输入API Key...",
+          "placeholder-3": "请输入Base URL...",
+          "provider-select": "选择供应商",
+          "provider-type": "供应商类型"
         },
         "delete": "删除",
         "description": "个模型",

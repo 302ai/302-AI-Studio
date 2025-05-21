@@ -32,7 +32,11 @@
         "add-provider-form": {
           "check-key": "Verify Key",
           "custom-provider": "Custom Provider",
-          "label": "Select Provider"
+          "placeholder": "Please select a povider...",
+          "placeholder-2": "Please enter the API Key...",
+          "placeholder-3": "Please enter the Base URL...",
+          "provider-select": "Select Provider",
+          "provider-type": "Provider Type"
         },
         "delete": "Delete",
         "description": "Models",

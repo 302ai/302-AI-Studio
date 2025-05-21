@@ -32,7 +32,11 @@
         "add-provider-form": {
           "check-key": "キーを確認します",
           "custom-provider": "カスタムプロバイダー",
-          "label": "サプライヤーを選択します"
+          "placeholder": "サプライヤーを選択してください...",
+          "placeholder-2": "APIキーを入力してください...",
+          "placeholder-3": "ベースURLを入力してください...",
+          "provider-select": "サプライヤーを選択します",
+          "provider-type": "サプライヤータイプ"
         },
         "delete": "消去",
         "description": "のモデル",
