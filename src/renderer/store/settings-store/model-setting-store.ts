@@ -13,7 +13,7 @@ interface ModelSettingStore {
   addModelProvider: (newProvider: ModelProvider) => void;
   moveModelProvider: (fromIndex: number, toIndex: number) => void;
   removeModelProvider: (providerId: string) => void;
-  setSelectedModelProvider: (provider: ModelProvider) => void;
+  setSelectedModelProvider: (provider: ModelProvider | null) => void;
 }
 
 export const useModelSettingStore = create<ModelSettingStore>()(
@@ -44,6 +44,8 @@ export const useModelSettingStore = create<ModelSettingStore>()(
           state.modelProvider = state.modelProvider.filter(
             (provider) => provider.id !== providerId
           );
+
+          return state;
         });
       },
     })),

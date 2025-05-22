@@ -5,18 +5,15 @@ import {
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import {
-  INITIAL_PROVIDERS,
-  PROVIDER_TYPES,
-  getProviderIcon,
-} from "@renderer/config/providers";
-import { Key } from "react-aria-components";
+import { PROVIDER_TYPES, getProviderIcon } from "@renderer/config/providers";
 import { TextField } from "@renderer/components/ui/text-field";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { Button } from "@renderer/components/ui/button";
 import { IoKeyOutline } from "react-icons/io5";
-import { useState } from "react";
 import { RadioGroup, Radio } from "@renderer/components/ui/radio-group";
+import { useAddProvider } from "@/src/renderer/hooks/use-add-provider";
+import { useState } from "react";
+import { Key } from "react-aria-components";
 
 interface AddProviderProps {
   onValidate: () => void;
@@ -26,10 +23,15 @@ export function AddProvider({ onValidate }: AddProviderProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.add-provider-form",
   });
+
+  const { canSelectProviders, handleCheckKey } = useAddProvider();
+
   const [provider, setProvider] = useState<Key | null>("");
   const [providerType, setProviderType] = useState("openai-compatible");
+  const [apiKey, setApiKey] = useState("");
 
   const isCustomProvider = provider === "custom";
+  const canCheckKey = !!apiKey && !!provider;
 
   return (
     <div className="flex flex-col gap-4">
@@ -43,11 +45,8 @@ export function AddProvider({ onValidate }: AddProviderProps) {
           onSelectionChange={(key) => setProvider(key)}
         >
           <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
-          <SelectList
-            popoverClassName="min-w-[300px]"
-            items={INITIAL_PROVIDERS}
-          >
-            {INITIAL_PROVIDERS.map((provider) => (
+          <SelectList popoverClassName="min-w-[300px]">
+            {canSelectProviders.map((provider) => (
               <SelectOption
                 className="flex cursor-pointer justify-between"
                 key={provider.id}
@@ -89,8 +88,15 @@ export function AddProvider({ onValidate }: AddProviderProps) {
           type="password"
           placeholder={t("placeholder-2")}
           isRevealable
+          value={apiKey}
+          onChange={setApiKey}
         />
-        <Button intent="outline">
+        <Button
+          intent="outline"
+          className="self-end"
+          onClick={handleCheckKey}
+          isDisabled={!canCheckKey}
+        >
           <IoKeyOutline className="size-4" />
           {t("check-key")}
         </Button>

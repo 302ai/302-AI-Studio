@@ -22,6 +22,7 @@ export function useProviderList() {
     if (!selectedModelProvider) return;
 
     removeModelProvider(selectedModelProvider.id);
+    setSelectedModelProvider(null);
     closeModal();
   };
 
