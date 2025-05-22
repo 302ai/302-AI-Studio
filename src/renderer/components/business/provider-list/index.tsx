@@ -19,7 +19,9 @@ import { ActionGroup } from "./action-group";
 import { AddProvider } from "./add-provider";
 
 export function ProviderList() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings.model-settings.model-provider",
+  });
   const {
     modelProvider,
     selectedModelProvider,
@@ -45,9 +47,7 @@ export function ProviderList() {
     switch (action) {
       case "add":
         return {
-          title: t(
-            "settings.model-settings.model-provider.modal-action.add-provider"
-          ),
+          title: t("modal-action.add-provider"),
           descriptions: [],
           body: (
             <AddProvider
@@ -60,29 +60,21 @@ export function ProviderList() {
         };
       case "edit":
         return {
-          title: t("settings.model-settings.model-provider.modal-action.edit"),
+          title: `${t("modal-action.edit")} ${selectedModelProvider?.name}`,
           descriptions: [],
           action: () => {},
         };
       case "delete":
         return {
-          title: t(
-            "settings.model-settings.model-provider.modal-action.delete"
-          ),
+          title: t("modal-action.delete"),
           descriptions: [
-            `${t(
-              "settings.model-settings.model-provider.modal-action.delete-description"
-            )} ${selectedModelProvider?.name} ?`,
-            t(
-              "settings.model-settings.model-provider.modal-action.delete-description-2"
-            ),
-            t(
-              "settings.model-settings.model-provider.modal-action.delete-description-3"
-            ),
+            `${t("modal-action.delete-description")} ${
+              selectedModelProvider?.name
+            } ?`,
+            t("modal-action.delete-description-2"),
+            t("modal-action.delete-description-3"),
           ],
-          confirmText: t(
-            "settings.model-settings.model-provider.modal-action.delete-confirm"
-          ),
+          confirmText: t("modal-action.delete-confirm"),
           action: handleDelete,
         };
       default:
@@ -174,7 +166,7 @@ export function ProviderList() {
           onClick={() => setState("add")}
         >
           <Plus className="size-4" />
-          {t("settings.model-settings.model-provider.add-provider")}
+          {t("add-provider")}
         </Button>
         <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
           <DragDropContext onDragEnd={handleDragEnd}>

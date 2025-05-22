@@ -23,7 +23,9 @@ interface AddProviderProps {
 }
 
 export function AddProvider({ onValidate }: AddProviderProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings.model-settings.model-provider.add-provider-form",
+  });
   const [provider, setProvider] = useState<Key | null>("");
   const [providerType, setProviderType] = useState("openai-compatible");
 
@@ -35,13 +37,9 @@ export function AddProvider({ onValidate }: AddProviderProps) {
       <div className="flex flex-col gap-2">
         <Select
           className="w-[300px]"
-          label={t(
-            "settings.model-settings.model-provider.add-provider-form.provider-select"
-          )}
-          aria-label="Select provider"
-          placeholder={t(
-            "settings.model-settings.model-provider.add-provider-form.placeholder"
-          )}
+          label={t("provider-select")}
+          aria-label={t("provider-select")}
+          placeholder={t("placeholder")}
           onSelectionChange={(key) => setProvider(key)}
         >
           <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
@@ -75,11 +73,7 @@ export function AddProvider({ onValidate }: AddProviderProps) {
             >
               <span className="flex items-center gap-2">
                 <MdOutlineDashboardCustomize className="size-4" />
-                <span className="text-base">
-                  {t(
-                    "settings.model-settings.model-provider.add-provider-form.custom-provider"
-                  )}
-                </span>
+                <span className="text-base">{t("custom-provider")}</span>
               </span>
             </SelectOption>
           </SelectList>
@@ -93,16 +87,12 @@ export function AddProvider({ onValidate }: AddProviderProps) {
           label="API Key"
           aria-label="API Key"
           type="password"
-          placeholder={t(
-            "settings.model-settings.model-provider.add-provider-form.placeholder-2"
-          )}
+          placeholder={t("placeholder-2")}
           isRevealable
         />
         <Button intent="outline">
           <IoKeyOutline className="size-4" />
-          {t(
-            "settings.model-settings.model-provider.add-provider-form.check-key"
-          )}
+          {t("check-key")}
         </Button>
       </div>
 
@@ -110,17 +100,13 @@ export function AddProvider({ onValidate }: AddProviderProps) {
       <TextField
         aria-label="Base URL"
         label="Base URL"
-        placeholder={t(
-          "settings.model-settings.model-provider.add-provider-form.placeholder-3"
-        )}
+        placeholder={t("placeholder-3")}
       />
 
       <RadioGroup
         className={isCustomProvider ? "block" : "hidden"}
         orientation="horizontal"
-        label={t(
-          "settings.model-settings.model-provider.add-provider-form.provider-type"
-        )}
+        label={t("provider-type")}
         value={providerType}
         onChange={(value) => setProviderType(value)}
       >

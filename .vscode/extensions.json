@@ -2,7 +2,6 @@
   "recommendations": [
     "mikestead.dotenv",
     "EditorConfig.EditorConfig",
-    "lokalise.i18n-ally",
     "bradlc.vscode-tailwindcss",
     "biomejs.biome"
   ],

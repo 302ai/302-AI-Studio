@@ -27,5 +27,11 @@
   "i18n-ally.displayLanguage": "zh",
   "i18n-ally.editor.preferEditor": true,
   "i18n-ally.sourceLanguage": "zh",
-  "i18n-ally.sortKeys": true
+  "i18n-ally.keyPrefix": true,
+  "i18n-ally.defaultNamespace": "translation",
+  "i18n-ally.enabledFrameworks": [
+    "i18next",
+    "react-i18next"
+  ],
+  "i18n-ally.namespace": true,
 }

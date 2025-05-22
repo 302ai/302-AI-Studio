@@ -30,7 +30,9 @@ export function ModalAction({
   actionType,
   dangerActions,
 }: ModalActionProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "thread-menu.actions",
+  });
 
   return (
     <ModalContent isOpen={state !== null} onOpenChange={onOpenChange} isBlurred>
@@ -42,7 +44,7 @@ export function ModalAction({
       </ModalHeader>
       {actionType.body && <ModalBody>{actionType.body}</ModalBody>}
       <ModalFooter>
-        <ModalClose>{t("thread-menu.actions.cancel")}</ModalClose>
+        <ModalClose>{t("cancel")}</ModalClose>
         <Button
           intent={
             state && dangerActions?.includes(state) ? "danger" : "primary"
@@ -52,7 +54,7 @@ export function ModalAction({
           isDisabled={actionType.disabled}
           onPress={actionType.action}
         >
-          {actionType.confirmText ?? t("thread-menu.actions.confirm")}
+          {actionType.confirmText ?? t("confirm")}
         </Button>
       </ModalFooter>
     </ModalContent>

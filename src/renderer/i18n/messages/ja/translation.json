@@ -1,0 +1,127 @@
+{
+  "chat": {
+    "input-label": "メッセージを入力",
+    "input-placeholder": "何でも聞いてみてください...",
+    "tool-bar": {
+      "attach-file": "ファイルを添付"
+    }
+  },
+  "settings": {
+    "assistant-settings": {
+      "name": "アシスタント設定"
+    },
+    "general-settings": {
+      "language": {
+        "label": "言語"
+      },
+      "name": "一般設定",
+      "theme": {
+        "dark": "ダーク",
+        "label": "テーマ",
+        "light": "ライト",
+        "system": "システム"
+      }
+    },
+    "icon-tooltip": "設定を開く",
+    "model-settings": {
+      "model-list": {
+        "label": "モデルリスト"
+      },
+      "model-provider": {
+        "add-provider": "追加",
+        "add-provider-form": {
+          "check-key": "キーを確認",
+          "custom-provider": "カスタムプロバイダー",
+          "placeholder": "プロバイダーを選択してください...",
+          "placeholder-2": "APIキーを入力してください...",
+          "placeholder-3": "ベースURLを入力してください...",
+          "provider-select": "プロバイダーを選択",
+          "provider-type": "プロバイダータイプ"
+        },
+        "delete": "削除",
+        "description": "モデル",
+        "edit": "編集",
+        "label": "モデルプロバイダー",
+        "modal-action": {
+          "add-provider": "プロバイダーを追加",
+          "delete": "プロバイダーを削除",
+          "delete-confirm": "削除",
+          "delete-description": "プロバイダーを削除してもよろしいですか",
+          "delete-description-2": "このプロバイダーが提供するすべてのモデルが削除され、",
+          "delete-description-3": "これらのデフォルトモデルを設定したアシスタントは他のデフォルトモデルに変更されます。",
+          "edit": "設定"
+        }
+      },
+      "name": "モデル設定"
+    },
+    "tab-title": "設定",
+    "tool-settings": {
+      "name": "ツール設定"
+    }
+  },
+  "sidebar": {
+    "close-sidebar": {
+      "tooltip": "サイドバーを閉じる"
+    },
+    "menu-item": {
+      "clean-messages": "メッセージをクリア",
+      "collect-thread": "お気に入り",
+      "delete": "削除",
+      "rename": "名前を変更",
+      "uncollect-thread": "お気に入りを解除"
+    },
+    "new-thread": {
+      "tooltip": "新しいチャット"
+    },
+    "open-sidebar": {
+      "tooltip": "サイドバーを開く"
+    },
+    "search": {
+      "placeholder": "検索..."
+    },
+    "search-thread": {
+      "tooltip": "会話を検索"
+    },
+    "section": {
+      "collected": "お気に入り",
+      "earlier": "以前",
+      "last30Days": "過去30日",
+      "last7Days": "過去7日",
+      "today": "今日",
+      "yesterday": "昨日"
+    }
+  },
+  "tab-bar": {
+    "menu-item": {
+      "close": "閉じる",
+      "close-all": "すべて閉じる"
+    }
+  },
+  "thread": {
+    "new-thread-title": "新しい会話"
+  },
+  "thread-menu": {
+    "actions": {
+      "cancel": "キャンセル",
+      "clean-messages": {
+        "confirmText": "クリア",
+        "description": "メッセージをクリアすると、会話内のすべてのメッセージとファイルが削除されます。続行しますか？",
+        "title": "会話メッセージをクリア"
+      },
+      "confirm": "確認",
+      "delete": {
+        "confirmText": "削除",
+        "description": "削除後、会話は復元できません。慎重に操作してください。",
+        "title": "この会話を削除してもよろしいですか？"
+      },
+      "rename": {
+        "confirmText": "確認",
+        "description": "新しい会話名を入力してください。",
+        "edit": {
+          "placeholder": "新しい会話名..."
+        },
+        "title": "会話名を変更"
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
 {
   "chat": {
-    "input-label": "Enter Messages",
-    "input-placeholder": "Just Ask...",
+    "input-label": "Enter a message",
+    "input-placeholder": "Ask anything...",
     "tool-bar": {
-      "attach-file": "Upload Attachments"
+      "attach-file": "Attach file"
     }
   },
   "settings": {
@@ -19,7 +19,7 @@
         "dark": "Dark",
         "label": "Theme",
         "light": "Light",
-        "system": "OS"
+        "system": "System"
       }
     },
     "icon-tooltip": "Open Settings",
@@ -32,24 +32,24 @@
         "add-provider-form": {
           "check-key": "Verify Key",
           "custom-provider": "Custom Provider",
-          "placeholder": "Please select a povider...",
-          "placeholder-2": "Please enter the API Key...",
-          "placeholder-3": "Please enter the Base URL...",
+          "placeholder": "Please select a provider...",
+          "placeholder-2": "Please enter API Key...",
+          "placeholder-3": "Please enter Base URL...",
           "provider-select": "Select Provider",
           "provider-type": "Provider Type"
         },
         "delete": "Delete",
-        "description": "Models",
+        "description": "models",
         "edit": "Edit",
         "label": "Model Provider",
         "modal-action": {
           "add-provider": "Add Provider",
           "delete": "Delete Provider",
           "delete-confirm": "Delete",
-          "delete-description": "Please confirm whether to delete the supplier",
-          "delete-description-2": "All models provided by this vendor will be removed,",
-          "delete-description-3": "Assistants who also configure these default models will be changed to other default models.",
-          "edit": "configure"
+          "delete-description": "Please confirm to delete the provider",
+          "delete-description-2": "All models provided by this provider will be deleted,",
+          "delete-description-3": "and assistants that have configured these default models will be changed to other default models.",
+          "edit": "Configure"
         }
       },
       "name": "Model Settings"
@@ -65,10 +65,10 @@
     },
     "menu-item": {
       "clean-messages": "Clear Messages",
-      "collect-thread": "Collect",
+      "collect-thread": "Favorite",
       "delete": "Delete",
       "rename": "Rename",
-      "uncollect-thread": "Cancel Collection"
+      "uncollect-thread": "Unfavorite"
     },
     "new-thread": {
       "tooltip": "New Chat"
@@ -80,13 +80,13 @@
       "placeholder": "Search..."
     },
     "search-thread": {
-      "tooltip": "Search Conversation"
+      "tooltip": "Search Conversations"
     },
     "section": {
-      "collected": "Collections",
+      "collected": "Favorites",
       "earlier": "Earlier",
-      "last30Days": "Last 30 days",
-      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 Days",
+      "last7Days": "Last 7 Days",
       "today": "Today",
       "yesterday": "Yesterday"
     }
@@ -98,25 +98,25 @@
     }
   },
   "thread": {
-    "new-thread-title": "New Conversation"
+    "new-thread-title": "New Chat"
   },
   "thread-menu": {
     "actions": {
       "cancel": "Cancel",
       "clean-messages": {
         "confirmText": "Clear",
-        "description": "This will delete all messages and files in this conversation. Are you sure you want to continue?",
-        "title": "Clear All Messages"
+        "description": "Clearing messages will delete all messages and files in the conversation. Are you sure you want to continue?",
+        "title": "Clear Conversation Messages"
       },
       "confirm": "Confirm",
       "delete": {
         "confirmText": "Delete",
-        "description": "The conversation cannot be restored after deletion, please be cautious.",
+        "description": "The conversation cannot be recovered after deletion. Please proceed with caution.",
         "title": "Are you sure you want to delete this conversation?"
       },
       "rename": {
         "confirmText": "Confirm",
-        "description": "Please enter a new name for the conversation.",
+        "description": "Please enter a new conversation name.",
         "edit": {
           "placeholder": "New conversation name..."
         },

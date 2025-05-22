@@ -8,7 +8,9 @@ import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 
 export function SettingsPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings",
+  });
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,22 +19,22 @@ export function SettingsPage() {
       {
         name: "general-settings",
         path: "/settings/general-settings",
-        label: t("settings.general-settings.name"),
+        label: t("general-settings.name"),
       },
       {
         name: "model-settings",
         path: "/settings/model-settings",
-        label: t("settings.model-settings.name"),
+        label: t("model-settings.name"),
       },
       {
         name: "tool-settings",
         path: "/settings/tool-settings",
-        label: t("settings.tool-settings.name"),
+        label: t("tool-settings.name"),
       },
       {
         name: "assistant-settings",
         path: "/settings/assistant-settings",
-        label: t("settings.assistant-settings.name"),
+        label: t("assistant-settings.name"),
       },
     ],
     [t]

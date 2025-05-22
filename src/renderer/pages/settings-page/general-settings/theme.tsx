@@ -7,7 +7,9 @@ import { cn } from "@renderer/lib/utils";
 import { useSettingsStore } from "@renderer/store/settings-store";
 
 export function ThemeSwitcher() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings.general-settings.theme",
+  });
   const { theme, setTheme } = useSettingsStore();
 
   const [thumbStyle, setThumbStyle] = useState({});
@@ -28,17 +30,17 @@ export function ThemeSwitcher() {
       {
         key: ThemeMode.Light,
         icon: <BsSun className="size-4" />,
-        label: t("settings.general-settings.theme.light"),
+        label: t("light"),
       },
       {
         key: ThemeMode.Dark,
         icon: <BsMoon className="size-4" />,
-        label: t("settings.general-settings.theme.dark"),
+        label: t("dark"),
       },
       {
         key: ThemeMode.System,
         icon: <BsLaptop className="size-4" />,
-        label: t("settings.general-settings.theme.system"),
+        label: t("system"),
       },
     ],
     [t]
@@ -69,7 +71,7 @@ export function ThemeSwitcher() {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label>{t("settings.general-settings.theme.label")}</Label>
+      <Label>{t("label")}</Label>
       <div
         ref={containerRef}
         className="relative flex h-9 w-[280px] overflow-hidden rounded-xl border border-input bg-bg p-1"
