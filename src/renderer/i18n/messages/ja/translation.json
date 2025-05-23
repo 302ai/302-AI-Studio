@@ -38,7 +38,14 @@
           "provider-select": "プロバイダーを選択",
           "provider-type": "プロバイダータイプ",
           "placeholder-1": "サプライヤー名を入力してください...",
-          "provider-name": "カスタム名"
+          "provider-name": "カスタム名",
+          "default-name": "カスタムベンダー",
+          "check-key-success": "APIキー検証に正常に！",
+          "check-key-failed": "APIキー検証に失敗しました！",
+          "checking": "検証...",
+          "unverified": "検証されます",
+          "verified": "検証に合格しました",
+          "verification-failed": "認証に失敗しました"
         },
         "delete": "削除",
         "description": "モデル",

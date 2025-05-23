@@ -38,7 +38,14 @@
           "provider-select": "选择供应商",
           "provider-type": "供应商类型",
           "placeholder-1": "请输入供应商名称...",
-          "provider-name": "自定义名称"
+          "provider-name": "自定义名称",
+          "default-name": "自定义供应商",
+          "check-key-success": "API Key 验证成功！",
+          "check-key-failed": "API Key 验证失败！",
+          "checking": "验证中...",
+          "unverified": "待验证",
+          "verified": "已通过验证",
+          "verification-failed": "未通过验证"
         },
         "delete": "删除",
         "description": "个模型",

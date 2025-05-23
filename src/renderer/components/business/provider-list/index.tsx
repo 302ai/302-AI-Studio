@@ -31,6 +31,7 @@ export function ProviderList() {
 
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
+  const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
 
   const actionType = (action: ModelActionType | null) => {
     const initialsState = {
@@ -47,13 +48,14 @@ export function ProviderList() {
           descriptions: [],
           body: (
             <AddProvider
-              onValidate={() => {
-                console.log("validate");
+              onValidationStatusChange={(isValid) => {
+                setIsApiKeyValidated(isValid);
               }}
             />
           ),
           confirmText: t("modal-action.add-provider-confirm"),
           action: () => {},
+          disabled: !isApiKeyValidated,
         };
       case "edit":
         return {
@@ -166,12 +168,10 @@ export function ProviderList() {
             </DragDropContext>
           </div>
         ) : (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex h-full items-center justify-center text-muted-fg">
             <div className="flex flex-col items-center gap-2">
-              <PackageOpen className="size-9 text-muted-foreground" />
-              <p className="text-muted-foreground">
-                {t("no-provider-description")}
-              </p>
+              <PackageOpen className="size-9" />
+              <p>{t("no-provider-description")}</p>
             </div>
           </div>
         )}

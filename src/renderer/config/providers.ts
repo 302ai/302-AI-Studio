@@ -538,10 +538,3 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     },
   },
 ];
-
-export const PROVIDER_TYPES = [
-  { label: "OpenAI", value: "openai" },
-  { label: "OpenAI-Response", value: "openai" },
-  { label: "Gemini", value: "gemini" },
-  { label: "Anthropic", value: "anthropic" },
-];

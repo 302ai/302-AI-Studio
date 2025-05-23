@@ -6,7 +6,17 @@ import {
 import type { ModelProvider } from "@renderer/types/providers";
 import { ConfigService } from "../config-service";
 import type { BaseProviderService } from "./base-provider-service";
-import { OpenAICompatibleProviderService } from "./openAI-compatible-provider-service";
+import { OpenAIProviderService } from "./openAI-provider-service";
+
+export type CheckApiKeyParams =
+  | {
+      condition: "add";
+      providerCfg: ModelProvider;
+    }
+  | {
+      condition: "edit";
+      providerId: string;
+    };
 
 @ServiceRegister("providerService")
 export class ProviderService {
@@ -37,8 +47,8 @@ export class ProviderService {
     provider: ModelProvider
   ): BaseProviderService | undefined {
     switch (provider.apiType) {
-      case "openai-compatible":
-        return new OpenAICompatibleProviderService(provider);
+      case "openai":
+        return new OpenAIProviderService(provider);
 
       default:
         console.warn(`Unknown provider type: ${provider.apiType}`);
@@ -48,57 +58,32 @@ export class ProviderService {
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async checkApiKey(
-    condition: "add" | "edit",
-    providerId?: string,
-    tempConfig?: {
-      apiKey: string;
-      baseURL: string;
-      providerType: string;
-      providerName?: string;
-    }
+    _event: Electron.IpcMainEvent,
+    params: CheckApiKeyParams
   ): Promise<{
     isOk: boolean;
     errorMsg: string | null;
   }> {
-    let providerInst: BaseProviderService | undefined;
-
-    if (condition === "edit") {
-      if (!providerId) {
-        return {
-          isOk: false,
-          errorMsg: "Provider ID is required for edit mode",
-        };
-      }
-      providerInst = this.getProviderInst(providerId);
-    } else {
-      // condition === "add"
-      if (!tempConfig) {
-        return {
-          isOk: false,
-          errorMsg: "Temporary config is required for add mode",
-        };
-      }
-
-      const tempProvider: ModelProvider = {
-        id: `temp_${Date.now()}`,
-        name: tempConfig.providerName || "Temporary Provider",
-        apiType: tempConfig.providerType,
-        apiKey: tempConfig.apiKey,
-        baseUrl: tempConfig.baseURL,
-        enable: false,
-        custom: true,
-      };
-
-      providerInst = this.createProviderInst(tempProvider);
+    if (params.condition === "add") {
+      const providerInst = this.createProviderInst(params.providerCfg);
       if (!providerInst) {
+        return { isOk: false, errorMsg: "Failed to create provider instance" };
+      }
+      return providerInst.checkApiKey();
+    }
+
+    if (params.condition === "edit") {
+      try {
+        const providerInst = this.getProviderInst(params.providerId);
+        return providerInst.checkApiKey();
+      } catch (error) {
         return {
           isOk: false,
-          errorMsg: `Failed to create provider instance for type: ${tempConfig.providerType}`,
+          errorMsg: `Failed to get provider instance: ${error}`,
         };
       }
     }
-
-    return providerInst.checkApiKey();
+    return { isOk: false, errorMsg: "Invalid condition" };
   }
 
   getProviderById(id: string): ModelProvider {

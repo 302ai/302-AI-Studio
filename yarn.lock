@@ -4781,6 +4781,11 @@ lazy-val@^1.0.5:
   resolved "https://mirrors.huaweicloud.com/repository/npm/lazy-val/-/lazy-val-1.0.5.tgz#6cf3b9f5bc31cee7ee3e369c0832b7583dcd923d"
   integrity sha512-0/BnGCCfyUMkBpeDgWihanIAF9JmZhHBgUhEqzvf+adhNGLoP6TaiI5oF8oyb3I45P+PcnrqihSf01M0l0G5+Q==
 
+ldrs@^1.1.7:
+  version "1.1.7"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/ldrs/-/ldrs-1.1.7.tgz#1288d6c4f1fa1193e1805839c434dbb66807b4b4"
+  integrity sha512-rZnfveeY1SeS3F3ifUVd9AVGTFHmQ0qzp5fuszAirnrVkjqJBLrm99vtr/Mxbby4XgadUYv+DsFqyk2p4FV40Q==
+
 lie@~3.3.0:
   version "3.3.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/lie/-/lie-3.3.0.tgz#dcf82dee545f46074daf200c7c1c5a08e0f40f6a"

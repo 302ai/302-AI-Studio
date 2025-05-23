@@ -3,6 +3,7 @@ import type { ModelProvider } from "@renderer/types/providers";
 import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
 import { contextBridge } from "electron";
 import { initPreloadBridge } from "../main/bridge";
+import type { CheckApiKeyParams } from "../main/services/provider-service";
 
 /**
  * ! This should be declared in index.d.ts,
@@ -24,7 +25,7 @@ declare global {
         setActiveThread: (threadId: string) => void;
       };
       providerService: {
-        checkApiKey: (providerId: string) => Promise<{
+        checkApiKey: (params: CheckApiKeyParams) => Promise<{
           isOk: boolean;
           errorMsg: string | null;
         }>;

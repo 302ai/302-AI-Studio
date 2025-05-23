@@ -3,7 +3,7 @@ import type { ModelProvider } from "@renderer/types/providers";
 import OpenAI from "openai";
 import { BaseProviderService } from "./base-provider-service";
 
-export class OpenAICompatibleProviderService extends BaseProviderService {
+export class OpenAIProviderService extends BaseProviderService {
   protected openai: OpenAI;
 
   constructor(provider: ModelProvider) {

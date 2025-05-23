@@ -38,7 +38,14 @@
           "provider-select": "Select Provider",
           "provider-type": "Provider Type",
           "placeholder-1": "Please enter the provider name...",
-          "provider-name": "Custom Name"
+          "provider-name": "Custom Name",
+          "default-name": "Custom Provider",
+          "check-key-success": "API Key Verification Successfully!",
+          "check-key-failed": "API Key Verification failed!",
+          "checking": "Checking...",
+          "unverified": "To Be Verified",
+          "verified": "Verified",
+          "verification-failed": "Failed"
         },
         "delete": "Delete",
         "description": "models",
