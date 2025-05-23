@@ -1,19 +1,19 @@
 import {
   ContextMenu,
-  ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
+  ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
-import { Pencil, Eraser, Package, Trash2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { ModalAction } from "../modal-action";
-import { ThreadItem } from "@renderer/types/threads";
 import { TextField } from "@renderer/components/ui/text-field";
 import {
-  MenuModelActionType,
+  type MenuModelActionType,
   useThreadMenu,
 } from "@renderer/hooks/use-thread-menu";
+import type { ThreadItem } from "@renderer/types/threads";
+import { Eraser, Package, Pencil, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { ModalAction } from "../modal-action";
 
 interface ThreadMenuProps {
   thread: ThreadItem;

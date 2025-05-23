@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { IconEye, IconEyeClosed } from "@intentui/icons";
 
 import type { FieldProps } from "@renderer/components/ui/field";
 import {
@@ -10,14 +10,14 @@ import {
 } from "@renderer/components/ui/field";
 import { Loader } from "@renderer/components/ui/loader";
 import { composeTailwindRenderProps } from "@renderer/lib/primitive";
-import { IconEye, IconEyeClosed } from "@intentui/icons";
-import {
-  Button as ButtonPrimitive,
-  TextField as TextFieldPrimitive,
-} from "react-aria-components";
+import { useState } from "react";
 import type {
   InputProps,
   TextFieldProps as TextFieldPrimitiveProps,
+} from "react-aria-components";
+import {
+  Button as ButtonPrimitive,
+  TextField as TextFieldPrimitive,
 } from "react-aria-components";
 
 type InputType = Exclude<InputProps["type"], "password">;

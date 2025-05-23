@@ -1,3 +1,5 @@
+import type { Model } from "./models";
+
 // * Model Provider Settings Types
 export type ProviderType =
   | "openai"
@@ -6,12 +8,7 @@ export type ProviderType =
   | "gemini"
   | "qwenlm"
   | "azure-openai";
-export type Model = {
-  id: string;
-  provider: string;
-  name: string;
-  group: string;
-};
+
 export interface ModelProvider {
   id: string;
   type: ProviderType;

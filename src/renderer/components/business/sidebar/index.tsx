@@ -1,18 +1,18 @@
+import placeholder from "@renderer/assets/images/providers/302ai.png";
 import {
   Sidebar,
   SidebarContent,
+  SidebarDisclosure,
+  SidebarDisclosureGroup,
+  SidebarDisclosurePanel,
+  SidebarDisclosureTrigger,
   SidebarInset,
   SidebarItem,
   SidebarLabel,
-  SidebarDisclosure,
-  SidebarDisclosureTrigger,
-  SidebarDisclosurePanel,
-  SidebarDisclosureGroup,
 } from "@renderer/components/ui/sidebar";
-import { ThreadMenu } from "./thread-menu";
-import { useTranslation } from "react-i18next";
-import placeholder from "@renderer/assets/images/providers/302ai.png";
 import { useThread } from "@renderer/hooks/use-thread";
+import { useTranslation } from "react-i18next";
+import { ThreadMenu } from "./thread-menu";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   children: React.ReactNode;

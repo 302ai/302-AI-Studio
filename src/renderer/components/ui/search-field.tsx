@@ -1,11 +1,4 @@
 import { IconSearch, IconX } from "@intentui/icons";
-import { SearchField as SearchFieldPrimitive } from "react-aria-components";
-
-import type {
-  SearchFieldProps as SearchFieldPrimitiveProps,
-  ValidationResult,
-} from "react-aria-components";
-
 import { Button } from "@renderer/components/ui/button";
 import {
   Description,
@@ -16,6 +9,11 @@ import {
 } from "@renderer/components/ui/field";
 import { Loader } from "@renderer/components/ui/loader";
 import { composeTailwindRenderProps } from "@renderer/lib/primitive";
+import type {
+  SearchFieldProps as SearchFieldPrimitiveProps,
+  ValidationResult,
+} from "react-aria-components";
+import { SearchField as SearchFieldPrimitive } from "react-aria-components";
 
 interface SearchFieldProps extends SearchFieldPrimitiveProps {
   label?: string;

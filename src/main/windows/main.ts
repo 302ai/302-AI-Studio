@@ -1,11 +1,11 @@
-import { BrowserWindow } from "electron";
 import { join } from "node:path";
-import { createWindow } from "@lib/electron-app/factories/windows/create";
 import { is } from "@electron-toolkit/utils";
-import { isLinux, isMac } from "../constant";
+import { createWindow } from "@lib/electron-app/factories/windows/create";
+import { BrowserWindow } from "electron";
+import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
-import ElectronStore from "electron-store";
+import { isLinux, isMac } from "../constant";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({

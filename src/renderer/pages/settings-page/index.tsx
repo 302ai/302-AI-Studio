@@ -1,11 +1,11 @@
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Tab, TabList, Tabs } from "@renderer/components/ui/tab";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { AssistantSettings } from "./assistant-settings";
 import { GeneralSettings } from "./general-settings";
 import { ModelSettings } from "./model-settings";
 import { ToolSettings } from "./tool-settings";
-import { AssistantSettings } from "./assistant-settings";
-import { Tab, TabList, Tabs } from "@renderer/components/ui/tab";
-import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
 
 export function SettingsPage() {
   const { t } = useTranslation("translation", {

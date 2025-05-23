@@ -1,8 +1,8 @@
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import {
   Switch as SwitchPrimitive,
   type SwitchProps as SwitchPrimitiveProps,
 } from "react-aria-components";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 
 interface SwitchProps extends SwitchPrimitiveProps {
   ref?: React.RefObject<HTMLLabelElement>;
@@ -14,7 +14,7 @@ const Switch = ({ children, className, ref, ...props }: SwitchProps) => {
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "group inline-flex touch-none items-center sm:text-sm",
+        "group inline-flex touch-none items-center sm:text-sm"
       )}
       style={{ WebkitTapHighlightColor: "transparent" }}
     >

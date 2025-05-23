@@ -1,26 +1,26 @@
-import { FiSettings, FiSearch } from "react-icons/fi";
-import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
-import { FaRegSquarePlus } from "react-icons/fa6";
+import {
+  TitlebarCenter,
+  TitlebarContainer,
+  TitlebarLeft,
+  TitlebarRight,
+} from "@renderer/components/business/title-bar/title-bar-container";
+import { Separator } from "@renderer/components/ui/separator";
+import { useSidebar } from "@renderer/components/ui/sidebar";
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
-import {
-  TitlebarLeft,
-  TitlebarCenter,
-  TitlebarRight,
-  TitlebarContainer,
-} from "@renderer/components/business/title-bar/title-bar-container";
-import { useSidebar } from "@renderer/components/ui/sidebar";
-import { cn } from "@renderer/lib/utils";
 import { isMac } from "@renderer/config/constant";
-import { Separator } from "@renderer/components/ui/separator";
-import { TabBar } from "../tab-bar";
+import { cn } from "@renderer/lib/utils";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
-import { useTranslation } from "react-i18next";
-import { ThreadSearcher } from "./thread-searcher";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FaRegSquarePlus } from "react-icons/fa6";
+import { FiSearch, FiSettings } from "react-icons/fi";
+import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
+import { TabBar } from "../tab-bar";
+import { ThreadSearcher } from "./thread-searcher";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 

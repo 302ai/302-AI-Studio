@@ -1,6 +1,7 @@
-import { useId } from "react";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 
 import { LayoutGroup, motion } from "motion/react";
+import { useId } from "react";
 import type {
   TabListProps as TabListPrimitiveProps,
   TabPanelProps as TabPanelPrimitiveProps,
@@ -8,15 +9,14 @@ import type {
   TabsProps as TabsPrimitiveProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   TabList as TabListPrimitive,
   TabPanel as TabPanelPrimitive,
   Tab as TabPrimitive,
   Tabs as TabsPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 
 const tabsStyles = tv({
   base: "group/tabs flex gap-4 forced-color-adjust-none",
@@ -38,7 +38,7 @@ const Tabs = ({ className, ref, ...props }: TabsProps) => {
         tabsStyles({
           ...renderProps,
           className,
-        }),
+        })
       )}
       ref={ref}
       {...props}
@@ -71,7 +71,7 @@ const TabList = <T extends object>({
         ref={ref}
         {...props}
         className={composeRenderProps(className, (className, renderProps) =>
-          tabListStyles({ ...renderProps, className }),
+          tabListStyles({ ...renderProps, className })
         )}
       />
     </LayoutGroup>
@@ -113,7 +113,7 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
           tabStyles({
             ...renderProps,
             className: twJoin("href" in props && "cursor-pointer", _className),
-          }),
+          })
       )}
     >
       {({ isSelected }) => (
@@ -127,7 +127,7 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
                 // horizontal
                 "group-data-[orientation=horizontal]/tabs:-bottom-px group-data-[orientation=horizontal]/tabs:inset-x-0 group-data-[orientation=horizontal]/tabs:h-0.5 group-data-[orientation=horizontal]/tabs:w-full",
                 // vertical
-                "group-data-[orientation=vertical]/tabs:right-[-12px] group-data-[orientation=vertical]/tabs:h-[calc(50%)] group-data-[orientation=vertical]/tabs:w-[3px] group-data-[orientation=vertical]/tabs:transform group-data-[orientation=vertical]/tabs:rounded-r-[2px]",
+                "group-data-[orientation=vertical]/tabs:right-[-12px] group-data-[orientation=vertical]/tabs:h-[calc(50%)] group-data-[orientation=vertical]/tabs:w-[3px] group-data-[orientation=vertical]/tabs:transform group-data-[orientation=vertical]/tabs:rounded-r-[2px]"
               )}
               layoutId="current-selected"
               transition={{ type: "spring", stiffness: 500, damping: 40 }}
@@ -149,7 +149,7 @@ const TabPanel = ({ className, ref, ...props }: TabPanelProps) => {
       ref={ref}
       className={composeTailwindRenderProps(
         className,
-        "flex-1 text-fg text-sm focus-visible:outline-hidden",
+        "flex-1 text-fg text-sm focus-visible:outline-hidden"
       )}
     />
   );

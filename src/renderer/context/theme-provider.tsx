@@ -1,12 +1,12 @@
+import { useSettingsStore } from "@renderer/store/settings-store";
+import { ThemeMode } from "@renderer/types/settings";
 import {
   createContext,
+  type ReactNode,
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from "react";
-import { ThemeMode } from "@renderer/types/settings";
-import { useSettingsStore } from "@renderer/store/settings-store";
 
 type ThemeContextType = {
   theme: ThemeMode;

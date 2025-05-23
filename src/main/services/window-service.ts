@@ -1,5 +1,5 @@
+import { titleBarOverlayDark, titleBarOverlayLight } from "@main/config";
 import { ThemeMode } from "@renderer/types/settings";
-import { titleBarOverlayLight, titleBarOverlayDark } from "@main/config";
 import { BrowserWindow } from "electron";
 import { ServiceRegister } from "../shared/reflect";
 

@@ -1,7 +1,7 @@
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
 import { Paperclip } from "lucide-react";
 import { useTranslation } from "react-i18next";

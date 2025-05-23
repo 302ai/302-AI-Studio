@@ -15,12 +15,12 @@ import type {
   ModalOverlayProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   DialogTrigger as DialogTriggerPrimitive,
   ModalOverlay,
   Modal as ModalPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
-import { type VariantProps, tv } from "tailwind-variants";
+import { tv, type VariantProps } from "tailwind-variants";
 
 const Modal = (props: DialogTriggerProps) => {
   return <DialogTriggerPrimitive {...props} />;

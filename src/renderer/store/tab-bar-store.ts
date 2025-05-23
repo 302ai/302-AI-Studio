@@ -1,7 +1,7 @@
+import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { nanoid } from "nanoid";
 
 const TAB_BAR_STORAGE_KEY = "tab-bar";
 

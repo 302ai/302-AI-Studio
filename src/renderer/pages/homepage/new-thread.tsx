@@ -1,5 +1,5 @@
-import { ChatInput } from "@renderer/components/business/chat-input";
 import logo from "@renderer/assets/images/logo.png";
+import { ChatInput } from "@renderer/components/business/chat-input";
 
 export function NewThread() {
   return (

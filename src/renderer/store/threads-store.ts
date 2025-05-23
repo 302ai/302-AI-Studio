@@ -1,7 +1,7 @@
+import type { ThreadItem } from "@renderer/types/threads";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { ThreadItem } from "@renderer/types/threads";
 
 const THREADS_STORAGE_KEY = "threads";
 

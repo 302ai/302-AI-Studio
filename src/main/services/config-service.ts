@@ -1,8 +1,9 @@
-import ElectronStore from "electron-store";
-import { type LanguageVarious, ThemeMode } from "@renderer/types/settings";
-import { app } from "electron";
-import { locales } from "@main/utils/locales";
 import { defaultLanguage } from "@main/constant";
+import { locales } from "@main/utils/locales";
+import type { ModelProvider } from "@renderer/types/providers";
+import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
+import { app } from "electron";
+import ElectronStore from "electron-store";
 import {
   CommunicationWay,
   ServiceHandler,
@@ -13,6 +14,7 @@ import { WindowService } from "./window-service";
 enum ConfigKeys {
   Language = "language",
   Theme = "theme",
+  Providers = "providers",
 }
 
 const electronStore: ElectronStore = new ElectronStore();
@@ -26,13 +28,13 @@ export class ConfigService {
   }
 
   @ServiceHandler()
-  getLanguage() {
+  getLanguage(): string {
     const currentLocale = app.getLocale();
     const locale = Object.keys(locales).includes(currentLocale)
       ? currentLocale
       : defaultLanguage;
 
-    return electronStore.get(ConfigKeys.Language, locale);
+    return electronStore.get(ConfigKeys.Language, locale) as string;
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
@@ -44,5 +46,14 @@ export class ConfigService {
   setTheme(_event: Electron.IpcMainEvent, theme: ThemeMode) {
     electronStore.set(ConfigKeys.Theme, theme);
     this.windowService.setTitleBarOverlay(theme);
+  }
+
+  getProviders(): ModelProvider[] {
+    return electronStore.get(ConfigKeys.Providers, []) as ModelProvider[];
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  setProviders(_event: Electron.IpcMainEvent, providers: ModelProvider[]) {
+    electronStore.set(ConfigKeys.Providers, providers);
   }
 }

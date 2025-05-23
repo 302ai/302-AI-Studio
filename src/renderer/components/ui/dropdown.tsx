@@ -1,5 +1,5 @@
-import { Keyboard } from "@renderer/components/ui/keyboard";
 import { IconCheck } from "@intentui/icons";
+import { Keyboard } from "@renderer/components/ui/keyboard";
 import type {
   ListBoxItemProps,
   SectionProps,
@@ -8,12 +8,12 @@ import type {
 } from "react-aria-components";
 import {
   Collection,
+  composeRenderProps,
   Header,
   ListBoxItem as ListBoxItemPrimitive,
   ListBoxSection,
   Separator,
   Text,
-  composeRenderProps,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";

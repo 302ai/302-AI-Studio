@@ -1,6 +1,6 @@
-import { PropsWithChildren, HTMLAttributes } from "react";
 import { isMac, isWindows } from "@renderer/config/constant";
 import { cn } from "@renderer/lib/utils";
+import type { HTMLAttributes, PropsWithChildren } from "react";
 
 type Props = PropsWithChildren & HTMLAttributes<HTMLDivElement>;
 
@@ -15,7 +15,7 @@ export function TitlebarContainer({ children, ...props }: TitlebarProps) {
     <div
       className={cn(
         "flex w-full flex-row items-center bg-navbar",
-        isMac ? "pl-[140px]" : "",
+        isMac ? "pl-[140px]" : ""
       )}
       style={dragRegion}
       {...props}
@@ -30,7 +30,7 @@ export function TitlebarLeft({ children, className, ...props }: TitlebarProps) {
     <div
       className={cn(
         "flex h-[var(--title-bar-height)] shrink-0 flex-row items-center",
-        className,
+        className
       )}
       {...props}
     >
@@ -49,7 +49,7 @@ export function TitlebarCenter({
       className={cn(
         "flex h-[var(--title-bar-height)] flex-1 items-center overflow-hidden",
         isMac ? "px-5" : "px-0",
-        className,
+        className
       )}
       {...props}
     >
@@ -68,7 +68,7 @@ export function TitlebarRight({
       className={cn(
         "flex h-[var(--title-bar-height)] items-center justify-end",
         isWindows ? "pr-[140px]" : "pr-3",
-        className,
+        className
       )}
       {...props}
     >

@@ -1,10 +1,10 @@
-import { Label } from "react-aria-components";
-import { useTranslation } from "react-i18next";
-import { useState, useRef, useEffect, useMemo } from "react";
-import { ThemeMode } from "@renderer/types/settings";
-import { BsSun, BsMoon, BsLaptop } from "react-icons/bs";
 import { cn } from "@renderer/lib/utils";
 import { useSettingsStore } from "@renderer/store/settings-store";
+import { ThemeMode } from "@renderer/types/settings";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Label } from "react-aria-components";
+import { useTranslation } from "react-i18next";
+import { BsLaptop, BsMoon, BsSun } from "react-icons/bs";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation("translation", {
@@ -64,8 +64,8 @@ export function ThemeSwitcher() {
     const itemRect = item.getBoundingClientRect();
 
     setThumbStyle({
-      left: itemRect.left - containerRect.left + "px",
-      width: itemRect.width + "px",
+      left: `${itemRect.left - containerRect.left}px`,
+      width: `${itemRect.width}px`,
     });
   }, [theme, themeOptions]);
 
@@ -97,8 +97,8 @@ export function ThemeSwitcher() {
                 handleThemeChange(option.key as ThemeMode);
               }
             }}
-            aria-pressed={theme === option.key}
-            // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
+            aria-checked={theme === option.key}
+            role="switch"
             tabIndex={0}
           >
             {option.icon}

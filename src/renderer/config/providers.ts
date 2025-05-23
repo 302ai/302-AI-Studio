@@ -1,15 +1,13 @@
 import Ai302ProviderIcon from "@renderer/assets/images/providers/302ai.png";
 import ZhinaoProviderIcon from "@renderer/assets/images/providers/360.png";
-import HunyuanProviderIcon from "@renderer/assets/images/providers/hunyuan.png";
-import AzureProviderIcon from "@renderer/assets/images/providers/microsoft.png";
 import AiHubMixProviderIcon from "@renderer/assets/images/providers/aihubmix.webp";
 import AlayaNewProviderIcon from "@renderer/assets/images/providers/alayanew.webp";
 import AnthropicProviderIcon from "@renderer/assets/images/providers/anthropic.png";
 import BaichuanProviderIcon from "@renderer/assets/images/providers/baichuan.png";
 import BaiduCloudProviderIcon from "@renderer/assets/images/providers/baidu-cloud.svg";
 import BailianProviderIcon from "@renderer/assets/images/providers/bailian.png";
-import DeepSeekProviderIcon from "@renderer/assets/images/providers/deepseek.png";
 import DmxapiProviderIcon from "@renderer/assets/images/providers/DMXAPI.png";
+import DeepSeekProviderIcon from "@renderer/assets/images/providers/deepseek.png";
 import FireworksProviderIcon from "@renderer/assets/images/providers/fireworks.png";
 import GiteeAIProviderIcon from "@renderer/assets/images/providers/gitee-ai.png";
 import GithubProviderIcon from "@renderer/assets/images/providers/github.png";
@@ -17,10 +15,12 @@ import GoogleProviderIcon from "@renderer/assets/images/providers/google.png";
 import GPUStackProviderIcon from "@renderer/assets/images/providers/gpustack.svg";
 import GrokProviderIcon from "@renderer/assets/images/providers/grok.png";
 import GroqProviderIcon from "@renderer/assets/images/providers/groq.png";
+import HunyuanProviderIcon from "@renderer/assets/images/providers/hunyuan.png";
 import HyperbolicProviderIcon from "@renderer/assets/images/providers/hyperbolic.png";
 import InfiniProviderIcon from "@renderer/assets/images/providers/infini.png";
 import JinaProviderIcon from "@renderer/assets/images/providers/jina.png";
 import LMStudioProviderIcon from "@renderer/assets/images/providers/lmstudio.png";
+import AzureProviderIcon from "@renderer/assets/images/providers/microsoft.png";
 import MinimaxProviderIcon from "@renderer/assets/images/providers/minimax.png";
 import MistralProviderIcon from "@renderer/assets/images/providers/mistral.png";
 import ModelScopeProviderIcon from "@renderer/assets/images/providers/modelscope.png";
@@ -43,8 +43,8 @@ import VoyageAIProviderIcon from "@renderer/assets/images/providers/voyageai.png
 import XirangProviderIcon from "@renderer/assets/images/providers/xirang.png";
 import ZeroOneProviderIcon from "@renderer/assets/images/providers/zero-one.png";
 import ZhipuProviderIcon from "@renderer/assets/images/providers/zhipu.png";
+import type { ModelProvider } from "@renderer/types/providers";
 import { SYSTEM_MODELS } from "./models";
-import { ModelProvider } from "@renderer/types/providers";
 
 const PROVIDER_ICON_MAP = {
   "302ai": Ai302ProviderIcon,

@@ -1,19 +1,19 @@
-import { useTranslation } from "react-i18next";
+import { Button } from "@renderer/components/ui/button";
+import { Radio, RadioGroup } from "@renderer/components/ui/radio-group";
 import {
   Select,
   SelectList,
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import { PROVIDER_TYPES, getProviderIcon } from "@renderer/config/providers";
 import { TextField } from "@renderer/components/ui/text-field";
-import { MdOutlineDashboardCustomize } from "react-icons/md";
-import { Button } from "@renderer/components/ui/button";
-import { IoKeyOutline } from "react-icons/io5";
-import { RadioGroup, Radio } from "@renderer/components/ui/radio-group";
-import { useAddProvider } from "@/src/renderer/hooks/use-add-provider";
+import { getProviderIcon, PROVIDER_TYPES } from "@renderer/config/providers";
 import { useState } from "react";
-import { Key } from "react-aria-components";
+import type { Key } from "react-aria-components";
+import { useTranslation } from "react-i18next";
+import { IoKeyOutline } from "react-icons/io5";
+import { MdOutlineDashboardCustomize } from "react-icons/md";
+import { useAddProvider } from "@/src/renderer/hooks/use-add-provider";
 
 interface AddProviderProps {
   onValidate: () => void;

@@ -1,7 +1,9 @@
-import { ElectronAPI, electronAPI } from "@electron-toolkit/preload";
+import { type ElectronAPI, electronAPI } from "@electron-toolkit/preload";
+import type { ModelProvider } from "@renderer/types/providers";
+import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
 import { contextBridge } from "electron";
 import { initPreloadBridge } from "../main/bridge";
-import { LanguageVarious, ThemeMode } from "../renderer/types";
+
 /**
  * ! This should be declared in index.d.ts,
  * ! but declaring it in index.d.ts would result in an error: Property 'api' does not exist on type 'Window & typeof globalThis'.
@@ -16,9 +18,16 @@ declare global {
         getLanguage: () => Promise<LanguageVarious>;
         setLanguage: (language: LanguageVarious) => void;
         setTheme: (theme: ThemeMode) => void;
+        setProviders: (providers: ModelProvider[]) => void;
       };
       threadsService: {
         setActiveThread: (threadId: string) => void;
+      };
+      providerService: {
+        checkApiKey: (providerId: string) => Promise<{
+          isOk: boolean;
+          errorMsg: string | null;
+        }>;
       };
     };
   }

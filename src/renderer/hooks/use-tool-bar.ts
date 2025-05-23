@@ -1,5 +1,5 @@
-import { useThreadsStore } from "@renderer/store/threads-store";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
+import { useThreadsStore } from "@renderer/store/threads-store";
 import { useTranslation } from "react-i18next";
 
 export function useToolBar() {

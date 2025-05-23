@@ -1,11 +1,4 @@
 import { IconCheck, IconHamburger } from "@intentui/icons";
-import type { ListBoxItemProps, ListBoxProps } from "react-aria-components";
-import {
-  ListBoxItem as ListBoxItemPrimitive,
-  ListBox as ListBoxPrimitive,
-  composeRenderProps,
-} from "react-aria-components";
-
 import {
   DropdownDescription,
   DropdownLabel,
@@ -13,6 +6,12 @@ import {
   dropdownItemStyles,
 } from "@renderer/components/ui/dropdown";
 import { composeTailwindRenderProps } from "@renderer/lib/primitive";
+import type { ListBoxItemProps, ListBoxProps } from "react-aria-components";
+import {
+  composeRenderProps,
+  ListBoxItem as ListBoxItemPrimitive,
+  ListBox as ListBoxPrimitive,
+} from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 
 const ListBox = <T extends object>({

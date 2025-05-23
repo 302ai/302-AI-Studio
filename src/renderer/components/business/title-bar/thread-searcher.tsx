@@ -1,5 +1,4 @@
-import { Autocomplete, useFilter } from "react-aria-components";
-import { SearchField } from "@renderer/components/ui/search-field";
+import placeholder from "@renderer/assets/images/providers/302ai.png";
 import {
   ListBox,
   ListBoxItem,
@@ -10,10 +9,11 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@renderer/components/ui/modal";
+import { SearchField } from "@renderer/components/ui/search-field";
 import { useThread } from "@renderer/hooks/use-thread";
+import { EventNames, emitter } from "@renderer/services/event-service";
+import { Autocomplete, useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
-import { emitter, EventNames } from "@renderer/services/event-service";
-import placeholder from "@renderer/assets/images/providers/302ai.png";
 
 interface ThreadSearcherProps {
   isOpenSearcher: boolean;

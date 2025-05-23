@@ -1,11 +1,11 @@
-import { CircleX, PencilLine } from "lucide-react";
+import { CardAction } from "@renderer/components/ui/card";
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
+import { CircleX, PencilLine } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { CardAction } from "@renderer/components/ui/card";
 
 interface ActionGroupProps {
   onEdit: () => void;

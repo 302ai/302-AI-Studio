@@ -1,9 +1,9 @@
+import { defaultLanguage } from "@main/constant";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import zhTranslation from "./messages/zh/translation.json";
 import enTranslation from "./messages/en/translation.json";
 import jaTranslation from "./messages/ja/translation.json";
-import { defaultLanguage } from "@main/constant";
+import zhTranslation from "./messages/zh/translation.json";
 
 const { configService } = window.service;
 

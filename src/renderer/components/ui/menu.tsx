@@ -1,5 +1,6 @@
-import { createContext } from "react";
 import { IconBulletFill, IconCheck, IconChevronLgRight } from "@intentui/icons";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
+import { createContext } from "react";
 import type {
   ButtonProps,
   MenuItemProps as MenuItemPrimitiveProps,
@@ -11,13 +12,13 @@ import type {
 import {
   Button,
   Collection,
+  composeRenderProps,
   Header,
   MenuItem as MenuItemPrimitive,
   Menu as MenuPrimitive,
   MenuSection as MenuSectionPrimitive,
   MenuTrigger as MenuTriggerPrimitive,
   SubmenuTrigger as SubmenuTriggerPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import type { VariantProps } from "tailwind-variants";
@@ -30,7 +31,6 @@ import {
   dropdownSectionStyles,
 } from "./dropdown";
 import { PopoverContent } from "./popover";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 
 interface MenuContextProps {
   respectScreen: boolean;

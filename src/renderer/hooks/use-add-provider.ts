@@ -1,5 +1,5 @@
-import { useModelSettingStore } from "../store/settings-store/model-setting-store";
-import { INITIAL_PROVIDERS } from "../config/providers";
+import { INITIAL_PROVIDERS } from "@renderer/config/providers";
+import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 
 export function useAddProvider() {
   const { modelProvider } = useModelSettingStore();

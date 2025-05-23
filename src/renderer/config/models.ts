@@ -1,4 +1,5 @@
-import { Model } from "@renderer/types/providers";
+import type { Model } from "@renderer/types/models";
+import type OpenAI from "openai";
 
 export const SYSTEM_MODELS: Record<string, Model[]> = {
   aihubmix: [
@@ -1740,3 +1741,13 @@ export const SYSTEM_MODELS: Record<string, Model[]> = {
     },
   ],
 };
+
+export const NOT_SUPPORTED_REGEX = /(?:^tts|whisper|speech)/i;
+
+export function isSupportedModel(model: OpenAI.Models.Model): boolean {
+  if (!model) {
+    return false;
+  }
+
+  return !NOT_SUPPORTED_REGEX.test(model.id);
+}

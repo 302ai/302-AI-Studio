@@ -1,9 +1,9 @@
 import type { TooltipProps as TooltipPrimitiveProps } from "react-aria-components";
 import {
+  composeRenderProps,
   OverlayArrow,
   Tooltip as TooltipPrimitive,
   TooltipTrigger as TooltipTriggerPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";

@@ -1,16 +1,15 @@
 import {
+  composeTailwindRenderProps,
+  focusStyles,
+} from "@renderer/lib/primitive";
+import {
+  composeRenderProps,
   TextArea as TextAreaPrimitive,
   TextField as TextFieldPrimitive,
   type TextFieldProps as TextFieldPrimitiveProps,
   type ValidationResult,
-  composeRenderProps,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
-
-import {
-  composeTailwindRenderProps,
-  focusStyles,
-} from "@renderer/lib/primitive";
 import { Description, FieldError, Label } from "./field";
 
 const textareaStyles = tv({
@@ -42,7 +41,7 @@ const Textarea = ({
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "group flex flex-col gap-y-1.5",
+        "group flex flex-col gap-y-1.5"
       )}
     >
       {label && <Label>{label}</Label>}
@@ -52,7 +51,7 @@ const Textarea = ({
           textareaStyles({
             ...renderProps,
             className,
-          }),
+          })
         )}
         style={{
           resize: resize,

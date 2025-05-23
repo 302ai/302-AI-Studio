@@ -3,6 +3,7 @@ import {
   IconHamburger,
   IconSidebarFill,
 } from "@intentui/icons";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import {
   createContext,
   use,
@@ -20,6 +21,7 @@ import type {
   SeparatorProps as SidebarSeparatorProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   Disclosure,
   DisclosureGroup,
   DisclosurePanel,
@@ -29,14 +31,12 @@ import {
   Separator,
   Text,
   Button as Trigger,
-  composeRenderProps,
 } from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 import { Badge } from "./badge";
 import { Button } from "./button";
 import { Tooltip } from "./tooltip";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

@@ -1,3 +1,4 @@
+import { Button } from "@renderer/components/ui/button";
 import {
   ModalBody,
   ModalClose,
@@ -7,7 +8,6 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@renderer/components/ui/modal";
-import { Button } from "@renderer/components/ui/button";
 import { useTranslation } from "react-i18next";
 
 interface ModalActionProps {

@@ -1,15 +1,19 @@
-import { useTranslation } from "react-i18next";
+/** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
+import type {
+  DraggableProvided,
+  DraggableStateSnapshot,
+} from "@hello-pangea/dnd";
 import { Avatar } from "@renderer/components/ui/avatar";
-import { DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
-import { ModelProvider } from "@renderer/types/providers";
-import { getProviderIcon } from "@renderer/config/providers";
 import {
-  CardTitle,
-  CardHeader,
   CardDescription,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@renderer/components/ui/card";
+import { getProviderIcon } from "@renderer/config/providers";
 import { cn } from "@renderer/lib/utils";
+import type { ModelProvider } from "@renderer/types/providers";
+import { useTranslation } from "react-i18next";
 
 interface ProviderCardProps {
   snapshot: DraggableStateSnapshot;
@@ -43,6 +47,14 @@ export function ProviderCard({
         marginBottom: 5,
       }}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick?.();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={provider.name}
     >
       <CardHeader className="flex items-center gap-3 pl-4">
         <Avatar

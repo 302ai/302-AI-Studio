@@ -1,3 +1,5 @@
+import { Description, FieldError, Label } from "@renderer/components/ui/field";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import type {
   RadioGroupProps as RadioGroupPrimitiveProps,
   RadioProps as RadioPrimitiveProps,
@@ -8,9 +10,6 @@ import {
   Radio as RadioPrimitive,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
-
-import { Description, FieldError, Label } from "@renderer/components/ui/field";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 
 interface RadioGroupProps extends Omit<RadioGroupPrimitiveProps, "children"> {
   label?: string;

@@ -1,5 +1,3 @@
-import { createContext, use, useRef, useState } from "react";
-
 import type { MenuContentProps } from "@renderer/components/ui/menu";
 import {
   MenuContent,
@@ -11,6 +9,7 @@ import {
   MenuSection,
   MenuSeparator,
 } from "@renderer/components/ui/menu";
+import { createContext, use, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface ContextMenuTriggerContextType {

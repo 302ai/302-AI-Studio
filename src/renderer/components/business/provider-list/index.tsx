@@ -1,22 +1,23 @@
-import { ProviderCard } from "./provider-card";
-import { Plus } from "lucide-react";
-import { Button } from "@renderer/components/ui/button";
-import { useTranslation } from "react-i18next";
+/** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
 import {
   DragDropContext,
   Draggable,
   Droppable,
-  DropResult,
+  type DropResult,
 } from "@hello-pangea/dnd";
-import { FixedSizeList, areEqual } from "react-window";
-import { memo, useRef, useState, useEffect } from "react";
+import { Button } from "@renderer/components/ui/button";
 import {
+  type ModelActionType,
   useProviderList,
-  ModelActionType,
 } from "@renderer/hooks/use-provider-list";
+import { Plus } from "lucide-react";
+import { memo, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { areEqual, FixedSizeList } from "react-window";
 import { ModalAction } from "../modal-action";
 import { ActionGroup } from "./action-group";
 import { AddProvider } from "./add-provider";
+import { ProviderCard } from "./provider-card";
 
 export function ProviderList() {
   const { t } = useTranslation("translation", {
@@ -138,8 +139,15 @@ export function ProviderList() {
         {(provided, snapshot) => (
           <div
             style={style}
-            onKeyDown={handleProviderSelect}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                handleProviderSelect?.();
+              }
+            }}
             onClick={handleProviderSelect}
+            role="button"
+            tabIndex={0}
+            aria-label={provider.name}
           >
             <ProviderCard
               provided={provided}

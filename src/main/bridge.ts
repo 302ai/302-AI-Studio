@@ -1,7 +1,8 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+
+import { ipcMain, ipcRenderer } from "electron";
 import { services } from "./services";
 import { CommunicationWay, getMetadata } from "./shared/reflect";
-import { ipcMain, ipcRenderer } from "electron";
 
 export function initMainBridge(): void {
   services?.forEach((service) => {

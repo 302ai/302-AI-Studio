@@ -1,4 +1,8 @@
 import { IconChevronLgDown } from "@intentui/icons";
+import {
+  composeTailwindRenderProps,
+  focusStyles,
+} from "@renderer/lib/primitive";
 import type {
   ListBoxProps,
   PopoverProps,
@@ -7,9 +11,9 @@ import type {
 } from "react-aria-components";
 import {
   Button,
+  composeRenderProps,
   Select as SelectPrimitive,
   SelectValue,
-  composeRenderProps,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 import {
@@ -21,10 +25,6 @@ import {
 import { Description, FieldError, Label } from "./field";
 import { ListBox } from "./list-box";
 import { PopoverContent, type PopoverContentProps } from "./popover";
-import {
-  composeTailwindRenderProps,
-  focusStyles,
-} from "@renderer/lib/primitive";
 
 const selectTriggerStyles = tv({
   extend: focusStyles,

@@ -5,15 +5,15 @@ import type {
   PopoverProps as PopoverPrimitiveProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   DialogTrigger,
   OverlayArrow,
   PopoverContext,
   Popover as PopoverPrimitive,
-  composeRenderProps,
   useSlottedContext,
 } from "react-aria-components";
-import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
+import { tv } from "tailwind-variants";
 import type {
   DialogBodyProps,
   DialogFooterProps,

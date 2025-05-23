@@ -1,8 +1,8 @@
+import type { DropResult } from "@hello-pangea/dnd";
 import { useCallback, useEffect, useState } from "react";
-import { TabType, useTabBarStore } from "../store/tab-bar-store";
 import { useNavigate } from "react-router-dom";
-import { emitter, EventNames } from "../services/event-service";
-import { DropResult } from "@hello-pangea/dnd";
+import { EventNames, emitter } from "../services/event-service";
+import { TabType, useTabBarStore } from "../store/tab-bar-store";
 
 interface UseTabBarProps {
   tabBarRef: React.RefObject<HTMLDivElement>;

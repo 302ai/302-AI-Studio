@@ -185,59 +185,59 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.27.1"
 
-"@biomejs/biome@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/biome/-/biome-2.0.0-beta.1.tgz#2a384db788831031a5c6b46a51306054bbfbbc46"
-  integrity sha512-MqRoy9CbTkrS45zW+S4u8p4kQUIFx0mGUWi789W1R3b1kXYIudEqsTKgXKtTGsI0kWOlvnjuKqwTrabjaGchhQ==
+"@biomejs/biome@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/biome/-/biome-2.0.0-beta.5.tgz#78c92441d5d97fadfda614d424d8bbcbc4676abd"
+  integrity sha512-1ldO4AepieVvg4aLi1ubZkA7NsefQT2UTNssbJbDiQTGem8kCHx/PZCwLxIR6UzFpGIjh0xsDzivyVvhnmqmuA==
   optionalDependencies:
-    "@biomejs/cli-darwin-arm64" "2.0.0-beta.1"
-    "@biomejs/cli-darwin-x64" "2.0.0-beta.1"
-    "@biomejs/cli-linux-arm64" "2.0.0-beta.1"
-    "@biomejs/cli-linux-arm64-musl" "2.0.0-beta.1"
-    "@biomejs/cli-linux-x64" "2.0.0-beta.1"
-    "@biomejs/cli-linux-x64-musl" "2.0.0-beta.1"
-    "@biomejs/cli-win32-arm64" "2.0.0-beta.1"
-    "@biomejs/cli-win32-x64" "2.0.0-beta.1"
+    "@biomejs/cli-darwin-arm64" "2.0.0-beta.5"
+    "@biomejs/cli-darwin-x64" "2.0.0-beta.5"
+    "@biomejs/cli-linux-arm64" "2.0.0-beta.5"
+    "@biomejs/cli-linux-arm64-musl" "2.0.0-beta.5"
+    "@biomejs/cli-linux-x64" "2.0.0-beta.5"
+    "@biomejs/cli-linux-x64-musl" "2.0.0-beta.5"
+    "@biomejs/cli-win32-arm64" "2.0.0-beta.5"
+    "@biomejs/cli-win32-x64" "2.0.0-beta.5"
 
-"@biomejs/cli-darwin-arm64@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-2.0.0-beta.1.tgz#3651b621cd70bcc1afa39c8e530d6b9c32f7c328"
-  integrity sha512-RaGmpNLl5NFooXaoCwvgvcuU6Am/rMZ3R48pQeCVxjrCcz1BIlKLTai5UosiedazW7JbXAvgXdSNizYG7ITlAQ==
+"@biomejs/cli-darwin-arm64@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-2.0.0-beta.5.tgz#aede7c9915dbac3b3088bb91b9a0e3a39f9f74ce"
+  integrity sha512-pnJiaoDpwGo+ctGkMu4POcO8jgOgCErBdYbhutr+K9rxxJS+TlHLr0LR91GCEWbGV2O1oyZRFQcW21rYFoak4w==
 
-"@biomejs/cli-darwin-x64@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-darwin-x64/-/cli-darwin-x64-2.0.0-beta.1.tgz#05939bccd46e8188656c13059a1a4f2fac53c21b"
-  integrity sha512-sTzSshkne7HKZFNfiIhmAji7gjtCBXvkTujZELCZWIZC7oj1Tjw/gvAzbdFj2UyHd5/i90pND4ybFOLQZm9gpg==
+"@biomejs/cli-darwin-x64@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-darwin-x64/-/cli-darwin-x64-2.0.0-beta.5.tgz#8f59f237940bed8d10ac621a3f649b912a3ee6de"
+  integrity sha512-WwEZpqcmsNoFpZkUFNQcbZo52WK4hLGQ0vZk3PQ8JlZ55gJsHiyhtv6aem6fVlyVCvZgpsC0sYPLE3VvFVKNAQ==
 
-"@biomejs/cli-linux-arm64-musl@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.0.0-beta.1.tgz#db9be3882a705bfd2abf8dc4f9c5e871f79a8ebe"
-  integrity sha512-0MPUKzz9uBBxAYSJ+OlFi4+yGwiRcZeFqq39H0MxXCQ9MMpKJFH2Ek72fw8sXwG7Prn7EsW/3u1b7najyn1XGQ==
+"@biomejs/cli-linux-arm64-musl@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.0.0-beta.5.tgz#1431290e7e1df7f44827fa4bbf0d2d4c9a0ad0be"
+  integrity sha512-4vxNkYx1uEt211W8hLdXddc7icRHQgYENb72g6uTd/tLVPSBvIwqUAxAOkU+9Ai1E/8R4sWy7HIxREgpuFgbNA==
 
-"@biomejs/cli-linux-arm64@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64/-/cli-linux-arm64-2.0.0-beta.1.tgz#cabe1bda2cbb4d1428db3060982c3fc00a555993"
-  integrity sha512-bxce2O4nooBmp20Ey0+IFIZyy/b0RVnciIQk9euCfAi9evq7SvFtMBYo3YUZej0KIvrau5H7tJk5OqmRJk2l+g==
+"@biomejs/cli-linux-arm64@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64/-/cli-linux-arm64-2.0.0-beta.5.tgz#184213339bb8d898f302a148a983decf128b1954"
+  integrity sha512-lAF1de+Ki0vnq14NwDXouKkAR/iviyMNrUngSHjTGFC4z8XGVEfIw0ZMSm7fAdJZ5fAWodt9HiYmEAVs5EtHQg==
 
-"@biomejs/cli-linux-x64-musl@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64-musl/-/cli-linux-x64-musl-2.0.0-beta.1.tgz#3e5638f86a9b4c8b2a125fe7aac816ec70ff6fcb"
-  integrity sha512-dFvisnP1hFpVILNw0PZfs8piBwe8+aykO04Tb/4AJDVVzKkGgJfwSefwo4jqzO/Wk/Zruvhcp1nKbjgRXM+vDg==
+"@biomejs/cli-linux-x64-musl@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64-musl/-/cli-linux-x64-musl-2.0.0-beta.5.tgz#3b01d91f9b514acc73b27a180bad2b223fb66dfc"
+  integrity sha512-nUeKGO517GtRCxziVD9les1HiCs2s2/WIVITMN9+9RRuLOko8r+T77E8ZXEmlfLOfOIOeE6z62WITqei3oNccA==
 
-"@biomejs/cli-linux-x64@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64/-/cli-linux-x64-2.0.0-beta.1.tgz#fa9957e415966f77fcfd267676eee58fb7bb0c64"
-  integrity sha512-6P/AtJv4hOH8mu8ez0c4UInUpiet9NEoF25+O7OPyb4w6ZHJMp2qzvayJS7TKrTQzE5KUvSiNsACGRz34DzUkg==
+"@biomejs/cli-linux-x64@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64/-/cli-linux-x64-2.0.0-beta.5.tgz#0f4cdd8cb13d3ef4eb443f06cc2357bf10f90430"
+  integrity sha512-I0Pt1VHeL1mN8G7ZwV2u9AfzBd5ZKfbvHUI4x2wETUZbwcQlAu/nEzEa2LUe5HqSmnctTR36ig7RkkM9qbmIrA==
 
-"@biomejs/cli-win32-arm64@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-win32-arm64/-/cli-win32-arm64-2.0.0-beta.1.tgz#d92ce928370524645a14dbb543e4c24c1b65c1e6"
-  integrity sha512-0C9YSqWHf2cJGnjKDbLi49xv6H9IfqbDsFav7X557PqwY64O6IKWqcmZzi/PkDFHjQM9opU6uhKapeGKGDxziQ==
+"@biomejs/cli-win32-arm64@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-win32-arm64/-/cli-win32-arm64-2.0.0-beta.5.tgz#501ae513dd0da4c04e685a4a35d56421ce484831"
+  integrity sha512-YXW6hgbrgBcWQ1SLO69ypWlluPchgQV5C1lTG4xOcBUWdCsfYuQirM64S6Dov7SFPqsMIoFC6LlQRW+n8qAyiA==
 
-"@biomejs/cli-win32-x64@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-win32-x64/-/cli-win32-x64-2.0.0-beta.1.tgz#0a64e0a355023b4cf40afb83439d1f95fd70bca4"
-  integrity sha512-o8W6+DX0YRjt1kS8Y3ismq6EkjwiVDv7X0TEpfnFywoVG8HoJ7G7/m9r8LM1yE46WI3maPH2A0MoVpQ1ZNG++A==
+"@biomejs/cli-win32-x64@2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@biomejs/cli-win32-x64/-/cli-win32-x64-2.0.0-beta.5.tgz#5b2b709d98abad662a3e2d831fa1473da3b6b19c"
+  integrity sha512-N7Yby52BJmvEdst1iMbclE5hxxefboaXKRJLm1tLfBYr4FeuoCe6j8HdiQSwhCRdIUGFFqBLaDXh//LLF6EReA==
 
 "@develar/schema-utils@~2.6.5":
   version "2.6.5"
@@ -2369,12 +2369,27 @@
   resolved "https://mirrors.huaweicloud.com/repository/npm/@types/ms/-/ms-2.1.0.tgz#052aa67a48eccc4309d7f0191b7e41434b90bb78"
   integrity sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==
 
+"@types/node-fetch@^2.6.4":
+  version "2.6.12"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@types/node-fetch/-/node-fetch-2.6.12.tgz#8ab5c3ef8330f13100a7479e2cd56d3386830a03"
+  integrity sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==
+  dependencies:
+    "@types/node" "*"
+    form-data "^4.0.0"
+
 "@types/node@*", "@types/node@^22.13.8", "@types/node@^22.7.7":
   version "22.15.17"
   resolved "https://mirrors.huaweicloud.com/repository/npm/@types/node/-/node-22.15.17.tgz#355ccec95f705b664e4332bb64a7f07db30b7055"
   integrity sha512-wIX2aSZL5FE+MR0JlvF87BNVrtFWf6AE6rxSE9X7OwnVvoyCQjpzSRJ+M87se/4QCkCiebQAqrJ0y6fwIyi7nw==
   dependencies:
     undici-types "~6.21.0"
+
+"@types/node@^18.11.18":
+  version "18.19.103"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@types/node/-/node-18.19.103.tgz#9bbd31a54e240fc469cca409d7507ebc77536458"
+  integrity sha512-hHTHp+sEz6SxFsp+SA+Tqrua3AbmlAw+Y//aEwdHrdZkYVRWdvWD3y5uPZ0flYOkgskaFWqZ/YGFm3FaFQ0pRw==
+  dependencies:
+    undici-types "~5.26.4"
 
 "@types/plist@^3.0.1":
   version "3.0.5"
@@ -2483,6 +2498,13 @@ abbrev@^1.0.0:
   version "1.1.1"
   resolved "https://mirrors.huaweicloud.com/repository/npm/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
+
+abort-controller@^3.0.0:
+  version "3.0.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
+  integrity sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==
+  dependencies:
+    event-target-shim "^5.0.0"
 
 agent-base@6, agent-base@^6.0.2:
   version "6.0.2"
@@ -3770,6 +3792,11 @@ estree-walker@^2.0.2:
   resolved "https://mirrors.huaweicloud.com/repository/npm/estree-walker/-/estree-walker-2.0.2.tgz#52f010178c2a4c117a7757cfe942adb7d2da4cac"
   integrity sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==
 
+event-target-shim@^5.0.0:
+  version "5.0.1"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
+  integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
+
 expand-template@^2.0.3:
   version "2.0.3"
   resolved "https://mirrors.huaweicloud.com/repository/npm/expand-template/-/expand-template-2.0.3.tgz#6e14b3fcee0f3a6340ecb57d2e8918692052a47c"
@@ -3857,6 +3884,11 @@ foreground-child@^3.1.0:
     cross-spawn "^7.0.6"
     signal-exit "^4.0.1"
 
+form-data-encoder@1.7.2:
+  version "1.7.2"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/form-data-encoder/-/form-data-encoder-1.7.2.tgz#1f1ae3dccf58ed4690b86d87e4f57c654fbab040"
+  integrity sha512-qfqtYan3rxrnCk1VYaA4H+Ms9xdpPqvLZa6xmMgFvhO32x7/3J/ExcTd6qpxM0vH2GdMI+poehyBZvqfMTto8A==
+
 form-data@^4.0.0:
   version "4.0.2"
   resolved "https://mirrors.huaweicloud.com/repository/npm/form-data/-/form-data-4.0.2.tgz#35cabbdd30c3ce73deb2c42d3c8d3ed9ca51794c"
@@ -3866,6 +3898,14 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     es-set-tostringtag "^2.1.0"
     mime-types "^2.1.12"
+
+formdata-node@^4.3.2:
+  version "4.4.1"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/formdata-node/-/formdata-node-4.4.1.tgz#23f6a5cb9cb55315912cbec4ff7b0f59bbd191e2"
+  integrity sha512-0iirZp3uVDjVGt9p49aTaqjk84TrglENEDuqfdlZQ1roC9CWlPk6Avf8EEnZNcAqPonwkG35x4n3ww/1THYAeQ==
+  dependencies:
+    node-domexception "1.0.0"
+    web-streams-polyfill "4.0.0-beta.3"
 
 framer-motion@^12.11.0:
   version "12.11.0"
@@ -5202,6 +5242,18 @@ node-api-version@^0.2.0:
   dependencies:
     semver "^7.3.5"
 
+node-domexception@1.0.0:
+  version "1.0.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
+  integrity sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==
+
+node-fetch@^2.6.7:
+  version "2.7.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
+  dependencies:
+    whatwg-url "^5.0.0"
+
 node-gyp-build@^4.2.1:
   version "4.8.4"
   resolved "https://mirrors.huaweicloud.com/repository/npm/node-gyp-build/-/node-gyp-build-4.8.4.tgz#8a70ee85464ae52327772a90d66c6077a900cfc8"
@@ -5321,6 +5373,19 @@ open@^10.1.0:
     define-lazy-prop "^3.0.0"
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
+
+openai@^4.102.0:
+  version "4.102.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/openai/-/openai-4.102.0.tgz#fcf09d2ad2b33eb399fe79bb43df1872bf2a15c8"
+  integrity sha512-CWk15CMhPSHNZnjz+6rwVYV551xaC8CwOd7/zxImrC1btEo37dX/Ii5tBKWfqqxqyzpJ6p3Y4bICzzKhW03WhQ==
+  dependencies:
+    "@types/node" "^18.11.18"
+    "@types/node-fetch" "^2.6.4"
+    abort-controller "^3.0.0"
+    agentkeepalive "^4.2.1"
+    form-data-encoder "1.7.2"
+    formdata-node "^4.3.2"
+    node-fetch "^2.6.7"
 
 ora@^5.1.0:
   version "5.4.1"
@@ -6236,6 +6301,11 @@ socks@^2.6.2:
     ip-address "^9.0.5"
     smart-buffer "^4.2.0"
 
+sonner@^2.0.3:
+  version "2.0.3"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/sonner/-/sonner-2.0.3.tgz#de7cdbc4b6a25ac3f0a9e0aed3748e0b3d6e092e"
+  integrity sha512-njQ4Hht92m0sMqqHVDL32V2Oun9W1+PHO9NDv9FHfJjT3JT22IG4Jpo3FPQy+mouRKCXFWO+r67v6MrHX2zeIA==
+
 source-map-js@^1.2.0, source-map-js@^1.2.1:
   version "1.2.1"
   resolved "https://mirrors.huaweicloud.com/repository/npm/source-map-js/-/source-map-js-1.2.1.tgz#1ce5650fddd87abc099eda37dcff024c2667ae46"
@@ -6552,6 +6622,11 @@ tmp@^0.2.0:
   resolved "https://mirrors.huaweicloud.com/repository/npm/tmp/-/tmp-0.2.3.tgz#eb783cc22bc1e8bebd0671476d46ea4eb32a79ae"
   integrity sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==
 
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
+
 truncate-utf8-bytes@^1.0.0:
   version "1.0.2"
   resolved "https://mirrors.huaweicloud.com/repository/npm/truncate-utf8-bytes/-/truncate-utf8-bytes-1.0.2.tgz#405923909592d56f78a5818434b0b78489ca5f2b"
@@ -6660,6 +6735,11 @@ unbox-primitive@^1.1.0:
     has-bigints "^1.0.2"
     has-symbols "^1.1.0"
     which-boxed-primitive "^1.1.1"
+
+undici-types@~5.26.4:
+  version "5.26.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
+  integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
 undici-types@~6.21.0:
   version "6.21.0"
@@ -6779,12 +6859,30 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
+web-streams-polyfill@4.0.0-beta.3:
+  version "4.0.0-beta.3"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/web-streams-polyfill/-/web-streams-polyfill-4.0.0-beta.3.tgz#2898486b74f5156095e473efe989dcf185047a38"
+  integrity sha512-QW95TCTaHmsYfHDybGMwO5IJIM93I/6vTRk+daHTWFPhwh+C8Cg7j7XyKrwrj8Ib6vYXe0ocYNrmzY4xAAN6ug==
+
+webidl-conversions@^3.0.0:
+  version "3.0.1"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
+
 webpack-code-inspector-plugin@0.20.10:
   version "0.20.10"
   resolved "https://mirrors.huaweicloud.com/repository/npm/webpack-code-inspector-plugin/-/webpack-code-inspector-plugin-0.20.10.tgz#19f0fbaf33ed6ff0503fac30cf2da8598e1dedc9"
   integrity sha512-I8mSEVbwMtQ1SSdb9pLK7VHqykobdrLvAgbZSKzrGQUGsmTbLmpVTJVs6EJgV1rsl5aoi1BKgmdr77CqaDSnfA==
   dependencies:
     code-inspector-core "0.20.10"
+
+whatwg-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  integrity sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==
+  dependencies:
+    tr46 "~0.0.3"
+    webidl-conversions "^3.0.0"
 
 which-boxed-primitive@^1.1.0, which-boxed-primitive@^1.1.1:
   version "1.1.1"

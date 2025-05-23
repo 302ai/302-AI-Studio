@@ -1,8 +1,8 @@
+import { Router } from "@lib/electron-router-dom";
 import { Route } from "react-router-dom";
+import { Layout } from "../layout/app-layout";
 import { HomePage } from "../pages/homepage";
 import { SettingsPage } from "../pages/settings-page";
-import { Layout } from "../layout/app-layout";
-import { Router } from "@lib/electron-router-dom";
 
 export function Routes() {
   return (

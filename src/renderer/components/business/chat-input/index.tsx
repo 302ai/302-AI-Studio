@@ -1,7 +1,7 @@
 import { Textarea } from "@renderer/components/ui/textarea";
+import { cn } from "@renderer/lib/utils";
 import { useTranslation } from "react-i18next";
 import { ToolBar } from "./tool-bar";
-import { cn } from "@renderer/lib/utils";
 
 interface ChatInputProps {
   className?: string;

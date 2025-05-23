@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/a11y/noSvgWithoutTitle: <explanation> */
 import { twMerge } from "tailwind-merge";
 
 interface AvatarProps {
@@ -37,6 +36,7 @@ const Avatar = ({
       )}
     >
       {initials && (
+        // biome-ignore lint/a11y/noSvgWithoutTitle: ignore
         <svg
           className="size-full select-none fill-current p-[5%] font-medium text-[48px] uppercase"
           viewBox="0 0 100 100"

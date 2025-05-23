@@ -1,5 +1,5 @@
-import { BasicTitleBar } from "@renderer/components/business/title-bar";
 import { AppSidebar } from "@renderer/components/business/sidebar";
+import { BasicTitleBar } from "@renderer/components/business/title-bar";
 import { Outlet } from "react-router-dom";
 
 export function Layout() {

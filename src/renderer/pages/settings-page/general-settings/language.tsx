@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectList,
@@ -6,9 +5,10 @@ import {
   SelectTrigger,
 } from "@renderer/components/ui/select";
 import langs from "@renderer/i18n/langs";
-import { BsGlobe } from "react-icons/bs";
 import { useSettingsStore } from "@renderer/store/settings-store";
-import { Key } from "react-aria-components";
+import type { Key } from "react-aria-components";
+import { useTranslation } from "react-i18next";
+import { BsGlobe } from "react-icons/bs";
 
 export function LanguageSelector() {
   const { t, i18n } = useTranslation();

@@ -1,6 +1,6 @@
+import { EventNames, emitter } from "@renderer/services/event-service";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useEffect, useRef } from "react";
-import { emitter, EventNames } from "@renderer/services/event-service";
 
 interface HookParams {
   id: string;

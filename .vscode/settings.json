@@ -6,6 +6,10 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
   "editor.defaultFormatter": "biomejs.biome",
   "biome.enabled": true,
   "[javascript]": {

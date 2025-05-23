@@ -1,5 +1,7 @@
-import { useEffect, useRef } from "react";
 import { IconX } from "@intentui/icons";
+import { Button, type ButtonProps } from "@renderer/components/ui/button";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
+import { useEffect, useRef } from "react";
 import type { HeadingProps } from "react-aria-components";
 import {
   Button as ButtonPrimitive,
@@ -7,8 +9,6 @@ import {
   Heading,
   Text,
 } from "react-aria-components";
-import { Button, type ButtonProps } from "@renderer/components/ui/button";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import { twJoin, twMerge } from "tailwind-merge";
 
 const Dialog = ({

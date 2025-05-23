@@ -1,17 +1,18 @@
-import { VscClose, VscCloseAll } from "react-icons/vsc";
-import { cn } from "@renderer/lib/utils";
-import { TabType, useTabBarStore } from "@renderer/store/tab-bar-store";
-import placeholder from "@renderer/assets/images/providers/302ai.png";
-import { Settings2, X } from "lucide-react";
-import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
+/** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
 import { Draggable } from "@hello-pangea/dnd";
+import placeholder from "@renderer/assets/images/providers/302ai.png";
 import {
   ContextMenu,
-  ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuItem,
+  ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
+import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
+import { cn } from "@renderer/lib/utils";
+import { TabType, useTabBarStore } from "@renderer/store/tab-bar-store";
+import { Settings2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { VscClose, VscCloseAll } from "react-icons/vsc";
 
 interface TabProps {
   id: string;
@@ -76,6 +77,8 @@ export function Tab({
                   onClick();
                 }
               }}
+              role="button"
+              tabIndex={0}
               style={
                 {
                   width: `${width}px`,

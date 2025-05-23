@@ -3,7 +3,8 @@
     "mikestead.dotenv",
     "EditorConfig.EditorConfig",
     "bradlc.vscode-tailwindcss",
-    "biomejs.biome"
+    "biomejs.biome",
+    "carlosmeduardo.i18n-ally-pro"
   ],
   "unwantedRecommendations": [
     "dbaeumer.vscode-eslint",

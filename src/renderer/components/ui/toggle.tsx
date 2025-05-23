@@ -4,9 +4,9 @@ import type {
   ToggleButtonProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   ToggleButton,
   ToggleButtonGroup,
-  composeRenderProps,
 } from "react-aria-components";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";

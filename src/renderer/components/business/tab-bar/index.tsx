@@ -1,11 +1,11 @@
-import { useRef } from "react";
-import { Tab } from "./tab";
-import { TabType } from "@renderer/store/tab-bar-store";
-import { useTranslation } from "react-i18next";
-import { DragDropContext, DragStart, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext, type DragStart, Droppable } from "@hello-pangea/dnd";
 import { Separator } from "@renderer/components/ui/separator";
-import { cn } from "@renderer/lib/utils";
 import { useTabBar } from "@renderer/hooks/use-tab-bar";
+import { cn } from "@renderer/lib/utils";
+import { TabType } from "@renderer/store/tab-bar-store";
+import { useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Tab } from "./tab";
 
 export type TabItem = {
   id: string;
