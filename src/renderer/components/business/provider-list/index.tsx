@@ -1,22 +1,17 @@
-/** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  type DropResult,
-} from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
 import { Button } from "@renderer/components/ui/button";
 import {
   type ModelActionType,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
 import { Plus } from "lucide-react";
-import { memo, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { areEqual, FixedSizeList } from "react-window";
+import { FixedSizeList } from "react-window";
 import { ModalAction } from "../modal-action";
 import { ActionGroup } from "./action-group";
 import { AddProvider } from "./add-provider";
+import { ListRow } from "./list-row";
 import { ProviderCard } from "./provider-card";
 
 export function ProviderList() {
@@ -57,6 +52,7 @@ export function ProviderList() {
               }}
             />
           ),
+          confirmText: t("modal-action.add-provider-confirm"),
           action: () => {},
         };
       case "edit":
@@ -111,59 +107,6 @@ export function ProviderList() {
     };
   }, []);
 
-  const Row = memo(function Row({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) {
-    const provider = modelProvider[index];
-
-    const handleProviderSelect = () => {
-      setSelectedModelProvider(provider);
-    };
-
-    const handleEdit = () => {
-      handleProviderSelect();
-      setState("edit");
-    };
-
-    const handleDelete = () => {
-      handleProviderSelect();
-      setState("delete");
-    };
-
-    return (
-      <Draggable draggableId={provider.id} index={index} key={provider.id}>
-        {(provided, snapshot) => (
-          <div
-            style={style}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                handleProviderSelect?.();
-              }
-            }}
-            onClick={handleProviderSelect}
-            role="button"
-            tabIndex={0}
-            aria-label={provider.name}
-          >
-            <ProviderCard
-              provided={provided}
-              snapshot={snapshot}
-              provider={provider}
-              actionGroup={
-                <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
-              }
-            />
-          </div>
-        )}
-      </Draggable>
-    );
-  },
-  areEqual);
-
   return (
     <>
       <div className="flex h-full flex-col">
@@ -207,7 +150,15 @@ export function ProviderList() {
                   outerRef={provided.innerRef}
                   itemData={modelProvider}
                 >
-                  {Row}
+                  {({ index, style }) => (
+                    <ListRow
+                      index={index}
+                      style={style}
+                      provider={modelProvider[index]}
+                      setSelectedModelProvider={setSelectedModelProvider}
+                      setState={setState}
+                    />
+                  )}
                 </FixedSizeList>
               )}
             </Droppable>

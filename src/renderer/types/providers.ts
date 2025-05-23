@@ -1,22 +1,17 @@
-import type { Model } from "./models";
-
 // * Model Provider Settings Types
-export type ProviderType =
-  | "openai"
-  | "openai-compatible"
-  | "anthropic"
-  | "gemini"
-  | "qwenlm"
-  | "azure-openai";
-
 export interface ModelProvider {
   id: string;
-  type: ProviderType;
   name: string;
+  apiType: string;
   apiKey: string;
-  apiHost: string;
-  apiVersion?: string;
-  models: Model[];
-  enabled: boolean;
-  isSystem: boolean;
+  baseUrl: string;
+  enable: boolean;
+  custom?: boolean;
+  websites?: {
+    official: string;
+    apiKey: string;
+    docs: string;
+    models: string;
+    defaultBaseUrl: string;
+  };
 }

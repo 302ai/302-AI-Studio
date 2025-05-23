@@ -1,6 +1,6 @@
 import {
-  execSync,
   type ExecSyncOptionsWithStringEncoding,
+  execSync,
 } from "node:child_process";
 
 import { resolve } from "node:path";

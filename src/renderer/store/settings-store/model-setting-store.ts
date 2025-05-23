@@ -1,4 +1,3 @@
-import { INITIAL_PROVIDERS } from "@renderer/config/providers";
 import type { ModelProvider } from "@renderer/types/providers";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -19,7 +18,7 @@ interface ModelSettingStore {
 export const useModelSettingStore = create<ModelSettingStore>()(
   persist(
     immer((set, get) => ({
-      modelProvider: INITIAL_PROVIDERS,
+      modelProvider: [],
       selectedModelProvider: null,
 
       addModelProvider: (newProvider) => {

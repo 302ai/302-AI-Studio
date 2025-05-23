@@ -1,7 +1,7 @@
-import { normalize, dirname } from 'node:path'
+import { dirname, normalize } from "node:path";
 
 export function getDevFolder(path: string) {
-  const [nodeModules, devFolder] = normalize(dirname(path)).split(/\/|\\/g)
+  const [nodeModules, devFolder] = normalize(dirname(path)).split(/\/|\\/g);
 
-  return [nodeModules, devFolder].join('/')
+  return [nodeModules, devFolder].join("/");
 }

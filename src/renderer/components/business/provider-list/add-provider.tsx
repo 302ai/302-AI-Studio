@@ -7,13 +7,14 @@ import {
   SelectTrigger,
 } from "@renderer/components/ui/select";
 import { TextField } from "@renderer/components/ui/text-field";
-import { getProviderIcon, PROVIDER_TYPES } from "@renderer/config/providers";
+import { PROVIDER_TYPES } from "@renderer/config/providers";
 import { useState } from "react";
 import type { Key } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { IoKeyOutline } from "react-icons/io5";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { useAddProvider } from "@/src/renderer/hooks/use-add-provider";
+import { ModelIcon } from "../model-icon";
 
 interface AddProviderProps {
   onValidate: () => void;
@@ -23,15 +24,18 @@ export function AddProvider({ onValidate }: AddProviderProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.add-provider-form",
   });
-
   const { canSelectProviders, handleCheckKey } = useAddProvider();
 
   const [provider, setProvider] = useState<Key | null>("");
   const [providerType, setProviderType] = useState("openai-compatible");
   const [apiKey, setApiKey] = useState("");
+  const [baseURL, setBaseURL] = useState("");
+  const [customProviderName, setCustomProviderName] = useState("");
 
   const isCustomProvider = provider === "custom";
-  const canCheckKey = !!apiKey && !!provider;
+  const canCheckKey = !!apiKey && !!provider && !!baseURL;
+
+  const handleCheckClick = () => {};
 
   return (
     <div className="flex flex-col gap-4">
@@ -46,20 +50,16 @@ export function AddProvider({ onValidate }: AddProviderProps) {
         >
           <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
           <SelectList popoverClassName="min-w-[300px]">
-            {canSelectProviders.map((provider) => (
+            {canSelectProviders.map(({ id, name }) => (
               <SelectOption
                 className="flex cursor-pointer justify-between"
-                key={provider.id}
-                id={provider.id}
-                textValue={provider.name}
+                key={id}
+                id={id}
+                textValue={name}
               >
                 <span className="flex items-center gap-2">
-                  <img
-                    src={getProviderIcon(provider.id)}
-                    alt={provider.name}
-                    className="size-4 rounded-full"
-                  />
-                  <span className="text-base">{provider.name}</span>
+                  <ModelIcon modelId={id} />
+                  <span className="text-base">{name}</span>
                 </span>
               </SelectOption>
             ))}
@@ -79,6 +79,16 @@ export function AddProvider({ onValidate }: AddProviderProps) {
         </Select>
       </div>
 
+      {/* Provider Name Input */}
+      <TextField
+        className={isCustomProvider ? "" : "hidden"}
+        aria-label="Provider Name"
+        label={t("provider-name")}
+        placeholder={t("placeholder-1")}
+        value={customProviderName}
+        onChange={setCustomProviderName}
+      />
+
       {/* Provider API Key Input */}
       <div className="flex flex-row items-center gap-2">
         <TextField
@@ -94,7 +104,7 @@ export function AddProvider({ onValidate }: AddProviderProps) {
         <Button
           intent="outline"
           className="self-end"
-          onClick={handleCheckKey}
+          onClick={handleCheckClick}
           isDisabled={!canCheckKey}
         >
           <IoKeyOutline className="size-4" />
@@ -107,18 +117,20 @@ export function AddProvider({ onValidate }: AddProviderProps) {
         aria-label="Base URL"
         label="Base URL"
         placeholder={t("placeholder-3")}
+        value={baseURL}
+        onChange={setBaseURL}
       />
 
       <RadioGroup
-        className={isCustomProvider ? "block" : "hidden"}
+        className={isCustomProvider ? "" : "hidden"}
         orientation="horizontal"
         label={t("provider-type")}
         value={providerType}
         onChange={(value) => setProviderType(value)}
       >
-        {PROVIDER_TYPES.map((provider) => (
-          <Radio key={provider.value} value={provider.value}>
-            {provider.label}
+        {PROVIDER_TYPES.map(({ value, label }) => (
+          <Radio key={value} value={value}>
+            {label}
           </Radio>
         ))}
       </RadioGroup>

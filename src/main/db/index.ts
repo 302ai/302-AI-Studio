@@ -1,12 +1,15 @@
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import { existsSync, mkdirSync } from "fs";
-import path, { dirname } from "path";
-import { BetterSQLite3Database, drizzle } from "drizzle-orm/better-sqlite3";
+import { existsSync, mkdirSync } from "node:fs";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import Database from "better-sqlite3";
-import * as schema from "./schema";
-import { APP_NAME, DB_CONFIG } from "../constant";
+import {
+  type BetterSQLite3Database,
+  drizzle,
+} from "drizzle-orm/better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { app } from "electron";
-import { fileURLToPath } from "url";
+import { APP_NAME, DB_CONFIG } from "../constant";
+import * as schema from "./schema";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(

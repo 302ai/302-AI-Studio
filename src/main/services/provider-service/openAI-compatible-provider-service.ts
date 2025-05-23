@@ -10,7 +10,7 @@ export class OpenAICompatibleProviderService extends BaseProviderService {
     super(provider);
     this.openai = new OpenAI({
       apiKey: provider.apiKey,
-      baseURL: provider.apiHost,
+      baseURL: provider.baseUrl,
     });
   }
 

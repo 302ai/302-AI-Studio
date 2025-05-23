@@ -30,13 +30,15 @@
       "model-provider": {
         "add-provider": "追加",
         "add-provider-form": {
-          "check-key": "キーを確認",
+          "check-key": "確認する",
           "custom-provider": "カスタムプロバイダー",
           "placeholder": "プロバイダーを選択してください...",
           "placeholder-2": "APIキーを入力してください...",
           "placeholder-3": "ベースURLを入力してください...",
           "provider-select": "プロバイダーを選択",
-          "provider-type": "プロバイダータイプ"
+          "provider-type": "プロバイダータイプ",
+          "placeholder-1": "サプライヤー名を入力してください...",
+          "provider-name": "カスタム名"
         },
         "delete": "削除",
         "description": "モデル",
@@ -49,7 +51,8 @@
           "delete-description": "プロバイダーを削除してもよろしいですか",
           "delete-description-2": "このプロバイダーが提供するすべてのモデルが削除され、",
           "delete-description-3": "これらのデフォルトモデルを設定したアシスタントは他のデフォルトモデルに変更されます。",
-          "edit": "設定"
+          "edit": "設定",
+          "add-provider-confirm": "に追加"
         }
       },
       "name": "モデル設定"

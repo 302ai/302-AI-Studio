@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/noSvgWithoutTitle: ignore svg */
 import { IconLoader } from "@intentui/icons";
 import { ProgressBar } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
@@ -31,7 +32,6 @@ const loaderStyles = tv({
 type LoaderVariantProps = VariantProps<typeof loaderStyles>;
 
 const Bars = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
-  // biome-ignore lint/a11y/noSvgWithoutTitle: ignore svg
   <svg
     className={twMerge("size-4", className)}
     data-slot="icon"

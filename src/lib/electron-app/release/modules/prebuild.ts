@@ -1,12 +1,11 @@
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-
-import trustedDependencies from "../../../../../trusted-dependencies-scripts.json";
 import packageJSON from "../../../../../package.json";
+import trustedDependencies from "../../../../../trusted-dependencies-scripts.json";
 import { getDevFolder } from "../utils/path";
 
 async function createPackageJSONDistVersion() {
-  const { main, scripts, resources, devDependencies, ...rest } = packageJSON;
+  const { main, ...rest } = packageJSON;
 
   const packageJSONDistVersion = {
     main: "./main/index.js",
@@ -23,7 +22,7 @@ async function createPackageJSONDistVersion() {
       resolve(getDevFolder(main), "trusted-dependencies-scripts.json"),
       JSON.stringify(trustedDependencies, null, 2)
     );
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: ignore any
   } catch ({ message }: any) {
     console.log(`
     🛑 Something went wrong!\n

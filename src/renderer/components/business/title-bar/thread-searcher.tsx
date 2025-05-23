@@ -1,4 +1,4 @@
-import placeholder from "@renderer/assets/images/providers/302ai.png";
+import placeholder from "@renderer/assets/llm-icons/logo.png?url";
 import {
   ListBox,
   ListBoxItem,

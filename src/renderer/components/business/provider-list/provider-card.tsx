@@ -3,17 +3,16 @@ import type {
   DraggableProvided,
   DraggableStateSnapshot,
 } from "@hello-pangea/dnd";
-import { Avatar } from "@renderer/components/ui/avatar";
 import {
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@renderer/components/ui/card";
-import { getProviderIcon } from "@renderer/config/providers";
 import { cn } from "@renderer/lib/utils";
 import type { ModelProvider } from "@renderer/types/providers";
 import { useTranslation } from "react-i18next";
+import { ModelIcon } from "../model-icon";
 
 interface ProviderCardProps {
   snapshot: DraggableStateSnapshot;
@@ -57,15 +56,11 @@ export function ProviderCard({
       aria-label={provider.name}
     >
       <CardHeader className="flex items-center gap-3 pl-4">
-        <Avatar
-          src={getProviderIcon(provider.id)}
-          size="large"
-          shape="circle"
-        />
+        <ModelIcon modelId={provider.id} className="size-8" />
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">
-            {provider.models.length}
+            {/* {provider.models.length} */}
             {t("settings.model-settings.model-provider.description")}
           </CardDescription>
         </div>

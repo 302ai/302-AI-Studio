@@ -1,4 +1,4 @@
-import logo from "@renderer/assets/images/logo.png";
+import logo from "@renderer/assets/llm-icons/logo.png?url";
 import { ChatInput } from "@renderer/components/business/chat-input";
 
 export function NewThread() {

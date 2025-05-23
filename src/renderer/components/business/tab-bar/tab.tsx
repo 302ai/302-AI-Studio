@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
 import { Draggable } from "@hello-pangea/dnd";
-import placeholder from "@renderer/assets/images/providers/302ai.png";
+import placeholder from "@renderer/assets/llm-icons/logo.png?url";
 import {
   ContextMenu,
   ContextMenuContent,

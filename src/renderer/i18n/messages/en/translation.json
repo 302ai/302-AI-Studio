@@ -30,13 +30,15 @@
       "model-provider": {
         "add-provider": "Add",
         "add-provider-form": {
-          "check-key": "Verify Key",
+          "check-key": "Verify",
           "custom-provider": "Custom Provider",
           "placeholder": "Please select a provider...",
           "placeholder-2": "Please enter API Key...",
           "placeholder-3": "Please enter Base URL...",
           "provider-select": "Select Provider",
-          "provider-type": "Provider Type"
+          "provider-type": "Provider Type",
+          "placeholder-1": "Please enter the provider name...",
+          "provider-name": "Custom Name"
         },
         "delete": "Delete",
         "description": "models",
@@ -49,7 +51,8 @@
           "delete-description": "Please confirm to delete the provider",
           "delete-description-2": "All models provided by this provider will be deleted,",
           "delete-description-3": "and assistants that have configured these default models will be changed to other default models.",
-          "edit": "Configure"
+          "edit": "Configure",
+          "add-provider-confirm": "Add"
         }
       },
       "name": "Model Settings"

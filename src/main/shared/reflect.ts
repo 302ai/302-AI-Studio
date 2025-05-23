@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
 import "reflect-metadata";
 
 // Define a metadata to collect all metadata

@@ -1,14 +1,13 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import open from "open";
-
-import { extractOwnerAndRepoFromGitRemoteURL } from "../utils/extractors";
 import packageJSON from "../../../../../package.json";
-import { checkValidations } from "../utils/validations";
-import { question } from "../utils/question";
 import { COLORS } from "../constants/colors";
 import { exec } from "../utils/exec";
+import { extractOwnerAndRepoFromGitRemoteURL } from "../utils/extractors";
+import { question } from "../utils/question";
+import { checkValidations } from "../utils/validations";
 
 async function makeRelease() {
   console.clear();

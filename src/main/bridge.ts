@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
 
 import { ipcMain, ipcRenderer } from "electron";
 import { services } from "./services";
@@ -35,7 +35,7 @@ export function initMainBridge(): void {
   });
 }
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes: ignore any
 export function initPreloadBridge(): { [key: string]: Function } {
   const api = {};
 

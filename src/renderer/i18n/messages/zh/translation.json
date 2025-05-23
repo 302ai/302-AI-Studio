@@ -30,13 +30,15 @@
       "model-provider": {
         "add-provider": "添加",
         "add-provider-form": {
-          "check-key": "验证密钥",
+          "check-key": "验证",
           "custom-provider": "自定义提供商",
           "placeholder": "请选择一个供应商...",
           "placeholder-2": "请输入API Key...",
           "placeholder-3": "请输入Base URL...",
           "provider-select": "选择供应商",
-          "provider-type": "供应商类型"
+          "provider-type": "供应商类型",
+          "placeholder-1": "请输入供应商名称...",
+          "provider-name": "自定义名称"
         },
         "delete": "删除",
         "description": "个模型",
@@ -49,7 +51,8 @@
           "delete-description": "请确认是否删除供应商",
           "delete-description-2": "该供应商提供的所有模型将被删除，",
           "delete-description-3": "同时配置了这些默认模型的助手将会被改为其他默认模型。",
-          "edit": "配置"
+          "edit": "配置",
+          "add-provider-confirm": "添加"
         }
       },
       "name": "模型设置"

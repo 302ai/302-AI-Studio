@@ -3,7 +3,7 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
-import type { ModelProvider } from "@/src/renderer/types/providers";
+import type { ModelProvider } from "@renderer/types/providers";
 import { ConfigService } from "../config-service";
 import type { BaseProviderService } from "./base-provider-service";
 import { OpenAICompatibleProviderService } from "./openAI-compatible-provider-service";
@@ -24,7 +24,7 @@ export class ProviderService {
     providers.forEach((provider) => {
       this.providerMap.set(provider.id, provider);
 
-      if (provider.enabled) {
+      if (provider.enable) {
         const providerInst = this.createProviderInst(provider);
         if (providerInst) {
           this.providerInstMap.set(provider.id, providerInst);
@@ -36,22 +36,68 @@ export class ProviderService {
   private createProviderInst(
     provider: ModelProvider
   ): BaseProviderService | undefined {
-    switch (provider.type) {
+    switch (provider.apiType) {
       case "openai-compatible":
         return new OpenAICompatibleProviderService(provider);
 
       default:
-        console.warn(`Unknown provider type: ${provider.type}`);
+        console.warn(`Unknown provider type: ${provider.apiType}`);
         return undefined;
     }
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async checkApiKey(providerId: string): Promise<{
+  async checkApiKey(
+    condition: "add" | "edit",
+    providerId?: string,
+    tempConfig?: {
+      apiKey: string;
+      baseURL: string;
+      providerType: string;
+      providerName?: string;
+    }
+  ): Promise<{
     isOk: boolean;
     errorMsg: string | null;
   }> {
-    const providerInst = this.getProviderInst(providerId);
+    let providerInst: BaseProviderService | undefined;
+
+    if (condition === "edit") {
+      if (!providerId) {
+        return {
+          isOk: false,
+          errorMsg: "Provider ID is required for edit mode",
+        };
+      }
+      providerInst = this.getProviderInst(providerId);
+    } else {
+      // condition === "add"
+      if (!tempConfig) {
+        return {
+          isOk: false,
+          errorMsg: "Temporary config is required for add mode",
+        };
+      }
+
+      const tempProvider: ModelProvider = {
+        id: `temp_${Date.now()}`,
+        name: tempConfig.providerName || "Temporary Provider",
+        apiType: tempConfig.providerType,
+        apiKey: tempConfig.apiKey,
+        baseUrl: tempConfig.baseURL,
+        enable: false,
+        custom: true,
+      };
+
+      providerInst = this.createProviderInst(tempProvider);
+      if (!providerInst) {
+        return {
+          isOk: false,
+          errorMsg: `Failed to create provider instance for type: ${tempConfig.providerType}`,
+        };
+      }
+    }
+
     return providerInst.checkApiKey();
   }
 
