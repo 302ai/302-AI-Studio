@@ -15,6 +15,8 @@ interface ModelSettingStore {
   setSelectedModelProvider: (provider: ModelProvider | null) => void;
 }
 
+const { configService } = window.service;
+
 export const useModelSettingStore = create<ModelSettingStore>()(
   persist(
     immer((set, get) => ({
@@ -22,7 +24,9 @@ export const useModelSettingStore = create<ModelSettingStore>()(
       selectedModelProvider: null,
 
       addModelProvider: (newProvider) => {
-        set({ modelProviders: [...get().modelProviders, newProvider] });
+        set({
+          modelProviders: [newProvider, ...get().modelProviders],
+        });
       },
 
       moveModelProvider: (fromIndex, toIndex) => {
@@ -53,3 +57,12 @@ export const useModelSettingStore = create<ModelSettingStore>()(
     }
   )
 );
+
+/**
+ * * This effect is used to sync the model providers to the main process
+ */
+useModelSettingStore.subscribe((state, prevState) => {
+  if (state.modelProviders !== prevState.modelProviders) {
+    configService.setProviders(state.modelProviders);
+  }
+});

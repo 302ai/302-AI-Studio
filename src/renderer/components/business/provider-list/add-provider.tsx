@@ -25,9 +25,13 @@ import { LoaderRenderer } from "../loader-renderer";
 
 interface AddProviderProps {
   onValidationStatusChange: (isValid: boolean) => void;
+  onProviderCfgSet: (providerCfg: ModelProvider) => void;
 }
 
-export function AddProvider({ onValidationStatusChange }: AddProviderProps) {
+export function AddProvider({
+  onValidationStatusChange,
+  onProviderCfgSet,
+}: AddProviderProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.add-provider-form",
   });
@@ -109,19 +113,22 @@ export function AddProvider({ onValidationStatusChange }: AddProviderProps) {
 
     const { isOk, errorMsg } = await handleCheckKey(providerCfg);
 
+    setIsChecking(isOk ? "success" : "failed");
+    setKeyValidationStatus(isOk ? "success" : "failed");
+
+    onValidationStatusChange(isOk);
+
     if (isOk) {
-      setIsChecking("success");
-      setKeyValidationStatus("success");
+      onProviderCfgSet({ ...providerCfg, enable: true });
+
       toast.success(t("check-key-success"));
-      onValidationStatusChange(true);
     } else {
-      setIsChecking("failed");
-      setKeyValidationStatus("failed");
       toast.error(errorMsg || t("check-key-failed"));
-      onValidationStatusChange(false);
     }
 
-    setIsChecking("idle");
+    setTimeout(() => {
+      setIsChecking("idle");
+    }, 1000);
   };
 
   return (
@@ -195,11 +202,7 @@ export function AddProvider({ onValidationStatusChange }: AddProviderProps) {
             <Label className="font-medium text-foreground text-sm">
               API Key
             </Label>
-            <Badge
-              intent={getBadgeIntent(keyValidationStatus)}
-              shape="square"
-              className="text-xs"
-            >
+            <Badge intent={getBadgeIntent(keyValidationStatus)} shape="square">
               <LoaderRenderer
                 status={keyValidationStatus}
                 statuses={badgeStatuses}
@@ -253,6 +256,7 @@ export function AddProvider({ onValidationStatusChange }: AddProviderProps) {
         }}
       />
 
+      {/* Provider Type Select */}
       <RadioGroup
         className={isCustomProvider ? "" : "hidden"}
         orientation="horizontal"

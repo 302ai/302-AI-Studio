@@ -20,12 +20,10 @@ export function useAddProvider() {
     isOk: boolean;
     errorMsg: string | null;
   }> => {
-    const res = await providerService.checkApiKey({
+    return await providerService.checkApiKey({
       condition: "add",
       providerCfg: providerConfig,
     });
-    console.log("res", res);
-    return res;
   };
 
   return {

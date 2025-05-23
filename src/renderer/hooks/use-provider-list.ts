@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useModelSettingStore } from "../store/settings-store/model-setting-store";
+import type { ModelProvider } from "../types/providers";
 
 export type ModelActionType = "add" | "edit" | "delete";
 
@@ -10,6 +11,7 @@ export function useProviderList() {
     moveModelProvider,
     setSelectedModelProvider,
     removeModelProvider,
+    addModelProvider,
   } = useModelSettingStore();
 
   const [state, setState] = useState<ModelActionType | null>(null);
@@ -26,6 +28,11 @@ export function useProviderList() {
     closeModal();
   };
 
+  const handleAddProvider = (provider: ModelProvider) => {
+    addModelProvider(provider);
+    closeModal();
+  };
+
   return {
     modelProviders,
     selectedModelProvider,
@@ -35,5 +42,6 @@ export function useProviderList() {
     handleDelete,
     moveModelProvider,
     setSelectedModelProvider,
+    handleAddProvider,
   };
 }

@@ -4,6 +4,7 @@ import {
   type ModelActionType,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
+import type { ModelProvider } from "@renderer/types/providers";
 import { PackageOpen, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,11 +28,13 @@ export function ProviderList() {
     handleDelete,
     moveModelProvider,
     setSelectedModelProvider,
+    handleAddProvider,
   } = useProviderList();
 
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
   const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
+  const [providerCfg, setProviderCfg] = useState<ModelProvider | null>(null);
 
   const actionType = (action: ModelActionType | null) => {
     const initialsState = {
@@ -51,11 +54,18 @@ export function ProviderList() {
               onValidationStatusChange={(isValid) => {
                 setIsApiKeyValidated(isValid);
               }}
+              onProviderCfgSet={(providerCfg) => {
+                setProviderCfg(providerCfg);
+              }}
             />
           ),
           confirmText: t("modal-action.add-provider-confirm"),
-          action: () => {},
           disabled: !isApiKeyValidated,
+          action: () => {
+            if (providerCfg) {
+              handleAddProvider(providerCfg);
+            }
+          },
         };
       case "edit":
         return {
@@ -85,6 +95,13 @@ export function ProviderList() {
     if (result.destination) {
       moveModelProvider(result.source.index, result.destination.index);
     }
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
+
+    setIsApiKeyValidated(false);
+    setProviderCfg(null);
   };
 
   useEffect(() => {
@@ -179,7 +196,7 @@ export function ProviderList() {
 
       <ModalAction
         state={state}
-        onOpenChange={closeModal}
+        onOpenChange={handleCloseModal}
         actionType={actionType(state)}
       />
     </>
