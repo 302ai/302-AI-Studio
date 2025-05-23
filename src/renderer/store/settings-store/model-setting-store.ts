@@ -6,7 +6,7 @@ import { immer } from "zustand/middleware/immer";
 const MODEL_SETTING_STORAGE_KEY = "model-setting";
 
 interface ModelSettingStore {
-  modelProvider: ModelProvider[];
+  modelProviders: ModelProvider[];
   selectedModelProvider: ModelProvider | null;
 
   addModelProvider: (newProvider: ModelProvider) => void;
@@ -18,18 +18,18 @@ interface ModelSettingStore {
 export const useModelSettingStore = create<ModelSettingStore>()(
   persist(
     immer((set, get) => ({
-      modelProvider: [],
+      modelProviders: [],
       selectedModelProvider: null,
 
       addModelProvider: (newProvider) => {
-        set({ modelProvider: [...get().modelProvider, newProvider] });
+        set({ modelProviders: [...get().modelProviders, newProvider] });
       },
 
       moveModelProvider: (fromIndex, toIndex) => {
         set((state) => {
-          const provider = state.modelProvider[fromIndex];
-          state.modelProvider.splice(fromIndex, 1);
-          state.modelProvider.splice(toIndex, 0, provider);
+          const provider = state.modelProviders[fromIndex];
+          state.modelProviders.splice(fromIndex, 1);
+          state.modelProviders.splice(toIndex, 0, provider);
           return state;
         });
       },
@@ -40,7 +40,7 @@ export const useModelSettingStore = create<ModelSettingStore>()(
 
       removeModelProvider: (providerId) => {
         set((state) => {
-          state.modelProvider = state.modelProvider.filter(
+          state.modelProviders = state.modelProviders.filter(
             (provider) => provider.id !== providerId
           );
 

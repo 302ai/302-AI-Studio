@@ -53,7 +53,8 @@
           "delete-description-3": "これらのデフォルトモデルを設定したアシスタントは他のデフォルトモデルに変更されます。",
           "edit": "設定",
           "add-provider-confirm": "に追加"
-        }
+        },
+        "no-provider-description": "モデルベンダーはまだ追加されていません..."
       },
       "name": "モデル設定"
     },

@@ -4,7 +4,7 @@ import {
   type ModelActionType,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
-import { Plus } from "lucide-react";
+import { PackageOpen, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList } from "react-window";
@@ -19,7 +19,7 @@ export function ProviderList() {
     keyPrefix: "settings.model-settings.model-provider",
   });
   const {
-    modelProvider,
+    modelProviders,
     selectedModelProvider,
     state,
     setState,
@@ -111,7 +111,7 @@ export function ProviderList() {
     <>
       <div className="flex h-full flex-col">
         <Button
-          className="w-fit"
+          className="w-fit shrink-0"
           size="small"
           intent="outline"
           onClick={() => setState("add")}
@@ -119,51 +119,62 @@ export function ProviderList() {
           <Plus className="size-4" />
           {t("add-provider")}
         </Button>
-        <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable
-              droppableId="provider-list"
-              mode="virtual"
-              direction="vertical"
-              renderClone={(provided, snapshot, rubric) => (
-                <ProviderCard
-                  provided={provided}
-                  snapshot={snapshot}
-                  provider={modelProvider[rubric.source.index]}
-                  actionGroup={
-                    <ActionGroup
-                      onEdit={() => {
-                        setState("edit");
-                      }}
-                      onDelete={() => setState("delete")}
-                    />
-                  }
-                />
-              )}
-            >
-              {(provided, _snapshot) => (
-                <FixedSizeList
-                  height={listHeight}
-                  itemCount={modelProvider.length}
-                  itemSize={65}
-                  width="100%"
-                  outerRef={provided.innerRef}
-                  itemData={modelProvider}
-                >
-                  {({ index, style }) => (
-                    <ListRow
-                      index={index}
-                      style={style}
-                      provider={modelProvider[index]}
-                      setSelectedModelProvider={setSelectedModelProvider}
-                      setState={setState}
-                    />
-                  )}
-                </FixedSizeList>
-              )}
-            </Droppable>
-          </DragDropContext>
-        </div>
+        {modelProviders.length > 0 ? (
+          <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable
+                droppableId="provider-list"
+                mode="virtual"
+                direction="vertical"
+                renderClone={(provided, snapshot, rubric) => (
+                  <ProviderCard
+                    provided={provided}
+                    snapshot={snapshot}
+                    provider={modelProviders[rubric.source.index]}
+                    actionGroup={
+                      <ActionGroup
+                        onEdit={() => {
+                          setState("edit");
+                        }}
+                        onDelete={() => setState("delete")}
+                      />
+                    }
+                  />
+                )}
+              >
+                {(provided, _snapshot) => (
+                  <FixedSizeList
+                    height={listHeight}
+                    itemCount={modelProviders.length}
+                    itemSize={65}
+                    width="100%"
+                    outerRef={provided.innerRef}
+                    itemData={modelProviders}
+                  >
+                    {({ index, style }) => (
+                      <ListRow
+                        index={index}
+                        style={style}
+                        provider={modelProviders[index]}
+                        setSelectedModelProvider={setSelectedModelProvider}
+                        setState={setState}
+                      />
+                    )}
+                  </FixedSizeList>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </div>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <div className="flex flex-col items-center gap-2">
+              <PackageOpen className="size-9 text-muted-foreground" />
+              <p className="text-muted-foreground">
+                {t("no-provider-description")}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <ModalAction

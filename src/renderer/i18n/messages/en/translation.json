@@ -53,7 +53,8 @@
           "delete-description-3": "and assistants that have configured these default models will be changed to other default models.",
           "edit": "Configure",
           "add-provider-confirm": "Add"
-        }
+        },
+        "no-provider-description": "Model providers have not been added yet..."
       },
       "name": "Model Settings"
     },

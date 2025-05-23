@@ -5,7 +5,7 @@ export type ModelActionType = "add" | "edit" | "delete";
 
 export function useProviderList() {
   const {
-    modelProvider,
+    modelProviders,
     selectedModelProvider,
     moveModelProvider,
     setSelectedModelProvider,
@@ -27,7 +27,7 @@ export function useProviderList() {
   };
 
   return {
-    modelProvider,
+    modelProviders,
     selectedModelProvider,
     state,
     setState,

@@ -3,7 +3,7 @@ import { useModelSettingStore } from "@renderer/store/settings-store/model-setti
 import type { ModelProvider } from "../types/providers";
 
 export function useAddProvider() {
-  const { modelProvider } = useModelSettingStore();
+  const { modelProviders: modelProvider } = useModelSettingStore();
 
   // * Show providers that are NOT already in the modelProvider array
   const canSelectProviders = DEFAULT_PROVIDERS.filter(

@@ -53,7 +53,8 @@
           "delete-description-3": "同时配置了这些默认模型的助手将会被改为其他默认模型。",
           "edit": "配置",
           "add-provider-confirm": "添加"
-        }
+        },
+        "no-provider-description": "尚未添加模型供应商..."
       },
       "name": "模型设置"
     },
