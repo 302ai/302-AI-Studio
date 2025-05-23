@@ -1,4 +1,4 @@
-import { Button } from "@renderer/components/ui/button";
+import { Label } from "@renderer/components/ui/field";
 import { Radio, RadioGroup } from "@renderer/components/ui/radio-group";
 import {
   Select,
@@ -8,20 +8,15 @@ import {
 } from "@renderer/components/ui/select";
 import { TextField } from "@renderer/components/ui/text-field";
 import type { ModelProvider } from "@renderer/types/providers";
-import { TailChase } from "ldrs/react";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IoKeyOutline } from "react-icons/io5";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { toast } from "sonner";
 import { useAddProvider } from "@/src/renderer/hooks/use-add-provider";
 import { ModelIcon } from "../model-icon";
-import "ldrs/react/TailChase.css";
-import { Badge } from "@renderer/components/ui/badge";
-import { Label } from "@renderer/components/ui/field";
-import { VscCheck, VscClose } from "react-icons/vsc";
-import { LoaderRenderer } from "../loader-renderer";
+import { ApiKeyCheckButton } from "./api-key-check-button";
+import { ValidationBadge } from "./validation-badge";
 
 interface AddProviderProps {
   onValidationStatusChange: (isValid: boolean) => void;
@@ -53,49 +48,6 @@ export function AddProvider({
   const canCheckKey = !!apiKey && !!provider && !!baseUrl;
   const customProviderName = customName === "" ? t("default-name") : customName;
   const currentButtonStatus = isChecking === "loading" ? "loading" : "idle";
-
-  const buttonStatuses = {
-    idle: {
-      icon: <IoKeyOutline className="size-4" />,
-      text: t("check-key"),
-    },
-    loading: {
-      icon: <TailChase size="16" color="currentColor" />,
-      text: t("checking"),
-    },
-  } as const;
-  const badgeStatuses = {
-    unverified: {
-      icon: <IoKeyOutline className="size-4" />,
-      text: t("unverified"),
-    },
-    loading: {
-      icon: <TailChase size="16" color="currentColor" />,
-      text: t("checking"),
-    },
-    success: {
-      icon: <VscCheck className="size-4" />,
-      text: t("verified"),
-    },
-    failed: {
-      icon: <VscClose className="size-4" />,
-      text: t("verification-failed"),
-    },
-  } as const;
-
-  const getBadgeIntent = (status: typeof keyValidationStatus) => {
-    switch (status) {
-      case "unverified":
-      case "loading":
-        return "primary";
-      case "success":
-        return "success";
-      case "failed":
-        return "danger";
-      default:
-        return "primary";
-    }
-  };
 
   const handleCheckClick = async () => {
     setIsChecking("loading");
@@ -202,13 +154,7 @@ export function AddProvider({
             <Label className="font-medium text-foreground text-sm">
               API Key
             </Label>
-            <Badge intent={getBadgeIntent(keyValidationStatus)} shape="square">
-              <LoaderRenderer
-                status={keyValidationStatus}
-                statuses={badgeStatuses}
-                className="gap-1"
-              />
-            </Badge>
+            <ValidationBadge status={keyValidationStatus} className="gap-1" />
           </div>
           <TextField
             className="transition-all duration-300"
@@ -227,18 +173,11 @@ export function AddProvider({
           />
         </div>
 
-        <Button
-          intent="outline"
-          className="self-end transition-all duration-300"
-          onClick={handleCheckClick}
+        <ApiKeyCheckButton
+          status={currentButtonStatus}
           isDisabled={!canCheckKey}
-          isPending={isChecking === "loading"}
-        >
-          <LoaderRenderer
-            status={currentButtonStatus}
-            statuses={buttonStatuses}
-          />
-        </Button>
+          onClick={handleCheckClick}
+        />
       </div>
 
       {/* Provider Base URL Input */}
