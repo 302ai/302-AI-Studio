@@ -1,8 +1,5 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
-import type {
-  DraggableProvided,
-  DraggableStateSnapshot,
-} from "@hello-pangea/dnd";
+import type { DraggableProvided } from "@hello-pangea/dnd";
 import {
   CardDescription,
   CardFooter,
@@ -15,42 +12,55 @@ import { useTranslation } from "react-i18next";
 import { ModelIcon } from "../model-icon";
 
 interface ProviderCardProps {
-  snapshot: DraggableStateSnapshot;
   provided: DraggableProvided;
   provider: ModelProvider;
   actionGroup: React.ReactNode;
+  style?: React.CSSProperties;
+  isDragging?: boolean;
   onClick?: () => void;
 }
 
 export function ProviderCard({
-  snapshot,
   provided,
   provider,
   actionGroup,
+  style,
+  isDragging,
   onClick,
 }: ProviderCardProps) {
   const { t } = useTranslation();
+
+  const getStyle = ({ provided, style, isDragging }) => {
+    const combined = {
+      ...style,
+      ...provided.draggableProps.style,
+    };
+    const marginBottom = 5;
+    const withSpacing = {
+      ...combined,
+      height: isDragging ? combined.height : combined.height - marginBottom,
+      marginBottom,
+      cursor: "pointer",
+    };
+    return withSpacing;
+  };
 
   return (
     <div
       className={cn(
         "group flex h-[60px] flex-row items-center justify-between rounded-xl border bg-bg py-4 hover:bg-hover-primary",
-        snapshot.isDragging && "bg-hover-primary opacity-50"
+        isDragging && "bg-hover-primary opacity-50"
       )}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      style={{
-        ...provided.draggableProps.style,
-        cursor: "pointer",
-        marginBottom: 5,
-      }}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           onClick?.();
         }
       }}
+      style={getStyle({ provided, style, isDragging })}
       role="button"
       tabIndex={0}
       aria-label={provider.name}
@@ -60,7 +70,6 @@ export function ProviderCard({
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">
-            {/* {provider.models.length} */}
             {t("settings.model-settings.model-provider.description")}
           </CardDescription>
         </div>

@@ -1,4 +1,9 @@
-import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  type DropResult,
+} from "@hello-pangea/dnd";
 import { Button } from "@renderer/components/ui/button";
 import {
   type ModelActionType,
@@ -6,14 +11,13 @@ import {
 } from "@renderer/hooks/use-provider-list";
 import type { ModelProvider } from "@renderer/types/providers";
 import { PackageOpen, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FixedSizeList } from "react-window";
+import { areEqual, FixedSizeList } from "react-window";
 import { ModalAction } from "../modal-action";
 import { ActionGroup } from "./action-group";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
-import { ListRow } from "./list-row";
 import { ProviderCard } from "./provider-card";
 
 export function ProviderList() {
@@ -113,6 +117,52 @@ export function ProviderList() {
     setProviderCfg(null);
   };
 
+  /**
+   * ! This component can not be extracted to a separate file
+   */
+  const ListRow = React.memo(function ListRow({
+    index,
+    style,
+    data,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+    data: ModelProvider[];
+  }) {
+    const provider = data[index];
+
+    const handleProviderSelect = () => {
+      setSelectedModelProvider(provider);
+    };
+
+    const handleEdit = () => {
+      handleProviderSelect();
+      setState("edit");
+    };
+
+    const handleDelete = () => {
+      handleProviderSelect();
+      setState("delete");
+    };
+
+    return (
+      <Draggable draggableId={provider.id} index={index} key={provider.id}>
+        {(provided) => (
+          <ProviderCard
+            style={style}
+            provided={provided}
+            provider={provider}
+            actionGroup={
+              <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
+            }
+            onClick={handleProviderSelect}
+          />
+        )}
+      </Draggable>
+    );
+  },
+  areEqual);
+
   useEffect(() => {
     const updateHeight = () => {
       if (listContainerRef.current) {
@@ -153,24 +203,18 @@ export function ProviderList() {
               <Droppable
                 droppableId="provider-list"
                 mode="virtual"
-                direction="vertical"
                 renderClone={(provided, snapshot, rubric) => (
                   <ProviderCard
                     provided={provided}
-                    snapshot={snapshot}
+                    isDragging={snapshot.isDragging}
                     provider={modelProviders[rubric.source.index]}
                     actionGroup={
-                      <ActionGroup
-                        onEdit={() => {
-                          setState("edit");
-                        }}
-                        onDelete={() => setState("delete")}
-                      />
+                      <ActionGroup onEdit={() => {}} onDelete={() => {}} />
                     }
                   />
                 )}
               >
-                {(provided, _snapshot) => (
+                {(provided) => (
                   <FixedSizeList
                     height={listHeight}
                     itemCount={modelProviders.length}
@@ -179,15 +223,7 @@ export function ProviderList() {
                     outerRef={provided.innerRef}
                     itemData={modelProviders}
                   >
-                    {({ index, style }) => (
-                      <ListRow
-                        index={index}
-                        style={style}
-                        provider={modelProviders[index]}
-                        setSelectedModelProvider={setSelectedModelProvider}
-                        setState={setState}
-                      />
-                    )}
+                    {ListRow}
                   </FixedSizeList>
                 )}
               </Droppable>
