@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useProviderList } from "@/src/renderer/hooks/use-provider-list";
 import type { ModelProvider } from "@/src/renderer/types/providers";
-import { ProviderCfgForm } from "./providerCfgForm";
+import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface EditProviderProps {
   provider: ModelProvider | null;

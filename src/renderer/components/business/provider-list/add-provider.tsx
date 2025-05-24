@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { ModelIcon } from "../model-icon";
 import "ldrs/react/TailChase.css";
 import { useProviderList } from "@/src/renderer/hooks/use-provider-list";
-import { ProviderCfgForm } from "./providerCfgForm";
+import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface AddProviderProps {
   onValidationStatusChange: (isValid: boolean) => void;

@@ -169,7 +169,7 @@ export function ProviderCfgForm({
         orientation="horizontal"
         label={t("provider-type")}
         value={providerType}
-        onChange={onProviderTypeChange}
+        onChange={(value) => handleInputChange(value, onProviderTypeChange)}
       >
         {[
           { label: "OpenAI", value: "openai" },
