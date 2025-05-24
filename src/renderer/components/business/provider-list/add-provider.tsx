@@ -1,22 +1,19 @@
-import { Label } from "@renderer/components/ui/field";
-import { Radio, RadioGroup } from "@renderer/components/ui/radio-group";
 import {
   Select,
   SelectList,
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import { TextField } from "@renderer/components/ui/text-field";
 import type { ModelProvider } from "@renderer/types/providers";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { toast } from "sonner";
-import { useAddProvider } from "@/src/renderer/hooks/use-add-provider";
 import { ModelIcon } from "../model-icon";
-import { ApiKeyCheckButton } from "./api-key-check-button";
-import { ValidationBadge } from "./validation-badge";
+import "ldrs/react/TailChase.css";
+import { useProviderList } from "@/src/renderer/hooks/use-provider-list";
+import { ProviderCfgForm } from "./providerCfgForm";
 
 interface AddProviderProps {
   onValidationStatusChange: (isValid: boolean) => void;
@@ -30,7 +27,7 @@ export function AddProvider({
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.add-provider-form",
   });
-  const { canSelectProviders, handleCheckKey } = useAddProvider();
+  const { canSelectProviders, handleCheckKey } = useProviderList();
 
   const [provider, setProvider] = useState<string>("");
   const [providerType, setProviderType] = useState("openai");
@@ -47,7 +44,6 @@ export function AddProvider({
   const isCustomProvider = provider === "custom";
   const canCheckKey = !!apiKey && !!provider && !!baseUrl;
   const customProviderName = customName === "" ? t("default-name") : customName;
-  const currentButtonStatus = isChecking === "loading" ? "loading" : "idle";
 
   const handleCheckClick = async () => {
     setIsChecking("loading");
@@ -63,7 +59,7 @@ export function AddProvider({
       custom: isCustomProvider,
     };
 
-    const { isOk, errorMsg } = await handleCheckKey(providerCfg);
+    const { isOk, errorMsg } = await handleCheckKey(providerCfg, "add");
 
     setIsChecking(isOk ? "success" : "failed");
     setKeyValidationStatus(isOk ? "success" : "failed");
@@ -81,6 +77,11 @@ export function AddProvider({
     setTimeout(() => {
       setIsChecking("idle");
     }, 1000);
+  };
+
+  const handleValidationStatusReset = () => {
+    setKeyValidationStatus("unverified");
+    onValidationStatusChange(false);
   };
 
   return (
@@ -131,89 +132,23 @@ export function AddProvider({
         </Select>
       </div>
 
-      {/* Provider Name Input */}
-      <TextField
-        className={isCustomProvider ? "" : "hidden"}
-        aria-label="Provider Name"
-        label={t("provider-name")}
-        placeholder={t("placeholder-1")}
-        value={customName}
-        onChange={(value) => {
-          setCustomName(value);
-          if (keyValidationStatus !== "unverified") {
-            setKeyValidationStatus("unverified");
-            onValidationStatusChange(false);
-          }
-        }}
+      {/* Provider Configuration Form */}
+      <ProviderCfgForm
+        isCustomProvider={isCustomProvider}
+        customName={customName}
+        onCustomNameChange={setCustomName}
+        apiKey={apiKey}
+        onApiKeyChange={setApiKey}
+        baseUrl={baseUrl}
+        onBaseUrlChange={setBaseURL}
+        providerType={providerType}
+        onProviderTypeChange={setProviderType}
+        keyValidationStatus={keyValidationStatus}
+        onCheckKey={handleCheckClick}
+        canCheckKey={canCheckKey}
+        isChecking={isChecking}
+        onValidationStatusReset={handleValidationStatusReset}
       />
-
-      {/* Provider API Key Input */}
-      <div className="flex flex-row items-center gap-2">
-        <div className="flex-1">
-          <div className="mb-[calc(var(--spacing)*1.5)] flex items-center gap-x-2">
-            <Label className="font-medium text-foreground text-sm">
-              API Key
-            </Label>
-            <ValidationBadge status={keyValidationStatus} className="gap-1" />
-          </div>
-          <TextField
-            className="transition-all duration-300"
-            aria-label="API Key"
-            type="password"
-            placeholder={t("placeholder-2")}
-            isRevealable
-            value={apiKey}
-            onChange={(value) => {
-              setApiKey(value);
-              if (keyValidationStatus !== "unverified") {
-                setKeyValidationStatus("unverified");
-                onValidationStatusChange(false);
-              }
-            }}
-          />
-        </div>
-
-        <ApiKeyCheckButton
-          status={currentButtonStatus}
-          isDisabled={!canCheckKey}
-          onClick={handleCheckClick}
-        />
-      </div>
-
-      {/* Provider Base URL Input */}
-      <TextField
-        aria-label="Base URL"
-        label="Base URL"
-        placeholder={t("placeholder-3")}
-        value={baseUrl}
-        onChange={(value) => {
-          setBaseURL(value);
-          if (keyValidationStatus !== "unverified") {
-            setKeyValidationStatus("unverified");
-            onValidationStatusChange(false);
-          }
-        }}
-      />
-
-      {/* Provider Type Select */}
-      <RadioGroup
-        className={isCustomProvider ? "" : "hidden"}
-        orientation="horizontal"
-        label={t("provider-type")}
-        value={providerType}
-        onChange={(value) => setProviderType(value)}
-      >
-        {[
-          { label: "OpenAI", value: "openai" },
-          { label: "OpenAI-Response", value: "openai-responses" },
-          { label: "Gemini", value: "gemini" },
-          { label: "Anthropic", value: "anthropic" },
-        ].map(({ value, label }) => (
-          <Radio key={value} value={value}>
-            {label}
-          </Radio>
-        ))}
-      </RadioGroup>
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { FixedSizeList } from "react-window";
 import { ModalAction } from "../modal-action";
 import { ActionGroup } from "./action-group";
 import { AddProvider } from "./add-provider";
+import { EditProvider } from "./edit-provider";
 import { ListRow } from "./list-row";
 import { ProviderCard } from "./provider-card";
 
@@ -71,6 +72,14 @@ export function ProviderList() {
         return {
           title: `${t("modal-action.edit")} ${selectedModelProvider?.name}`,
           descriptions: [],
+          body: (
+            <EditProvider
+              provider={selectedModelProvider}
+              onValidationStatusChange={(isValid) => {
+                setIsApiKeyValidated(isValid);
+              }}
+            />
+          ),
           action: () => {},
         };
       case "delete":

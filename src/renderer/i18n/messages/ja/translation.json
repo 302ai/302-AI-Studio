@@ -61,7 +61,11 @@
           "edit": "設定",
           "add-provider-confirm": "に追加"
         },
-        "no-provider-description": "モデルベンダーはまだ追加されていません..."
+        "no-provider-description": "モデルベンダーはまだ追加されていません...",
+        "edit-provider-form": {
+          "check-key-success": "APIキー検証に正常に！",
+          "check-key-failed": "APIキー検証に失敗しました！"
+        }
       },
       "name": "モデル設定"
     },
