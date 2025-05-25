@@ -34,7 +34,7 @@ export class ProviderService {
     providers.forEach((provider) => {
       this.providerMap.set(provider.id, provider);
 
-      if (provider.enable) {
+      if (provider.enabled) {
         const providerInst = this.createProviderInst(provider);
         if (providerInst) {
           this.providerInstMap.set(provider.id, providerInst);
@@ -56,6 +56,13 @@ export class ProviderService {
     }
   }
 
+  /**
+   * Check API Key and if the condition is "add", set the models to the config service
+   *
+   * @param _event
+   * @param params CheckApiKeyParams
+   * @returns The status of the API key check, and the error message if the check fails, and the models if the check is successful (only on "add" condition)
+   */
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async checkApiKey(
     _event: Electron.IpcMainEvent,
@@ -69,7 +76,16 @@ export class ProviderService {
       if (!providerInst) {
         return { isOk: false, errorMsg: "Failed to create provider instance" };
       }
-      return providerInst.checkApiKey();
+
+      const { isOk, errorMsg, models } = await providerInst.checkApiKey();
+      if (isOk) {
+        this.configService.setProviderModels(
+          params.providerCfg.id,
+          models || []
+        );
+      }
+
+      return { isOk, errorMsg };
     }
 
     if (params.condition === "edit") {
@@ -83,6 +99,7 @@ export class ProviderService {
         };
       }
     }
+
     return { isOk: false, errorMsg: "Invalid condition" };
   }
 

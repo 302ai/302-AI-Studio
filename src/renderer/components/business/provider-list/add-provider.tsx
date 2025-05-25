@@ -12,7 +12,7 @@ import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { toast } from "sonner";
 import { ModelIcon } from "../model-icon";
 import "ldrs/react/TailChase.css";
-import { useProviderList } from "@/src/renderer/hooks/use-provider-list";
+import { useProviderList } from "@renderer/hooks/use-provider-list";
 import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface AddProviderProps {
@@ -29,7 +29,8 @@ export function AddProvider({
   });
   const { canSelectProviders, handleCheckKey } = useProviderList();
 
-  const [provider, setProvider] = useState<string>("");
+  const [providerId, setProviderId] = useState<string>("");
+  const [providerName, setProviderName] = useState<string>("");
   const [providerType, setProviderType] = useState("openai");
   const [apiKey, setApiKey] = useState("");
   const [baseUrl, setBaseURL] = useState("");
@@ -41,8 +42,8 @@ export function AddProvider({
     "unverified" | "loading" | "success" | "failed"
   >("unverified");
 
-  const isCustomProvider = provider === "custom";
-  const canCheckKey = !!apiKey && !!provider && !!baseUrl;
+  const isCustomProvider = providerId === "custom";
+  const canCheckKey = !!apiKey && !!providerId && !!baseUrl;
   const customProviderName = customName === "" ? t("default-name") : customName;
 
   const handleCheckClick = async () => {
@@ -50,12 +51,12 @@ export function AddProvider({
     setKeyValidationStatus("loading");
 
     const providerCfg: ModelProvider = {
-      id: isCustomProvider ? `custom-${nanoid()}` : provider,
-      name: isCustomProvider ? customProviderName : provider,
+      id: isCustomProvider ? `custom-${nanoid()}` : providerId,
+      name: isCustomProvider ? customProviderName : providerName,
       apiType: providerType,
       apiKey,
       baseUrl,
-      enable: false,
+      enabled: false,
       custom: isCustomProvider,
     };
 
@@ -67,7 +68,7 @@ export function AddProvider({
     onValidationStatusChange(isOk);
 
     if (isOk) {
-      onProviderCfgSet({ ...providerCfg, enable: true });
+      onProviderCfgSet({ ...providerCfg, enabled: true });
 
       toast.success(t("check-key-success"));
     } else {
@@ -84,6 +85,16 @@ export function AddProvider({
     onValidationStatusChange(false);
   };
 
+  const handleProviderSelect = (key: string) => {
+    const [id, name] = key.toString().split("-");
+    setProviderId(id);
+    setProviderName(name);
+
+    if (keyValidationStatus !== "unverified") {
+      handleValidationStatusReset();
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* Provider Select */}
@@ -93,13 +104,7 @@ export function AddProvider({
           label={t("provider-select")}
           aria-label={t("provider-select")}
           placeholder={t("placeholder")}
-          onSelectionChange={(key) => {
-            setProvider(key as string);
-            if (keyValidationStatus !== "unverified") {
-              setKeyValidationStatus("unverified");
-              onValidationStatusChange(false);
-            }
-          }}
+          onSelectionChange={(key) => handleProviderSelect(key as string)}
         >
           <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
           <SelectList popoverClassName="min-w-[300px]">
@@ -107,7 +112,7 @@ export function AddProvider({
               <SelectOption
                 className="flex cursor-pointer justify-between"
                 key={id}
-                id={id}
+                id={`${id}-${name}`}
                 textValue={name}
               >
                 <span className="flex items-center gap-2">

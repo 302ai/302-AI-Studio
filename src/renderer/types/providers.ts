@@ -5,7 +5,7 @@ export interface ModelProvider {
   apiType: string;
   apiKey: string;
   baseUrl: string;
-  enable: boolean;
+  enabled: boolean;
   custom?: boolean;
   websites?: {
     official: string;

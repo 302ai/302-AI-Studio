@@ -1,6 +1,7 @@
 export type Model = {
   id: string;
-  provider: string;
   name: string;
-  group: string;
+  providerId: string;
+  custom: boolean;
+  enabled: boolean;
 };

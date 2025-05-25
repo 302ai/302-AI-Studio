@@ -1,5 +1,8 @@
+import fs from "node:fs";
+import path from "node:path";
 import { defaultLanguage } from "@main/constant";
 import { locales } from "@main/utils/locales";
+import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
 import { app } from "electron";
@@ -11,20 +14,32 @@ import {
 } from "../shared/reflect";
 import { WindowService } from "./window-service";
 
+interface IModelStore {
+  models: Model[];
+  custom_models: Model[];
+}
+
 enum ConfigKeys {
   Language = "language",
   Theme = "theme",
   Providers = "providers",
 }
 
-const electronStore: ElectronStore = new ElectronStore();
+const PROVIDER_MODELS_DIR = "provider_models";
 
 @ServiceRegister("configService")
 export class ConfigService {
+  private configStore: ElectronStore = new ElectronStore();
+  private providerModelStoreMap: Map<string, ElectronStore<IModelStore>> =
+    new Map();
   private windowService: WindowService;
+  private userDataPath: string;
 
   constructor() {
     this.windowService = new WindowService();
+    this.userDataPath = app.getPath("userData");
+
+    this.initProviderModelsDir();
   }
 
   @ServiceHandler()
@@ -34,26 +49,68 @@ export class ConfigService {
       ? currentLocale
       : defaultLanguage;
 
-    return electronStore.get(ConfigKeys.Language, locale) as string;
+    return this.configStore.get(ConfigKeys.Language, locale) as string;
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   setLanguage(_event: Electron.IpcMainEvent, language: LanguageVarious) {
-    electronStore.set(ConfigKeys.Language, language);
+    this.configStore.set(ConfigKeys.Language, language);
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   setTheme(_event: Electron.IpcMainEvent, theme: ThemeMode) {
-    electronStore.set(ConfigKeys.Theme, theme);
+    this.configStore.set(ConfigKeys.Theme, theme);
     this.windowService.setTitleBarOverlay(theme);
   }
 
   getProviders(): ModelProvider[] {
-    return electronStore.get(ConfigKeys.Providers, []) as ModelProvider[];
+    return this.configStore.get(ConfigKeys.Providers, []) as ModelProvider[];
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   setProviders(_event: Electron.IpcMainEvent, providers: ModelProvider[]) {
-    electronStore.set(ConfigKeys.Providers, providers);
+    this.configStore.set(ConfigKeys.Providers, providers);
+  }
+
+  private initProviderModelsDir(): void {
+    const modelsDir = path.join(this.userDataPath, PROVIDER_MODELS_DIR);
+    if (!fs.existsSync(modelsDir)) {
+      fs.mkdirSync(modelsDir, { recursive: true });
+    }
+  }
+
+  private getProviderModelStore(
+    providerId: string
+  ): ElectronStore<IModelStore> {
+    if (!this.providerModelStoreMap.has(providerId)) {
+      const store = new ElectronStore<IModelStore>({
+        name: `models_${providerId}`,
+        cwd: path.join(this.userDataPath, PROVIDER_MODELS_DIR),
+        defaults: {
+          models: [],
+          custom_models: [],
+        },
+      });
+      this.providerModelStoreMap.set(providerId, store);
+    }
+
+    return this.providerModelStoreMap.get(
+      providerId
+    ) as ElectronStore<IModelStore>;
+  }
+
+  setProviderModels(providerId: string, models: Model[]) {
+    const store = this.getProviderModelStore(providerId);
+    store.set("models", models);
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  getProviderModels(
+    _event: Electron.IpcMainEvent,
+    providerId: string
+  ): Model[] {
+    console.log("getProviderModels", providerId);
+    const store = this.getProviderModelStore(providerId);
+    return store.get("models", []) as Model[];
   }
 }

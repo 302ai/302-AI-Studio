@@ -1,9 +1,10 @@
 import { type ElectronAPI, electronAPI } from "@electron-toolkit/preload";
+import { initPreloadBridge } from "@main/bridge";
+import type { CheckApiKeyParams } from "@main/services/provider-service";
+import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
 import { contextBridge } from "electron";
-import { initPreloadBridge } from "../main/bridge";
-import type { CheckApiKeyParams } from "../main/services/provider-service";
 
 /**
  * ! This should be declared in index.d.ts,
@@ -20,6 +21,7 @@ declare global {
         setLanguage: (language: LanguageVarious) => void;
         setTheme: (theme: ThemeMode) => void;
         setProviders: (providers: ModelProvider[]) => void;
+        getProviderModels: (providerId: string) => Promise<Model[]>;
       };
       threadsService: {
         setActiveThread: (threadId: string) => void;

@@ -1,3 +1,4 @@
+import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -8,11 +9,13 @@ const MODEL_SETTING_STORAGE_KEY = "model-setting";
 interface ModelSettingStore {
   modelProviders: ModelProvider[];
   selectedModelProvider: ModelProvider | null;
+  providerModelMap: Record<string, Model[]>;
 
   addModelProvider: (newProvider: ModelProvider) => void;
   moveModelProvider: (fromIndex: number, toIndex: number) => void;
   removeModelProvider: (providerId: string) => void;
   setSelectedModelProvider: (provider: ModelProvider | null) => void;
+  setProviderModelMap: (providerId: string, models: Model[]) => void;
 }
 
 const { configService } = window.service;
@@ -22,6 +25,7 @@ export const useModelSettingStore = create<ModelSettingStore>()(
     immer((set, get) => ({
       modelProviders: [],
       selectedModelProvider: null,
+      providerModelMap: {},
 
       addModelProvider: (newProvider) => {
         set({
@@ -48,7 +52,15 @@ export const useModelSettingStore = create<ModelSettingStore>()(
             (provider) => provider.id !== providerId
           );
 
+          delete state.providerModelMap[providerId];
+
           return state;
+        });
+      },
+
+      setProviderModelMap: (providerId, models) => {
+        set((state) => {
+          state.providerModelMap[providerId] = models;
         });
       },
     })),

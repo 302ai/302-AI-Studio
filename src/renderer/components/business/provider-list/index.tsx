@@ -27,6 +27,7 @@ export function ProviderList() {
   const {
     modelProviders,
     selectedModelProvider,
+    providerModelMap,
     state,
     setState,
     closeModal,
@@ -152,6 +153,7 @@ export function ProviderList() {
             style={style}
             provided={provided}
             provider={provider}
+            providerModels={providerModelMap[provider.id]}
             actionGroup={
               <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
             }
@@ -208,6 +210,9 @@ export function ProviderList() {
                     provided={provided}
                     isDragging={snapshot.isDragging}
                     provider={modelProviders[rubric.source.index]}
+                    providerModels={
+                      providerModelMap[modelProviders[rubric.source.index].id]
+                    }
                     actionGroup={
                       <ActionGroup onEdit={() => {}} onDelete={() => {}} />
                     }

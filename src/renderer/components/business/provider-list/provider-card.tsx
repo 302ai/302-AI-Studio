@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@renderer/components/ui/card";
 import { cn } from "@renderer/lib/utils";
+import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import { useTranslation } from "react-i18next";
 import { ModelIcon } from "../model-icon";
@@ -14,6 +15,7 @@ import { ModelIcon } from "../model-icon";
 interface ProviderCardProps {
   provided: DraggableProvided;
   provider: ModelProvider;
+  providerModels: Model[];
   actionGroup: React.ReactNode;
   style?: React.CSSProperties;
   isDragging?: boolean;
@@ -23,6 +25,7 @@ interface ProviderCardProps {
 export function ProviderCard({
   provided,
   provider,
+  providerModels,
   actionGroup,
   style,
   isDragging,
@@ -70,6 +73,7 @@ export function ProviderCard({
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">
+            {providerModels.length}
             {t("settings.model-settings.model-provider.description")}
           </CardDescription>
         </div>

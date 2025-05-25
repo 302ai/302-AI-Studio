@@ -7,7 +7,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "ollama",
     apiKey: "",
     baseUrl: "http://localhost:11434",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://ollama.com/",
       apiKey: "",
@@ -22,7 +22,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "deepseek",
     apiKey: "",
     baseUrl: "https://api.deepseek.com/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://deepseek.com/",
       apiKey: "https://platform.deepseek.com/api_keys",
@@ -37,7 +37,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://api.qnaigc.com/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://www.qiniu.com",
       apiKey: "https://developer.qiniu.com/aitokenapi/12884/how-to-get-api-key",
@@ -52,7 +52,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "silicon",
     apiKey: "",
     baseUrl: "https://api.siliconflow.cn/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://www.siliconflow.cn/",
       apiKey:
@@ -68,7 +68,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'qwenlm',
   //   apiKey: '',
   //   baseUrl: 'https://chat.qwenlm.ai/api',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://chat.qwenlm.ai',
   //     apiKey: 'https://chat.qwenlm.ai',
@@ -83,7 +83,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "doubao",
     apiKey: "",
     baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://console.volcengine.com/ark/",
       apiKey: "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey",
@@ -99,7 +99,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "minimax",
     apiKey: "",
     baseUrl: "https://api.minimax.chat/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://platform.minimaxi.com/",
       apiKey:
@@ -115,7 +115,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "fireworks",
     apiKey: "",
     baseUrl: "https://api.fireworks.ai/inference",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://fireworks.ai/",
       apiKey: "https://fireworks.ai/account/api-keys",
@@ -130,7 +130,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://api.ppinfra.com/v3/openai",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://ppinfra.com/",
       apiKey: "https://ppinfra.com/settings/key-management",
@@ -145,7 +145,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai-responses",
     apiKey: "",
     baseUrl: "https://api.openai.com/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://openai.com/",
       apiKey: "https://platform.openai.com/api-keys",
@@ -160,7 +160,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://api.openai.com/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://openai.com/",
       apiKey: "https://platform.openai.com/api-keys",
@@ -175,7 +175,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "gemini",
     apiKey: "",
     baseUrl: "https://generativelanguage.googleapis.com",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://gemini.google.com/",
       apiKey: "https://aistudio.google.com/app/apikey",
@@ -191,7 +191,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'ocoolai',
   //   apiKey: '',
   //   baseUrl: 'https://api.ocoolai.com',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://one.ocoolai.com/',
   //     apiKey: 'https://one.ocoolai.com/token',
@@ -206,7 +206,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'together',
   //   apiKey: '',
   //   baseUrl: 'https://api.tohgether.xyz',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://www.together.ai/',
   //     apiKey: 'https://api.together.ai/settings/api-keys',
@@ -221,7 +221,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://models.inference.ai.azure.com",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://github.com/marketplace/models",
       apiKey: "https://github.com/settings/tokens",
@@ -236,7 +236,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'yi',
   //   apiKey: '',
   //   baseUrl: 'https://api.lingyiwanwu.com',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://platform.lingyiwanwu.com/',
   //     apiKey: 'https://platform.lingyiwanwu.com/apikeys',
@@ -251,7 +251,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "zhipu",
     apiKey: "",
     baseUrl: "https://open.bigmodel.cn/api/paas/v4/",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://open.bigmodel.cn/",
       apiKey: "https://open.bigmodel.cn/usercenter/apikeys",
@@ -266,7 +266,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://api.moonshot.cn/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://moonshot.ai/",
       apiKey: "https://platform.moonshot.cn/console/api-keys",
@@ -282,7 +282,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'baichuan',
   //   apiKey: '',
   //   baseUrl: 'https://api.baichuan-ai.com',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://www.baichuan-ai.com/',
   //     apiKey: 'https://platform.baichuan-ai.com/console/apikey',
@@ -297,7 +297,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1/",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://www.aliyun.com/product/bailian",
       apiKey: "https://bailian.console.aliyun.com/?apiKey=1#/api-key",
@@ -312,7 +312,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "lmstudio",
     apiKey: "",
     baseUrl: "http://127.0.0.1:1234/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://lmstudio.ai/docs/app",
       apiKey: "https://lmstudio.ai/docs/app",
@@ -327,7 +327,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'stepfun',
   //   apiKey: '',
   //   baseUrl: 'https://api.stepfun.com',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://platform.stepfun.com/',
   //     apiKey: 'https://platform.stepfun.com/interface-key',
@@ -343,7 +343,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://openrouter.ai/api/v1/",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://openrouter.ai/",
       apiKey: "https://openrouter.ai/settings/keys",
@@ -358,7 +358,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'groq',
   //   apiKey: '',
   //   baseUrl: 'https://api.groq.com/openai',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://groq.com/',
   //     apiKey: 'https://console.groq.com/keys',
@@ -374,7 +374,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "anthropic",
     apiKey: "",
     baseUrl: "https://api.anthropic.com",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://www.anthropic.com/",
       apiKey: "https://console.anthropic.com/settings/keys",
@@ -389,7 +389,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "grok",
     apiKey: "",
     baseUrl: "https://api.x.ai/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://x.ai/",
       apiKey: "https://console.x.ai",
@@ -404,7 +404,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'hyperbolic',
   //   apiKey: '',
   //   baseUrl: 'https://api.hyperbolic.xyz',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://app.hyperbolic.xyz',
   //     apiKey: 'https://app.hyperbolic.xyz/settings',
@@ -419,7 +419,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'mistral',
   //   apiKey: '',
   //   baseUrl: 'https://api.mistral.ai',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://mistral.ai',
   //     apiKey: 'https://console.mistral.ai/api-keys/',
@@ -434,7 +434,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'jina',
   //   apiKey: '',
   //   baseUrl: 'https://api.jina.ai',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://jina.ai',
   //     apiKey: 'https://jina.ai/',
@@ -449,7 +449,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://aihubmix.com/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://aihubmix.com",
       apiKey: "https://aihubmix.com/token",
@@ -464,7 +464,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'fireworks',
   //   apiKey: '',
   //   baseUrl: 'https://api.fireworks.ai/inference',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://fireworks.ai/',
   //     apiKey: 'https://fireworks.ai/account/api-keys',
@@ -479,7 +479,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'zhinao',
   //   apiKey: '',
   //   baseUrl: 'https://api.360.cn',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://ai.360.com/',
   //     apiKey: 'https://ai.360.com/platform/keys',
@@ -494,7 +494,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "https://api.hunyuan.cloud.tencent.com/v1",
-    enable: false,
+    enabled: false,
     websites: {
       official: "https://cloud.tencent.com/product/hunyuan",
       apiKey: "https://console.cloud.tencent.com/hunyuan/api-key",
@@ -509,7 +509,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   apiType: 'nvidia',
   //   apiKey: '',
   //   baseUrl: 'https://integrate.api.nvidia.com',
-  //   enable: false,
+  //   enabled: false,
   //   websites: {
   //     official: 'https://build.nvidia.com/explore/discover',
   //     apiKey: 'https://build.nvidia.com/meta/llama-3_1-405b-instruct',
@@ -524,7 +524,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     apiType: "openai",
     apiKey: "",
     baseUrl: "",
-    enable: false,
+    enabled: false,
     websites: {
       official:
         "https://azure.microsoft.com/en-us/products/ai-services/openai-service",

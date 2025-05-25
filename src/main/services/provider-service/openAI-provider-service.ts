@@ -1,4 +1,5 @@
 import { isSupportedModel } from "@renderer/config/models";
+import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import OpenAI from "openai";
 import { BaseProviderService } from "./base-provider-service";
@@ -14,15 +15,17 @@ export class OpenAIProviderService extends BaseProviderService {
     });
   }
 
-  public async checkApiKey(): Promise<{
+  async checkApiKey(): Promise<{
     isOk: boolean;
     errorMsg: string | null;
+    models?: Model[];
   }> {
     try {
-      await this.fetchOpenAIModels();
+      const models = await this.fetchOpenAIModels();
       return {
         isOk: true,
         errorMsg: null,
+        models,
       };
     } catch (error: unknown) {
       let errorMessage = "An unknown error occurred during provider check.";
@@ -39,14 +42,30 @@ export class OpenAIProviderService extends BaseProviderService {
     }
   }
 
+  protected async fetchProviderModels(options?: {
+    timeout: number;
+  }): Promise<Model[]> {
+    return this.fetchOpenAIModels(options);
+  }
+
   protected async fetchOpenAIModels(options?: {
     timeout: number;
-  }): Promise<OpenAI.Models.Model[]> {
+  }): Promise<Model[]> {
     const response = await this.openai.models.list(options);
     const models = response.data || [];
     models.forEach((model) => {
       model.id = model.id.trim();
     });
-    return models.filter(isSupportedModel);
+    const filterModels = models.filter(isSupportedModel);
+    const formatedModels = filterModels.map((model) => {
+      return {
+        id: model.id,
+        name: model.id,
+        providerId: this.provider.id,
+        custom: false,
+        enabled: true,
+      };
+    });
+    return formatedModels;
   }
 }

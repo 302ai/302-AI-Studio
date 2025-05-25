@@ -3,7 +3,7 @@ import { DEFAULT_PROVIDERS } from "../config/providers";
 import { useModelSettingStore } from "../store/settings-store/model-setting-store";
 import type { ModelProvider } from "../types/providers";
 
-const { providerService } = window.service;
+const { configService, providerService } = window.service;
 
 export type ModelActionType = "add" | "edit" | "delete";
 
@@ -11,10 +11,12 @@ export function useProviderList() {
   const {
     modelProviders,
     selectedModelProvider,
+    providerModelMap,
     moveModelProvider,
     setSelectedModelProvider,
     removeModelProvider,
     addModelProvider,
+    setProviderModelMap,
   } = useModelSettingStore();
 
   const [state, setState] = useState<ModelActionType | null>(null);
@@ -39,8 +41,12 @@ export function useProviderList() {
     closeModal();
   };
 
-  const handleAddProvider = (provider: ModelProvider) => {
+  const handleAddProvider = async (provider: ModelProvider) => {
+    const models = await configService.getProviderModels(provider.id);
+    setProviderModelMap(provider.id, models);
+
     addModelProvider(provider);
+
     closeModal();
   };
 
@@ -58,6 +64,7 @@ export function useProviderList() {
       });
     }
 
+    // * Handle the condition "add"
     return await providerService.checkApiKey({
       condition,
       providerCfg,
@@ -69,6 +76,7 @@ export function useProviderList() {
     selectedModelProvider,
     state,
     canSelectProviders,
+    providerModelMap,
     setState,
     closeModal,
     handleDelete,
