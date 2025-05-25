@@ -46,6 +46,7 @@ export function useProviderList() {
     setProviderModelMap(provider.id, models);
 
     addModelProvider(provider);
+    setSelectedModelProvider(provider);
 
     closeModal();
   };

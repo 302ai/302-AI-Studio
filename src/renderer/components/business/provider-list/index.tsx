@@ -153,6 +153,7 @@ export function ProviderList() {
             style={style}
             provided={provided}
             provider={provider}
+            isSelected={selectedModelProvider?.id === provider.id}
             providerModels={providerModelMap[provider.id]}
             actionGroup={
               <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
@@ -205,19 +206,21 @@ export function ProviderList() {
               <Droppable
                 droppableId="provider-list"
                 mode="virtual"
-                renderClone={(provided, snapshot, rubric) => (
-                  <ProviderCard
-                    provided={provided}
-                    isDragging={snapshot.isDragging}
-                    provider={modelProviders[rubric.source.index]}
-                    providerModels={
-                      providerModelMap[modelProviders[rubric.source.index].id]
-                    }
-                    actionGroup={
-                      <ActionGroup onEdit={() => {}} onDelete={() => {}} />
-                    }
-                  />
-                )}
+                renderClone={(provided, snapshot, rubric) => {
+                  const provider = modelProviders[rubric.source.index];
+                  return (
+                    <ProviderCard
+                      provided={provided}
+                      isDragging={snapshot.isDragging}
+                      isSelected={selectedModelProvider?.id === provider.id}
+                      provider={provider}
+                      providerModels={providerModelMap[provider.id]}
+                      actionGroup={
+                        <ActionGroup onEdit={() => {}} onDelete={() => {}} />
+                      }
+                    />
+                  );
+                }}
               >
                 {(provided) => (
                   <FixedSizeList

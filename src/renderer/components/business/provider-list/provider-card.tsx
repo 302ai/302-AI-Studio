@@ -19,6 +19,7 @@ interface ProviderCardProps {
   actionGroup: React.ReactNode;
   style?: React.CSSProperties;
   isDragging?: boolean;
+  isSelected: boolean;
   onClick?: () => void;
 }
 
@@ -29,6 +30,7 @@ export function ProviderCard({
   actionGroup,
   style,
   isDragging,
+  isSelected,
   onClick,
 }: ProviderCardProps) {
   const { t } = useTranslation();
@@ -52,7 +54,8 @@ export function ProviderCard({
     <div
       className={cn(
         "group flex h-[60px] flex-row items-center justify-between rounded-xl border bg-bg py-4 hover:bg-hover-primary",
-        isDragging && "bg-hover-primary opacity-50"
+        isDragging && "bg-hover-primary opacity-50",
+        isSelected && "border-primary"
       )}
       ref={provided.innerRef}
       {...provided.draggableProps}
