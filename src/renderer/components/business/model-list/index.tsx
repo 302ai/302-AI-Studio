@@ -57,7 +57,7 @@ export function ModelList() {
       >
         <div className="flex items-center">
           <Checkbox
-            className="px-4 py-2.5"
+            className="ml-4"
             isSelected={item.enabled}
             onChange={handleCheckboxChange}
           />
@@ -65,7 +65,7 @@ export function ModelList() {
           <div className="group px-4 py-2.5 align-middle outline-hidden flex-1">
             {item.name}
           </div>
-          <div className="group px-4 py-2.5 align-middle outline-hidden flex-1">
+          <div className="group px-4 py-2.5 align-middle outline-hidden mr-4">
             {provider?.name}
           </div>
           <ActionGroup
@@ -107,6 +107,7 @@ export function ModelList() {
             itemCount={models.length}
             itemSize={40}
             itemData={listData}
+            overscanCount={5}
             width="100%"
           >
             {Row}

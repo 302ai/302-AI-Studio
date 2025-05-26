@@ -1,4 +1,5 @@
 import { Suspense, lazy, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const LazyProvider = lazy(() =>
   import("./provider").then((module) => ({
@@ -12,6 +13,8 @@ const LazyProviderModel = lazy(() =>
 );
 
 export function ModelSettings() {
+  const { t } = useTranslation();
+
   const [shouldLoadProvider, setShouldLoadProvider] = useState(false);
   const [shouldLoadProviderModel, setShouldLoadProviderModel] = useState(false);
 
@@ -31,7 +34,9 @@ export function ModelSettings() {
         <Suspense
           fallback={
             <div className="flex h-1/2 items-center justify-center">
-              <div className="text-muted-fg">Loading providers...</div>
+              <div className="text-muted-fg">
+                {t("settings.model-settings.loading")}
+              </div>
             </div>
           }
         >
@@ -39,7 +44,9 @@ export function ModelSettings() {
         </Suspense>
       ) : (
         <div className="flex h-1/2 items-center justify-center">
-          <div className="text-muted-fg">Loading providers...</div>
+          <div className="text-muted-fg">
+            {t("settings.model-settings.loading")}
+          </div>
         </div>
       )}
 
@@ -47,7 +54,9 @@ export function ModelSettings() {
         <Suspense
           fallback={
             <div className="flex h-1/2 items-center justify-center">
-              <div className="text-muted-fg">Loading models...</div>
+              <div className="text-muted-fg">
+                {t("settings.model-settings.loading")}
+              </div>
             </div>
           }
         >
@@ -55,7 +64,9 @@ export function ModelSettings() {
         </Suspense>
       ) : (
         <div className="flex h-1/2 items-center justify-center">
-          <div className="text-muted-fg">Loading models...</div>
+          <div className="text-muted-fg">
+            {t("settings.model-settings.loading")}
+          </div>
         </div>
       )}
     </div>

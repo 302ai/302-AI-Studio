@@ -68,7 +68,8 @@
         },
         "star": "收藏"
       },
-      "name": "模型设置"
+      "name": "模型设置",
+      "loading": "加载中..."
     },
     "tab-title": "设置",
     "tool-settings": {

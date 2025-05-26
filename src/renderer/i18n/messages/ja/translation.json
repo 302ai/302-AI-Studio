@@ -68,7 +68,8 @@
         },
         "star": "集める"
       },
-      "name": "モデル設定"
+      "name": "モデル設定",
+      "loading": "読み込み..."
     },
     "tab-title": "設定",
     "tool-settings": {

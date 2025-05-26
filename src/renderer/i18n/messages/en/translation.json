@@ -68,7 +68,8 @@
         },
         "star": "Collect"
       },
-      "name": "Model Settings"
+      "name": "Model Settings",
+      "loading": "Loading..."
     },
     "tab-title": "Settings",
     "tool-settings": {
