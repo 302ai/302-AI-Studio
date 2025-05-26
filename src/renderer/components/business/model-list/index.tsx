@@ -2,11 +2,12 @@ import { useModelSettingStore } from "@renderer/store/settings-store/model-setti
 import { useEffect, useMemo, useRef, useState } from "react";
 import { areEqual, FixedSizeList as List } from "react-window";
 import type { Model } from "@renderer/types/models";
-import { cn } from "@/src/renderer/lib/utils";
+import { cn } from "@renderer/lib/utils";
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { ActionGroup } from "../action-group";
 import React from "react";
 import { ModelIcon } from "../model-icon";
+import type { ModelProvider } from "@renderer/types/providers";
 
 export function ModelList() {
   const { modelProviders, selectedModelProvider, getModelsByProvider } =
@@ -20,8 +21,11 @@ export function ModelList() {
     return getModelsByProvider(selectedModelProvider?.id);
   }, [getModelsByProvider, selectedModelProvider?.id]);
 
-  const providerMap = useMemo(() => {
-    return new Map(modelProviders.map((provider) => [provider.id, provider]));
+  const providerMap = useMemo<Record<string, ModelProvider>>(() => {
+    return modelProviders.reduce((acc, provider) => {
+      acc[provider.id] = provider;
+      return acc;
+    }, {});
   }, [modelProviders]);
 
   const listData = useMemo(
@@ -39,11 +43,11 @@ export function ModelList() {
   }: {
     index: number;
     style: React.CSSProperties;
-    data: { models: Model[]; providerMap: Map<string, any> };
+    data: { models: Model[]; providerMap: Record<string, ModelProvider> };
   }) {
     const { models, providerMap } = data;
     const item = models[index];
-    const provider = providerMap.get(item.providerId);
+    const provider = providerMap[item.providerId];
     const isLast = index === models.length - 1;
 
     const handleCheckboxChange = () => {
@@ -57,24 +61,24 @@ export function ModelList() {
       <div
         style={style}
         className={cn(
-          "group relative cursor-default outline-transparent ring-primary hover:bg-hover-primary",
+          "outline-transparent ring-primary hover:bg-hover-primary",
           !isLast ? "border-b border-border" : ""
         )}
       >
         <div className="flex items-center">
           <Checkbox
-            className="ml-4"
+            className="ml-4 cursor-pointer"
             isSelected={item.enabled}
             onChange={handleCheckboxChange}
           />
 
-          <div className="group px-4 py-2.5 align-middle outline-hidden flex-1">
+          <div className="px-4 py-2.5 align-middle outline-hidden flex-1">
             {item.name}
           </div>
-          <div className="group px-4 py-2.5 align-middle outline-hidden mr-4">
+          <div className="px-4 py-2.5 align-middle outline-hidden mr-4">
             <div className="flex items-center gap-2">
               <ModelIcon modelId={provider.id} />
-              {provider?.name}
+              {provider.name}
             </div>
           </div>
           <ActionGroup
@@ -108,7 +112,7 @@ export function ModelList() {
       ref={containerRef}
       className="flex h-full flex-col border border-border rounded-xl overflow-hidden"
     >
-      {/* Virtualized Table Body */}
+      {/* Virtualized List Body */}
       <div className="flex-1 w-full min-w-full caption-bottom text-sm outline-hidden">
         {models.length > 0 ? (
           <List
