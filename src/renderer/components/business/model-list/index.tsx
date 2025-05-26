@@ -1,5 +1,5 @@
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { areEqual, FixedSizeList as List } from "react-window";
 import type { Model } from "@renderer/types/models";
 import { cn } from "@/src/renderer/lib/utils";
@@ -45,12 +45,12 @@ export function ModelList() {
     const provider = providerMap.get(item.providerId);
     const isLast = index === models.length - 1;
 
-    const handleCheckboxChange = useCallback(() => {
+    const handleCheckboxChange = () => {
       console.log("checked");
-    }, []);
-    const handleEdit = useCallback(() => {}, []);
-    const handleDelete = useCallback(() => {}, []);
-    const handleStar = useCallback(() => {}, []);
+    };
+    const handleEdit = () => {};
+    const handleDelete = () => {};
+    const handleStar = () => {};
 
     return (
       <div

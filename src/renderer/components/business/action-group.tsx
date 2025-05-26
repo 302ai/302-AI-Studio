@@ -7,7 +7,6 @@ import {
 import { Star, CircleX, PencilLine } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@renderer/lib/utils";
-import { memo } from "react";
 
 interface ActionGroupProps {
   className?: string;
@@ -18,7 +17,7 @@ interface ActionGroupProps {
   onStar?: () => void;
 }
 
-export const ActionGroup = memo(function ActionGroup({
+export function ActionGroup({
   className,
   size = "square-petite",
   shape = "square",
@@ -80,4 +79,4 @@ export const ActionGroup = memo(function ActionGroup({
       </CardAction>
     </>
   );
-});
+}

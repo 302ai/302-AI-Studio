@@ -142,12 +142,12 @@ export function ProviderList() {
     };
 
     const handleEdit = () => {
-      handleProviderSelect();
+      setSelectedModelProvider(provider);
       setState("edit");
     };
 
     const handleDelete = () => {
-      handleProviderSelect();
+      setSelectedModelProvider(provider);
       setState("delete");
     };
 
