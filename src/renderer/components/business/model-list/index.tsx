@@ -1,13 +1,69 @@
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { areEqual, FixedSizeList as List } from "react-window";
-import type { Model } from "@renderer/types/models";
-import { cn } from "@renderer/lib/utils";
 import { Checkbox } from "@renderer/components/ui/checkbox";
-import { ActionGroup } from "../action-group";
-import React from "react";
-import { ModelIcon } from "../model-icon";
+import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import type { ModelProvider } from "@renderer/types/providers";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { areEqual, FixedSizeList as List } from "react-window";
+import { cn } from "@/src/renderer/lib/utils";
+import type { Model } from "@/src/renderer/types/models";
+import { ActionGroup } from "../action-group";
+import { ModelIcon } from "../model-icon";
+
+const Row = memo(function Row({
+  index,
+  style,
+  data,
+}: {
+  index: number;
+  style: React.CSSProperties;
+  data: { models: Model[]; providerMap: Record<string, ModelProvider> };
+}) {
+  const { models, providerMap } = data;
+  const item = models[index];
+  const provider = providerMap[item.providerId];
+  const isLast = index === models.length - 1;
+
+  const handleCheckboxChange = () => {
+    console.log("checked");
+  };
+  const handleEdit = () => {};
+  const handleDelete = () => {};
+  const handleStar = () => {};
+
+  return (
+    <div
+      style={style}
+      className={cn(
+        "outline-transparent ring-primary hover:bg-hover-primary",
+        !isLast ? "border-border border-b" : ""
+      )}
+    >
+      <div className="flex items-center">
+        <Checkbox
+          className="ml-4 cursor-pointer"
+          isSelected={item.enabled}
+          onChange={handleCheckboxChange}
+        />
+
+        <div className="flex-1 px-4 py-2.5 align-middle outline-hidden">
+          {item.name}
+        </div>
+        <div className="mr-4 px-4 py-2.5 align-middle outline-hidden">
+          <div className="flex items-center gap-2">
+            <ModelIcon modelId={provider.id} />
+            {provider.name}
+          </div>
+        </div>
+        <ActionGroup
+          className="my-auto"
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onStar={handleStar}
+        />
+      </div>
+    </div>
+  );
+},
+areEqual);
 
 export function ModelList() {
   const { modelProviders, selectedModelProvider, getModelsByProvider } =
@@ -36,63 +92,6 @@ export function ModelList() {
     [models, providerMap]
   );
 
-  const Row = React.memo(function Row({
-    index,
-    style,
-    data,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-    data: { models: Model[]; providerMap: Record<string, ModelProvider> };
-  }) {
-    const { models, providerMap } = data;
-    const item = models[index];
-    const provider = providerMap[item.providerId];
-    const isLast = index === models.length - 1;
-
-    const handleCheckboxChange = () => {
-      console.log("checked");
-    };
-    const handleEdit = () => {};
-    const handleDelete = () => {};
-    const handleStar = () => {};
-
-    return (
-      <div
-        style={style}
-        className={cn(
-          "outline-transparent ring-primary hover:bg-hover-primary",
-          !isLast ? "border-b border-border" : ""
-        )}
-      >
-        <div className="flex items-center">
-          <Checkbox
-            className="ml-4 cursor-pointer"
-            isSelected={item.enabled}
-            onChange={handleCheckboxChange}
-          />
-
-          <div className="px-4 py-2.5 align-middle outline-hidden flex-1">
-            {item.name}
-          </div>
-          <div className="px-4 py-2.5 align-middle outline-hidden mr-4">
-            <div className="flex items-center gap-2">
-              <ModelIcon modelId={provider.id} />
-              {provider.name}
-            </div>
-          </div>
-          <ActionGroup
-            className="my-auto"
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onStar={handleStar}
-          />
-        </div>
-      </div>
-    );
-  },
-  areEqual);
-
   useEffect(() => {
     const updateHeight = () => {
       if (containerRef.current) {
@@ -110,10 +109,10 @@ export function ModelList() {
   return (
     <div
       ref={containerRef}
-      className="flex h-full flex-col border border-border rounded-xl overflow-hidden"
+      className="flex h-full flex-col overflow-hidden rounded-xl border border-border"
     >
       {/* Virtualized List Body */}
-      <div className="flex-1 w-full min-w-full caption-bottom text-sm outline-hidden">
+      <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
         {models.length > 0 ? (
           <List
             height={containerHeight}
@@ -126,7 +125,7 @@ export function ModelList() {
             {Row}
           </List>
         ) : (
-          <div className="flex items-center justify-center h-32 text-muted-fg">
+          <div className="flex h-32 items-center justify-center text-muted-fg">
             No models available
           </div>
         )}
