@@ -1,4 +1,3 @@
-import { isSupportedModel } from "@renderer/config/models";
 import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import OpenAI from "openai";
@@ -56,8 +55,7 @@ export class OpenAIProviderService extends BaseProviderService {
     models.forEach((model) => {
       model.id = model.id.trim();
     });
-    const filterModels = models.filter(isSupportedModel);
-    const formatedModels = filterModels.map((model) => {
+    const formatedModels = models.map((model) => {
       return {
         id: model.id,
         name: model.id,

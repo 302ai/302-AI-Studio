@@ -65,7 +65,8 @@
         "edit-provider-form": {
           "check-key-success": "APIキー検証に正常に！",
           "check-key-failed": "APIキー検証に失敗しました！"
-        }
+        },
+        "star": "集める"
       },
       "name": "モデル設定"
     },
@@ -138,5 +139,9 @@
         "title": "会話名を変更"
       }
     }
-  }
+  },
+  "enable": "有効化",
+  "model-name": "モデル",
+  "provider-name": "サプライヤー",
+  "actions": "動作します"
 }

@@ -1,7 +1,7 @@
 import { ProviderList } from "@renderer/components/business/provider-list";
 import { useTranslation } from "react-i18next";
 
-export function ModelProvider() {
+export function Provider() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider",
   });

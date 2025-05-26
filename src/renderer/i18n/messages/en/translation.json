@@ -65,7 +65,8 @@
         "edit-provider-form": {
           "check-key-success": "API Key Verification Successfully!",
           "check-key-failed": "API Key Verification failed!"
-        }
+        },
+        "star": "Collect"
       },
       "name": "Model Settings"
     },
@@ -138,5 +139,9 @@
         "title": "Rename Conversation"
       }
     }
-  }
+  },
+  "enable": "Enable",
+  "model-name": "Model",
+  "provider-name": "Provider",
+  "actions": "Actions"
 }

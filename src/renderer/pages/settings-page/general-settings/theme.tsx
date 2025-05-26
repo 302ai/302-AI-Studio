@@ -2,7 +2,6 @@ import { cn } from "@renderer/lib/utils";
 import { useSettingsStore } from "@renderer/store/settings-store";
 import { ThemeMode } from "@renderer/types/settings";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Label } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { BsLaptop, BsMoon, BsSun } from "react-icons/bs";
 
@@ -71,7 +70,7 @@ export function ThemeSwitcher() {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label>{t("label")}</Label>
+      <div>{t("label")}</div>
       <div
         ref={containerRef}
         className="relative flex h-9 w-[280px] overflow-hidden rounded-xl border border-input bg-bg p-1"

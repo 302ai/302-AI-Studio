@@ -65,7 +65,8 @@
         "edit-provider-form": {
           "check-key-success": "API Key 验证成功！",
           "check-key-failed": "API Key 验证失败！"
-        }
+        },
+        "star": "收藏"
       },
       "name": "模型设置"
     },
@@ -138,5 +139,9 @@
         "title": "重命名会话"
       }
     }
-  }
+  },
+  "enable": "启用",
+  "model-name": "模型",
+  "provider-name": "供应商",
+  "actions": "操作"
 }

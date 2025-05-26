@@ -15,7 +15,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
 import { ModalAction } from "../modal-action";
-import { ActionGroup } from "./action-group";
+import { ActionGroup } from "../action-group";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";

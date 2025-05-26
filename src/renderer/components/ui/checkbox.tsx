@@ -116,18 +116,16 @@ const Checkbox = ({
           </div>
 
           <div className="flex flex-col gap-1">
-            <>
-              {label ? (
-                <Label
-                  className={twMerge(description && "font-normal text-sm/4")}
-                >
-                  {label}
-                </Label>
-              ) : (
-                children
-              )}
-              {description && <Description>{description}</Description>}
-            </>
+            {label ? (
+              <Label
+                className={twMerge(description && "font-normal text-sm/4")}
+              >
+                {label}
+              </Label>
+            ) : typeof children === "function" ? null : (
+              children
+            )}
+            {description && <Description>{description}</Description>}
           </div>
         </div>
       )}
