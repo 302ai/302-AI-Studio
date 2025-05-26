@@ -6,6 +6,7 @@ import { cn } from "@/src/renderer/lib/utils";
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { ActionGroup } from "../action-group";
 import React from "react";
+import { ModelIcon } from "../model-icon";
 
 export function ModelList() {
   const { modelProviders, selectedModelProvider, getModelsByProvider } =
@@ -13,7 +14,7 @@ export function ModelList() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [containerHeight, setContainerHeight] = useState(400);
+  const [containerHeight, setContainerHeight] = useState(0);
 
   const models = useMemo(() => {
     return getModelsByProvider(selectedModelProvider?.id);
@@ -71,7 +72,10 @@ export function ModelList() {
             {item.name}
           </div>
           <div className="group px-4 py-2.5 align-middle outline-hidden mr-4">
-            {provider?.name}
+            <div className="flex items-center gap-2">
+              <ModelIcon modelId={provider.id} />
+              {provider?.name}
+            </div>
           </div>
           <ActionGroup
             className="my-auto"

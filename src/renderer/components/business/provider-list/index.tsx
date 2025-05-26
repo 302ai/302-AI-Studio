@@ -19,6 +19,7 @@ import { ActionGroup } from "../action-group";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
+import _ from "lodash";
 
 export function ProviderList() {
   const { t } = useTranslation("translation", {
@@ -132,14 +133,14 @@ export function ProviderList() {
   }) {
     const provider = data[index];
 
-    const handleProviderSelect = () => {
+    const handleProviderSelect = _.debounce(() => {
       // * Toggle selection: if already selected, deselect; otherwise select
       if (selectedModelProvider?.id === provider.id) {
         setSelectedModelProvider(null);
       } else {
         setSelectedModelProvider(provider);
       }
-    };
+    }, 100);
 
     const handleEdit = () => {
       setSelectedModelProvider(provider);
