@@ -17,6 +17,7 @@ interface ModelSettingStore {
   setSelectedModelProvider: (provider: ModelProvider | null) => void;
   setProviderModelMap: (providerId: string, models: Model[]) => void;
   getAllModels: () => Model[];
+  getModelsByProvider: (providerId?: string) => Model[];
 }
 
 const { configService } = window.service;
@@ -67,6 +68,14 @@ export const useModelSettingStore = create<ModelSettingStore>()(
 
       getAllModels: () => {
         return Object.values(get().providerModelMap).flat();
+      },
+
+      getModelsByProvider: (providerId?: string) => {
+        const { providerModelMap } = get();
+        if (!providerId) {
+          return Object.values(providerModelMap).flat();
+        }
+        return providerModelMap[providerId] || [];
       },
     })),
     {

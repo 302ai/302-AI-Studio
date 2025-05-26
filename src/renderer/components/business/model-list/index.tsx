@@ -8,16 +8,21 @@ import { ActionGroup } from "../action-group";
 import React from "react";
 
 export function ModelList() {
-  const { modelProviders, getAllModels } = useModelSettingStore();
+  const { modelProviders, selectedModelProvider, getModelsByProvider } =
+    useModelSettingStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [containerHeight, setContainerHeight] = useState(400);
 
-  const models = useMemo(() => getAllModels(), [getAllModels]);
+  const models = useMemo(() => {
+    return getModelsByProvider(selectedModelProvider?.id);
+  }, [getModelsByProvider, selectedModelProvider?.id]);
+
   const providerMap = useMemo(() => {
     return new Map(modelProviders.map((provider) => [provider.id, provider]));
   }, [modelProviders]);
+
   const listData = useMemo(
     () => ({
       models,

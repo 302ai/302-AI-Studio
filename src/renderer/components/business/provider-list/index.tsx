@@ -133,7 +133,12 @@ export function ProviderList() {
     const provider = data[index];
 
     const handleProviderSelect = () => {
-      setSelectedModelProvider(provider);
+      // * Toggle selection: if already selected, deselect; otherwise select
+      if (selectedModelProvider?.id === provider.id) {
+        setSelectedModelProvider(null);
+      } else {
+        setSelectedModelProvider(provider);
+      }
     };
 
     const handleEdit = () => {

@@ -46,6 +46,7 @@ export function useProviderList() {
     setProviderModelMap(provider.id, models);
 
     addModelProvider(provider);
+    // * Auto-select the newly added provider to show its models
     setSelectedModelProvider(provider);
 
     closeModal();
