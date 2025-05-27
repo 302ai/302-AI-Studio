@@ -83,7 +83,7 @@ export class ProviderService {
 
       const { isOk, errorMsg, models } = await providerInst.checkApiKey();
       if (isOk) {
-        this.configService.setProviderModels(
+        this.configService._setProviderModels(
           params.providerCfg.id,
           models || []
         );

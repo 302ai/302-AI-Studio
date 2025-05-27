@@ -1,15 +1,14 @@
 import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-
-const MODEL_SETTING_STORAGE_KEY = "model-setting";
 
 interface ModelSettingStore {
   modelProviders: ModelProvider[];
   selectedModelProvider: ModelProvider | null;
   providerModelMap: Record<string, Model[]>;
+
+  initializeStore: () => Promise<void>;
 
   addModelProvider: (newProvider: ModelProvider) => void;
   moveModelProvider: (fromIndex: number, toIndex: number) => void;
@@ -24,85 +23,104 @@ interface ModelSettingStore {
 const { configService } = window.service;
 
 export const useModelSettingStore = create<ModelSettingStore>()(
-  persist(
-    immer((set, get) => ({
-      modelProviders: [],
-      selectedModelProvider: null,
-      providerModelMap: {},
+  immer((set, get) => ({
+    modelProviders: [],
+    selectedModelProvider: null,
+    providerModelMap: {},
 
-      addModelProvider: (newProvider) => {
-        set({
-          modelProviders: [newProvider, ...get().modelProviders],
-        });
-      },
+    initializeStore: async () => {
+      const modelSettings = await configService.getModelSettings();
 
-      moveModelProvider: (fromIndex, toIndex) => {
-        set((state) => {
-          const provider = state.modelProviders[fromIndex];
-          state.modelProviders.splice(fromIndex, 1);
-          state.modelProviders.splice(toIndex, 0, provider);
-          return state;
-        });
-      },
+      set({
+        modelProviders: modelSettings.modelProviders,
+        providerModelMap: modelSettings.providerModelMap,
+      });
+    },
 
-      setSelectedModelProvider: (provider) => {
-        set({ selectedModelProvider: provider });
-      },
+    addModelProvider: (newProvider) => {
+      set({
+        modelProviders: [newProvider, ...get().modelProviders],
+      });
+    },
 
-      updateSelectedModelProvider: (data) => {
-        set((state) => {
-          if (!state.selectedModelProvider) return;
+    moveModelProvider: (fromIndex, toIndex) => {
+      set((state) => {
+        const provider = state.modelProviders[fromIndex];
+        state.modelProviders.splice(fromIndex, 1);
+        state.modelProviders.splice(toIndex, 0, provider);
+        return state;
+      });
+    },
 
-          state.selectedModelProvider = {
-            ...state.selectedModelProvider,
-            ...data,
-          };
+    setSelectedModelProvider: (provider) => {
+      set({ selectedModelProvider: provider });
+    },
 
-          state.modelProviders = state.modelProviders.map((provider) =>
-            provider.id === state.selectedModelProvider?.id
-              ? { ...provider, ...data }
-              : provider
-          );
+    updateSelectedModelProvider: (data) => {
+      set((state) => {
+        if (!state.selectedModelProvider) return;
 
-          return state;
-        });
-      },
+        state.selectedModelProvider = {
+          ...state.selectedModelProvider,
+          ...data,
+        };
 
-      removeModelProvider: (providerId) => {
-        set((state) => {
-          state.modelProviders = state.modelProviders.filter(
-            (provider) => provider.id !== providerId
-          );
+        state.modelProviders = state.modelProviders.map((provider) =>
+          provider.id === state.selectedModelProvider?.id
+            ? { ...provider, ...data }
+            : provider
+        );
 
-          delete state.providerModelMap[providerId];
+        return state;
+      });
+    },
 
-          return state;
-        });
-      },
+    removeModelProvider: (providerId) => {
+      set((state) => {
+        state.modelProviders = state.modelProviders.filter(
+          (provider) => provider.id !== providerId
+        );
 
-      setProviderModelMap: (providerId, models) => {
-        set((state) => {
-          state.providerModelMap[providerId] = models;
-        });
-      },
+        delete state.providerModelMap[providerId];
 
-      getAllModels: () => {
-        return Object.values(get().providerModelMap).flat();
-      },
+        return state;
+      });
+    },
 
-      getModelsByProvider: (providerId?: string) => {
-        const { providerModelMap } = get();
-        if (!providerId) {
-          return Object.values(providerModelMap).flat();
-        }
-        return providerModelMap[providerId] || [];
-      },
-    })),
-    {
-      name: MODEL_SETTING_STORAGE_KEY,
-    }
-  )
+    setProviderModelMap: (providerId, models) => {
+      set((state) => {
+        state.providerModelMap[providerId] = models;
+      });
+
+      try {
+        console.log(
+          `Syncing models for provider: ${providerId}`,
+          models.length
+        );
+        configService.setProviderModels(providerId, models);
+      } catch (error) {
+        console.error(
+          `Failed to sync models for provider ${providerId}:`,
+          error
+        );
+      }
+    },
+
+    getAllModels: () => {
+      return Object.values(get().providerModelMap).flat();
+    },
+
+    getModelsByProvider: (providerId?: string) => {
+      const { providerModelMap } = get();
+      if (!providerId) {
+        return Object.values(providerModelMap).flat();
+      }
+      return providerModelMap[providerId] || [];
+    },
+  }))
 );
+
+useModelSettingStore.getState().initializeStore();
 
 /**
  * * This effect is used to sync the model providers to the main process

@@ -1,5 +1,6 @@
 import { type ElectronAPI, electronAPI } from "@electron-toolkit/preload";
 import { initPreloadBridge } from "@main/bridge";
+import type { ModelSettingData } from "@main/services/config-service";
 import type { CheckApiKeyParams } from "@main/services/provider-service";
 import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
@@ -22,6 +23,8 @@ declare global {
         setTheme: (theme: ThemeMode) => void;
         setProviders: (providers: ModelProvider[]) => void;
         getProviderModels: (providerId: string) => Promise<Model[]>;
+        setProviderModels: (providerId: string, models: Model[]) => void;
+        getModelSettings: () => Promise<ModelSettingData>;
       };
       threadsService: {
         setActiveThread: (threadId: string) => void;

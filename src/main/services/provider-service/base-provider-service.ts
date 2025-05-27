@@ -22,7 +22,7 @@ export abstract class BaseProviderService {
     try {
       const models = await this.fetchProviderModels();
       this.models = models;
-      this.configService.setProviderModels(this.provider.id, models);
+      this.configService._setProviderModels(this.provider.id, models);
 
       return models;
     } catch (error) {

@@ -19,6 +19,11 @@ interface IModelStore {
   custom_models: Model[];
 }
 
+export interface ModelSettingData {
+  modelProviders: ModelProvider[];
+  providerModelMap: Record<string, Model[]>;
+}
+
 enum ConfigKeys {
   Language = "language",
   Theme = "theme",
@@ -43,7 +48,7 @@ export class ConfigService {
   }
 
   @ServiceHandler()
-  getLanguage(): string {
+  getLanguage(_event: Electron.IpcMainEvent): string {
     const currentLocale = app.getLocale();
     const locale = Object.keys(locales).includes(currentLocale)
       ? currentLocale
@@ -82,6 +87,24 @@ export class ConfigService {
     this.configStore.set(ConfigKeys.Providers, providers);
   }
 
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  getModelSettings(_event: Electron.IpcMainEvent): ModelSettingData {
+    const providers = this.getProviders();
+    const providerModelMap = {};
+
+    for (const provider of providers) {
+      const store = this.getProviderModelStore(provider.id);
+      providerModelMap[provider.id] = store.get("models", []) as Model[];
+    }
+
+    const modelSettings = {
+      modelProviders: providers,
+      providerModelMap,
+    };
+
+    return modelSettings;
+  }
+
   private initProviderModelsDir(): void {
     const modelsDir = path.join(this.userDataPath, PROVIDER_MODELS_DIR);
     if (!fs.existsSync(modelsDir)) {
@@ -109,9 +132,18 @@ export class ConfigService {
     ) as ElectronStore<IModelStore>;
   }
 
-  setProviderModels(providerId: string, models: Model[]) {
+  _setProviderModels(providerId: string, models: Model[]) {
     const store = this.getProviderModelStore(providerId);
     store.set("models", models);
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  setProviderModels(
+    _event: Electron.IpcMainEvent,
+    providerId: string,
+    models: Model[]
+  ) {
+    this._setProviderModels(providerId, models);
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
