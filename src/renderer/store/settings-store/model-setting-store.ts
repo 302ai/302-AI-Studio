@@ -16,6 +16,7 @@ interface ModelSettingStore {
   setSelectedModelProvider: (provider: ModelProvider | null) => void;
   updateSelectedModelProvider: (data: Partial<ModelProvider>) => void;
   setProviderModelMap: (providerId: string, models: Model[]) => void;
+  updateProviderModelMap: (providerId: string, models: Model[]) => void;
   getAllModels: () => Model[];
   getModelsByProvider: (providerId?: string) => Model[];
 }
@@ -88,6 +89,12 @@ export const useModelSettingStore = create<ModelSettingStore>()(
     },
 
     setProviderModelMap: (providerId, models) => {
+      set((state) => {
+        state.providerModelMap[providerId] = models;
+      });
+    },
+
+    updateProviderModelMap: (providerId, models) => {
       set((state) => {
         state.providerModelMap[providerId] = models;
       });

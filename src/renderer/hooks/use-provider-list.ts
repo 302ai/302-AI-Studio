@@ -48,8 +48,6 @@ export function useProviderList() {
   const handleUpdateProvider = (updatedProvider: ModelProvider) => {
     const { name, baseUrl, apiKey, apiType } = updatedProvider;
 
-    console.log("handleUpdateProvider", updatedProvider);
-
     providerService.updateProviderConfig(updatedProvider.id, {
       name,
       baseUrl,
