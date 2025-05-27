@@ -8,16 +8,23 @@ import { RowList } from "./row-list";
 
 export function ModelList() {
   const { t } = useTranslation();
-  const { modelProviders, selectedModelProvider, getModelsByProvider } =
-    useModelSettingStore();
+  const {
+    modelProviders,
+    selectedModelProvider,
+    providerModelMap,
+    getAllModels,
+  } = useModelSettingStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [containerHeight, setContainerHeight] = useState(0);
 
   const models = useMemo(() => {
-    return getModelsByProvider(selectedModelProvider?.id);
-  }, [getModelsByProvider, selectedModelProvider?.id]);
+    if (!selectedModelProvider?.id) {
+      return getAllModels();
+    }
+    return providerModelMap[selectedModelProvider.id] || [];
+  }, [getAllModels, providerModelMap, selectedModelProvider?.id]);
 
   const providerMap = useMemo<Record<string, ModelProvider>>(() => {
     return modelProviders.reduce((acc, provider) => {

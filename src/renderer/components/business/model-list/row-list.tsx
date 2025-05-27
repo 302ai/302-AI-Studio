@@ -4,6 +4,7 @@ import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import { memo } from "react";
 import { areEqual } from "react-window";
+import { useModelSettingStore } from "@/src/renderer/store/settings-store/model-setting-store";
 import { ActionGroup } from "../action-group";
 import { ModelIcon } from "../model-icon";
 
@@ -21,8 +22,14 @@ export const RowList = memo(function RowList({
   const provider = providerMap[item.providerId];
   const isLast = index === models.length - 1;
 
+  const { providerModelMap, updateProviderModelMap } = useModelSettingStore();
+
   const handleCheckboxChange = () => {
-    console.log("checked");
+    const targetModels = providerModelMap[provider.id];
+    const updatedModels = targetModels.map((model) =>
+      model.id === item.id ? { ...model, enabled: !model.enabled } : model
+    );
+    updateProviderModelMap(provider.id, updatedModels);
   };
   const handleEdit = () => {};
   const handleDelete = () => {};
