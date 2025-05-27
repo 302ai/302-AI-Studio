@@ -19,10 +19,10 @@ export function ModelFilter({ onTabChange }: ModelFilterProps) {
       <TabList className="px-3 pt-2 pb-0" aria-label="Model List Tabs List">
         <Tab
           className="cursor-pointer group-data-[orientation=horizontal]/tabs:pb-2"
-          key="all"
-          id="all"
+          key="current"
+          id="current"
         >
-          {t("all")}
+          {t("current")}
         </Tab>
         <Tab
           className="cursor-pointer group-data-[orientation=horizontal]/tabs:pb-2"

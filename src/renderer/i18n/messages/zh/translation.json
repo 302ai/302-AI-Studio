@@ -27,7 +27,7 @@
       "model-list": {
         "label": "模型列表",
         "no-models-description": "模型列表为空...",
-        "all": "全部",
+        "current": "当前",
         "collected": "收藏"
       },
       "model-provider": {

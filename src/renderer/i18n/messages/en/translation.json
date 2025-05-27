@@ -27,7 +27,7 @@
       "model-list": {
         "label": "Model List",
         "no-models-description": "The model list is empty...",
-        "all": "All",
+        "current": "Current",
         "collected": "Favorites"
       },
       "model-provider": {

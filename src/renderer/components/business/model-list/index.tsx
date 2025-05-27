@@ -51,6 +51,10 @@ export function ModelList() {
     [models, providerMap]
   );
 
+  const handleTabChange = (key: React.Key) => {
+    setTabKey(key);
+  };
+
   useEffect(() => {
     const updateHeight = () => {
       if (containerRef.current) {
@@ -70,7 +74,7 @@ export function ModelList() {
       ref={containerRef}
       className="flex h-full flex-col overflow-hidden rounded-xl border border-border"
     >
-      <ModelFilter onTabChange={setTabKey} />
+      <ModelFilter onTabChange={handleTabChange} />
 
       {/* Virtualized List Body */}
       <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">

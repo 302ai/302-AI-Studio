@@ -27,7 +27,7 @@
       "model-list": {
         "label": "モデルリスト",
         "no-models-description": "モデルリストは空です...",
-        "all": "全て",
+        "current": "現在",
         "collected": "お気に入り"
       },
       "model-provider": {
