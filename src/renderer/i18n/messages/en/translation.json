@@ -48,7 +48,7 @@
           "verification-failed": "Failed"
         },
         "delete": "Delete",
-        "description": "models",
+        "description": " models",
         "edit": "Edit",
         "label": "Model Provider",
         "modal-action": {
