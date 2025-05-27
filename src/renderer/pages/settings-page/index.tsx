@@ -1,4 +1,4 @@
-import { Tab, TabList, Tabs } from "@renderer/components/ui/tab";
+import { Tab, TabList, Tabs } from "@renderer/components/business/setting-tabs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";

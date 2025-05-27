@@ -1,13 +1,16 @@
+import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import type { ModelProvider } from "@renderer/types/providers";
 import { PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
-import { useModelSettingStore } from "@/src/renderer/store/settings-store/model-setting-store";
+import { ModelFilter } from "./model-filter";
 import { RowList } from "./row-list";
 
 export function ModelList() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings.model-settings.model-list",
+  });
   const {
     modelProviders,
     selectedModelProvider,
@@ -18,13 +21,20 @@ export function ModelList() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [containerHeight, setContainerHeight] = useState(0);
+  const [tabKey, setTabKey] = useState<React.Key>("all");
+
+  const collected = tabKey === "collected";
 
   const models = useMemo(() => {
     if (!selectedModelProvider?.id) {
-      return getAllModels();
+      return getAllModels({ collected });
     }
-    return providerModelMap[selectedModelProvider.id] || [];
-  }, [getAllModels, providerModelMap, selectedModelProvider?.id]);
+
+    const providerModels = providerModelMap[selectedModelProvider.id] || [];
+    return providerModels.filter((model) =>
+      collected ? model.collected : true
+    );
+  }, [getAllModels, providerModelMap, selectedModelProvider?.id, collected]);
 
   const providerMap = useMemo<Record<string, ModelProvider>>(() => {
     return modelProviders.reduce((acc, provider) => {
@@ -45,7 +55,7 @@ export function ModelList() {
     const updateHeight = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        const availableHeight = window.innerHeight - rect.top - 20;
+        const availableHeight = window.innerHeight - rect.top - 57; // * 20px for the padding and 37px for the model filter
         setContainerHeight(Math.max(200, Math.min(600, availableHeight)));
       }
     };
@@ -60,6 +70,8 @@ export function ModelList() {
       ref={containerRef}
       className="flex h-full flex-col overflow-hidden rounded-xl border border-border"
     >
+      <ModelFilter onTabChange={setTabKey} />
+
       {/* Virtualized List Body */}
       <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
         {models.length > 0 ? (
@@ -70,6 +82,9 @@ export function ModelList() {
             itemData={listData}
             overscanCount={5}
             width="100%"
+            style={{
+              scrollbarGutter: "stable",
+            }}
           >
             {RowList}
           </List>

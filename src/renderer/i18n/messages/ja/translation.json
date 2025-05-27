@@ -25,7 +25,10 @@
     "icon-tooltip": "設定を開く",
     "model-settings": {
       "model-list": {
-        "label": "モデルリスト"
+        "label": "モデルリスト",
+        "no-models-description": "モデルリストは空です...",
+        "all": "全て",
+        "collected": "お気に入り"
       },
       "model-provider": {
         "add-provider": "追加",
@@ -140,10 +143,5 @@
         "title": "会話名を変更"
       }
     }
-  },
-  "enable": "有効化",
-  "model-name": "モデル",
-  "provider-name": "サプライヤー",
-  "actions": "動作します",
-  "no-models-description": "モデルリストは空です..."
+  }
 }

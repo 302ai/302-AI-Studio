@@ -17,8 +17,11 @@ interface ModelSettingStore {
   updateSelectedModelProvider: (data: Partial<ModelProvider>) => void;
   setProviderModelMap: (providerId: string, models: Model[]) => void;
   updateProviderModelMap: (providerId: string, models: Model[]) => void;
-  getAllModels: () => Model[];
-  getModelsByProvider: (providerId?: string) => Model[];
+  getAllModels: (options?: { collected: boolean }) => Model[];
+  getModelsByProvider: (
+    providerId?: string,
+    options?: { collected: boolean }
+  ) => Model[];
 }
 
 const { configService } = window.service;
@@ -113,16 +116,28 @@ export const useModelSettingStore = create<ModelSettingStore>()(
       }
     },
 
-    getAllModels: () => {
-      return Object.values(get().providerModelMap).flat();
+    getAllModels: (options?: { collected: boolean }) => {
+      const { providerModelMap } = get();
+      return Object.values(providerModelMap)
+        .flat()
+        .filter((model) => (options?.collected ? model.collected : true));
     },
 
-    getModelsByProvider: (providerId?: string) => {
+    getModelsByProvider: (
+      providerId?: string,
+      options?: { collected: boolean }
+    ) => {
       const { providerModelMap } = get();
       if (!providerId) {
-        return Object.values(providerModelMap).flat();
+        return Object.values(providerModelMap)
+          .flat()
+          .filter((model) => (options?.collected ? model.collected : true));
       }
-      return providerModelMap[providerId] || [];
+      return (
+        providerModelMap[providerId]?.filter((model) =>
+          options?.collected ? model.collected : true
+        ) || []
+      );
     },
   }))
 );

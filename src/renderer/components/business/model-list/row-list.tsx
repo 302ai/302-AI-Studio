@@ -24,16 +24,23 @@ export const RowList = memo(function RowList({
 
   const { providerModelMap, updateProviderModelMap } = useModelSettingStore();
 
-  const handleCheckboxChange = () => {
+  const handleUpdateModel = (updatedConfig: Partial<Model>) => {
     const targetModels = providerModelMap[provider.id];
     const updatedModels = targetModels.map((model) =>
-      model.id === item.id ? { ...model, enabled: !model.enabled } : model
+      model.id === item.id ? { ...model, ...updatedConfig } : model
     );
     updateProviderModelMap(provider.id, updatedModels);
   };
-  const handleEdit = () => {};
-  const handleDelete = () => {};
-  const handleStar = () => {};
+
+  const handleCheckboxChange = () => {
+    handleUpdateModel({ enabled: !item.enabled });
+  };
+  // TODO: Support edit and delete functionality (in the future version)
+  // const handleEdit = () => {};
+  // const handleDelete = () => {};
+  const handleStar = () => {
+    handleUpdateModel({ collected: !item.collected });
+  };
 
   return (
     <div
@@ -53,17 +60,20 @@ export const RowList = memo(function RowList({
         <div className="flex-1 px-4 py-2.5 align-middle outline-hidden">
           {item.name}
         </div>
+
         <div className="mr-4 px-4 py-2.5 align-middle outline-hidden">
           <div className="flex items-center gap-2">
             <ModelIcon modelId={provider.id} />
             {provider.name}
           </div>
         </div>
+
         <ActionGroup
-          className="my-auto"
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+          className="my-auto mr-4"
+          // onEdit={handleEdit}
+          // onDelete={handleDelete}
           onStar={handleStar}
+          stared={item.collected}
         />
       </div>
     </div>

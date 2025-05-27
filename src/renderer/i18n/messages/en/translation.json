@@ -25,7 +25,10 @@
     "icon-tooltip": "Open Settings",
     "model-settings": {
       "model-list": {
-        "label": "Model List"
+        "label": "Model List",
+        "no-models-description": "The model list is empty...",
+        "all": "All",
+        "collected": "Favorites"
       },
       "model-provider": {
         "add-provider": "Add",
@@ -140,10 +143,5 @@
         "title": "Rename Conversation"
       }
     }
-  },
-  "enable": "Enable",
-  "model-name": "Model",
-  "provider-name": "Provider",
-  "actions": "Actions",
-  "no-models-description": "The model list is empty..."
+  }
 }

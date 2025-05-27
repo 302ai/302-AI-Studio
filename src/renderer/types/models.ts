@@ -4,4 +4,5 @@ export type Model = {
   providerId: string;
   custom: boolean;
   enabled: boolean;
+  collected: boolean;
 };

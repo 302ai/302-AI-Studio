@@ -12,6 +12,7 @@ interface ActionGroupProps {
   className?: string;
   size?: "medium" | "large" | "square-petite" | "extra-small" | "small";
   shape?: "square" | "circle";
+  stared?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
   onStar?: () => void;
@@ -21,6 +22,7 @@ export function ActionGroup({
   className,
   size = "square-petite",
   shape = "square",
+  stared = false,
   onEdit,
   onDelete,
   onStar,
@@ -39,7 +41,12 @@ export function ActionGroup({
               shape={shape}
               onClick={onStar}
             >
-              <Star className="size-4" />
+              <Star
+                className={cn(
+                  "size-4",
+                  stared ? "fill-yellow-500 text-yellow-500" : ""
+                )}
+              />
             </TooltipTrigger>
             <TooltipContent>
               {t("settings.model-settings.model-provider.star")}

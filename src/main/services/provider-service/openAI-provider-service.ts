@@ -62,6 +62,7 @@ export class OpenAIProviderService extends BaseProviderService {
         providerId: this.provider.id,
         custom: false,
         enabled: true,
+        collected: false,
       };
     });
     return formatedModels;

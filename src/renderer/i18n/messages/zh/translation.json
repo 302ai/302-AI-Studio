@@ -25,7 +25,10 @@
     "icon-tooltip": "打开设置",
     "model-settings": {
       "model-list": {
-        "label": "模型列表"
+        "label": "模型列表",
+        "no-models-description": "模型列表为空...",
+        "all": "全部",
+        "collected": "收藏"
       },
       "model-provider": {
         "add-provider": "添加",
@@ -140,10 +143,5 @@
         "title": "重命名会话"
       }
     }
-  },
-  "enable": "启用",
-  "model-name": "模型",
-  "provider-name": "供应商",
-  "actions": "操作",
-  "no-models-description": "模型列表为空..."
+  }
 }
