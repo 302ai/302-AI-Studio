@@ -144,5 +144,6 @@
   "enable": "有効化",
   "model-name": "モデル",
   "provider-name": "サプライヤー",
-  "actions": "動作します"
+  "actions": "動作します",
+  "no-models-description": "モデルリストは空です..."
 }

@@ -144,5 +144,6 @@
   "enable": "Enable",
   "model-name": "Model",
   "provider-name": "Provider",
-  "actions": "Actions"
+  "actions": "Actions",
+  "no-models-description": "The model list is empty..."
 }

@@ -1,6 +1,8 @@
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import type { ModelProvider } from "@renderer/types/providers";
+import { PackageOpen } from "lucide-react";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList as List } from "react-window";
 import { cn } from "@/src/renderer/lib/utils";
 import { useModelSettingStore } from "@/src/renderer/store/settings-store/model-setting-store";
@@ -66,6 +68,7 @@ const Row = memo(function Row({
 areEqual);
 
 export function ModelList() {
+  const { t } = useTranslation();
   const { modelProviders, selectedModelProvider, getModelsByProvider } =
     useModelSettingStore();
 
@@ -125,8 +128,11 @@ export function ModelList() {
             {Row}
           </List>
         ) : (
-          <div className="flex h-32 items-center justify-center text-muted-fg">
-            No models available
+          <div className="flex h-full items-center justify-center text-muted-fg">
+            <div className="flex flex-col items-center gap-2">
+              <PackageOpen className="size-9" />
+              <p>{t("no-models-description")}</p>
+            </div>
           </div>
         )}
       </div>

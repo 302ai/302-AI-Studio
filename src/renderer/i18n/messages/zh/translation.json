@@ -144,5 +144,6 @@
   "enable": "启用",
   "model-name": "模型",
   "provider-name": "供应商",
-  "actions": "操作"
+  "actions": "操作",
+  "no-models-description": "模型列表为空..."
 }
