@@ -87,6 +87,7 @@ const SidebarProvider = ({
         setInternalOpenState(openState);
       }
 
+      // biome-ignore lint/suspicious/noDocumentCookie: ignore
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
     [setOpenProp, open]
@@ -273,6 +274,7 @@ const SidebarHeader = ({
   ref,
   ...props
 }: React.ComponentProps<"div">) => {
+  // biome-ignore lint/style/noNonNullAssertion: ignore
   const { state } = use(SidebarContext)!;
   return (
     <div
