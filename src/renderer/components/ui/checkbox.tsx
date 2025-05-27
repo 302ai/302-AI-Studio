@@ -1,4 +1,6 @@
 import { IconCheck, IconMinus } from "@intentui/icons";
+import { Description, FieldError, Label } from "@renderer/components/ui/field";
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import type {
   CheckboxGroupProps as CheckboxGroupPrimitiveProps,
   CheckboxProps as CheckboxPrimitiveProps,
@@ -9,11 +11,8 @@ import {
   Checkbox as CheckboxPrimitive,
   composeRenderProps,
 } from "react-aria-components";
-import { tv } from "tailwind-variants";
-
-import { Description, FieldError, Label } from "@renderer/components/ui/field";
-import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import { twMerge } from "tailwind-merge";
+import { tv } from "tailwind-variants";
 
 interface CheckboxGroupProps extends CheckboxGroupPrimitiveProps {
   label?: string;
