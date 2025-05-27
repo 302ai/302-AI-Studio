@@ -17,6 +17,7 @@ export function useProviderList() {
     removeModelProvider,
     addModelProvider,
     setProviderModelMap,
+    updateSelectedModelProvider,
   } = useModelSettingStore();
 
   const [state, setState] = useState<ModelActionType | null>(null);
@@ -34,10 +35,35 @@ export function useProviderList() {
   };
 
   const handleDelete = () => {
-    if (!selectedModelProvider) return;
+    if (!selectedModelProvider) {
+      closeModal();
+      return;
+    }
 
     removeModelProvider(selectedModelProvider.id);
     setSelectedModelProvider(null);
+    closeModal();
+  };
+
+  const handleUpdateProvider = (updatedProvider: ModelProvider) => {
+    const { name, baseUrl, apiKey, apiType } = updatedProvider;
+
+    console.log("handleUpdateProvider", updatedProvider);
+
+    providerService.updateProviderConfig(updatedProvider.id, {
+      name,
+      baseUrl,
+      apiKey,
+      apiType,
+    });
+
+    updateSelectedModelProvider({
+      name,
+      baseUrl,
+      apiKey,
+      apiType,
+    });
+
     closeModal();
   };
 
@@ -60,9 +86,16 @@ export function useProviderList() {
     errorMsg: string | null;
   }> => {
     if (condition === "edit") {
+      const { id, name, baseUrl, apiKey, apiType } = providerCfg;
       return await providerService.checkApiKey({
         condition,
-        providerId: providerCfg.id,
+        providerId: id,
+        providerCfg: {
+          name,
+          baseUrl,
+          apiKey,
+          apiType,
+        },
       });
     }
 
@@ -86,5 +119,6 @@ export function useProviderList() {
     setSelectedModelProvider,
     handleAddProvider,
     handleCheckKey,
+    handleUpdateProvider,
   };
 }

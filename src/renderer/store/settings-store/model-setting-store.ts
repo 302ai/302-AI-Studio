@@ -15,6 +15,7 @@ interface ModelSettingStore {
   moveModelProvider: (fromIndex: number, toIndex: number) => void;
   removeModelProvider: (providerId: string) => void;
   setSelectedModelProvider: (provider: ModelProvider | null) => void;
+  updateSelectedModelProvider: (data: Partial<ModelProvider>) => void;
   setProviderModelMap: (providerId: string, models: Model[]) => void;
   getAllModels: () => Model[];
   getModelsByProvider: (providerId?: string) => Model[];
@@ -46,6 +47,25 @@ export const useModelSettingStore = create<ModelSettingStore>()(
 
       setSelectedModelProvider: (provider) => {
         set({ selectedModelProvider: provider });
+      },
+
+      updateSelectedModelProvider: (data) => {
+        set((state) => {
+          if (!state.selectedModelProvider) return;
+
+          state.selectedModelProvider = {
+            ...state.selectedModelProvider,
+            ...data,
+          };
+
+          state.modelProviders = state.modelProviders.map((provider) =>
+            provider.id === state.selectedModelProvider?.id
+              ? { ...provider, ...data }
+              : provider
+          );
+
+          return state;
+        });
       },
 
       removeModelProvider: (providerId) => {

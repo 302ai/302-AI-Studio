@@ -67,6 +67,16 @@ export class ConfigService {
     return this.configStore.get(ConfigKeys.Providers, []) as ModelProvider[];
   }
 
+  updateProvider(updatedProvider: ModelProvider): void {
+    const providers = this.getProviders();
+    const index = providers.findIndex((p) => p.id === updatedProvider.id);
+
+    if (index !== -1) {
+      providers[index] = updatedProvider;
+      this.configStore.set(ConfigKeys.Providers, providers);
+    }
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   setProviders(_event: Electron.IpcMainEvent, providers: ModelProvider[]) {
     this.configStore.set(ConfigKeys.Providers, providers);

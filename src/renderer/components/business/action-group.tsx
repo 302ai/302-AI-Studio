@@ -4,16 +4,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
-import { Star, CircleX, PencilLine } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { cn } from "@renderer/lib/utils";
+import { CircleX, PencilLine, Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ActionGroupProps {
   className?: string;
   size?: "medium" | "large" | "square-petite" | "extra-small" | "small";
   shape?: "square" | "circle";
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
   onStar?: () => void;
 }
 
@@ -48,34 +48,38 @@ export function ActionGroup({
         )}
 
         {/* Edit */}
-        <Tooltip>
-          <TooltipTrigger
-            intent="plain"
-            size={size}
-            shape={shape}
-            onClick={onEdit}
-          >
-            <PencilLine className="size-4" />
-          </TooltipTrigger>
-          <TooltipContent>
-            {t("settings.model-settings.model-provider.edit")}
-          </TooltipContent>
-        </Tooltip>
+        {onEdit && (
+          <Tooltip>
+            <TooltipTrigger
+              intent="plain"
+              size={size}
+              shape={shape}
+              onClick={onEdit}
+            >
+              <PencilLine className="size-4" />
+            </TooltipTrigger>
+            <TooltipContent>
+              {t("settings.model-settings.model-provider.edit")}
+            </TooltipContent>
+          </Tooltip>
+        )}
 
         {/* Delete */}
-        <Tooltip>
-          <TooltipTrigger
-            intent="plain"
-            size={size}
-            shape={shape}
-            onClick={onDelete}
-          >
-            <CircleX className="size-4" />
-          </TooltipTrigger>
-          <TooltipContent>
-            {t("settings.model-settings.model-provider.delete")}
-          </TooltipContent>
-        </Tooltip>
+        {onDelete && (
+          <Tooltip>
+            <TooltipTrigger
+              intent="plain"
+              size={size}
+              shape={shape}
+              onClick={onDelete}
+            >
+              <CircleX className="size-4" />
+            </TooltipTrigger>
+            <TooltipContent>
+              {t("settings.model-settings.model-provider.delete")}
+            </TooltipContent>
+          </Tooltip>
+        )}
       </CardAction>
     </>
   );

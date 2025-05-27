@@ -10,16 +10,16 @@ import {
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
 import type { ModelProvider } from "@renderer/types/providers";
+import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
-import { ModalAction } from "../modal-action";
 import { ActionGroup } from "../action-group";
+import { ModalAction } from "../modal-action";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
-import _ from "lodash";
 
 export function ProviderList() {
   const { t } = useTranslation("translation", {
@@ -33,6 +33,7 @@ export function ProviderList() {
     setState,
     closeModal,
     handleDelete,
+    handleUpdateProvider,
     moveModelProvider,
     setSelectedModelProvider,
     handleAddProvider,
@@ -84,9 +85,17 @@ export function ProviderList() {
               onValidationStatusChange={(isValid) => {
                 setIsApiKeyValidated(isValid);
               }}
+              onProviderCfgSet={(providerCfg) => {
+                setProviderCfg(providerCfg);
+              }}
             />
           ),
-          action: () => {},
+          disabled: !isApiKeyValidated,
+          action: () => {
+            if (providerCfg) {
+              handleUpdateProvider(providerCfg);
+            }
+          },
         };
       case "delete":
         return {
@@ -113,10 +122,10 @@ export function ProviderList() {
   };
 
   const handleCloseModal = () => {
-    closeModal();
-
     setIsApiKeyValidated(false);
     setProviderCfg(null);
+
+    closeModal();
   };
 
   /**

@@ -16,6 +16,10 @@ export type CheckApiKeyParams =
   | {
       condition: "edit";
       providerId: string;
+      providerCfg: Pick<
+        ModelProvider,
+        "name" | "baseUrl" | "apiKey" | "apiType"
+      >;
     };
 
 @ServiceRegister("providerService")
@@ -90,8 +94,22 @@ export class ProviderService {
 
     if (params.condition === "edit") {
       try {
-        const providerInst = this.getProviderInst(params.providerId);
-        return providerInst.checkApiKey();
+        const originalProvider = this.getProviderById(params.providerId);
+        const tempProvider: ModelProvider = {
+          ...originalProvider,
+          ...params.providerCfg,
+        };
+        const tempProviderInst = this.createProviderInst(tempProvider);
+        if (!tempProviderInst) {
+          return {
+            isOk: false,
+            errorMsg: "Failed to create provider instance",
+          };
+        }
+
+        const result = await tempProviderInst.checkApiKey();
+
+        return result;
       } catch (error) {
         return {
           isOk: false,
@@ -111,16 +129,40 @@ export class ProviderService {
     return provider;
   }
 
-  private getProviderInst(providerId: string): BaseProviderService {
-    let instance = this.providerInstMap.get(providerId);
-    if (!instance) {
-      const provider = this.getProviderById(providerId);
-      instance = this.createProviderInst(provider);
-      if (!instance) {
-        throw new Error(`Failed to create provider instance for ${providerId}`);
-      }
-      this.providerInstMap.set(providerId, instance);
+  // private getProviderInst(providerId: string): BaseProviderService {
+  //   let instance = this.providerInstMap.get(providerId);
+  //   if (!instance) {
+  //     const provider = this.getProviderById(providerId);
+  //     instance = this.createProviderInst(provider);
+  //     if (!instance) {
+  //       throw new Error(`Failed to create provider instance for ${providerId}`);
+  //     }
+  //     this.providerInstMap.set(providerId, instance);
+  //   }
+  //   return instance;
+  // }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  updateProviderConfig(
+    _event: Electron.IpcMainEvent,
+    providerId: string,
+    updates: Partial<ModelProvider>
+  ): void {
+    const provider = this.providerMap.get(providerId);
+    if (!provider) {
+      throw new Error(`Provider ${providerId} not found`);
     }
-    return instance;
+
+    const updatedProvider = { ...provider, ...updates };
+    this.providerMap.set(providerId, updatedProvider);
+
+    this.configService.updateProvider(updatedProvider);
+
+    if (updatedProvider.enabled) {
+      const newInstance = this.createProviderInst(updatedProvider);
+      if (newInstance) {
+        this.providerInstMap.set(providerId, newInstance);
+      }
+    }
   }
 }

@@ -31,6 +31,10 @@ declare global {
           isOk: boolean;
           errorMsg: string | null;
         }>;
+        updateProviderConfig: (
+          providerId: string,
+          updates: Partial<ModelProvider>
+        ) => void;
       };
     };
   }

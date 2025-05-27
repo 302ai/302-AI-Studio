@@ -111,7 +111,7 @@ export function ProviderCfgForm({
         label={t("provider-name")}
         placeholder={t("placeholder-1")}
         value={customName}
-        onChange={(value) => handleInputChange(value, onCustomNameChange)}
+        onChange={onCustomNameChange}
       />
 
       {/* Provider API Key Input */}
