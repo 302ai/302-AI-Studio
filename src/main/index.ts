@@ -8,6 +8,8 @@ import { MainWindow } from "./windows/main";
 
 Logger.initialize();
 
+Logger.transports.ipc.level = false;
+
 makeAppWithSingleInstanceLock(async () => {
   await app.whenReady();
   initMainBridge();

@@ -154,7 +154,7 @@ export class ConfigService {
     _event: Electron.IpcMainEvent,
     providerId: string
   ): Model[] {
-    Logger.log("getProviderModels", providerId);
+    Logger.debug("getProviderModels", providerId);
     const store = this.getProviderModelStore(providerId);
     return store.get("models", []) as Model[];
   }

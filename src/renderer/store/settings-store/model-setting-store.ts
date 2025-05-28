@@ -1,8 +1,8 @@
+import { Logger } from "@renderer/config/logger";
 import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import Logger from "../../config/logger";
 
 interface ModelSettingStore {
   modelProviders: ModelProvider[];
@@ -59,7 +59,7 @@ export const useModelSettingStore = create<ModelSettingStore>()(
 
     setSelectedModelProvider: (provider) => {
       set({ selectedModelProvider: provider });
-      Logger.debug("setSelectedModelProvider: ", provider?.name);
+      Logger.info("setSelectedModelProvider: ", provider?.name);
     },
 
     updateSelectedModelProvider: (data) => {
