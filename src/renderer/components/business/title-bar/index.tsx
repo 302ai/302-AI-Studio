@@ -54,10 +54,12 @@ export function BasicTitleBar() {
             "transition-[width] duration-200 ease-linear",
             "border border-t-0 border-r-0 border-b-0 border-l-0",
             state === "expanded"
-              ? "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
+              ? isMac
+                ? "w-[calc(var(--sidebar-width)-60px)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
+                : "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
               : isMac
-              ? "w-[var(--sidebar-width-dock)]"
-              : "w-[var(--sidebar-width-collapsed)]"
+                ? "w-[var(--sidebar-width-dock)]"
+                : "w-[var(--sidebar-width-collapsed)]",
           )}
         >
           {/* Sidebar Toggle */}
@@ -118,7 +120,7 @@ export function BasicTitleBar() {
           orientation="vertical"
           className={cn(
             "h-[20px] w-[1px]",
-            state === "expanded" ? "hidden" : ""
+            state === "expanded" ? "hidden" : "",
           )}
         />
 

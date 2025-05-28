@@ -52,10 +52,6 @@ export function ProviderList() {
       action: () => {},
     };
 
-    if (!selectedModelProvider) {
-      return initialsState;
-    }
-
     switch (action) {
       case "add":
         return {
@@ -81,8 +77,11 @@ export function ProviderList() {
           },
         };
       case "edit":
+        if (!selectedModelProvider) {
+          return initialsState;
+        }
         return {
-          title: `${t("modal-action.edit")} ${selectedModelProvider?.name}`,
+          title: `${t("modal-action.edit")} ${selectedModelProvider.name}`,
           descriptions: [],
           body: (
             <EditProvider
@@ -104,11 +103,14 @@ export function ProviderList() {
           },
         };
       case "delete":
+        if (!selectedModelProvider) {
+          return initialsState;
+        }
         return {
           title: t("modal-action.delete"),
           descriptions: [
             `${t("modal-action.delete-description")} ${
-              selectedModelProvider?.name
+              selectedModelProvider.name
             } ?`,
             t("modal-action.delete-description-2"),
             t("modal-action.delete-description-3"),
@@ -152,7 +154,7 @@ export function ProviderList() {
     const handleProviderSelect = _.debounce(() => {
       // * Toggle selection: if already selected, deselect; otherwise select
       setSelectedModelProvider(
-        selectedModelProvider?.id === provider.id ? null : provider
+        selectedModelProvider?.id === provider.id ? null : provider,
       );
     }, 100);
 
@@ -183,8 +185,7 @@ export function ProviderList() {
         )}
       </Draggable>
     );
-  },
-  areEqual);
+  }, areEqual);
 
   useEffect(() => {
     const updateHeight = () => {
@@ -259,7 +260,7 @@ export function ProviderList() {
           </div>
         ) : (
           <div className="flex h-full items-center justify-center text-muted-fg">
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-2 text-sm">
               <PackageOpen className="size-9" />
               <p>{t("no-provider-description")}</p>
             </div>
