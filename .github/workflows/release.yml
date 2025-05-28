@@ -12,16 +12,15 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
-      - name: Checkout
+      - name: Check out Git repository
         uses: actions/checkout@v4
-      - run: npm i -g --force corepack && corepack enable
+        with:
+          ref: main
 
-      - name: Install Node.js, NPM and PNPM
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
-      - run: pnpm install
 
       - name: apt-update
         if: startsWith(matrix.os, 'ubuntu-latest')
@@ -38,7 +37,7 @@ jobs:
       - name: Release Electron app
         uses: daltonmenezes/action-electron-builder@v1.0.1
         with:
-          package_manager: "pnpm"
+          package_manager: "yarn"
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
