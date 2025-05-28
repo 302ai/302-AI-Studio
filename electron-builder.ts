@@ -21,11 +21,6 @@ const artifactNameSetup = [
   "-Setup",
   "-${os}.${ext}",
 ].join("");
-const artifactNamePortable = [
-  `${name}-v${version}`,
-  "-portable",
-  "-${os}.${ext}",
-].join("");
 
 export default {
   appId,
