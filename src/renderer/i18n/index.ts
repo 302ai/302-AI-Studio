@@ -1,4 +1,3 @@
-import { defaultLanguage } from "@main/constant";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import enTranslation from "./messages/en/translation.json";
@@ -10,7 +9,7 @@ const { configService } = window.service;
 // Initialize i18next
 i18n.use(initReactI18next).init({
   fallbackLng: "zh",
-  lng: ((await configService.getLanguage()) || defaultLanguage).split("-")[0],
+  lng: ((await configService.getLanguage()) || "zh-CN").split("-")[0],
   resources: {
     zh: {
       translation: zhTranslation,

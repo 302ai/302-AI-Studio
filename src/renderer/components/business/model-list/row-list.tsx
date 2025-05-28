@@ -1,10 +1,10 @@
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
+import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import { memo } from "react";
 import { areEqual } from "react-window";
-import { useModelSettingStore } from "@/src/renderer/store/settings-store/model-setting-store";
 import { ActionGroup } from "../action-group";
 import { ModelIcon } from "../model-icon";
 

@@ -52,6 +52,10 @@ export function ProviderList() {
       action: () => {},
     };
 
+    if (!selectedModelProvider) {
+      return initialsState;
+    }
+
     switch (action) {
       case "add":
         return {
@@ -133,6 +137,7 @@ export function ProviderList() {
   /**
    * ! This component can not be extracted to a separate file
    */
+  // biome-ignore lint: ignore noNestedComponentDefinitions
   const ListRow = React.memo(function ListRow({
     index,
     style,

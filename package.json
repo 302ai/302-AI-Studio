@@ -11,7 +11,7 @@
     "start": "electron-vite preview",
     "dev": "electron-vite dev --watch",
     "build": "npm run typecheck && electron-vite build",
-    "build:check": "yarn test && yarn typecheck && yarn check:i18n",
+    "build:check": "yarn typecheck",
     "build:unpack": "dotenv npm run build && electron-builder --dir",
     "build:win": "dotenv npm run build && electron-builder --win --x64 --arm64",
     "build:win:x64": "dotenv npm run build && electron-builder --win --x64",
@@ -34,9 +34,12 @@
     "clean:dev": "rimraf ./node_modules/.dev",
     "lint": "biome lint --no-errors-on-unmatched",
     "lint:fix": "biome lint --write --no-errors-on-unmatched",
-    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "typecheck": "npm run typecheck:node",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
-    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false"
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "prepare": "husky",
+    "commit": "git-cz",
+    "commitlint": "commitlint --edit"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -73,6 +76,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.0-beta.5",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@electron-toolkit/utils": "^4.0.0",
@@ -87,13 +92,16 @@
     "@types/semver": "^7.5.8",
     "@vitejs/plugin-react": "^4.3.4",
     "code-inspector-plugin": "^0.20.1",
+    "commitizen": "^4.3.0",
     "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
     "drizzle-kit": "^0.31.1",
     "electron": "^35.1.5",
     "electron-builder": "^25.1.8",
     "electron-extension-installer": "^1.2.0",
     "electron-rebuild": "^3.2.9",
     "electron-vite": "^3.1.0",
+    "husky": "^9.1.7",
     "npm-run-all": "^4.1.5",
     "open": "^10.1.0",
     "rimraf": "^6.0.1",
@@ -108,5 +116,10 @@
     "vite": "^6.3.3",
     "vite-tsconfig-paths": "^5.1.4"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }

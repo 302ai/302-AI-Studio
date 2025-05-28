@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useProviderList } from "@renderer/hooks/use-provider-list";
+import type { ModelProvider } from "@renderer/types/providers";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useProviderList } from "@/src/renderer/hooks/use-provider-list";
-import type { ModelProvider } from "@/src/renderer/types/providers";
 import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface EditProviderProps {
-  provider: ModelProvider | null;
+  provider: ModelProvider;
   onValidationStatusChange: (isValid: boolean) => void;
   onProviderCfgSet: (providerCfg: ModelProvider) => void;
 }
@@ -16,8 +16,6 @@ export function EditProvider({
   onValidationStatusChange,
   onProviderCfgSet,
 }: EditProviderProps) {
-  if (!provider) return null;
-
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.edit-provider-form",
   });
@@ -39,7 +37,7 @@ export function EditProvider({
   const isCustomProvider = provider.custom ?? false;
   const canCheckKey = !!apiKey && !!baseUrl;
 
-  const isOnlyNameChanged = () => {
+  const isOnlyNameChanged = useCallback(() => {
     return (
       customName !== provider.name &&
       apiKey === provider.apiKey &&
@@ -47,17 +45,24 @@ export function EditProvider({
       apiType === provider.apiType &&
       !hasKeyFieldsBeenModified
     );
-  };
+  }, [
+    customName,
+    apiKey,
+    baseUrl,
+    apiType,
+    hasKeyFieldsBeenModified,
+    provider,
+  ]);
 
-  const isKeyFieldsChanged = () => {
+  const isKeyFieldsChanged = useCallback(() => {
     return (
       apiKey !== provider.apiKey ||
       baseUrl !== provider.baseUrl ||
       apiType !== provider.apiType
     );
-  };
+  }, [apiKey, baseUrl, apiType, provider]);
 
-  const isCurrentConfigValid = () => {
+  const isCurrentConfigValid = useCallback(() => {
     if (isOnlyNameChanged()) {
       return true;
     }
@@ -71,7 +76,12 @@ export function EditProvider({
     }
 
     return true;
-  };
+  }, [
+    isOnlyNameChanged,
+    hasKeyFieldsBeenModified,
+    keyValidationStatus,
+    isKeyFieldsChanged,
+  ]);
 
   const handleValidationStatusReset = () => {
     setKeyValidationStatus("unverified");
@@ -141,8 +151,10 @@ export function EditProvider({
     apiKey,
     baseUrl,
     apiType,
-    keyValidationStatus,
-    hasKeyFieldsBeenModified,
+    onProviderCfgSet,
+    onValidationStatusChange,
+    provider,
+    isCurrentConfigValid,
   ]);
 
   return (

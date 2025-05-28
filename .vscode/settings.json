@@ -38,4 +38,5 @@
     "react-i18next"
   ],
   "i18n-ally.namespace": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
 }

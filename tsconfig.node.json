@@ -17,7 +17,8 @@
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "resolveJsonModule": true,
+    "target": "ESNext",
+    "useDefineForClassFields": false,
     "baseUrl": ".",
     "paths": {
       "@/*": [

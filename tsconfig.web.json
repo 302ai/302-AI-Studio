@@ -4,12 +4,14 @@
     "src/renderer/**/*",
     "src/preload/*.d.ts",
     "src/shared/**/*",
-    "src/lib/**/*"
+    "src/lib/**/*",
+    "src/types/**/*",
   ],
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [
@@ -20,7 +22,7 @@
       ],
       "@lib/*": [
         "src/lib/*"
-      ]
+      ],
     }
   }
 }
