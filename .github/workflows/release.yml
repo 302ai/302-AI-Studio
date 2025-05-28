@@ -1,47 +1,126 @@
+name: Create Release
+
 on:
-  push:
-    tags: ["*"]
+  workflow_dispatch:
+    inputs:
+      workflow_id:
+        description: 'Build workflow run ID to use for artifacts'
+        required: true
+        type: string
+      prerelease:
+        description: 'Is this a prerelease?'
+        required: true
+        type: boolean
+        default: false
+      tag_name:
+        description: 'Release tag name (e.g., v1.0.0)'
+        required: true
+        type: string
 
 jobs:
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-
+  create-release:
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Download artifacts from workflow
+        uses: dawidd6/action-download-artifact@v6
         with:
-          ref: main
+          workflow_conclusion: success
+          run_id: ${{ github.event.inputs.workflow_id }}
+          path: artifacts
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - name: List downloaded artifacts
+        run: find artifacts -type f | sort
+
+      - name: Get version number
+        id: get_version
+        run: |
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
+          VERSION=${TAG_NAME#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Found version: $VERSION"
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release_assets
+
+          # Process Windows x64 artifacts
+          if [ -d "artifacts/chatchat-win-x64" ]; then
+            cp artifacts/chatchat-win-x64/*.exe release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-win-x64/*.msi release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-win-x64/*.zip release_assets/ 2>/dev/null || true
+          fi
+
+          # Process Windows arm64 artifacts
+          if [ -d "artifacts/chatchat-win-arm64" ]; then
+            cp artifacts/chatchat-win-arm64/*.exe release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-win-arm64/*.msi release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-win-arm64/*.zip release_assets/ 2>/dev/null || true
+          fi
+
+          # Process Linux x64 artifacts
+          if [ -d "artifacts/chatchat-linux-x64" ]; then
+            cp artifacts/chatchat-linux-x64/*.AppImage release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-linux-x64/*.deb release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-linux-x64/*.rpm release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-linux-x64/*.tar.gz release_assets/ 2>/dev/null || true
+          fi
+
+          # Process Linux arm64 artifacts
+          if [ -d "artifacts/chatchat-linux-arm64" ]; then
+            cp artifacts/chatchat-linux-arm64/*.AppImage release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-linux-arm64/*.deb release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-linux-arm64/*.rpm release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-linux-arm64/*.tar.gz release_assets/ 2>/dev/null || true
+          fi
+
+          # Process Mac x64 artifacts
+          if [ -d "artifacts/chatchat-mac-x64" ]; then
+            cp artifacts/chatchat-mac-x64/*.dmg release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-mac-x64/*.zip release_assets/ 2>/dev/null || true
+          fi
+
+          # Process Mac arm64 artifacts
+          if [ -d "artifacts/chatchat-mac-arm64" ]; then
+            cp artifacts/chatchat-mac-arm64/*.dmg release_assets/ 2>/dev/null || true
+            cp artifacts/chatchat-mac-arm64/*.zip release_assets/ 2>/dev/null || true
+          fi
+
+          ls -la release_assets/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         with:
-          node-version: 20
+          tag_name: ${{ github.event.inputs.tag_name }}
+          name: ChatChat App V${{ steps.get_version.outputs.version }}
+          draft: true
+          prerelease: ${{ github.event.inputs.prerelease }}
+          files: |
+            release_assets/*
+          body: |
+            # 🚀 ChatChat App ${{ steps.get_version.outputs.version }} 正式发布
 
-      - name: apt-update
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: sudo apt-get update
+            📦 **构建信息**
+            - Workflow ID: `${{ github.event.inputs.workflow_id }}`
+            - 版本: `${{ steps.get_version.outputs.version }}`
+            - 预发布: `${{ github.event.inputs.prerelease }}`
+            - 构建时间: `${{ github.run_id }}`
 
-      - name: autoremove
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: sudo apt autoremove
+            🔥 **主要特性**
+            ✅ **强大的AI助手**：为生产者打造的智能对话工具
+            ✅ **跨平台支持**：Windows、macOS、Linux 全平台覆盖
+            ✅ **开箱即用**：简单配置，快速上手
+            ✅ **持续更新**：定期迭代，功能不断完善
 
-      - name: Install libarchive rpm on Linux
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: sudo apt-get install libarchive-tools rpm
+            📥 **下载说明**
+            - Windows: 下载 `.exe` 安装包或 `.zip` 便携版
+            - macOS: 下载 `.dmg` 安装包
+            - Linux: 下载 `.AppImage`、`.deb` 或 `.rpm` 包
 
-      - name: Release Electron app
-        uses: daltonmenezes/action-electron-builder@v1.0.1
-        with:
-          package_manager: "yarn"
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
+            💬 **反馈与支持**
+            如有问题或建议，欢迎提交 Issue 或 Pull Request！
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
