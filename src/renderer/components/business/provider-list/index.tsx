@@ -72,6 +72,7 @@ export function ProviderList() {
           action: () => {
             if (providerCfg) {
               handleAddProvider(providerCfg);
+              handleCloseModal();
             }
           },
         };
@@ -94,6 +95,7 @@ export function ProviderList() {
           action: () => {
             if (providerCfg) {
               handleUpdateProvider(providerCfg);
+              handleCloseModal();
             }
           },
         };
@@ -144,11 +146,9 @@ export function ProviderList() {
 
     const handleProviderSelect = _.debounce(() => {
       // * Toggle selection: if already selected, deselect; otherwise select
-      if (selectedModelProvider?.id === provider.id) {
-        setSelectedModelProvider(null);
-      } else {
-        setSelectedModelProvider(provider);
-      }
+      setSelectedModelProvider(
+        selectedModelProvider?.id === provider.id ? null : provider
+      );
     }, 100);
 
     const handleEdit = () => {

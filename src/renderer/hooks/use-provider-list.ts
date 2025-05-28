@@ -61,8 +61,6 @@ export function useProviderList() {
       apiKey,
       apiType,
     });
-
-    closeModal();
   };
 
   const handleAddProvider = async (provider: ModelProvider) => {
@@ -72,8 +70,6 @@ export function useProviderList() {
     addModelProvider(provider);
     // * Auto-select the newly added provider to show its models
     setSelectedModelProvider(provider);
-
-    closeModal();
   };
 
   const handleCheckKey = async (

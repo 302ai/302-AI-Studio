@@ -6,12 +6,14 @@ import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
 import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
 import { app } from "electron";
+import Logger from "electron-log";
 import ElectronStore from "electron-store";
 import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
+import { EventNames, emitter } from "./event-service";
 import { WindowService } from "./window-service";
 
 interface IModelStore {
@@ -85,6 +87,7 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   setProviders(_event: Electron.IpcMainEvent, providers: ModelProvider[]) {
     this.configStore.set(ConfigKeys.Providers, providers);
+    emitter.emit(EventNames.PROVIDERS_UPDATE, { providers });
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
@@ -151,7 +154,7 @@ export class ConfigService {
     _event: Electron.IpcMainEvent,
     providerId: string
   ): Model[] {
-    console.log("getProviderModels", providerId);
+    Logger.log("getProviderModels", providerId);
     const store = this.getProviderModelStore(providerId);
     return store.get("models", []) as Model[];
   }

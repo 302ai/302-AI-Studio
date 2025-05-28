@@ -4,7 +4,9 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import type { ModelProvider } from "@renderer/types/providers";
+import Logger from "electron-log";
 import { ConfigService } from "../config-service";
+import { EventNames, emitter } from "../event-service";
 import type { BaseProviderService } from "./base-provider-service";
 import { OpenAIProviderService } from "./openAI-provider-service";
 
@@ -31,6 +33,12 @@ export class ProviderService {
   constructor() {
     this.configService = new ConfigService();
     this.init();
+
+    // TODO: The current implementation is not efficient, we should use a more efficient way to update the provider service
+    emitter.on(EventNames.PROVIDERS_UPDATE, () => {
+      Logger.info("PROVIDERS_UPDATE");
+      this.init();
+    });
   }
 
   private init() {
@@ -42,6 +50,7 @@ export class ProviderService {
         const providerInst = this.createProviderInst(provider);
         if (providerInst) {
           this.providerInstMap.set(provider.id, providerInst);
+          Logger.info("Provider initialized successfully:", provider.name);
         }
       }
     });
@@ -55,7 +64,7 @@ export class ProviderService {
         return new OpenAIProviderService(provider);
 
       default:
-        console.warn(`Unknown provider type: ${provider.apiType}`);
+        Logger.warn(`Unknown provider type: ${provider.apiType}`);
         return undefined;
     }
   }
@@ -89,6 +98,12 @@ export class ProviderService {
         );
       }
 
+      Logger.debug("checkApiKey (add): ", params.providerCfg.name, {
+        isOk,
+        errorMsg,
+        models: models?.length,
+      });
+
       return { isOk, errorMsg };
     }
 
@@ -108,6 +123,12 @@ export class ProviderService {
         }
 
         const result = await tempProviderInst.checkApiKey();
+
+        Logger.debug("checkApiKey (edit): ", tempProvider.name, {
+          isOk: result.isOk,
+          errorMsg: result.errorMsg,
+          models: result.models?.length,
+        });
 
         return result;
       } catch (error) {
@@ -162,6 +183,7 @@ export class ProviderService {
       const newInstance = this.createProviderInst(updatedProvider);
       if (newInstance) {
         this.providerInstMap.set(providerId, newInstance);
+        Logger.info("Provider instance updated:", updatedProvider.name);
       }
     }
   }

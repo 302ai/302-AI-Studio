@@ -1,5 +1,6 @@
 import type { Model } from "@renderer/types/models";
 import type { ModelProvider } from "@renderer/types/providers";
+import Logger from "electron-log";
 import { ConfigService } from "../config-service";
 
 export abstract class BaseProviderService {
@@ -23,10 +24,16 @@ export abstract class BaseProviderService {
       const models = await this.fetchProviderModels();
       this.models = models;
       this.configService._setProviderModels(this.provider.id, models);
+      Logger.debug(
+        "Fetch models successfully:",
+        this.provider.name,
+        "model count:",
+        models.length
+      );
 
       return models;
     } catch (error) {
-      console.error("Failed to fetch models:", error);
+      Logger.error("Failed to fetch models:", error);
       if (!this.models) {
         this.models = [];
       }
