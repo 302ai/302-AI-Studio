@@ -28,7 +28,8 @@
         "label": "Model List",
         "no-models-description": "The model list is empty...",
         "current": "Current",
-        "collected": "Favorites"
+        "collected": "Favorites",
+        "search-placeholder": "Search..."
       },
       "model-provider": {
         "add-provider": "Add",

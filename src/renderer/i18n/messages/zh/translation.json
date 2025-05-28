@@ -28,7 +28,8 @@
         "label": "模型列表",
         "no-models-description": "模型列表为空...",
         "current": "当前",
-        "collected": "收藏"
+        "collected": "收藏",
+        "search-placeholder": "搜索..."
       },
       "model-provider": {
         "add-provider": "添加",

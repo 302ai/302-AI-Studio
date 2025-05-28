@@ -16,7 +16,10 @@ export function ModelFilter({ onTabChange }: ModelFilterProps) {
       orientation="horizontal"
       onSelectionChange={onTabChange}
     >
-      <TabList className="px-3 pt-2 pb-0" aria-label="Model List Tabs List">
+      <TabList
+        className="border-none px-3 pt-2 pb-0"
+        aria-label="Model List Tabs List"
+      >
         <Tab
           className="cursor-pointer group-data-[orientation=horizontal]/tabs:pb-2"
           key="current"
