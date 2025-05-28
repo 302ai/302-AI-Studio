@@ -16,6 +16,16 @@ const authorInKebabCase = author.replace(/\s+/g, "-");
 const appId = `com.${authorInKebabCase}.${name}`.toLowerCase();
 
 const artifactName = [`${name}-v${version}`, "-${os}.${ext}"].join("");
+const artifactNameSetup = [
+  `${name}-v${version}`,
+  "-Setup",
+  "-${os}.${ext}",
+].join("");
+const artifactNamePortable = [
+  `${name}-v${version}`,
+  "-portable",
+  "-${os}.${ext}",
+].join("");
 
 export default {
   appId,
@@ -42,8 +52,24 @@ export default {
   },
 
   win: {
-    artifactName,
+    executableName: displayName,
+    artifactName: artifactNameSetup,
     icon: `${resources}/build/icons/icon.ico`,
-    target: ["zip", "portable"],
+    target: [
+      {
+        target: "nsis",
+        arch: ["x64", "arm64"],
+      },
+    ],
+  },
+
+  nsis: {
+    artifactName: artifactNameSetup,
+    shortcutName: displayName,
+    uninstallDisplayName: displayName,
+    oneClick: false,
+    allowToChangeInstallationDirectory: true,
+    createDesktopShortcut: true,
+    createStartMenuShortcut: true,
   },
 };
