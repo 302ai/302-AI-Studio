@@ -1,7 +1,7 @@
+import type { ThreadItem } from "@shared/types/thread";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
 import { useThreadsStore } from "../store/threads-store";
-import type { ThreadItem } from "../types/threads";
 
 export type MenuModelActionType = "rename" | "clean-messages" | "delete";
 

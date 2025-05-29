@@ -1,5 +1,5 @@
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { ModelProvider } from "@shared/types/provider";
 import { PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

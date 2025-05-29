@@ -1,11 +1,11 @@
 import { type ElectronAPI, electronAPI } from "@electron-toolkit/preload";
-import type { Model } from "@renderer/types/models";
-import type { ModelProvider } from "@renderer/types/providers";
-import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
+import type { Model } from "@shared/types/model";
+import type { ModelProvider } from "@shared/types/provider";
 import { contextBridge } from "electron";
 import { initPreloadBridge } from "@/src/main/bridge";
 import type { ModelSettingData } from "@/src/main/services/config-service";
 import type { CheckApiKeyParams } from "@/src/main/services/provider-service";
+import type { LanguageVarious, ThemeMode } from "@/src/shared/types/settings";
 
 /**
  * ! This should be declared in index.d.ts,

@@ -1,8 +1,8 @@
+import type { ThreadItem } from "@shared/types/thread";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { EventNames, emitter } from "../services/event-service";
 import { useThreadsStore } from "../store/threads-store";
-import type { ThreadItem } from "../types/threads";
 
 type SidebarSection =
   | "collected"

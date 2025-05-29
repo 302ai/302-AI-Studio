@@ -1,4 +1,4 @@
-import type { ModelProvider } from "@renderer/types/providers";
+import type { ModelProvider } from "@shared/types/provider";
 import mitt from "mitt";
 
 export enum EventNames {

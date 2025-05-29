@@ -1,6 +1,6 @@
 import { titleBarOverlayDark, titleBarOverlayLight } from "@main/config";
-import { ThemeMode } from "@renderer/types/settings";
 import { BrowserWindow } from "electron";
+import { ThemeMode } from "@/src/shared/types/settings";
 import { isWin } from "../constant";
 import { ServiceRegister } from "../shared/reflect";
 
@@ -14,7 +14,7 @@ export class WindowService {
 
     BrowserWindow.getAllWindows().forEach((window) => {
       window.setTitleBarOverlay(
-        theme === ThemeMode.Dark ? titleBarOverlayDark : titleBarOverlayLight,
+        theme === ThemeMode.Dark ? titleBarOverlayDark : titleBarOverlayLight
       );
     });
   }

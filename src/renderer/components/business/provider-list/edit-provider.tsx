@@ -1,5 +1,5 @@
 import { useProviderList } from "@renderer/hooks/use-provider-list";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { ModelProvider } from "@shared/types/provider";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";

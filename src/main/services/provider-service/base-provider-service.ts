@@ -1,5 +1,5 @@
-import type { Model } from "@renderer/types/models";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { Model } from "@shared/types/model";
+import type { ModelProvider } from "@shared/types/provider";
 import Logger from "electron-log";
 import { ConfigService } from "../config-service";
 

@@ -4,7 +4,7 @@ import {
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { ModelProvider } from "@shared/types/provider";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

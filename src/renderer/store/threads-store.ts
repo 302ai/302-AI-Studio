@@ -1,4 +1,4 @@
-import type { ThreadItem } from "@renderer/types/threads";
+import type { ThreadItem } from "@shared/types/thread";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";

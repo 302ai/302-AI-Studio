@@ -3,7 +3,7 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { ModelProvider } from "@shared/types/provider";
 import Logger from "electron-log";
 import { ConfigService } from "../config-service";
 import { EventNames, emitter } from "../event-service";

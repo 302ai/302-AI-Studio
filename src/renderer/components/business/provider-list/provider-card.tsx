@@ -7,8 +7,8 @@ import {
   CardTitle,
 } from "@renderer/components/ui/card";
 import { cn } from "@renderer/lib/utils";
-import type { Model } from "@renderer/types/models";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { Model } from "@shared/types/model";
+import type { ModelProvider } from "@shared/types/provider";
 import { useTranslation } from "react-i18next";
 import { ModelIcon } from "../model-icon";
 

@@ -1,4 +1,4 @@
-import type { ModelProvider } from "../types/providers";
+import type { ModelProvider } from "@shared/types/provider";
 
 export const DEFAULT_PROVIDERS: ModelProvider[] = [
   {

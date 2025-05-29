@@ -1,9 +1,9 @@
 import { cn } from "@renderer/lib/utils";
 import { useSettingsStore } from "@renderer/store/settings-store";
-import { ThemeMode } from "@renderer/types/settings";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BsLaptop, BsMoon, BsSun } from "react-icons/bs";
+import { ThemeMode } from "@/src/shared/types/settings";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation("translation", {

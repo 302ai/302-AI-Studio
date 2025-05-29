@@ -1,7 +1,7 @@
+import type { ModelProvider } from "@shared/types/provider";
 import { useState } from "react";
 import { DEFAULT_PROVIDERS } from "../config/providers";
 import { useModelSettingStore } from "../store/settings-store/model-setting-store";
-import type { ModelProvider } from "../types/providers";
 
 const { configService, providerService } = window.service;
 

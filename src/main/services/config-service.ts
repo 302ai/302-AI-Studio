@@ -2,12 +2,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { defaultLanguage } from "@main/constant";
 import { locales } from "@main/utils/locales";
-import type { Model } from "@renderer/types/models";
-import type { ModelProvider } from "@renderer/types/providers";
-import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
+import type { Model } from "@shared/types/model";
+import type { ModelProvider } from "@shared/types/provider";
 import { app } from "electron";
 import Logger from "electron-log";
 import ElectronStore from "electron-store";
+import type { LanguageVarious, ThemeMode } from "@/src/shared/types/settings";
 import {
   CommunicationWay,
   ServiceHandler,

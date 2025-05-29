@@ -9,7 +9,7 @@ import {
   type ModelActionType,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { ModelProvider } from "@shared/types/provider";
 import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -154,7 +154,7 @@ export function ProviderList() {
     const handleProviderSelect = _.debounce(() => {
       // * Toggle selection: if already selected, deselect; otherwise select
       setSelectedModelProvider(
-        selectedModelProvider?.id === provider.id ? null : provider,
+        selectedModelProvider?.id === provider.id ? null : provider
       );
     }, 100);
 
@@ -185,7 +185,8 @@ export function ProviderList() {
         )}
       </Draggable>
     );
-  }, areEqual);
+  },
+  areEqual);
 
   useEffect(() => {
     const updateHeight = () => {
