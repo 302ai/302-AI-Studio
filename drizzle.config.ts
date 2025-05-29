@@ -1,13 +1,9 @@
 import { defineConfig } from "drizzle-kit";
-import path, { dirname } from "path";
+import { dirname } from "path";
 import { existsSync, mkdirSync } from "fs";
-import { APP_NAME, DB_CONFIG } from "./src/main/constant";
+import { getDbPath } from "./src/main/constant";
 
-const databasePath = path.join(
-  process.env.APPDATA ?? "",
-  APP_NAME,
-  DB_CONFIG.dbFileName
-);
+const databasePath = getDbPath();
 
 const generateDbPath = (dirString: string) => {
   try {

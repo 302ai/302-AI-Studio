@@ -2,7 +2,7 @@ import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
-} from "../shared/reflect";
+} from "../../shared/reflect";
 
 @ServiceRegister("threadsService")
 export class ThreadsService {
