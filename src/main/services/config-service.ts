@@ -1,13 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import { defaultLanguage } from "@main/constant";
-import { locales } from "@main/utils/locales";
 import type { Model } from "@shared/types/model";
 import type { ModelProvider } from "@shared/types/provider";
+import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 import { app } from "electron";
 import Logger from "electron-log";
 import ElectronStore from "electron-store";
-import type { LanguageVarious, ThemeMode } from "@/src/shared/types/settings";
 import {
   CommunicationWay,
   ServiceHandler,
@@ -51,12 +49,7 @@ export class ConfigService {
 
   @ServiceHandler()
   getLanguage(_event: Electron.IpcMainEvent): string {
-    const currentLocale = app.getLocale();
-    const locale = Object.keys(locales).includes(currentLocale)
-      ? currentLocale
-      : defaultLanguage;
-
-    return this.configStore.get(ConfigKeys.Language, locale) as string;
+    return this.configStore.get(ConfigKeys.Language, "zh-CN") as string;
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)

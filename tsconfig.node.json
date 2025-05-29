@@ -6,7 +6,6 @@
     "src/lib/**/*",
     "src/resources/**/*",
     "src/preload/**/*",
-    "src/renderer/**/*",
     "src/shared/**/*"
   ],
   "compilerOptions": {
@@ -21,9 +20,6 @@
     "useDefineForClassFields": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
       "@lib/*": [
         "src/lib/*"
       ],
@@ -32,9 +28,6 @@
       ],
       "@shared/*": [
         "src/shared/*"
-      ],
-      "@renderer/*": [
-        "src/renderer/*"
       ],
     }
   }

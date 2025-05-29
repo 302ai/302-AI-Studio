@@ -34,7 +34,7 @@
     "clean:dev": "rimraf ./node_modules/.dev",
     "lint": "biome lint --no-errors-on-unmatched",
     "lint:fix": "biome lint --write --no-errors-on-unmatched",
-    "typecheck": "npm run typecheck:node",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "prepare": "husky",
