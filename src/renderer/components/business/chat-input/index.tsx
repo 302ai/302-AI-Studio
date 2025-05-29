@@ -8,7 +8,9 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ className }: ChatInputProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "chat",
+  });
 
   return (
     <div
@@ -23,8 +25,8 @@ export function ChatInput({ className }: ChatInputProps) {
           "h-full min-h-[calc(100%-var(--chat-input-toolbar-height))] w-full rounded-none border-0 bg-transparent p-0",
           "shadow-none ring-0"
         )}
-        placeholder={t("chat.input-placeholder")}
-        aria-label={t("chat.input-label")}
+        placeholder={t("input-placeholder")}
+        aria-label={t("input-label")}
         resize="none"
       />
 

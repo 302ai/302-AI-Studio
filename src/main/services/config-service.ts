@@ -22,6 +22,7 @@ interface IModelStore {
 export interface ModelSettingData {
   modelProviders: ModelProvider[];
   providerModelMap: Record<string, Model[]>;
+  providerMap: Record<string, ModelProvider>;
 }
 
 enum ConfigKeys {
@@ -86,15 +87,18 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   getModelSettings(_event: Electron.IpcMainEvent): ModelSettingData {
     const providers = this.getProviders();
+    const providerMap = {};
     const providerModelMap = {};
 
     for (const provider of providers) {
       const store = this.getProviderModelStore(provider.id);
       providerModelMap[provider.id] = store.get("models", []) as Model[];
+      providerMap[provider.id] = provider;
     }
 
     const modelSettings = {
       modelProviders: providers,
+      providerMap,
       providerModelMap,
     };
 

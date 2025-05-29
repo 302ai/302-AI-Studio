@@ -4,7 +4,9 @@
     "input-placeholder": "何でも聞いてみてください...",
     "tool-bar": {
       "attach-file": "ファイルを添付"
-    }
+    },
+    "model-select-label": "モデルを選択します",
+    "model-select-placeholder": "モデルを選択してください..."
   },
   "settings": {
     "assistant-settings": {

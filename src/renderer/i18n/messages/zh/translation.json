@@ -4,7 +4,9 @@
     "input-placeholder": "随便问问...",
     "tool-bar": {
       "attach-file": "上传附件"
-    }
+    },
+    "model-select-label": "选择模型",
+    "model-select-placeholder": "请选择一个模型..."
   },
   "settings": {
     "assistant-settings": {

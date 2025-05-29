@@ -4,7 +4,9 @@
     "input-placeholder": "Ask anything...",
     "tool-bar": {
       "attach-file": "Attach file"
-    }
+    },
+    "model-select-label": "Select a model",
+    "model-select-placeholder": "Please select a model..."
   },
   "settings": {
     "assistant-settings": {

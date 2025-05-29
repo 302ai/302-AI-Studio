@@ -7,6 +7,7 @@ import { immer } from "zustand/middleware/immer";
 interface ModelSettingStore {
   modelProviders: ModelProvider[];
   selectedModelProvider: ModelProvider | null;
+  providerMap: Record<string, ModelProvider>;
   providerModelMap: Record<string, Model[]>;
 
   initializeStore: () => Promise<void>;
@@ -18,11 +19,15 @@ interface ModelSettingStore {
   updateSelectedModelProvider: (data: Partial<ModelProvider>) => void;
   setProviderModelMap: (providerId: string, models: Model[]) => void;
   updateProviderModelMap: (providerId: string, models: Model[]) => void;
-  getAllModels: (options?: { collected: boolean }) => Model[];
+  getAllModels: (options?: {
+    enabled?: boolean;
+    collected?: boolean;
+  }) => Model[];
   getModelsByProvider: (
     providerId?: string,
     options?: { collected: boolean }
   ) => Model[];
+  updateProviderMap: (providerId: string, provider: ModelProvider) => void;
 }
 
 const { configService } = window.service;
@@ -31,20 +36,27 @@ export const useModelSettingStore = create<ModelSettingStore>()(
   immer((set, get) => ({
     modelProviders: [],
     selectedModelProvider: null,
+    providerMap: {},
     providerModelMap: {},
 
     initializeStore: async () => {
-      const modelSettings = await configService.getModelSettings();
+      const { modelProviders, providerModelMap, providerMap } =
+        await configService.getModelSettings();
 
       set({
-        modelProviders: modelSettings.modelProviders,
-        providerModelMap: modelSettings.providerModelMap,
+        modelProviders,
+        providerModelMap,
+        providerMap,
       });
     },
 
     addModelProvider: (newProvider) => {
       set({
         modelProviders: [newProvider, ...get().modelProviders],
+        providerMap: {
+          ...get().providerMap,
+          [newProvider.id]: newProvider,
+        },
       });
     },
 
@@ -88,6 +100,7 @@ export const useModelSettingStore = create<ModelSettingStore>()(
         );
 
         delete state.providerModelMap[providerId];
+        delete state.providerMap[providerId];
 
         return state;
       });
@@ -118,11 +131,16 @@ export const useModelSettingStore = create<ModelSettingStore>()(
       }
     },
 
-    getAllModels: (options?: { collected: boolean }) => {
+    getAllModels: (options?: { enabled?: boolean; collected?: boolean }) => {
       const { providerModelMap } = get();
       return Object.values(providerModelMap)
         .flat()
-        .filter((model) => (options?.collected ? model.collected : true));
+        .filter((model) => {
+          if (options?.enabled) {
+            return model.enabled;
+          }
+          return options?.collected ? model.collected : true;
+        });
     },
 
     getModelsByProvider: (
@@ -140,6 +158,12 @@ export const useModelSettingStore = create<ModelSettingStore>()(
           options?.collected ? model.collected : true
         ) || []
       );
+    },
+
+    updateProviderMap: (providerId, provider) => {
+      set((state) => {
+        state.providerMap[providerId] = provider;
+      });
     },
   }))
 );
