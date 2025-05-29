@@ -15,41 +15,25 @@ export function useToolBar() {
   const { t } = useTranslation();
   const { threads, addThread } = useThreadsStore();
   const { tabs, activeTabId, addTab } = useTabBarStore();
-  const { getAllModels, providerMap } = useModelSettingStore();
-
-  const canSelectModels = useMemo(() => {
-    return getAllModels({ enabled: true });
-  }, [getAllModels]);
+  const { providerModelMap, providerMap } = useModelSettingStore();
 
   const groupedModels = useMemo(() => {
-    const groups: Record<string, Model[]> = {};
+    const result: GroupedModel[] = [];
 
-    canSelectModels.forEach((model) => {
-      const providerId = model.providerId;
-      if (!groups[providerId]) {
-        groups[providerId] = [];
+    Object.entries(providerModelMap).forEach(([providerId, models]) => {
+      const enabledModels = models.filter((model) => model.enabled);
+
+      if (enabledModels.length > 0) {
+        result.push({
+          id: providerId,
+          name: providerMap[providerId]?.name || providerId,
+          models: enabledModels,
+        });
       }
-      groups[providerId].push(model);
     });
 
-    const result: GroupedModel[] = Object.entries(groups).map(
-      ([providerId, models]) => ({
-        id: providerId,
-        name: providerMap[providerId]?.name || providerId,
-        models: models,
-      })
-    );
-
-    console.log(
-      "Grouped Models:",
-      result.map((group) => ({
-        name: group.name,
-        modelCount: group.models.length,
-      }))
-    );
-
     return result;
-  }, [canSelectModels, providerMap]);
+  }, [providerModelMap, providerMap]);
 
   const handleSendMessage = () => {
     if (tabs.length === 0) {
@@ -77,5 +61,5 @@ export function useToolBar() {
     }
   };
 
-  return { canSelectModels, groupedModels, providerMap, handleSendMessage };
+  return { groupedModels, providerMap, handleSendMessage };
 }

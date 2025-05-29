@@ -6,7 +6,8 @@
       "attach-file": "Attach file"
     },
     "model-select-label": "Select a model",
-    "model-select-placeholder": "Please select a model..."
+    "model-select-placeholder": "Please select a model...",
+    "model-search-placeholder": "Search..."
   },
   "settings": {
     "assistant-settings": {

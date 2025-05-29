@@ -5,6 +5,7 @@ import {
   Select,
   SelectOption,
   SelectSection,
+  SelectTrigger,
 } from "@renderer/components/ui/select";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { useState } from "react";
@@ -13,10 +14,10 @@ import { useTranslation } from "react-i18next";
 import { ModelIcon } from "../../model-icon";
 
 export const ChatModel = () => {
-
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
+  const { contains } = useFilter({ sensitivity: "base" });
   const { groupedModels } = useToolBar();
   const [selectedModelId, setSelectedModelId] = useState<string>("");
 
@@ -25,25 +26,30 @@ export const ChatModel = () => {
     // TODO: 处理模型选择逻辑
   };
 
-  const { contains } = useFilter({ sensitivity: "base" });
   return (
     <Select
       aria-label={t("model-select-label")}
       placeholder={t("model-select-placeholder")}
       selectedKey={selectedModelId}
       onSelectionChange={(key) => handleModelSelect(key as string)}
-      className="w-[240px]"
+      className="w-fit"
     >
-      <Select.Trigger />
+      <SelectTrigger className="rounded-full" />
       <PopoverContent
         showArrow={false}
         respectScreen={false}
         className="min-w-[240px] max-w-[240px] overflow-y-auto overflow-x-hidden"
       >
         <Autocomplete filter={contains}>
-          <SearchField className="min-w-[240px] max-w-[240px]" autoFocus />
+          <div className="border-b bg-muted p-2">
+            <SearchField
+              className="rounded-lg bg-bg"
+              placeholder={t("model-search-placeholder")}
+              autoFocus
+            />
+          </div>
           <ListBox
-            className="max-h-[300px] min-w-[240px] max-w-[240px] border-0 shadow-none"
+            className="max-h-[250px] min-w-[240px] max-w-[240px] border-0"
             items={groupedModels}
           >
             {(group) => (

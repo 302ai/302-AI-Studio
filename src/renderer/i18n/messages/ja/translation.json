@@ -6,7 +6,8 @@
       "attach-file": "ファイルを添付"
     },
     "model-select-label": "モデルを選択します",
-    "model-select-placeholder": "モデルを選択してください..."
+    "model-select-placeholder": "モデルを選択してください...",
+    "model-search-placeholder": "検索..."
   },
   "settings": {
     "assistant-settings": {
