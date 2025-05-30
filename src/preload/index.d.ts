@@ -22,7 +22,8 @@ declare global {
         getModelSettings: () => Promise<ModelSettingData>;
       };
       threadsService: {
-        setActiveThread: (threadId: string) => void;
+        setActiveThreadId: (threadId: string) => void;
+        createThread: (threadData: ThreadItem) => void;
       };
       providerService: {
         checkApiKey: (params: CheckApiKeyParams) => Promise<{

@@ -8,7 +8,9 @@
     "model-select-label": "モデルを選択します",
     "model-select-placeholder": "モデルを選択してください...",
     "model-search-placeholder": "検索...",
-    "no-models-found": "一致するモデルは見つかりませんでした..."
+    "no-models-found": "一致するモデルは見つかりませんでした...",
+    "lack-model": "最初にモデルを選択してください！",
+    "lack-provider": "モデルプロバイダーがありません！"
   },
   "settings": {
     "assistant-settings": {

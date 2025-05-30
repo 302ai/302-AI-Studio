@@ -8,7 +8,9 @@
     "model-select-label": "选择模型",
     "model-select-placeholder": "请选择一个模型...",
     "model-search-placeholder": "搜索...",
-    "no-models-found": "没有找到匹配的模型..."
+    "no-models-found": "没有找到匹配的模型...",
+    "lack-model": "请先选择一个模型！",
+    "lack-provider": "缺少模型提供商！"
   },
   "settings": {
     "assistant-settings": {

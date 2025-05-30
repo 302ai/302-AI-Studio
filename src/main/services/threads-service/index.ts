@@ -1,3 +1,4 @@
+import type { ThreadItem } from "@shared/types/thread";
 import {
   CommunicationWay,
   ServiceHandler,
@@ -7,11 +8,16 @@ import {
 @ServiceRegister("threadsService")
 export class ThreadsService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  setActiveThread(_event: Electron.IpcMainEvent, threadId: string) {
+  setActiveThreadId(_event: Electron.IpcMainEvent, threadId: string) {
     console.log("threadId", threadId);
   }
 
-  getThread(_event: Electron.IpcMainEvent, threadId: string) {
+  getThreadId(_event: Electron.IpcMainEvent, threadId: string) {
     console.log("threadId", threadId);
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  createThread(_event: Electron.IpcMainEvent, threadData: ThreadItem) {
+    console.log("threadId", threadData);
   }
 }
