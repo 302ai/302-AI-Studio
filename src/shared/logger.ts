@@ -3,7 +3,6 @@
  */
 
 import path from "node:path";
-import { is } from "@electron-toolkit/utils";
 import { app } from "electron";
 import log from "electron-log";
 
@@ -29,7 +28,7 @@ export function setLoggingEnabled(enabled: boolean): void {
 }
 
 // Configure console log
-log.transports.console.level = is.dev ? "debug" : "info";
+log.transports.console.level = "debug";
 
 // Configure file log
 log.transports.file.level = "info";
@@ -63,42 +62,42 @@ function hookConsole() {
   // Replace console methods
   console.log = (...args: unknown[]) => {
     // Only log when logging is enabled or in development mode
-    if (loggingEnabled || is.dev) {
+    if (loggingEnabled) {
       logger.info(...args);
     }
   };
 
   console.error = (...args: unknown[]) => {
     // Only log when logging is enabled or in development mode
-    if (loggingEnabled || is.dev) {
+    if (loggingEnabled) {
       logger.error(...args);
     }
   };
 
   console.warn = (...args: unknown[]) => {
     // Only log when logging is enabled or in development mode
-    if (loggingEnabled || is.dev) {
+    if (loggingEnabled) {
       logger.warn(...args);
     }
   };
 
   console.info = (...args: unknown[]) => {
     // Only log when logging is enabled or in development mode
-    if (loggingEnabled || is.dev) {
+    if (loggingEnabled) {
       logger.info(...args);
     }
   };
 
   console.debug = (...args: unknown[]) => {
     // Only log when logging is enabled or in development mode
-    if (loggingEnabled || is.dev) {
+    if (loggingEnabled) {
       logger.debug(...args);
     }
   };
 
   console.trace = (...args: unknown[]) => {
     // Only log when logging is enabled or in development mode
-    if (loggingEnabled || is.dev) {
+    if (loggingEnabled) {
       logger.debug(...args);
     }
   };

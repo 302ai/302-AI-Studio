@@ -3,7 +3,8 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 const getNow = () => new Date().toISOString();
 
 export const threads = sqliteTable("threads", {
-  id: text("id").primaryKey(),
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  threadId: text("thread_id").notNull().unique(),
   title: text("title").notNull(),
   providerId: text("provider_id").notNull(),
   modelId: text("model_id").notNull(),
