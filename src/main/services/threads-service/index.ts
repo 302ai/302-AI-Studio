@@ -22,10 +22,6 @@ export class ThreadsService {
     console.log("threadId", threadId);
   }
 
-  getThreadId(_event: Electron.IpcMainEvent, threadId: string) {
-    console.log("threadId", threadId);
-  }
-
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async createThread(_event: Electron.IpcMainEvent, threadData: ThreadItem) {
     try {
@@ -51,13 +47,64 @@ export class ThreadsService {
       const thread = await this.threadRepository.create(dbThreadData);
 
       Logger.info("Thread created successfully, threadId: ", thread.threadId);
+
       return { success: true, threadId: thread.threadId };
     } catch (error) {
       Logger.error("Failed to create thread:", error);
+
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
       };
     }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async updateThread(
+    _event: Electron.IpcMainEvent,
+    threadId: string,
+    data: Partial<ThreadItem>
+  ) {
+    try {
+      const updateData: Partial<InsertThread> = {};
+
+      if (data.title !== undefined) updateData.title = data.title;
+      if (data.isCollected !== undefined)
+        updateData.isCollected = data.isCollected;
+      if (data.settings?.providerId !== undefined)
+        updateData.providerId = data.settings.providerId;
+      if (data.settings?.modelId !== undefined)
+        updateData.modelId = data.settings.modelId;
+
+      const thread = await this.threadRepository.update(threadId, updateData);
+      Logger.info("Thread updated successfully, threadId: ", thread.threadId);
+
+      return { success: true, thread };
+    } catch (error) {
+      Logger.error("Failed to update thread:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async deleteThread(_event: Electron.IpcMainEvent, threadId: string) {
+    try {
+      const success = await this.threadRepository.delete(threadId);
+      if (!success) {
+        throw new Error("Failed to delete thread");
+      }
+
+      Logger.info("Thread deleted successfully, threadId: ", threadId);
+    } catch (error) {
+      Logger.error("Failed to delete thread:", error);
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getThreads(_event: Electron.IpcMainEvent) {
+    return await this.threadRepository.getAllThreads();
   }
 }

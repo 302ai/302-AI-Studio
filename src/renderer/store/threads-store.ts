@@ -1,14 +1,13 @@
 import type { ThreadItem, ThreadSetting } from "@shared/types/thread";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-
-const THREADS_STORAGE_KEY = "threads";
 
 interface ThreadStore {
   threads: ThreadItem[];
   activeThreadId: string;
   generatingThreadIds: Set<string>;
+
+  initializeStore: () => Promise<void>;
 
   setThreads: (threads: ThreadItem[]) => void;
   addThread: (data: {
@@ -24,70 +23,78 @@ interface ThreadStore {
 const { threadsService } = window.service;
 
 export const useThreadsStore = create<ThreadStore>()(
-  persist(
-    immer((set, get) => ({
-      threads: [],
-      activeThreadId: "",
-      generatingThreadIds: new Set(),
+  immer((set, get) => ({
+    threads: [],
+    activeThreadId: "",
+    generatingThreadIds: new Set(),
 
-      setThreads: (threads) => set({ threads }),
+    initializeStore: async () => {
+      const threads = await threadsService.getThreads();
+      set({ threads });
+    },
 
-      addThread: (data) => {
-        const now = new Date().toISOString();
-        const { id, title, settings } = data;
-        const newThread = {
-          id,
-          title,
-          settings,
-          createdAt: now,
-          updatedAt: now,
-          isCollected: false,
-        };
+    setThreads: (threads) => set({ threads }),
 
-        set((state) => {
-          const newThreads = [...get().threads, newThread];
-          const sortedThreads = newThreads.sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-          state.threads = sortedThreads;
-          state.activeThreadId = newThread.id;
+    addThread: (data) => {
+      const now = new Date().toISOString();
+      const { id, title, settings } = data;
+      const newThread = {
+        id,
+        title,
+        settings,
+        createdAt: now,
+        updatedAt: now,
+        isCollected: false,
+      };
 
-          return state;
-        });
+      set((state) => {
+        const newThreads = [...get().threads, newThread];
+        const sortedThreads = newThreads.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        state.threads = sortedThreads;
+        state.activeThreadId = newThread.id;
 
-        return newThread;
-      },
+        return state;
+      });
 
-      updateThread: (id, data) =>
-        set((state) => ({
-          threads: state.threads.map((thread) =>
-            thread.id === id
-              ? {
-                  ...thread,
-                  ...data,
-                  updatedAt: new Date().toISOString(),
-                }
-              : thread
-          ),
-        })),
+      return newThread;
+    },
 
-      removeThread: (id) =>
-        set((state) => ({
-          threads: state.threads.filter((thread) => thread.id !== id),
-        })),
+    updateThread: (id, data) => {
+      threadsService.updateThread(id, data);
 
-      setActiveThreadId: (id) =>
-        set((state) => {
-          if (state.activeThreadId === id) return;
+      set((state) => ({
+        threads: state.threads.map((thread) =>
+          thread.id === id
+            ? {
+                ...thread,
+                ...data,
+                updatedAt: new Date().toISOString(),
+              }
+            : thread
+        ),
+      }));
+    },
 
-          threadsService.setActiveThreadId(id);
-          state.activeThreadId = id;
-          return state;
-        }),
-    })),
-    {
-      name: THREADS_STORAGE_KEY,
-    }
-  )
+    removeThread: (id) => {
+      threadsService.deleteThread(id);
+
+      set((state) => ({
+        threads: state.threads.filter((thread) => thread.id !== id),
+      }));
+    },
+
+    setActiveThreadId: (id) =>
+      set((state) => {
+        if (state.activeThreadId === id) return;
+
+        threadsService.setActiveThreadId(id);
+        state.activeThreadId = id;
+        return state;
+      }),
+  }))
 );
+
+useThreadsStore.getState().initializeStore();
