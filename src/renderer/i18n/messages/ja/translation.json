@@ -7,7 +7,8 @@
     },
     "model-select-label": "モデルを選択します",
     "model-select-placeholder": "モデルを選択してください...",
-    "model-search-placeholder": "検索..."
+    "model-search-placeholder": "検索...",
+    "no-models-found": "一致するモデルは見つかりませんでした..."
   },
   "settings": {
     "assistant-settings": {

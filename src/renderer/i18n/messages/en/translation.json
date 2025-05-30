@@ -7,7 +7,8 @@
     },
     "model-select-label": "Select a model",
     "model-select-placeholder": "Please select a model...",
-    "model-search-placeholder": "Search..."
+    "model-search-placeholder": "Search...",
+    "no-models-found": "No matching model was found..."
   },
   "settings": {
     "assistant-settings": {

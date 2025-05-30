@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
+/** biome-ignore-all lint/a11y/useSemanticElements: ignore useSemanticElements */
 import type { DraggableProvided } from "@hello-pangea/dnd";
 import {
   CardDescription,

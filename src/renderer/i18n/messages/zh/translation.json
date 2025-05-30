@@ -7,7 +7,8 @@
     },
     "model-select-label": "选择模型",
     "model-select-placeholder": "请选择一个模型...",
-    "model-search-placeholder": "搜索..."
+    "model-search-placeholder": "搜索...",
+    "no-models-found": "没有找到匹配的模型..."
   },
   "settings": {
     "assistant-settings": {
