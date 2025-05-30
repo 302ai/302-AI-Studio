@@ -5,7 +5,7 @@ import { CheckIcon } from "lucide-react";
 import { memo } from "react";
 import { areEqual } from "react-window";
 
-interface ListItem {
+export interface ListItem {
   type: "group" | "model";
   id: string;
   name: string;
@@ -22,7 +22,7 @@ export const ModelRowList = memo(function ModelRowList({
   style: React.CSSProperties;
   data: {
     items: ListItem[];
-    onSelect: (modelId: string) => void;
+    onSelect: (providerId: string, modelId: string) => void;
     selectedModelId: string;
   };
 }) {
@@ -46,10 +46,10 @@ export const ModelRowList = memo(function ModelRowList({
     <div
       style={style}
       className="flex cursor-pointer items-center rounded-md px-2 text-accent-fg text-sm outline-hidden hover:bg-hover-primary"
-      onClick={() => onSelect(item.model.id)}
+      onClick={() => onSelect(item.providerId, item.model.id)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
-          onSelect(item.model.id);
+          onSelect(item.providerId, item.model.id);
         }
       }}
       role="option"

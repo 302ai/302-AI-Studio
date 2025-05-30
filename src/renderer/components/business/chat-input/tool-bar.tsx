@@ -2,7 +2,6 @@ import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
-import { useThreadsStore } from "@renderer/store/threads-store";
 import { useTranslation } from "react-i18next";
 import { FaCircleArrowUp } from "react-icons/fa6";
 import { toast } from "sonner";
@@ -17,14 +16,18 @@ export function ToolBar({ className }: ToolBarProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
-  const { handleSendMessage } = useToolBar();
-  const { activeProviderId, activeModelId } = useThreadsStore();
+  const {
+    selectedProviderId,
+    selectedModelId,
+    handleModelSelect,
+    handleSendMessage,
+  } = useToolBar();
 
-  const canSendMessage = activeProviderId && activeModelId;
+  const canSendMessage = selectedProviderId && selectedModelId;
 
-  const handleSMClick = () => {
+  const handleSendMessageClick = () => {
     if (!canSendMessage) {
-      const msg = activeProviderId ? t("lack-model") : t("lack-provider");
+      const msg = selectedProviderId ? t("lack-model") : t("lack-provider");
       toast.error(msg);
       return;
     }
@@ -45,7 +48,7 @@ export function ToolBar({ className }: ToolBarProps) {
         </div>
 
         <div className="flex flex-row items-center gap-x-2">
-          <ModelSelect />
+          <ModelSelect onSelect={handleModelSelect} />
 
           <Separator className="h-1/2 w-[2px]" orientation="vertical" />
 
@@ -53,7 +56,7 @@ export function ToolBar({ className }: ToolBarProps) {
             intent="plain"
             size="square-petite"
             shape="circle"
-            onClick={handleSMClick}
+            onClick={handleSendMessageClick}
           >
             <FaCircleArrowUp className="size-8" />
           </Button>

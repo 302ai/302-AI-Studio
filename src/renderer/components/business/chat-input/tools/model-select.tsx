@@ -11,17 +11,13 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
-import { ModelRowList } from "./model-row-list";
+import { type ListItem, ModelRowList } from "./model-row-list";
 
-interface ListItem {
-  type: "group" | "model";
-  id: string;
-  name: string;
-  providerId: string;
-  model: Model;
+interface ModelSelectProps {
+  onSelect: (providerId: string, modelId: string) => void;
 }
 
-export const ModelSelect = () => {
+export const ModelSelect = ({ onSelect }: ModelSelectProps) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
@@ -32,11 +28,15 @@ export const ModelSelect = () => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const handleModelSelect = useCallback((modelId: string) => {
-    setSelectedModelId(modelId);
-    setIsOpen(false);
-    // TODO: 处理模型选择逻辑
-  }, []);
+  const handleModelSelect = useCallback(
+    (providerId: string, modelId: string) => {
+      setSelectedModelId(modelId);
+      setIsOpen(false);
+
+      onSelect(providerId, modelId);
+    },
+    [onSelect]
+  );
 
   const filteredItems = useMemo(() => {
     const items: ListItem[] = [];

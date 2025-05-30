@@ -6,7 +6,7 @@ export type ThreadSetting = {
 export type ThreadItem = {
   id: string;
   title: string;
-  settings?: ThreadSetting;
+  settings: ThreadSetting;
   createdAt: string;
   updatedAt: string;
   isCollected: boolean;

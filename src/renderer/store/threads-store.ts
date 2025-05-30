@@ -1,4 +1,4 @@
-import type { ThreadItem } from "@shared/types/thread";
+import type { ThreadItem, ThreadSetting } from "@shared/types/thread";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -8,16 +8,16 @@ const THREADS_STORAGE_KEY = "threads";
 interface ThreadStore {
   threads: ThreadItem[];
   activeThreadId: string;
-  activeProviderId: string;
-  activeModelId: string;
 
   setThreads: (threads: ThreadItem[]) => void;
-  addThread: (data: { id: string; title: string }) => void;
+  addThread: (data: {
+    id: string;
+    title: string;
+    settings: ThreadSetting;
+  }) => void;
   updateThread: (id: string, data: Partial<ThreadItem>) => void;
   removeThread: (id: string) => void;
   setActiveThreadId: (id: string) => void;
-  setActiveProviderId: (id: string) => void;
-  setActiveModelId: (id: string) => void;
 }
 
 const { threadsService } = window.service;
@@ -27,18 +27,17 @@ export const useThreadsStore = create<ThreadStore>()(
     immer((set, get) => ({
       threads: [],
       activeThreadId: "",
-      activeProviderId: "",
-      activeModelId: "",
 
       setThreads: (threads) => set({ threads }),
 
       addThread: (data) =>
         set((state) => {
           const now = new Date().toISOString();
-          const { id, title } = data;
+          const { id, title, settings } = data;
           const newThread = {
             id,
             title,
+            settings,
             createdAt: now,
             updatedAt: now,
             isCollected: false,
@@ -82,9 +81,6 @@ export const useThreadsStore = create<ThreadStore>()(
           state.activeThreadId = id;
           return state;
         }),
-
-      setActiveProviderId: (id) => set({ activeProviderId: id }),
-      setActiveModelId: (id) => set({ activeModelId: id }),
     })),
     {
       name: THREADS_STORAGE_KEY,
