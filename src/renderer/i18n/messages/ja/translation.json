@@ -125,7 +125,8 @@
     }
   },
   "thread": {
-    "new-thread-title": "新しい会話"
+    "new-thread-title": "新しい会話",
+    "create-thread-error": "申し訳ありませんが、新しいセッションの作成は失敗しました！"
   },
   "thread-menu": {
     "actions": {

@@ -2,8 +2,12 @@ import { useModelSettingStore } from "@renderer/store/settings-store/model-setti
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useThreadsStore } from "@renderer/store/threads-store";
 import type { Model } from "@shared/types/model";
+import type { ThreadItem } from "@shared/types/thread";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+
+const { threadsService } = window.service;
 
 interface GroupedModel {
   id: string;
@@ -12,7 +16,9 @@ interface GroupedModel {
 }
 
 export function useToolBar() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "thread",
+  });
   const { threads, addThread } = useThreadsStore();
   const { tabs, activeTabId, addTab } = useTabBarStore();
   const { providerModelMap, providerMap } = useModelSettingStore();
@@ -43,37 +49,62 @@ export function useToolBar() {
     setSelectedModelId(modelId);
   };
 
-  const handleSendMessage = () => {
+  const createThread = async (
+    threadData: ThreadItem
+  ): Promise<string | null> => {
+    const { success, threadId, error } = await threadsService.createThread(
+      threadData
+    );
+    if (success && threadId) {
+      return threadId;
+    }
+
+    console.error("create thread error", error);
+
+    toast.error(t("create-thread-error"));
+    return null;
+  };
+
+  const handleSendMessage = async () => {
     const settings = {
       providerId: selectedProviderId,
       modelId: selectedModelId,
     };
 
-    if (tabs.length === 0) {
+    const isHomepage = tabs.length === 0;
+    const hasActiveThread = threads.some((thread) => thread.id === activeTabId);
+
+    let activeThreadId: string | null = null;
+
+    if (isHomepage) {
       // * Handle homepage condition
-      const title = t("thread.new-thread-title");
+      const title = t("new-thread-title");
       const newTabId = addTab({
         title,
       });
-      addThread({
+      const newThread = addThread({
         id: newTabId,
         title,
         settings,
       });
-    } else {
-      // * Handle tab exists condition
-      if (!threads.some((thread) => thread.id === activeTabId)) {
-        // * Handle new tab condition (thread not exists)
-        const activeTab = tabs.find((tab) => tab.id === activeTabId);
-        addThread({
-          id: activeTabId,
-          title: activeTab?.title ?? t("thread.new-thread-title"),
-          settings,
-        });
-      }
 
-      // TODO: Send message logic
+      activeThreadId = await createThread(newThread);
+    } else if (!hasActiveThread) {
+      // * Handle new tab condition - tab exists but thread doesn't
+      const activeTab = tabs.find((tab) => tab.id === activeTabId);
+      const newThread = addThread({
+        id: activeTabId,
+        title: activeTab?.title ?? t("new-thread-title"),
+        settings,
+      });
+
+      activeThreadId = await createThread(newThread);
     }
+    // * If thread already exists, continue conversation on existing thread
+    // * No need to create new thread
+
+    // TODO: Send message logic (work with existing or newly created thread)
+    activeThreadId && console.log("activeThreadId", activeThreadId);
   };
 
   return {

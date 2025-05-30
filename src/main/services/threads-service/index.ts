@@ -29,20 +29,29 @@ export class ThreadsService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async createThread(_event: Electron.IpcMainEvent, threadData: ThreadItem) {
     try {
+      const {
+        id: threadId,
+        title,
+        settings: { providerId, modelId },
+        createdAt,
+        updatedAt,
+        isCollected,
+      } = threadData;
+
       const dbThreadData: InsertThread = {
-        threadId: threadData.id,
-        title: threadData.title,
-        providerId: threadData.settings.providerId,
-        modelId: threadData.settings.modelId,
-        createdAt: threadData.createdAt,
-        updatedAt: threadData.updatedAt,
-        isCollected: threadData.isCollected,
+        threadId,
+        title,
+        providerId,
+        modelId,
+        createdAt,
+        updatedAt,
+        isCollected,
       };
 
       const thread = await this.threadRepository.create(dbThreadData);
 
       Logger.info("Thread created successfully, threadId: ", thread.threadId);
-      return { success: true, thread };
+      return { success: true, threadId: thread.threadId };
     } catch (error) {
       Logger.error("Failed to create thread:", error);
       return {

@@ -23,7 +23,11 @@ declare global {
       };
       threadsService: {
         setActiveThreadId: (threadId: string) => void;
-        createThread: (threadData: ThreadItem) => void;
+        createThread: (threadData: ThreadItem) => Promise<{
+          success: boolean;
+          threadId?: string;
+          error?: string;
+        }>;
       };
       providerService: {
         checkApiKey: (params: CheckApiKeyParams) => Promise<{

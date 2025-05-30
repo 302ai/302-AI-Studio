@@ -8,13 +8,14 @@ const THREADS_STORAGE_KEY = "threads";
 interface ThreadStore {
   threads: ThreadItem[];
   activeThreadId: string;
+  generatingThreadIds: Set<string>;
 
   setThreads: (threads: ThreadItem[]) => void;
   addThread: (data: {
     id: string;
     title: string;
     settings: ThreadSetting;
-  }) => void;
+  }) => ThreadItem;
   updateThread: (id: string, data: Partial<ThreadItem>) => void;
   removeThread: (id: string) => void;
   setActiveThreadId: (id: string) => void;
@@ -27,21 +28,23 @@ export const useThreadsStore = create<ThreadStore>()(
     immer((set, get) => ({
       threads: [],
       activeThreadId: "",
+      generatingThreadIds: new Set(),
 
       setThreads: (threads) => set({ threads }),
 
-      addThread: (data) =>
+      addThread: (data) => {
+        const now = new Date().toISOString();
+        const { id, title, settings } = data;
+        const newThread = {
+          id,
+          title,
+          settings,
+          createdAt: now,
+          updatedAt: now,
+          isCollected: false,
+        };
+
         set((state) => {
-          const now = new Date().toISOString();
-          const { id, title, settings } = data;
-          const newThread = {
-            id,
-            title,
-            settings,
-            createdAt: now,
-            updatedAt: now,
-            isCollected: false,
-          };
           const newThreads = [...get().threads, newThread];
           const sortedThreads = newThreads.sort(
             (a, b) =>
@@ -50,10 +53,11 @@ export const useThreadsStore = create<ThreadStore>()(
           state.threads = sortedThreads;
           state.activeThreadId = newThread.id;
 
-          threadsService.createThread(newThread);
-
           return state;
-        }),
+        });
+
+        return newThread;
+      },
 
       updateThread: (id, data) =>
         set((state) => ({

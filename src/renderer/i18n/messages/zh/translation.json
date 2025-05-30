@@ -125,7 +125,8 @@
     }
   },
   "thread": {
-    "new-thread-title": "新会话"
+    "new-thread-title": "新会话",
+    "create-thread-error": "抱歉，新会话创建失败！"
   },
   "thread-menu": {
     "actions": {

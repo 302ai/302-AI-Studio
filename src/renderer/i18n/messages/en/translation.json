@@ -125,7 +125,8 @@
     }
   },
   "thread": {
-    "new-thread-title": "New Chat"
+    "new-thread-title": "New Chat",
+    "create-thread-error": "Sorry, the new conversation creation failed!"
   },
   "thread-menu": {
     "actions": {
