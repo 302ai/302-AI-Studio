@@ -12,7 +12,7 @@ export class ThreadRepository extends BaseRepository<Thread, InsertThread> {
     super(db, threads);
   }
 
-  async create(data: InsertThread): Promise<Thread> {
+  async createThread(data: InsertThread): Promise<ThreadItem> {
     const now = new Date().toISOString();
     const threadData: InsertThread = {
       ...data,
@@ -23,10 +23,13 @@ export class ThreadRepository extends BaseRepository<Thread, InsertThread> {
 
     const result = await this.db.insert(threads).values(threadData).returning();
 
-    return result[0];
+    return this.toThreadItem(result[0]);
   }
 
-  async update(threadId: string, data: Partial<InsertThread>): Promise<Thread> {
+  async updateThread(
+    threadId: string,
+    data: Partial<InsertThread>
+  ): Promise<ThreadItem> {
     const now = new Date().toISOString();
     const updateData = {
       ...data,
@@ -43,7 +46,7 @@ export class ThreadRepository extends BaseRepository<Thread, InsertThread> {
       throw new Error(`Thread with threadId ${threadId} not found`);
     }
 
-    return result[0];
+    return this.toThreadItem(result[0]);
   }
 
   async delete(threadId: string): Promise<boolean> {
@@ -57,6 +60,16 @@ export class ThreadRepository extends BaseRepository<Thread, InsertThread> {
   async getAllThreads(): Promise<ThreadItem[]> {
     const result = await this.getAll();
     return result.map(this.toThreadItem);
+  }
+
+  async getByThreadId(threadId: string): Promise<ThreadItem | undefined> {
+    const result = await this.db
+      .select()
+      .from(threads)
+      .where(eq(threads.threadId, threadId))
+      .limit(1);
+
+    return result[0] ? this.toThreadItem(result[0]) : undefined;
   }
 
   private toThreadItem(dbThread: Thread): ThreadItem {

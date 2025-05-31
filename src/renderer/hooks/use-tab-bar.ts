@@ -1,4 +1,5 @@
 import type { DropResult } from "@hello-pangea/dnd";
+import type { ThreadItem } from "@shared/types/thread";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
@@ -18,7 +19,8 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
 
   const activateTabId = (id: string) => {
     setActiveTabId(id);
-    emitter.emit(EventNames.TAB_ACTIVE, { tabId: id });
+
+    emitter.emit(EventNames.TAB_SELECT, { tabId: id });
   };
 
   const handleDragEnd = (result: DropResult) => {
@@ -125,32 +127,23 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
    * * This effect is used to handle the click event for a thread in the sidebar
    */
   useEffect(() => {
-    /**
-     * Handles the click event for a thread in the sidebar
-     * * If the thread is already open, it will be set as the active tab
-     * * Else if the thread is not open, it will be added to the tabs and set as the active tab
-     * @param threadId The id of the thread to be clicked
-     */
-    const handleClickThread = (event: {
-      id: string;
-      title: string;
-      favicon: string;
-    }) => {
-      const { id, title, favicon } = event;
-      if (tabs.find((tab) => tab.id === id)) {
+    const handleThreadSelect = (event: { thread: ThreadItem }) => {
+      const { thread } = event;
+      const { id, title, favicon } = thread;
+
+      const currentTabs = useTabBarStore.getState().tabs;
+      const existingTab = currentTabs.find((tab) => tab.id === id);
+
+      if (existingTab) {
         setActiveTabId(id);
       } else {
-        addTab({
-          title,
-          id,
-          favicon,
-        });
+        addTab({ title, id, favicon });
       }
     };
-    const unsub = emitter.on(EventNames.THREAD_ACTIVE, handleClickThread);
 
+    const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadSelect);
     return () => unsub();
-  }, [tabs, addTab, setActiveTabId]);
+  }, [addTab, setActiveTabId]);
 
   return {
     tabs,

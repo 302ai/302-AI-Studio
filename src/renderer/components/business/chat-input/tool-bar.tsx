@@ -48,7 +48,10 @@ export function ToolBar({ className }: ToolBarProps) {
         </div>
 
         <div className="flex flex-row items-center gap-x-2">
-          <ModelSelect onSelect={handleModelSelect} />
+          <ModelSelect
+            onSelect={handleModelSelect}
+            selectedModelId={selectedModelId}
+          />
 
           <Separator className="h-1/2 w-[2px]" orientation="vertical" />
 

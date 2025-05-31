@@ -59,19 +59,13 @@ export function AppSidebar(props: AppSidebarProps) {
                 </SidebarDisclosureTrigger>
                 <SidebarDisclosurePanel>
                   {threads.map((thread) => {
-                    const { id, title, favicon } = thread;
+                    const { id, favicon } = thread;
                     return (
                       <SidebarItem
                         className="flex flex-1"
                         key={id}
                         isCurrent={id === activeThreadId}
-                        onClick={() =>
-                          handleClickThread({
-                            id,
-                            title,
-                            favicon: favicon ?? placeholder,
-                          })
-                        }
+                        onClick={() => handleClickThread(id)}
                       >
                         <img
                           src={favicon || placeholder}

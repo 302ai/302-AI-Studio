@@ -44,11 +44,11 @@ export class ThreadsService {
         isCollected,
       };
 
-      const thread = await this.threadRepository.create(dbThreadData);
+      const thread = await this.threadRepository.createThread(dbThreadData);
 
-      Logger.info("Thread created successfully, threadId: ", thread.threadId);
+      Logger.info("Thread created successfully, threadId: ", thread.id);
 
-      return { success: true, threadId: thread.threadId };
+      return { success: true, threadId: thread.id };
     } catch (error) {
       Logger.error("Failed to create thread:", error);
 
@@ -76,8 +76,11 @@ export class ThreadsService {
       if (data.settings?.modelId !== undefined)
         updateData.modelId = data.settings.modelId;
 
-      const thread = await this.threadRepository.update(threadId, updateData);
-      Logger.info("Thread updated successfully, threadId: ", thread.threadId);
+      const thread = await this.threadRepository.updateThread(
+        threadId,
+        updateData
+      );
+      Logger.info("Thread updated successfully, threadId: ", thread.id);
 
       return { success: true, thread };
     } catch (error) {
@@ -106,5 +109,10 @@ export class ThreadsService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getThreads(_event: Electron.IpcMainEvent) {
     return await this.threadRepository.getAllThreads();
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getThreadById(_event: Electron.IpcMainEvent, threadId: string) {
+    return await this.threadRepository.getByThreadId(threadId);
   }
 }

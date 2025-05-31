@@ -66,6 +66,12 @@ export const useTabBarStore = create<TabBarStore>()(
         const id = data.id ?? nanoid();
 
         set((state) => {
+          const existingTab = state.tabs.find((tab) => tab.id === id);
+          if (existingTab) {
+            state.activeTabId = id;
+            return state;
+          }
+
           const newTab = {
             id,
             title: data.title,

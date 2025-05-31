@@ -1,11 +1,13 @@
 import type { ThreadItem, ThreadSetting } from "@shared/types/thread";
+import { current } from "immer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 interface ThreadStore {
   threads: ThreadItem[];
-  activeThreadId: string;
+  activeThreadId: string | null;
   generatingThreadIds: Set<string>;
+  threadMap: Record<string, ThreadItem>;
 
   initializeStore: () => Promise<void>;
 
@@ -23,14 +25,23 @@ interface ThreadStore {
 const { threadsService } = window.service;
 
 export const useThreadsStore = create<ThreadStore>()(
-  immer((set, get) => ({
+  immer((set) => ({
     threads: [],
-    activeThreadId: "",
+    activeThreadId: null,
     generatingThreadIds: new Set(),
+    threadMap: {},
 
     initializeStore: async () => {
       const threads = await threadsService.getThreads();
-      set({ threads });
+      const threadMap = threads.reduce((acc, thread) => {
+        acc[thread.id] = thread;
+        return acc;
+      }, {} as Record<string, ThreadItem>);
+
+      set({
+        threads,
+        threadMap,
+      });
     },
 
     setThreads: (threads) => set({ threads }),
@@ -48,13 +59,14 @@ export const useThreadsStore = create<ThreadStore>()(
       };
 
       set((state) => {
-        const newThreads = [...get().threads, newThread];
+        const newThreads = [...current(state.threads), newThread];
         const sortedThreads = newThreads.sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         state.threads = sortedThreads;
         state.activeThreadId = newThread.id;
+        state.threadMap[id] = newThread;
 
         return state;
       });
@@ -63,35 +75,43 @@ export const useThreadsStore = create<ThreadStore>()(
     },
 
     updateThread: (id, data) => {
-      threadsService.updateThread(id, data);
+      set((state) => {
+        const existingThread = current(state.threadMap)[id];
+        if (!existingThread) return state;
 
-      set((state) => ({
-        threads: state.threads.map((thread) =>
-          thread.id === id
-            ? {
-                ...thread,
-                ...data,
-                updatedAt: new Date().toISOString(),
-              }
-            : thread
-        ),
-      }));
+        const updatedThread = {
+          ...existingThread,
+          ...data,
+          updatedAt: new Date().toISOString(),
+        };
+
+        state.threads = state.threads.map((thread) =>
+          thread.id === id ? updatedThread : thread
+        );
+        state.threadMap[id] = updatedThread;
+
+        return state;
+      });
+
+      threadsService.updateThread(id, data);
     },
 
     removeThread: (id) => {
-      threadsService.deleteThread(id);
+      set((state) => {
+        state.threads = state.threads.filter((thread) => thread.id !== id);
+        delete state.threadMap[id];
 
-      set((state) => ({
-        threads: state.threads.filter((thread) => thread.id !== id),
-      }));
+        return state;
+      });
+
+      threadsService.deleteThread(id);
     },
 
     setActiveThreadId: (id) =>
       set((state) => {
         if (state.activeThreadId === id) return;
-
-        threadsService.setActiveThreadId(id);
         state.activeThreadId = id;
+
         return state;
       }),
   }))

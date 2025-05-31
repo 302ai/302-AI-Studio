@@ -39,6 +39,7 @@ declare global {
         }>;
         deleteThread: (threadId: string) => void;
         getThreads: () => Promise<ThreadItem[]>;
+        getThreadById: (threadId: string) => Promise<ThreadItem | undefined>;
       };
       providerService: {
         checkApiKey: (params: CheckApiKeyParams) => Promise<{

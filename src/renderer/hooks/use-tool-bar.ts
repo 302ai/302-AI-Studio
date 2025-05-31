@@ -1,9 +1,10 @@
+import { EventNames, emitter } from "@renderer/services/event-service";
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useThreadsStore } from "@renderer/store/threads-store";
 import type { Model } from "@shared/types/model";
 import type { ThreadItem } from "@shared/types/thread";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -19,7 +20,11 @@ export function useToolBar() {
   const { t } = useTranslation("translation", {
     keyPrefix: "thread",
   });
-  const { threads, addThread } = useThreadsStore();
+  const {
+    threads,
+    addThread,
+    activeThreadId: _activeThreadId,
+  } = useThreadsStore();
   const { tabs, activeTabId, addTab } = useTabBarStore();
   const { providerModelMap, providerMap } = useModelSettingStore();
 
@@ -72,9 +77,11 @@ export function useToolBar() {
     };
 
     const isHomepage = tabs.length === 0;
-    const hasActiveThread = threads.some((thread) => thread.id === activeTabId);
+    const threadNotExists = !threads.some(
+      (thread) => thread.id === activeTabId
+    );
 
-    let activeThreadId: string | null = null;
+    let activeThreadId: string | null = _activeThreadId;
 
     if (isHomepage) {
       // * Handle homepage condition
@@ -89,7 +96,7 @@ export function useToolBar() {
       });
 
       activeThreadId = await createThread(newThread);
-    } else if (!hasActiveThread) {
+    } else if (threadNotExists) {
       // * Handle new tab condition - tab exists but thread doesn't
       const activeTab = tabs.find((tab) => tab.id === activeTabId);
       const newThread = addThread({
@@ -102,10 +109,34 @@ export function useToolBar() {
     }
     // * If thread already exists, continue conversation on existing thread
     // * No need to create new thread
+    const activeThread = threads.find((thread) => thread.id === activeThreadId);
+    console.log("activeThread", activeThread);
 
     // TODO: Send message logic (work with existing or newly created thread)
-    activeThreadId && console.log("activeThreadId", activeThreadId);
   };
+
+  useEffect(() => {
+    const handleThreadActive = (event: { thread: ThreadItem }) => {
+      const { providerId, modelId } = event.thread.settings;
+      const isProviderAvailable = providerModelMap[providerId];
+      const isModelAvailable = isProviderAvailable?.some(
+        (model) => model.id === modelId && model.enabled
+      );
+
+      if (isProviderAvailable && isModelAvailable) {
+        setSelectedProviderId(providerId);
+        setSelectedModelId(modelId);
+
+        console.log(`🔄 Synced model selection: ${providerId}/${modelId}`);
+      } else {
+        // TODO: If thread model not available, set default model
+        console.warn(`⚠️ Thread model not available: ${providerId}/${modelId}`);
+      }
+    };
+
+    const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadActive);
+    return () => unsub();
+  }, [providerModelMap]);
 
   return {
     selectedProviderId,

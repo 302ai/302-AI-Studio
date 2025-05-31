@@ -13,6 +13,7 @@ import {
 } from "@renderer/components/ui/tooltip";
 import { isMac } from "@renderer/config/constant";
 import { cn } from "@renderer/lib/utils";
+import { EventNames, emitter } from "@renderer/services/event-service";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -38,7 +39,8 @@ export function BasicTitleBar() {
   };
 
   const handleAddNewTab = () => {
-    addTab({ title: t("thread.new-thread-title") });
+    const newTabId = addTab({ title: t("thread.new-thread-title") });
+    emitter.emit(EventNames.TAB_SELECT, { tabId: newTabId });
   };
 
   const handleSearchThread = () => {
@@ -58,8 +60,8 @@ export function BasicTitleBar() {
                 ? "w-[calc(var(--sidebar-width)-60px)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
                 : "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
               : isMac
-                ? "w-[var(--sidebar-width-dock)]"
-                : "w-[var(--sidebar-width-collapsed)]",
+              ? "w-[var(--sidebar-width-dock)]"
+              : "w-[var(--sidebar-width-collapsed)]"
           )}
         >
           {/* Sidebar Toggle */}
@@ -120,7 +122,7 @@ export function BasicTitleBar() {
           orientation="vertical"
           className={cn(
             "h-[20px] w-[1px]",
-            state === "expanded" ? "hidden" : "",
+            state === "expanded" ? "hidden" : ""
           )}
         />
 

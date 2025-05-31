@@ -20,7 +20,8 @@ export type GroupedThreads = {
 
 export function useThread() {
   const { t } = useTranslation();
-  const { activeThreadId, threads, setActiveThreadId } = useThreadsStore();
+  const { activeThreadId, threads, threadMap, setActiveThreadId } =
+    useThreadsStore();
 
   const collectedThreads = threads.filter((thread) => thread.isCollected);
 
@@ -122,20 +123,16 @@ export function useThread() {
    * * Else if the thread is not open, it will be added to the tabs and set as the active tab
    * @param threadId The id of the thread to be clicked
    */
-  const handleClickThread = (thread: {
-    id: string;
-    title: string;
-    favicon: string;
-  }) => {
-    setActiveThreadId(thread.id);
-    emitter.emit(EventNames.THREAD_ACTIVE, thread);
+  const handleClickThread = (threadId: string) => {
+    setActiveThreadId(threadId);
+    emitter.emit(EventNames.THREAD_SELECT, { thread: threadMap[threadId] });
   };
 
   useEffect(() => {
     /**
-     * Handles the active tab change event
+     * Handles the tab select event
      */
-    const handleTabActive = (event: { tabId: string }) => {
+    const handleTabSelect = (event: { tabId: string }) => {
       const thread = threads.find((thread) => thread.id === event.tabId);
       setActiveThreadId(thread ? thread.id : "");
     };
@@ -153,7 +150,7 @@ export function useThread() {
     };
 
     const unsubs = [
-      emitter.on(EventNames.TAB_ACTIVE, handleTabActive),
+      emitter.on(EventNames.TAB_SELECT, handleTabSelect),
       emitter.on(EventNames.TAB_CLOSE, handleTabClose),
       emitter.on(EventNames.TAB_CLOSE_ALL, handleTabCloseAll),
     ];

@@ -1,15 +1,16 @@
+import type { ThreadItem } from "@shared/types/thread";
 import mitt from "mitt";
 
 export enum EventNames {
   // * Thread events
   THREAD_RENAME = "thread:rename",
   THREAD_DELETE = "thread:delete",
-  THREAD_ACTIVE = "thread:active",
+  THREAD_SELECT = "thread:select",
 
   // * Tab events
-  TAB_ACTIVE = "tab:active",
   TAB_CLOSE = "tab:close",
   TAB_CLOSE_ALL = "tab:close-all",
+  TAB_SELECT = "tab:select",
 }
 
 type Events = {
@@ -20,12 +21,10 @@ type Events = {
   [EventNames.THREAD_DELETE]: {
     threadId: string;
   };
-  [EventNames.THREAD_ACTIVE]: {
-    id: string;
-    title: string;
-    favicon: string;
+  [EventNames.THREAD_SELECT]: {
+    thread: ThreadItem;
   };
-  [EventNames.TAB_ACTIVE]: {
+  [EventNames.TAB_SELECT]: {
     tabId: string;
   };
   [EventNames.TAB_CLOSE]: {
@@ -46,6 +45,5 @@ export const emitter = {
     mittInstance.on(type, handler);
     return () => mittInstance.off(type, handler);
   },
-  // Original mitt instance
   _mittInstance: mittInstance,
 };

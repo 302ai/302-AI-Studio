@@ -15,24 +15,25 @@ import { type ListItem, ModelRowList } from "./model-row-list";
 
 interface ModelSelectProps {
   onSelect: (providerId: string, modelId: string) => void;
+  selectedModelId?: string;
 }
 
-export const ModelSelect = ({ onSelect }: ModelSelectProps) => {
+export const ModelSelect = ({
+  onSelect,
+  selectedModelId = "",
+}: ModelSelectProps) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
   const { contains } = useFilter({ sensitivity: "base" });
   const { groupedModels } = useToolBar();
-  const [selectedModelId, setSelectedModelId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const handleModelSelect = useCallback(
     (providerId: string, modelId: string) => {
-      setSelectedModelId(modelId);
       setIsOpen(false);
-
       onSelect(providerId, modelId);
     },
     [onSelect]
