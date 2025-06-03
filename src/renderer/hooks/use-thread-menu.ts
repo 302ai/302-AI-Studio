@@ -1,13 +1,11 @@
+import { triplitClient } from "@renderer/triplit/client";
 import type { ThreadItem } from "@shared/types/thread";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
-import { useThreadsStore } from "../store/threads-store";
 
 export type MenuModelActionType = "rename" | "clean-messages" | "delete";
 
 export function useThreadMenu(thread: ThreadItem) {
-  const { updateThread, removeThread } = useThreadsStore();
-
   const [state, setState] = useState<MenuModelActionType | null>(null);
   const [newTitle, setNewTitle] = useState(thread.title);
 
@@ -17,8 +15,10 @@ export function useThreadMenu(thread: ThreadItem) {
     setState(null);
   };
 
-  const handleRename = () => {
-    updateThread(thread.id, { title: formattedTitle });
+  const handleRename = async () => {
+    await triplitClient.update("threads", thread.id, async (thread) => {
+      thread.title = formattedTitle;
+    });
 
     emitter.emit(EventNames.THREAD_RENAME, {
       threadId: thread.id,
@@ -32,8 +32,8 @@ export function useThreadMenu(thread: ThreadItem) {
     closeModal();
   };
 
-  const handleDelete = () => {
-    removeThread(thread.id);
+  const handleDelete = async () => {
+    await triplitClient.delete("threads", thread.id);
 
     emitter.emit(EventNames.THREAD_DELETE, {
       threadId: thread.id,
@@ -42,8 +42,10 @@ export function useThreadMenu(thread: ThreadItem) {
     closeModal();
   };
 
-  const handleCollectThread = () => {
-    updateThread(thread.id, { isCollected: !thread.isCollected });
+  const handleCollectThread = async () => {
+    await triplitClient.update("threads", thread.id, async (thread) => {
+      thread.collected = !thread.collected;
+    });
 
     closeModal();
   };

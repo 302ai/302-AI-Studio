@@ -1,4 +1,6 @@
+import { triplitClient } from "@renderer/triplit/client";
 import type { ThreadItem } from "@shared/types/thread";
+import { useQuery } from "@triplit/react";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { EventNames, emitter } from "../services/event-service";
@@ -20,10 +22,22 @@ export type GroupedThreads = {
 
 export function useThread() {
   const { t } = useTranslation();
-  const { activeThreadId, threads, threadMap, setActiveThreadId } =
-    useThreadsStore();
+  const { activeThreadId, setActiveThreadId } = useThreadsStore();
 
-  const collectedThreads = threads.filter((thread) => thread.isCollected);
+  const threadsQuery = triplitClient
+    .query("threads")
+    .Order("createdAt", "DESC");
+  const { results: threadItems } = useQuery(triplitClient, threadsQuery);
+  const threads = threadItems ?? [];
+
+  const threadMap = useMemo(() => {
+    return threads.reduce((acc, thread) => {
+      acc[thread.id] = thread;
+      return acc;
+    }, {} as Record<string, ThreadItem>);
+  }, [threads]);
+
+  const collectedThreads = threads.filter((thread) => thread.collected);
 
   /**
    * Returns the grouped threads for the sidebar including collected threads and date-based groups
@@ -37,13 +51,13 @@ export function useThread() {
       {
         key: "collected",
         label: t("sidebar.section.collected"),
-        filter: (thread: ThreadItem) => thread.isCollected,
+        filter: (thread: ThreadItem) => thread.collected,
       },
       {
         key: "today",
         label: t("sidebar.section.today"),
         filter: (thread: ThreadItem) => {
-          if (thread.isCollected) return false;
+          if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           return date >= now;
         },
@@ -52,7 +66,7 @@ export function useThread() {
         key: "yesterday",
         label: t("sidebar.section.yesterday"),
         filter: (thread: ThreadItem) => {
-          if (thread.isCollected) return false;
+          if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const yesterday = new Date(now);
           yesterday.setDate(now.getDate() - 1);
@@ -63,7 +77,7 @@ export function useThread() {
         key: "last7Days",
         label: t("sidebar.section.last7Days"),
         filter: (thread: ThreadItem) => {
-          if (thread.isCollected) return false;
+          if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const last7Days = new Date(now);
           const yesterday = new Date(now);
@@ -76,7 +90,7 @@ export function useThread() {
         key: "last30Days",
         label: t("sidebar.section.last30Days"),
         filter: (thread: ThreadItem) => {
-          if (thread.isCollected) return false;
+          if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const last30Days = new Date(now);
           const last7Days = new Date(now);
@@ -89,7 +103,7 @@ export function useThread() {
         key: "earlier",
         label: t("sidebar.section.earlier"),
         filter: (thread: ThreadItem) => {
-          if (thread.isCollected) return false;
+          if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const last30Days = new Date(now);
           last30Days.setDate(now.getDate() - 30);

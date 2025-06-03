@@ -11,6 +11,7 @@
     "composite": true,
     "jsx": "react-jsx",
     "resolveJsonModule": true,
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [

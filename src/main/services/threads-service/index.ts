@@ -28,10 +28,11 @@ export class ThreadsService {
       const {
         id: threadId,
         title,
-        settings: { providerId, modelId },
+        providerId,
+        modelId,
         createdAt,
         updatedAt,
-        isCollected,
+        collected,
       } = threadData;
 
       const dbThreadData: InsertThread = {
@@ -39,9 +40,9 @@ export class ThreadsService {
         title,
         providerId,
         modelId,
-        createdAt,
-        updatedAt,
-        isCollected,
+        createdAt: createdAt.toISOString(),
+        updatedAt: updatedAt.toISOString(),
+        collected,
       };
 
       const thread = await this.threadRepository.createThread(dbThreadData);
@@ -69,12 +70,10 @@ export class ThreadsService {
       const updateData: Partial<InsertThread> = {};
 
       if (data.title !== undefined) updateData.title = data.title;
-      if (data.isCollected !== undefined)
-        updateData.isCollected = data.isCollected;
-      if (data.settings?.providerId !== undefined)
-        updateData.providerId = data.settings.providerId;
-      if (data.settings?.modelId !== undefined)
-        updateData.modelId = data.settings.modelId;
+      if (data.collected !== undefined) updateData.collected = data.collected;
+      if (data.providerId !== undefined)
+        updateData.providerId = data.providerId;
+      if (data.modelId !== undefined) updateData.modelId = data.modelId;
 
       const thread = await this.threadRepository.updateThread(
         threadId,

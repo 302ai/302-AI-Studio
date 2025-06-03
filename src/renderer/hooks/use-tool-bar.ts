@@ -2,24 +2,28 @@ import { EventNames, emitter } from "@renderer/services/event-service";
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useThreadsStore } from "@renderer/store/threads-store";
+import { triplitClient } from "@renderer/triplit/client";
+import type { CreateThreadData, Thread } from "@renderer/triplit/types";
 import type { ThreadItem } from "@shared/types/thread";
+import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-
-const { threadsService } = window.service;
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
     keyPrefix: "thread",
   });
-  const {
-    threads,
-    addThread,
-    activeThreadId: _activeThreadId,
-  } = useThreadsStore();
+  const { activeThreadId: _activeThreadId, setActiveThreadId } =
+    useThreadsStore();
   const { tabs, activeTabId, addTab } = useTabBarStore();
   const { providerModelMap } = useModelSettingStore();
+
+  const threadsQuery = triplitClient
+    .query("threads")
+    .Order("createdAt", "DESC");
+  const { results: threadItems } = useQuery(triplitClient, threadsQuery);
+  const threads = threadItems ?? [];
 
   const [selectedProviderId, setSelectedProviderId] = useState<string>("");
   const [selectedModelId, setSelectedModelId] = useState<string>("");
@@ -30,27 +34,28 @@ export function useToolBar() {
   };
 
   const createThread = async (
-    threadData: ThreadItem
-  ): Promise<string | null> => {
-    const { success, threadId, error } = await threadsService.createThread(
-      threadData
-    );
-    if (success && threadId) {
-      return threadId;
+    threadData: CreateThreadData
+  ): Promise<Thread | null> => {
+    try {
+      const { title, providerId, modelId } = threadData;
+      const createData: CreateThreadData = {
+        title,
+        providerId,
+        modelId,
+      };
+
+      const thread = await triplitClient.insert("threads", createData);
+      setActiveThreadId(thread.id);
+
+      return thread;
+    } catch (error) {
+      console.error("create thread error", error);
+      toast.error(t("create-thread-error"));
+      return null;
     }
-
-    console.error("create thread error", error);
-
-    toast.error(t("create-thread-error"));
-    return null;
   };
 
   const handleSendMessage = async () => {
-    const settings = {
-      providerId: selectedProviderId,
-      modelId: selectedModelId,
-    };
-
     const isHomepage = tabs.length === 0;
     const threadNotExists = !threads.some(
       (thread) => thread.id === activeTabId
@@ -61,27 +66,45 @@ export function useToolBar() {
     if (isHomepage) {
       // * Handle homepage condition
       const title = t("new-thread-title");
-      const newTabId = addTab({
-        title,
-      });
-      const newThread = addThread({
-        id: newTabId,
-        title,
-        settings,
-      });
 
-      activeThreadId = await createThread(newThread);
+      const createThreadData: CreateThreadData = {
+        title,
+        providerId: selectedProviderId,
+        modelId: selectedModelId,
+      };
+
+      const thread = await createThread(createThreadData);
+      if (thread) {
+        addTab({
+          title,
+          id: thread.id,
+        });
+        activeThreadId = thread.id;
+        console.log("Thread created successfully:", thread);
+        console.log("activeThreadId", activeThreadId);
+      }
     } else if (threadNotExists) {
       // * Handle new tab condition - tab exists but thread doesn't
       const activeTab = tabs.find((tab) => tab.id === activeTabId);
-      const newThread = addThread({
-        id: activeTabId,
-        title: activeTab?.title ?? t("new-thread-title"),
-        settings,
-      });
 
-      activeThreadId = await createThread(newThread);
+      const createThreadData: CreateThreadData = {
+        title: activeTab?.title ?? t("new-thread-title"),
+        providerId: selectedProviderId,
+        modelId: selectedModelId,
+      };
+
+      const thread = await createThread(createThreadData);
+      if (thread) {
+        addTab({
+          title: activeTab?.title ?? t("new-thread-title"),
+          id: thread.id,
+        });
+        activeThreadId = thread.id;
+        console.log("Thread created successfully:", thread);
+        console.log("activeThreadId", activeThreadId);
+      }
     }
+
     // * If thread already exists, continue conversation on existing thread
     // * No need to create new thread
     const activeThread = threads.find((thread) => thread.id === activeThreadId);
@@ -92,7 +115,7 @@ export function useToolBar() {
 
   useEffect(() => {
     const handleThreadActive = (event: { thread: ThreadItem }) => {
-      const { providerId, modelId } = event.thread.settings;
+      const { providerId, modelId } = event.thread;
       const isProviderAvailable = providerModelMap[providerId];
       const isModelAvailable = isProviderAvailable?.some(
         (model) => model.id === modelId && model.enabled

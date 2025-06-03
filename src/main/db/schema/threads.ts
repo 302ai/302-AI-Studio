@@ -10,7 +10,7 @@ export const threads = sqliteTable("threads", {
   modelId: text("model_id").notNull(),
   createdAt: text("created_at").notNull().$defaultFn(getNow),
   updatedAt: text("updated_at").notNull().$defaultFn(getNow),
-  isCollected: integer("is_collected", { mode: "boolean" })
+  collected: integer("is_collected", { mode: "boolean" })
     .notNull()
     .$defaultFn(() => false),
 });

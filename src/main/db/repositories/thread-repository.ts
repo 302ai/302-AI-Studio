@@ -18,7 +18,7 @@ export class ThreadRepository extends BaseRepository<Thread, InsertThread> {
       ...data,
       createdAt: data.createdAt ?? now,
       updatedAt: data.updatedAt ?? now,
-      isCollected: data.isCollected ?? false,
+      collected: data.collected ?? false,
     };
 
     const result = await this.db.insert(threads).values(threadData).returning();
@@ -80,18 +80,16 @@ export class ThreadRepository extends BaseRepository<Thread, InsertThread> {
       modelId,
       createdAt,
       updatedAt,
-      isCollected,
+      collected,
     } = dbThread;
     return {
       id: threadId,
       title,
-      settings: {
-        providerId,
-        modelId,
-      },
-      createdAt,
-      updatedAt,
-      isCollected,
+      providerId,
+      modelId,
+      createdAt: new Date(createdAt),
+      updatedAt: new Date(updatedAt),
+      collected: collected,
     };
   }
 }

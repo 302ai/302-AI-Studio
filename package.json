@@ -46,6 +46,8 @@
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@intentui/icons": "^1.10.33",
+    "@triplit/client": "^1.0.40",
+    "@triplit/react": "^1.0.40",
     "better-sqlite3": "^11.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -86,6 +88,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/vite": "^4.1.4",
+    "@triplit/cli": "^1.0.50",
     "@types/better-sqlite3": "^7.6.13",
     "@types/lodash": "^4.17.17",
     "@types/node": "^22.13.8",
