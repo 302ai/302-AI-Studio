@@ -22,6 +22,9 @@ import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
 
+/**
+ * ! This component can not be extracted to a separate file
+ */
 const ListRow = React.memo(function ListRow({
   index,
   style,

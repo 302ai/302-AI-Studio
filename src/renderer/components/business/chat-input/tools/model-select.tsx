@@ -36,6 +36,7 @@ export const ModelSelect = ({
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const handleModelSelect = useCallback(
