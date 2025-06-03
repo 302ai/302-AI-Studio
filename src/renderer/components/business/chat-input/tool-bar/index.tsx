@@ -5,8 +5,8 @@ import { cn } from "@renderer/lib/utils";
 import { useTranslation } from "react-i18next";
 import { FaCircleArrowUp } from "react-icons/fa6";
 import { toast } from "sonner";
-import { AttachmentUploader } from "./tools/attachment-uploader";
-import { ModelSelect } from "./tools/model-select";
+import { AttachmentUploader } from "./attachment-uploader";
+import { ModelSelect } from "./model-select";
 
 interface ToolBarProps {
   className?: string;
