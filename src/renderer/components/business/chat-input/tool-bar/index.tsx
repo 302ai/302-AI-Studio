@@ -1,9 +1,9 @@
+import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { useTranslation } from "react-i18next";
-import { FaCircleArrowUp } from "react-icons/fa6";
 import { toast } from "sonner";
 import { AttachmentUploader } from "./attachment-uploader";
 import { ModelSelect } from "./model-select";
@@ -61,7 +61,7 @@ export function ToolBar({ className }: ToolBarProps) {
             shape="circle"
             onClick={handleSendMessageClick}
           >
-            <FaCircleArrowUp className="size-8" />
+            <ArrowUpCircleIcon className="size-8" />
           </Button>
         </div>
       </div>

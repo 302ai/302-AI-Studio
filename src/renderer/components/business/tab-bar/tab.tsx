@@ -10,9 +10,8 @@ import {
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
 import { TabType, useTabBarStore } from "@renderer/store/tab-bar-store";
-import { Settings2, X } from "lucide-react";
+import { CopyX, Settings2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { VscClose, VscCloseAll } from "react-icons/vsc";
 
 interface TabProps {
   id: string;
@@ -158,11 +157,11 @@ export function Tab({
           </ContextMenuTrigger>
           <ContextMenuContent aria-label={`Tab options for ${title}`}>
             <ContextMenuItem onAction={handleTabClose}>
-              <VscClose className="mr-2 h-4 w-4" />
+              <X className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close")}
             </ContextMenuItem>
             <ContextMenuItem onAction={handleTabCloseAll}>
-              <VscCloseAll className="mr-2 h-4 w-4" />
+              <CopyX className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close-all")}
             </ContextMenuItem>
           </ContextMenuContent>

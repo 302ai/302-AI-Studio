@@ -6,9 +6,9 @@ import {
 } from "@renderer/components/ui/select";
 import langs from "@renderer/i18n/langs";
 import { useSettingsStore } from "@renderer/store/settings-store";
+import { Earth } from "lucide-react";
 import type { Key } from "react-aria-components";
 import { useTranslation } from "react-i18next";
-import { BsGlobe } from "react-icons/bs";
 
 export function LanguageSelector() {
   const { t, i18n } = useTranslation();
@@ -35,7 +35,7 @@ export function LanguageSelector() {
       >
         <SelectTrigger
           className="h-9 cursor-pointer rounded-xl text-secondary-fg"
-          prefix={<BsGlobe className="mr-1 size-4" />}
+          prefix={<Earth className="mr-1 size-4" />}
         />
         <SelectList popoverClassName="min-w-[240px]" items={langs}>
           {({ key, prefix, nativeName }) => (

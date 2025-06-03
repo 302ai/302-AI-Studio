@@ -4,9 +4,8 @@ import { Label } from "@renderer/components/ui/field";
 import { Radio, RadioGroup } from "@renderer/components/ui/radio-group";
 import { TextField } from "@renderer/components/ui/text-field";
 import { TailChase } from "ldrs/react";
+import { Check, KeyRound, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { IoKeyOutline } from "react-icons/io5";
-import { VscCheck, VscClose } from "react-icons/vsc";
 import { LoaderRenderer } from "../loader-renderer";
 
 interface ProviderCfgFormProps {
@@ -50,7 +49,7 @@ export function ProviderCfgForm({
 
   const buttonStatuses = {
     idle: {
-      icon: <IoKeyOutline className="size-4" />,
+      icon: <KeyRound className="size-4" />,
       text: t("check-key"),
     },
     loading: {
@@ -61,7 +60,7 @@ export function ProviderCfgForm({
 
   const badgeStatuses = {
     unverified: {
-      icon: <IoKeyOutline className="size-4" />,
+      icon: <KeyRound className="size-4" />,
       text: t("unverified"),
     },
     loading: {
@@ -69,11 +68,11 @@ export function ProviderCfgForm({
       text: t("checking"),
     },
     success: {
-      icon: <VscCheck className="size-4" />,
+      icon: <Check className="size-4" />,
       text: t("verified"),
     },
     failed: {
-      icon: <VscClose className="size-4" />,
+      icon: <X className="size-4" />,
       text: t("verification-failed"),
     },
   } as const;

@@ -15,11 +15,15 @@ import { isMac } from "@renderer/config/constant";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+  Settings,
+  SquarePlus,
+} from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaRegSquarePlus } from "react-icons/fa6";
-import { FiSearch, FiSettings } from "react-icons/fi";
-import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { TabBar } from "../tab-bar";
 import { ThreadSearcher } from "./thread-searcher";
 
@@ -73,10 +77,10 @@ export function BasicTitleBar() {
               style={noDragRegion}
               onClick={toggleSidebar}
             >
-              <LuPanelLeftOpen
+              <PanelLeftOpen
                 className={cn("h-4 w-4", { hidden: !isSidebarCollapsed })}
               />
-              <LuPanelLeftClose
+              <PanelLeftClose
                 className={cn("h-4 w-4", { hidden: isSidebarCollapsed })}
               />
             </TooltipTrigger>
@@ -96,7 +100,7 @@ export function BasicTitleBar() {
               style={noDragRegion}
               onClick={handleSearchThread}
             >
-              <FiSearch className="h-4 w-4" />
+              <Search className="h-4 w-4" />
             </TooltipTrigger>
             <TooltipContent>
               {t("sidebar.search-thread.tooltip")}
@@ -112,7 +116,7 @@ export function BasicTitleBar() {
               style={noDragRegion}
               onClick={handleAddNewTab}
             >
-              <FaRegSquarePlus className="h-4 w-4" />
+              <SquarePlus className="h-4 w-4" />
             </TooltipTrigger>
             <TooltipContent>{t("sidebar.new-thread.tooltip")}</TooltipContent>
           </Tooltip>
@@ -141,7 +145,7 @@ export function BasicTitleBar() {
               style={noDragRegion}
               onClick={handleSettingsClick}
             >
-              <FiSettings className="h-4 w-4" />
+              <Settings className="h-4 w-4" />
             </TooltipTrigger>
             <TooltipContent>{t("settings.icon-tooltip")}</TooltipContent>
           </Tooltip>

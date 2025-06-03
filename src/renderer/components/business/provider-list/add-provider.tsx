@@ -8,11 +8,11 @@ import type { ModelProvider } from "@shared/types/provider";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { toast } from "sonner";
 import { ModelIcon } from "../model-icon";
 import "ldrs/react/TailChase.css";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import { LayoutDashboard } from "lucide-react";
 import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface AddProviderProps {
@@ -129,7 +129,7 @@ export function AddProvider({
               textValue="Custom"
             >
               <span className="flex items-center gap-2">
-                <MdOutlineDashboardCustomize className="size-4" />
+                <LayoutDashboard className="size-4" />
                 <span className="text-base">{t("custom-provider")}</span>
               </span>
             </SelectOption>
