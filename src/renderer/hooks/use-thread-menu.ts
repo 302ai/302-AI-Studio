@@ -1,5 +1,5 @@
-import { triplitClient } from "@renderer/triplit/client";
-import { updateThread } from "@renderer/triplit/helpers";
+import { triplitClient } from "@shared/triplit/client";
+import { updateThread } from "@shared/triplit/helpers";
 import type { ThreadItem } from "@shared/types/thread";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
