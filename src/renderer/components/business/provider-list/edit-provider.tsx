@@ -1,6 +1,6 @@
 import { useProviderList } from "@renderer/hooks/use-provider-list";
 import type { ModelProvider } from "@shared/types/provider";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ProviderCfgForm } from "./provider-cfg-form";
@@ -131,6 +131,14 @@ export function EditProvider({
     }
   };
 
+  const onValidationStatusChangeRef = useRef(onValidationStatusChange);
+  const onProviderCfgSetRef = useRef(onProviderCfgSet);
+
+  useEffect(() => {
+    onValidationStatusChangeRef.current = onValidationStatusChange;
+    onProviderCfgSetRef.current = onProviderCfgSet;
+  });
+
   useEffect(() => {
     const updatedProvider: ModelProvider = {
       ...provider,
@@ -141,21 +149,12 @@ export function EditProvider({
     };
 
     const isValid = isCurrentConfigValid();
-    onValidationStatusChange(isValid);
+    onValidationStatusChangeRef.current(isValid);
 
     if (isValid) {
-      onProviderCfgSet(updatedProvider);
+      onProviderCfgSetRef.current(updatedProvider);
     }
-  }, [
-    customName,
-    apiKey,
-    baseUrl,
-    apiType,
-    onProviderCfgSet,
-    onValidationStatusChange,
-    provider,
-    isCurrentConfigValid,
-  ]);
+  }, [customName, apiKey, baseUrl, apiType, isCurrentConfigValid, provider]);
 
   return (
     <div className="flex flex-col gap-4">

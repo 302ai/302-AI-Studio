@@ -1,14 +1,16 @@
+import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
+import { fetchOpenAIModels } from "@shared/api/ai";
 import type { Model } from "@shared/types/model";
 import type { ModelProvider } from "@shared/types/provider";
-import OpenAI from "openai";
+import Logger from "electron-log";
 import { BaseProviderService } from "./base-provider-service";
 
 export class OpenAIProviderService extends BaseProviderService {
-  protected openai: OpenAI;
+  protected openai: OpenAIProvider;
 
   constructor(provider: ModelProvider) {
     super(provider);
-    this.openai = new OpenAI({
+    this.openai = createOpenAI({
       apiKey: provider.apiKey,
       baseURL: provider.baseUrl,
     });
@@ -20,7 +22,7 @@ export class OpenAIProviderService extends BaseProviderService {
     models?: Model[];
   }> {
     try {
-      const models = await this.fetchOpenAIModels();
+      const models = await this.fetchProviderModels();
       return {
         isOk: true,
         errorMsg: null,
@@ -44,27 +46,35 @@ export class OpenAIProviderService extends BaseProviderService {
   protected async fetchProviderModels(options?: {
     timeout: number;
   }): Promise<Model[]> {
-    return this.fetchOpenAIModels(options);
-  }
+    try {
+      const response = await fetchOpenAIModels({
+        apiKey: this.provider.apiKey,
+        baseUrl: this.provider.baseUrl,
+        timeout: options?.timeout,
+      });
 
-  protected async fetchOpenAIModels(options?: {
-    timeout: number;
-  }): Promise<Model[]> {
-    const response = await this.openai.models.list(options);
-    const models = response.data || [];
-    models.forEach((model) => {
-      model.id = model.id.trim();
-    });
-    const formatedModels = models.map((model) => {
-      return {
-        id: model.id,
-        name: model.id,
-        providerId: this.provider.id,
-        custom: false,
-        enabled: true,
-        collected: false,
-      };
-    });
-    return formatedModels;
+      const modelIds = response.data.map((model) => model.id.trim()) || [];
+      const formatedModels = modelIds.map((id) => {
+        return {
+          id,
+          name: id,
+          providerId: this.provider.id,
+          custom: false,
+          enabled: true,
+          collected: false,
+        };
+      });
+
+      Logger.info(
+        "Fetched OpenAI models successfully, the count is:",
+        formatedModels.length
+      );
+
+      return formatedModels;
+    } catch (error) {
+      Logger.error("Failed to fetch OpenAI models:", error);
+
+      throw error;
+    }
   }
 }

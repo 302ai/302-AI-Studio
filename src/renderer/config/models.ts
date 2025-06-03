@@ -1,8 +1,8 @@
-import type OpenAI from "openai";
+import type { Model } from "@shared/types/model";
 
 export const NOT_SUPPORTED_REGEX = /(?:^tts|whisper|speech)/i;
 
-export function isSupportedModel(model: OpenAI.Models.Model): boolean {
+export function isSupportedModel(model: Model): boolean {
   if (!model) {
     return false;
   }
