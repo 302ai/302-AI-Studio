@@ -9,6 +9,7 @@ import {
   type ModelActionType,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
+import type { Model } from "@shared/types/model";
 import type { ModelProvider } from "@shared/types/provider";
 import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
@@ -20,6 +21,62 @@ import { ModalAction } from "../modal-action";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
+
+const ListRow = React.memo(function ListRow({
+  index,
+  style,
+  data,
+  selectedModelProvider,
+  providerModelMap,
+  setSelectedModelProvider,
+  setState,
+}: {
+  index: number;
+  style: React.CSSProperties;
+  data: ModelProvider[];
+  selectedModelProvider: ModelProvider | null;
+  providerModelMap: Record<string, Model[]>;
+  setSelectedModelProvider: (provider: ModelProvider | null) => void;
+  setState: (state: ModelActionType) => void;
+}) {
+  const provider = data[index];
+
+  const handleProviderSelect = _.debounce(() => {
+    // * Toggle selection: if already selected, deselect; otherwise select
+    setSelectedModelProvider(
+      selectedModelProvider?.id === provider.id ? null : provider
+    );
+  }, 100);
+
+  const handleEdit = () => {
+    setSelectedModelProvider(provider);
+    setState("edit");
+  };
+
+  const handleDelete = () => {
+    setSelectedModelProvider(provider);
+    setState("delete");
+  };
+
+  return (
+    <Draggable draggableId={provider.id} index={index} key={provider.id}>
+      {(provided) => (
+        <ProviderCard
+          style={style}
+          provided={provided}
+          provider={provider}
+          isSelected={selectedModelProvider?.id === provider.id}
+          providerModels={providerModelMap[provider.id]}
+          actionGroup={
+            <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
+          }
+          onClick={handleProviderSelect}
+        />
+      )}
+    </Draggable>
+  );
+},
+areEqual);
 
 export function ProviderList() {
   const { t } = useTranslation("translation", {
@@ -136,57 +193,19 @@ export function ProviderList() {
     closeModal();
   };
 
-  /**
-   * ! This component can not be extracted to a separate file
-   */
-  // biome-ignore lint: ignore noNestedComponentDefinitions
-  const ListRow = React.memo(function ListRow({
-    index,
-    style,
-    data,
-  }: {
+  const renderListRow = (props: {
     index: number;
     style: React.CSSProperties;
     data: ModelProvider[];
-  }) {
-    const provider = data[index];
-
-    const handleProviderSelect = _.debounce(() => {
-      // * Toggle selection: if already selected, deselect; otherwise select
-      setSelectedModelProvider(
-        selectedModelProvider?.id === provider.id ? null : provider
-      );
-    }, 100);
-
-    const handleEdit = () => {
-      setSelectedModelProvider(provider);
-      setState("edit");
-    };
-
-    const handleDelete = () => {
-      setSelectedModelProvider(provider);
-      setState("delete");
-    };
-
-    return (
-      <Draggable draggableId={provider.id} index={index} key={provider.id}>
-        {(provided) => (
-          <ProviderCard
-            style={style}
-            provided={provided}
-            provider={provider}
-            isSelected={selectedModelProvider?.id === provider.id}
-            providerModels={providerModelMap[provider.id]}
-            actionGroup={
-              <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
-            }
-            onClick={handleProviderSelect}
-          />
-        )}
-      </Draggable>
-    );
-  },
-  areEqual);
+  }) => (
+    <ListRow
+      {...props}
+      selectedModelProvider={selectedModelProvider}
+      providerModelMap={providerModelMap}
+      setSelectedModelProvider={setSelectedModelProvider}
+      setState={setState}
+    />
+  );
 
   useEffect(() => {
     const updateHeight = () => {
@@ -253,7 +272,7 @@ export function ProviderList() {
                     outerRef={provided.innerRef}
                     itemData={modelProviders}
                   >
-                    {ListRow}
+                    {renderListRow}
                   </FixedSizeList>
                 )}
               </Droppable>
