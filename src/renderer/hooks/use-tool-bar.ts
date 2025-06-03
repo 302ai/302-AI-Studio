@@ -3,6 +3,7 @@ import { useModelSettingStore } from "@renderer/store/settings-store/model-setti
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useThreadsStore } from "@renderer/store/threads-store";
 import { triplitClient } from "@renderer/triplit/client";
+import { updateThread } from "@renderer/triplit/helpers";
 import type { CreateThreadData, Thread } from "@renderer/triplit/types";
 import type { ThreadItem } from "@shared/types/thread";
 import { useQuery } from "@triplit/react";
@@ -28,9 +29,20 @@ export function useToolBar() {
   const [selectedProviderId, setSelectedProviderId] = useState<string>("");
   const [selectedModelId, setSelectedModelId] = useState<string>("");
 
-  const handleModelSelect = (providerId: string, modelId: string) => {
+  const handleModelSelect = async (providerId: string, modelId: string) => {
     setSelectedProviderId(providerId);
     setSelectedModelId(modelId);
+
+    if (_activeThreadId) {
+      try {
+        await updateThread(_activeThreadId, async (thread) => {
+          thread.providerId = providerId;
+          thread.modelId = modelId;
+        });
+      } catch (error) {
+        console.error("update thread error", error);
+      }
+    }
   };
 
   const createThread = async (

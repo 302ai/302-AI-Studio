@@ -1,4 +1,5 @@
 import { triplitClient } from "@renderer/triplit/client";
+import { updateThread } from "@renderer/triplit/helpers";
 import type { ThreadItem } from "@shared/types/thread";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
@@ -16,7 +17,7 @@ export function useThreadMenu(thread: ThreadItem) {
   };
 
   const handleRename = async () => {
-    await triplitClient.update("threads", thread.id, async (thread) => {
+    await updateThread(thread.id, async (thread) => {
       thread.title = formattedTitle;
     });
 
@@ -43,7 +44,7 @@ export function useThreadMenu(thread: ThreadItem) {
   };
 
   const handleCollectThread = async () => {
-    await triplitClient.update("threads", thread.id, async (thread) => {
+    await updateThread(thread.id, async (thread) => {
       thread.collected = !thread.collected;
     });
 
