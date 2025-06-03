@@ -4,7 +4,6 @@ import type { CheckApiKeyParams } from "@main/services/provider-service";
 import type { Model } from "@shared/types/model";
 import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
-import type { ThreadItem } from "@shared/types/thread";
 
 declare global {
   interface Window {
@@ -24,22 +23,6 @@ declare global {
       };
       threadsService: {
         setActiveThreadId: (threadId: string) => void;
-        createThread: (threadData: ThreadItem) => Promise<{
-          success: boolean;
-          threadId?: string;
-          error?: string;
-        }>;
-        updateThread: (
-          threadId: string,
-          data: Partial<ThreadItem>
-        ) => Promise<{
-          success: boolean;
-          thread?: ThreadItem;
-          error?: string;
-        }>;
-        deleteThread: (threadId: string) => void;
-        getThreads: () => Promise<ThreadItem[]>;
-        getThreadById: (threadId: string) => Promise<ThreadItem | undefined>;
       };
       providerService: {
         checkApiKey: (params: CheckApiKeyParams) => Promise<{
