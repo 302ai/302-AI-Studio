@@ -2,19 +2,12 @@ import { EventNames, emitter } from "@renderer/services/event-service";
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useThreadsStore } from "@renderer/store/threads-store";
-import type { Model } from "@shared/types/model";
 import type { ThreadItem } from "@shared/types/thread";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 const { threadsService } = window.service;
-
-interface GroupedModel {
-  id: string;
-  name: string;
-  models: Model[];
-}
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -26,28 +19,10 @@ export function useToolBar() {
     activeThreadId: _activeThreadId,
   } = useThreadsStore();
   const { tabs, activeTabId, addTab } = useTabBarStore();
-  const { providerModelMap, providerMap } = useModelSettingStore();
+  const { providerModelMap } = useModelSettingStore();
 
   const [selectedProviderId, setSelectedProviderId] = useState<string>("");
   const [selectedModelId, setSelectedModelId] = useState<string>("");
-
-  const groupedModels = useMemo(() => {
-    const result: GroupedModel[] = [];
-
-    Object.entries(providerModelMap).forEach(([providerId, models]) => {
-      const enabledModels = models.filter((model) => model.enabled);
-
-      if (enabledModels.length > 0) {
-        result.push({
-          id: providerId,
-          name: providerMap[providerId]?.name || providerId,
-          models: enabledModels,
-        });
-      }
-    });
-
-    return result;
-  }, [providerModelMap, providerMap]);
 
   const handleModelSelect = (providerId: string, modelId: string) => {
     setSelectedProviderId(providerId);
@@ -141,8 +116,6 @@ export function useToolBar() {
   return {
     selectedProviderId,
     selectedModelId,
-    groupedModels,
-    providerMap,
     handleModelSelect,
     handleSendMessage,
   };

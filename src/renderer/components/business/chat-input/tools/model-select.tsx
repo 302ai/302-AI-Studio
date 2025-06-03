@@ -4,7 +4,7 @@ import { IconChevronLgDown } from "@intentui/icons";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
 import { SearchField } from "@renderer/components/ui/search-field";
-import { useToolBar } from "@renderer/hooks/use-tool-bar";
+import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import type { Model } from "@shared/types/model";
 import { SearchX } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -12,6 +12,12 @@ import { useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { type ListItem, ModelRowList } from "./model-row-list";
+
+interface GroupedModel {
+  id: string;
+  name: string;
+  models: Model[];
+}
 
 interface ModelSelectProps {
   onSelect: (providerId: string, modelId: string) => void;
@@ -26,7 +32,8 @@ export const ModelSelect = ({
     keyPrefix: "chat",
   });
   const { contains } = useFilter({ sensitivity: "base" });
-  const { groupedModels } = useToolBar();
+  const { providerModelMap, providerMap } = useModelSettingStore();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -38,6 +45,24 @@ export const ModelSelect = ({
     },
     [onSelect]
   );
+
+  const groupedModels = useMemo(() => {
+    const result: GroupedModel[] = [];
+
+    Object.entries(providerModelMap).forEach(([providerId, models]) => {
+      const enabledModels = models.filter((model) => model.enabled);
+
+      if (enabledModels.length > 0) {
+        result.push({
+          id: providerId,
+          name: providerMap[providerId]?.name || providerId,
+          models: enabledModels,
+        });
+      }
+    });
+
+    return result;
+  }, [providerModelMap, providerMap]);
 
   const filteredItems = useMemo(() => {
     const items: ListItem[] = [];
