@@ -2460,6 +2460,30 @@
     "@tailwindcss/oxide" "4.1.6"
     tailwindcss "4.1.6"
 
+"@tanstack/query-core@5.80.0":
+  version "5.80.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.80.0.tgz#78b1e7b7a959a8b061c797921bbad9ff22c49868"
+  integrity sha512-9a7xZv6W4R2GPlg+OYtskztGJbZ4aeQt/H4aNA5eAGtA/1hv46Et6RDN8050zmssJwoj4nclXmJY0npBV4xXrg==
+
+"@tanstack/query-devtools@5.80.0":
+  version "5.80.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-devtools/-/query-devtools-5.80.0.tgz#7fc7d0e3d935a0f163e06e9477bbf11b3c20fad5"
+  integrity sha512-D6gH4asyjaoXrCOt5vG5Og/YSj0D/TxwNQgtLJIgWbhbWCC/emu2E92EFoVHh4ppVWg1qT2gKHvKyQBEFZhCuA==
+
+"@tanstack/react-query-devtools@^5.80.0":
+  version "5.80.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-5.80.0.tgz#595a06dee2bc0eca687ea1d8202d028d3d5028e2"
+  integrity sha512-ums6gvv3IZqNpOHZEWyiAxTjDWUToR3rlMsem5Nye7GalAOewjBSPt3pdTfJSLvPZhkTjM1cNroCkw1RfGbifg==
+  dependencies:
+    "@tanstack/query-devtools" "5.80.0"
+
+"@tanstack/react-query@^5.80.0":
+  version "5.80.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.80.0.tgz#446b314b85fc8cef832d50fef69fa020722ac4e3"
+  integrity sha512-GsykJqLf3v3JIIE+OPPJWl9A8imusrsCJNYkweZj4egYUpw7kWpzvgqGX4URD1d3bxIgTb8O6FBUnHu4P/f6jg==
+  dependencies:
+    "@tanstack/query-core" "5.80.0"
+
 "@tootallnate/once@2":
   version "2.0.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
