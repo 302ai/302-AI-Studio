@@ -2,6 +2,8 @@ import { Textarea } from "@renderer/components/ui/textarea";
 import { cn } from "@renderer/lib/utils";
 import { useTranslation } from "react-i18next";
 import { ToolBar } from "./tool-bar";
+import { AttachmentList } from "./attachment-list";
+import { useAttachments } from "@renderer/hooks/use-attachments";
 
 interface ChatInputProps {
   className?: string;
@@ -12,25 +14,43 @@ export function ChatInput({ className }: ChatInputProps) {
     keyPrefix: "chat",
   });
 
-  return (
-    <div
-      className={cn(
-        "mx-auto flex max-h-60 min-h-36 w-full max-w-2xl flex-col rounded-[20px] border border-input pt-2 pr-2 pb-0 pl-4",
-        "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-4 focus-within:ring-ring/20",
-        className
-      )}
-    >
-      <Textarea
-        className={cn(
-          "h-full min-h-[calc(100%-var(--chat-input-toolbar-height))] w-full rounded-none border-0 bg-transparent p-0",
-          "shadow-none ring-0"
-        )}
-        placeholder={t("input-placeholder")}
-        aria-label={t("input-label")}
-        resize="none"
-      />
+  const { attachments, addAttachments, removeAttachment } = useAttachments();
 
-      <ToolBar className="mb-2" />
+  return (
+    <div className={cn("mx-auto w-full max-w-2xl", className)}>
+      {attachments.length > 0 && (
+        <div className="mb-2">
+          <AttachmentList
+            attachments={attachments}
+            onRemove={removeAttachment}
+          />
+        </div>
+      )}
+
+      <div
+        className={cn(
+          "relative",
+          "flex max-h-60 min-h-36 w-full flex-col rounded-[20px] border border-input pt-2 pr-2 pb-0 pl-4",
+          "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-4 focus-within:ring-ring/20"
+        )}
+      >
+        <Textarea
+          className={cn(
+            "w-full flex-1 rounded-none border-0 bg-transparent p-0",
+            "resize-none shadow-none ring-0",
+            "min-h-[calc(9rem-var(--chat-input-toolbar-height))]"
+          )}
+          placeholder={t("input-placeholder")}
+          aria-label={t("input-label")}
+          resize="none"
+        />
+
+        <ToolBar
+          className="mb-2"
+          onFilesSelect={addAttachments}
+          attachments={attachments}
+        />
+      </div>
     </div>
   );
 }

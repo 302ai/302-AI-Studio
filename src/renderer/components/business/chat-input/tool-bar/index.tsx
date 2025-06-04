@@ -7,12 +7,19 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentUploader } from "./attachment-uploader";
 import { ModelSelect } from "./model-select";
+import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 
 interface ToolBarProps {
   className?: string;
+  onFilesSelect: (files: FileList) => void;
+  attachments: AttachmentFile[];
 }
 
-export function ToolBar({ className }: ToolBarProps) {
+export function ToolBar({
+  className,
+  onFilesSelect,
+  attachments,
+}: ToolBarProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
@@ -32,7 +39,7 @@ export function ToolBar({ className }: ToolBarProps) {
       return;
     }
 
-    handleSendMessage();
+    handleSendMessage(attachments);
   };
 
   return (
@@ -44,7 +51,7 @@ export function ToolBar({ className }: ToolBarProps) {
     >
       <div className="flex w-full flex-row justify-between">
         <div className="flex flex-row items-center gap-x-2">
-          <AttachmentUploader />
+          <AttachmentUploader onFilesSelect={onFilesSelect} />
         </div>
 
         <div className="flex flex-row items-center gap-x-2">

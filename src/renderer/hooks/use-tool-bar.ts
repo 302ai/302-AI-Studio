@@ -10,6 +10,7 @@ import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -66,7 +67,7 @@ export function useToolBar() {
     }
   };
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (attachments?: AttachmentFile[]) => {
     const isHomepage = tabs.length === 0;
     const threadNotExists = !threads.some(
       (thread) => thread.id === activeTabId
@@ -122,6 +123,10 @@ export function useToolBar() {
     console.log("activeThread", activeThread);
 
     // TODO: Send message logic (work with existing or newly created thread)
+    // Now you have access to attachments here for sending with the message
+    if (attachments && attachments.length > 0) {
+      console.log("Sending message with attachments:", attachments);
+    }
   };
 
   useEffect(() => {
