@@ -1,6 +1,7 @@
 import { ConfigService } from "./config-service";
 import { ProviderService } from "./provider-service";
 import { ThreadsService } from "./threads-service";
+import { TrilitService } from "./triplit-service";
 import { WindowService } from "./window-service";
 
 export const services = [
@@ -8,4 +9,5 @@ export const services = [
   ConfigService,
   ThreadsService,
   ProviderService,
+  TrilitService,
 ];

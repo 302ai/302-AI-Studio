@@ -34,6 +34,20 @@ declare global {
           updates: Partial<ModelProvider>
         ) => void;
       };
+      trilitService: {
+        getServerStatus: () => Promise<{
+          isRunning: boolean;
+          config: {
+            port: number;
+            projectId: string;
+            verboseLogs: boolean;
+          };
+        }>;
+        restartServer: () => Promise<{
+          success: boolean;
+          message: string;
+        }>;
+      };
     };
   }
 }
