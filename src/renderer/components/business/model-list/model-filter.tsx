@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/nursery/useUniqueElementIds: biome-ignore-all */
 import { Tab, TabList, Tabs } from "@renderer/components/ui/tab";
 import { useTranslation } from "react-i18next";
 

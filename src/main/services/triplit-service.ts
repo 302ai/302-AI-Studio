@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: biome-ignore-all */
 import { getTrilitConfig } from "@shared/triplit/config";
 import {
   startTrilitServer,

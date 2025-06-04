@@ -150,19 +150,6 @@ export class ProviderService {
     return provider;
   }
 
-  // private getProviderInst(providerId: string): BaseProviderService {
-  //   let instance = this.providerInstMap.get(providerId);
-  //   if (!instance) {
-  //     const provider = this.getProviderById(providerId);
-  //     instance = this.createProviderInst(provider);
-  //     if (!instance) {
-  //       throw new Error(`Failed to create provider instance for ${providerId}`);
-  //     }
-  //     this.providerInstMap.set(providerId, instance);
-  //   }
-  //   return instance;
-  // }
-
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   updateProviderConfig(
     _event: Electron.IpcMainEvent,

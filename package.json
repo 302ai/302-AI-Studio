@@ -44,6 +44,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^2.0.0-alpha.8",
     "@ai-sdk/react": "^2.0.0-alpha.8",
+    "@better-fetch/fetch": "^1.1.18",
     "@hello-pangea/dnd": "^18.0.1",
     "@heroicons/react": "^2.2.0",
     "@intentui/icons": "^1.10.33",
@@ -83,7 +84,7 @@
     "zustand": "^5.0.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0-beta.5",
+    "@biomejs/biome": "2.0.0-beta.6",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@electron-toolkit/preload": "^3.0.2",

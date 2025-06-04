@@ -1,4 +1,4 @@
-import ky from "ky";
+import { betterFetch } from '@better-fetch/fetch';
 import { z } from "zod";
 
 const openAIModelSchema = z.object({
@@ -22,14 +22,18 @@ export async function fetchOpenAIModels(options: {
   timeout?: number;
 }): Promise<OpenAIModel> {
   const { apiKey, baseUrl, timeout } = options;
-  const response = await ky
-    .get(`${baseUrl}/models`, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
-      timeout,
-    })
-    .json<OpenAIModel>();
 
-  return response;
+  const { data, error } = await betterFetch<OpenAIModel>(`${baseUrl}/models`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+    timeout,
+  });
+
+  if (error) {
+    throw new Error(`Failed to fetch OpenAI models: ${error}`);
+  }
+
+  return data;
 }
