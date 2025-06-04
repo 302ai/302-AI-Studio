@@ -34,7 +34,7 @@ declare global {
           updates: Partial<ModelProvider>
         ) => void;
       };
-      trilitService: {
+      triplitService: {
         getServerStatus: () => Promise<{
           isRunning: boolean;
           config: {

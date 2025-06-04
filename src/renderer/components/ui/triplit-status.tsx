@@ -15,7 +15,8 @@ export function TriplitStatus() {
 
   const checkStatus = async () => {
     try {
-      const serverStatus = await window.service.trilitService.getServerStatus();
+      const serverStatus =
+        await window.service.triplitService.getServerStatus();
       setStatus(serverStatus);
     } catch (error) {
       console.error("Failed to get server status:", error);
@@ -26,7 +27,7 @@ export function TriplitStatus() {
   const restartServer = async () => {
     setLoading(true);
     try {
-      const result = await window.service.trilitService.restartServer();
+      const result = await window.service.triplitService.restartServer();
       console.log("Restart result:", result);
       if (result.success) {
         await checkStatus();

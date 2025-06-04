@@ -12,8 +12,8 @@ import {
   ServiceRegister,
 } from "../shared/reflect";
 
-@ServiceRegister("trilitService")
-export class TrilitService {
+@ServiceRegister("triplitService")
+export class TriplitService {
   private server: TriplitServer | null = null;
   private isServerRunning = false;
 
