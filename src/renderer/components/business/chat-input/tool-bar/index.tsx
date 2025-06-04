@@ -61,7 +61,7 @@ export function ToolBar({ className }: ToolBarProps) {
             shape="circle"
             onClick={handleSendMessageClick}
           >
-            <ArrowUpCircleIcon className="size-8" />
+            <ArrowUpCircleIcon className="!size-8" />
           </Button>
         </div>
       </div>
