@@ -22,7 +22,6 @@ export async function fetchOpenAIModels(options: {
   timeout?: number;
 }): Promise<OpenAIModel> {
   const { apiKey, baseUrl, timeout } = options;
-
   const response = await ky
     .get(`${baseUrl}/models`, {
       headers: {

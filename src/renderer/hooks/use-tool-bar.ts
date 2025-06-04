@@ -37,7 +37,6 @@ export function useToolBar() {
       try {
         await updateThread(_activeThreadId, async (thread) => {
           thread.providerId = providerId;
-          thread.modelId = modelId;
         });
       } catch (error) {
         console.error("update thread error", error);
