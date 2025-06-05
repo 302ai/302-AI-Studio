@@ -1,14 +1,14 @@
-import { cn } from "@renderer/lib/utils";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import { cn } from "@renderer/lib/utils";
 import {
-  Trash2,
-  FileText,
-  FileJson,
-  FileCode,
-  FileSpreadsheet,
-  FileImage,
-  FileAudio,
   File,
+  FileAudio,
+  FileCode,
+  FileImage,
+  FileJson,
+  FileSpreadsheet,
+  FileText,
+  Trash2,
 } from "lucide-react";
 
 interface AttachmentItemProps {
@@ -88,7 +88,7 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
         className={cn(
           "relative size-14 overflow-hidden rounded-lg",
           "flex items-center justify-center",
-          !attachment.preview && "border border-border bg-muted/50"
+          !attachment.preview && "border border-border bg-muted/50",
         )}
       >
         {/* File preview or icon + filename */}
@@ -112,7 +112,7 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
           className={cn(
             "absolute right-0 bottom-0 left-0 bg-black/60 text-white text-xs",
             "px-1.5 py-0.5 text-center font-medium",
-            "opacity-0 transition-opacity group-hover:opacity-100"
+            "opacity-0 transition-opacity group-hover:opacity-100",
           )}
         >
           {formatFileSize(attachment.size)}

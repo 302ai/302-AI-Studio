@@ -1,13 +1,13 @@
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
+import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentUploader } from "./attachment-uploader";
 import { ModelSelect } from "./model-select";
-import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 
 interface ToolBarProps {
   className?: string;
@@ -46,7 +46,7 @@ export function ToolBar({
     <div
       className={cn(
         "flex h-[var(--chat-input-toolbar-height)] flex-row items-center justify-between",
-        className
+        className,
       )}
     >
       <div className="flex w-full flex-row justify-between">

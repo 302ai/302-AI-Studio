@@ -1,6 +1,6 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
-import { AttachmentItem } from "./attachment-item";
 import { cn } from "@renderer/lib/utils";
+import { AttachmentItem } from "./attachment-item";
 
 interface AttachmentListProps {
   attachments: AttachmentFile[];

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/nursery/useUniqueElementIds: ignore */
 import placeholder from "@renderer/assets/llm-icons/logo.png?url";
 import {
   Sidebar,

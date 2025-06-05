@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore */
 import { Logger } from "@renderer/config/logger";
 import type { UseQueryOptions } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
