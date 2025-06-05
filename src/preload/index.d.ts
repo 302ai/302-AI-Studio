@@ -1,8 +1,6 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
-import type { CheckApiKeyParams } from "@main/services/provider-service";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
-import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 
 declare global {
@@ -34,15 +32,10 @@ declare global {
         setActiveThreadId: (threadId: string) => void;
       };
       providerService: {
-        checkApiKey: (params: CheckApiKeyParams) => Promise<{
+        checkApiKey: (provider: Provider) => Promise<{
           isOk: boolean;
           errorMsg: string | null;
         }>;
-        updateProviderConfig: (
-          providerId: string,
-          updates: Partial<ModelProvider>,
-        ) => void;
-
         fetchModels: (provider: Provider) => Promise<CreateModelData[]>;
       };
       triplitService: {

@@ -5,7 +5,6 @@ import {
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import type { ModelProvider } from "@shared/types/provider";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,14 +19,14 @@ import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface AddProviderProps {
   onValidationStatusChange: (isValid: boolean) => void;
-  onProviderCfgSet: (providerCfg: ModelProvider) => void;
+  onProviderCfgSet: (providerCfg: Provider) => void;
   providers: Provider[];
 }
 
 export function AddProvider({
   onValidationStatusChange,
   onProviderCfgSet,
-  providers
+  providers,
 }: AddProviderProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.add-provider-form",
@@ -63,7 +62,7 @@ export function AddProvider({
     setIsChecking("loading");
     setKeyValidationStatus("loading");
 
-    const providerCfg: ModelProvider = {
+    const providerCfg: Provider = {
       id: isCustomProvider ? `custom-${nanoid()}` : providerId,
       name: isCustomProvider ? customProviderName : providerName,
       apiType: providerType,
@@ -71,9 +70,10 @@ export function AddProvider({
       baseUrl,
       enabled: false,
       custom: isCustomProvider,
+      order: 0,
     };
 
-    const { isOk, errorMsg } = await handleCheckKey(providerCfg, "add");
+    const { isOk, errorMsg } = await handleCheckKey(providerCfg);
 
     setIsChecking(isOk ? "success" : "failed");
     setKeyValidationStatus(isOk ? "success" : "failed");

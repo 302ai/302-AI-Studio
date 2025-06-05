@@ -12,7 +12,6 @@ import {
 } from "@renderer/hooks/use-provider-list";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
-import type { ModelProvider } from "@shared/types/provider";
 import { useQuery } from "@triplit/react";
 import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
@@ -42,7 +41,6 @@ const ListRow = React.memo(function ListRow({
   const { selectedProvider, setSelectedProvider } = useActiveProvider();
 
   const handleProviderSelect = _.debounce(() => {
-    console.log("ProviderList - selecting provider:", provider);
     setSelectedProvider(selectedProvider?.id === provider.id ? null : provider);
   }, 100);
 
@@ -94,7 +92,7 @@ export function ProviderList() {
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
   const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
-  const [providerCfg, setProviderCfg] = useState<ModelProvider | null>(null);
+  const [providerCfg, setProviderCfg] = useState<Provider | null>(null);
   const [providers, setProviders] = useState<Provider[]>([]);
 
   // 使用 useQuery 获取所有模型数据
@@ -145,12 +143,13 @@ export function ProviderList() {
           disabled: !isApiKeyValidated,
           action: async () => {
             if (providerCfg) {
+              const { name, baseUrl, apiKey, apiType, custom } = providerCfg;
               const provider: CreateProviderData = {
-                name: providerCfg.name,
-                baseUrl: providerCfg.baseUrl,
-                apiKey: providerCfg.apiKey,
-                apiType: providerCfg.apiType,
-                custom: providerCfg.custom ?? false,
+                name,
+                baseUrl,
+                apiKey,
+                apiType,
+                custom: custom ?? false,
                 enabled: true,
               };
               await handleAddProvider(provider);
@@ -177,9 +176,9 @@ export function ProviderList() {
             />
           ),
           disabled: !isApiKeyValidated,
-          action: () => {
+          action: async () => {
             if (providerCfg) {
-              handleUpdateProvider(providerCfg);
+              await handleUpdateProvider(providerCfg);
               handleCloseModal();
             }
           },

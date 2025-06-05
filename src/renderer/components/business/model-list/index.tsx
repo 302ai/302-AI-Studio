@@ -47,9 +47,6 @@ export function ModelList() {
 
   // * Get base models based on selected provider and tab
   const baseModels = useMemo(() => {
-    console.log("ModelList - selectedProvider:", selectedProvider);
-    console.log("ModelList - all models:", models);
-
     if (!models) {
       return [];
     }
@@ -61,7 +58,6 @@ export function ModelList() {
     const providerModels = models.filter(
       (model) => model.providerId === selectedProvider.id,
     );
-    console.log("ModelList - filtered provider models:", providerModels);
 
     return providerModels.filter((model) =>
       collected ? model.collected : true,

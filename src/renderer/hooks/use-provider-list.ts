@@ -1,5 +1,4 @@
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
-import type { ModelProvider } from "@shared/types/provider";
 import { useState } from "react";
 import {
   deleteModelsByProviderId,
@@ -30,10 +29,9 @@ export function useProviderList() {
     await deleteModelsByProviderId(selectedProvider.id);
   };
 
-  const handleUpdateProvider = (updatedProvider: ModelProvider) => {
-    const { name, baseUrl, apiKey, apiType } = updatedProvider;
-
-    providerService.updateProviderConfig(updatedProvider.id, {
+  const handleUpdateProvider = async (updatedProvider: Provider) => {
+    const { id, name, baseUrl, apiKey, apiType } = updatedProvider;
+    await updateProvider(id, {
       name,
       baseUrl,
       apiKey,
@@ -44,35 +42,16 @@ export function useProviderList() {
   const handleAddProvider = async (provider: CreateProviderData) => {
     const newProvider = await insertProvider(provider);
     const models = await providerService.fetchModels(newProvider);
-    console.log("🚀 ~ handleAddProvider ~ models:", models);
     await insertModels(models);
   };
 
   const handleCheckKey = async (
-    providerCfg: ModelProvider,
-    condition: "add" | "edit",
+    providerCfg: Provider,
   ): Promise<{
     isOk: boolean;
     errorMsg: string | null;
   }> => {
-    if (condition === "edit") {
-      const { id, name, baseUrl, apiKey, apiType } = providerCfg;
-      return await providerService.checkApiKey({
-        condition,
-        providerId: id,
-        providerCfg: {
-          name,
-          baseUrl,
-          apiKey,
-          apiType,
-        },
-      });
-    }
-
-    return await providerService.checkApiKey({
-      condition,
-      providerCfg,
-    });
+    return await providerService.checkApiKey(providerCfg);
   };
 
   const moveProvider = async (
