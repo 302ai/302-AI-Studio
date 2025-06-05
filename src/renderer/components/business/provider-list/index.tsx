@@ -181,7 +181,10 @@ export function ProviderList() {
             t("modal-action.delete-description-3"),
           ],
           confirmText: t("modal-action.delete-confirm"),
-          action: handleDelete,
+          action: async () => {
+            await handleDelete();
+            handleCloseModal();
+          },
         };
       default:
         return initialsState;
@@ -260,7 +263,6 @@ export function ProviderList() {
 
         const query = triplitClient
           .query("providers")
-          .Where("enabled", "=", true)
           .Order("order", "ASC"); // Add order by order field
 
         unsubscribe = triplitClient.subscribe(

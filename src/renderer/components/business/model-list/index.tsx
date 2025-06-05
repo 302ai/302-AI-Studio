@@ -76,6 +76,8 @@ export function ModelList() {
 
     const initAndSubscribe = async () => {
       try {
+        await triplitClient.connect();
+
         const modelsQuery = triplitClient.query("models");
 
         unsubscribe =

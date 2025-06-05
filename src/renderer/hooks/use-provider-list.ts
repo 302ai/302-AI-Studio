@@ -39,7 +39,6 @@ export function useProviderList() {
 
     await configService.deleteProvider(selectedProvider.id);
     setSelectedProvider(null);
-    closeModal();
   };
 
   const handleUpdateProvider = (updatedProvider: ModelProvider) => {

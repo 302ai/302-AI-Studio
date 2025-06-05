@@ -8,7 +8,7 @@ import { BaseDbService } from "./base-db-service";
 
 export class ConfigDbService extends BaseDbService {
   async insertProvider(provider: CreateProviderData) {
-    const query = this.client.query("providers").Where("enabled", "=", true);
+    const query = this.client.query("providers")
     const existingProviders = await this.client.fetch(query);
     const maxOrder = existingProviders.reduce(
       (max, p) => Math.max(max, p.order || 0),
@@ -28,6 +28,7 @@ export class ConfigDbService extends BaseDbService {
 
   async updateProvider(providerId: string, provider: UpdateProviderData) {
     await this.client.update("providers", providerId, provider);
+    await this.reorderProviders();
   }
 
   async getProviders(): Promise<Provider[]> {
@@ -47,7 +48,6 @@ export class ConfigDbService extends BaseDbService {
   private async reorderProviders() {
     const query = this.client
       .query("providers")
-      .Where("enabled", "=", true)
       .Order("order", "ASC");
     const providers = await this.client.fetch(query);
 
