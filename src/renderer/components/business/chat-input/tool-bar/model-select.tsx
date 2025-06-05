@@ -4,8 +4,9 @@ import { IconChevronLgDown } from "@intentui/icons";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
 import { SearchField } from "@renderer/components/ui/search-field";
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import type { Model } from "@shared/types/model";
+import { triplitClient } from "@shared/triplit/client";
+import type { Model, Provider } from "@shared/triplit/types";
+import { useQuery } from "@triplit/react";
 import { SearchX } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useFilter } from "react-aria-components";
@@ -32,7 +33,18 @@ export const ModelSelect = ({
     keyPrefix: "chat",
   });
   const { contains } = useFilter({ sensitivity: "base" });
-  const { providerModelMap, providerMap } = useModelSettingStore();
+
+  // Use triplit queries instead of model-setting-store
+  const providersQuery = triplitClient
+    .query("providers")
+    .Where("enabled", "=", true)
+    .Order("order", "ASC");
+  const { results: providers } = useQuery(triplitClient, providersQuery);
+
+  const modelsQuery = triplitClient
+    .query("models")
+    .Where("enabled", "=", true);
+  const { results: models } = useQuery(triplitClient, modelsQuery);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +58,30 @@ export const ModelSelect = ({
     },
     [onSelect]
   );
+
+  // Create provider map and provider model map from triplit data
+  const { providerMap, providerModelMap } = useMemo(() => {
+    const providersArray = providers ?? [];
+    const modelsArray = models ?? [];
+
+    const providerMap: Record<string, Provider> = {};
+    const providerModelMap: Record<string, Model[]> = {};
+
+    // Build provider map
+    providersArray.forEach((provider) => {
+      providerMap[provider.id] = provider;
+    });
+
+    // Build provider model map
+    modelsArray.forEach((model) => {
+      if (!providerModelMap[model.providerId]) {
+        providerModelMap[model.providerId] = [];
+      }
+      providerModelMap[model.providerId].push(model);
+    });
+
+    return { providerMap, providerModelMap };
+  }, [providers, models]);
 
   const groupedModels = useMemo(() => {
     const result: GroupedModel[] = [];
@@ -131,7 +167,7 @@ export const ModelSelect = ({
       >
         {selectedModel ? (
           <>
-            <ModelIcon modelId={selectedModel.id} className="size-4 shrink-0" />
+            <ModelIcon modelName={selectedModel.name} />
             <span className="truncate text-muted-fg group-hover:text-fg">
               {selectedModel.name}
             </span>

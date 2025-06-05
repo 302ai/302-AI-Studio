@@ -1,6 +1,5 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { EventNames, emitter } from "@renderer/services/event-service";
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { useThreadsStore } from "@renderer/store/threads-store";
 import { triplitClient } from "@shared/triplit/client";
@@ -8,7 +7,7 @@ import { updateThread } from "@shared/triplit/helpers";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import type { ThreadItem } from "@shared/types/thread";
 import { useQuery } from "@triplit/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -19,7 +18,17 @@ export function useToolBar() {
   const { activeThreadId: _activeThreadId, setActiveThreadId } =
     useThreadsStore();
   const { tabs, activeTabId, addTab } = useTabBarStore();
-  const { providerModelMap } = useModelSettingStore();
+
+  // Use triplit queries instead of model-setting-store
+  const providersQuery = triplitClient
+    .query("providers")
+    .Where("enabled", "=", true);
+  const { results: providers } = useQuery(triplitClient, providersQuery);
+
+  const modelsQuery = triplitClient
+    .query("models")
+    .Where("enabled", "=", true);
+  const { results: models } = useQuery(triplitClient, modelsQuery);
 
   const threadsQuery = triplitClient
     .query("threads")
@@ -29,6 +38,30 @@ export function useToolBar() {
 
   const [selectedProviderId, setSelectedProviderId] = useState<string>("");
   const [selectedModelId, setSelectedModelId] = useState<string>("");
+
+  // Create enabled provider IDs set for validation
+  const enabledProviderIds = useMemo(() => {
+    const providersArray = providers ?? [];
+    return new Set(providersArray.map(provider => provider.id));
+  }, [providers]);
+
+  // Create provider model map from triplit data
+  const providerModelMap = useMemo(() => {
+    const modelsArray = models ?? [];
+    const providerModelMap: Record<string, typeof modelsArray> = {};
+
+    modelsArray.forEach((model) => {
+      // Only include models from enabled providers
+      if (enabledProviderIds.has(model.providerId)) {
+        if (!providerModelMap[model.providerId]) {
+          providerModelMap[model.providerId] = [];
+        }
+        providerModelMap[model.providerId].push(model);
+      }
+    });
+
+    return providerModelMap;
+  }, [models, enabledProviderIds]);
 
   const handleModelSelect = async (providerId: string, modelId: string) => {
     setSelectedProviderId(providerId);
@@ -132,12 +165,15 @@ export function useToolBar() {
   useEffect(() => {
     const handleThreadActive = (event: { thread: ThreadItem }) => {
       const { providerId, modelId } = event.thread;
+
+      // Check both provider and model availability
+      const isProviderEnabled = enabledProviderIds.has(providerId);
       const isProviderAvailable = providerModelMap[providerId];
       const isModelAvailable = isProviderAvailable?.some(
         (model) => model.id === modelId && model.enabled,
       );
 
-      if (isProviderAvailable && isModelAvailable) {
+      if (isProviderEnabled && isProviderAvailable && isModelAvailable) {
         setSelectedProviderId(providerId);
         setSelectedModelId(modelId);
 
@@ -145,12 +181,13 @@ export function useToolBar() {
       } else {
         // TODO: If thread model not available, set default model
         console.warn(`⚠️ Thread model not available: ${providerId}/${modelId}`);
+        console.warn(`Provider enabled: ${isProviderEnabled}, Provider available: ${!!isProviderAvailable}, Model available: ${!!isModelAvailable}`);
       }
     };
 
     const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadActive);
     return () => unsub();
-  }, [providerModelMap]);
+  }, [providerModelMap, enabledProviderIds]);
 
   return {
     selectedProviderId,

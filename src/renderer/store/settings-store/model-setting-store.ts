@@ -38,17 +38,6 @@ export const useModelSettingStore = create<ModelSettingStore>()(
     providerMap: {},
     providerModelMap: {},
 
-    // initializeStore: async () => {
-    //   const { modelProviders, providerModelMap, providerMap } =
-    //     await configService.getModelSettings();
-
-    //   set({
-    //     modelProviders,
-    //     providerModelMap,
-    //     providerMap,
-    //   });
-    // },
-
     addModelProvider: (newProvider) => {
       set({
         modelProviders: [newProvider, ...get().modelProviders],
