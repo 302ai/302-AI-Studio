@@ -122,6 +122,7 @@ export function ProviderList() {
               onProviderCfgSet={(providerCfg) => {
                 setProviderCfg(providerCfg);
               }}
+              providers={providers}
             />
           ),
           confirmText: t("modal-action.add-provider-confirm"),
@@ -191,9 +192,29 @@ export function ProviderList() {
     }
   };
 
-  const handleDragEnd = (result: DropResult) => {
-    if (result.destination) {
-      moveProvider(result.source.index, result.destination.index, providers);
+  const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.source.index === result.destination.index) {
+      return;
+    }
+
+    const fromIndex = result.source.index;
+    const toIndex = result.destination.index;
+
+    const newProviders = [...providers];
+    const [movedProvider] = newProviders.splice(fromIndex, 1);
+    newProviders.splice(toIndex, 0, movedProvider);
+    setProviders(newProviders);
+
+    try {
+      await moveProvider(fromIndex, toIndex, providers);
+      console.log("Provider order updated successfully");
+    } catch (error) {
+      console.error("Failed to move provider:", error);
+      setProviders(providers);
     }
   };
 
@@ -261,9 +282,7 @@ export function ProviderList() {
       try {
         await triplitClient.connect();
 
-        const query = triplitClient
-          .query("providers")
-          .Order("order", "ASC"); // Add order by order field
+        const query = triplitClient.query("providers").Order("order", "ASC");
 
         unsubscribe = triplitClient.subscribe(
           query,

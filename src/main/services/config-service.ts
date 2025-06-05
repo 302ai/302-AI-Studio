@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { CreateModelData, CreateProviderData, Provider, UpdateProviderData } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
 import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
@@ -12,7 +11,6 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
-import { ConfigDbService } from "./db-service/config-db-service";
 import { WindowService } from "./window-service";
 
 interface IModelStore {
@@ -41,11 +39,11 @@ export class ConfigService {
     new Map();
   private windowService: WindowService;
   private userDataPath: string;
-  private configDbService: ConfigDbService;
+  // private configDbService: ConfigDbService;
 
   constructor() {
     this.windowService = new WindowService();
-    this.configDbService = new ConfigDbService();
+    // this.configDbService = new ConfigDbService();
     this.userDataPath = app.getPath("userData");
     this.initProviderModelsDir();
   }
@@ -128,63 +126,71 @@ export class ConfigService {
   }
 
   // ***************** Refactor: 使用 triplit 数据库 ***************** //
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async addProvider(
-    _event: Electron.IpcMainEvent,
-    provider: CreateProviderData,
-  ) {
-    try {
-      const newProvider = await this.configDbService.insertProvider(provider);
-      Logger.info("addProvider success ---->", newProvider);
-      return newProvider;
-    } catch (error) {
-      Logger.error("addProvider error ---->", error);
-      throw error;
-    }
-  }
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  // async addProvider(
+  //   _event: Electron.IpcMainEvent,
+  //   provider: CreateProviderData,
+  // ) {
+  //   try {
+  //     const newProvider = await this.configDbService.insertProvider(provider);
+  //     Logger.info("addProvider success ---->", newProvider);
+  //     return newProvider;
+  //   } catch (error) {
+  //     Logger.error("addProvider error ---->", error);
+  //     throw error;
+  //   }
+  // }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async deleteProvider(
-    _event: Electron.IpcMainEvent,
-    providerId: string,
-  ) {
-    try {
-      await this.configDbService.deleteProvider(providerId);
-      Logger.info("deleteProvider success ---->", providerId);
-    } catch (error) {
-      Logger.error("deleteProvider error ---->", error);
-      throw error;
-    }
-  }
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  // async deleteProvider(
+  //   _event: Electron.IpcMainEvent,
+  //   providerId: string,
+  // ) {
+  //   try {
+  //     await this.configDbService.deleteProvider(providerId);
+  //     Logger.info("deleteProvider success ---->", providerId);
+  //   } catch (error) {
+  //     Logger.error("deleteProvider error ---->", error);
+  //     throw error;
+  //   }
+  // }
 
-  async getProviders(): Promise<Provider[]> {
-    const providers = await this.configDbService.getProviders();
-    return providers;
-  }
+  // async getProviders(): Promise<Provider[]> {
+  //   const providers = await this.configDbService.getProviders();
+  //   return providers;
+  // }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async addModels(_event: Electron.IpcMainEvent, models: CreateModelData[]): Promise<void> {
-    try {
-      await this.configDbService.insertModels(models);
-      Logger.info("addModels success");
-    } catch (error) {
-      Logger.error("addModels error ---->", error);
-      throw error;
-    }
-  }
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  // async addModels(_event: Electron.IpcMainEvent, models: CreateModelData[]): Promise<void> {
+  //   try {
+  //     await this.configDbService.insertModels(models);
+  //     Logger.info("addModels success");
+  //   } catch (error) {
+  //     Logger.error("addModels error ---->", error);
+  //     throw error;
+  //   }
+  // }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async updateProvider(
-    _event: Electron.IpcMainEvent,
-    providerId: string,
-    provider: UpdateProviderData,
-  ) {
-    try {
-      await this.configDbService.updateProvider(providerId, provider);
-      Logger.info("updateProvider success ---->", providerId);
-    } catch (error) {
-      Logger.error("updateProvider error ---->", error);
-      throw error;
-    }
-  }
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  // async deleteModelsByProviderId(
+  //   _event: Electron.IpcMainEvent,
+  //   providerId: string,
+  // ) {
+  //   await this.configDbService.deleteModels(providerId);
+  // }
+
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  // async updateProvider(
+  //   _event: Electron.IpcMainEvent,
+  //   providerId: string,
+  //   provider: UpdateProviderData,
+  // ) {
+  //   try {
+  //     await this.configDbService.updateProvider(providerId, provider);
+  //     Logger.info("updateProvider success ---->", providerId);
+  //   } catch (error) {
+  //     Logger.error("updateProvider error ---->", error);
+  //     throw error;
+  //   }
+  // }
 }

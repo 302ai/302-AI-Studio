@@ -12,23 +12,27 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ModelIcon } from "../model-icon";
 import "ldrs/react/TailChase.css";
+import { DEFAULT_PROVIDERS } from "@renderer/config/providers";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import type { Provider } from "@shared/triplit/types";
 import { LayoutDashboard } from "lucide-react";
 import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface AddProviderProps {
   onValidationStatusChange: (isValid: boolean) => void;
   onProviderCfgSet: (providerCfg: ModelProvider) => void;
+  providers: Provider[];
 }
 
 export function AddProvider({
   onValidationStatusChange,
   onProviderCfgSet,
+  providers
 }: AddProviderProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.add-provider-form",
   });
-  const { canSelectProviders, handleCheckKey } = useProviderList();
+  const { handleCheckKey } = useProviderList();
 
   const [providerId, setProviderId] = useState<string>("");
   const [providerName, setProviderName] = useState<string>("");
@@ -46,6 +50,14 @@ export function AddProvider({
   const isCustomProvider = providerId === "custom";
   const canCheckKey = !!apiKey && !!providerId && !!baseUrl;
   const customProviderName = customName === "" ? t("default-name") : customName;
+
+  // * Show providers that are NOT already in the modelProvider array
+  const canSelectProviders = DEFAULT_PROVIDERS.filter(
+    (initialProvider) =>
+      !providers.some(
+        (existingProvider) => existingProvider.id === initialProvider.id,
+      ),
+  );
 
   const handleCheckClick = async () => {
     setIsChecking("loading");
@@ -117,7 +129,7 @@ export function AddProvider({
                 textValue={name}
               >
                 <span className="flex items-center gap-2">
-                  <ModelIcon modelId={id} />
+                  <ModelIcon modelName={name} />
                   <span className="text-base">{name}</span>
                 </span>
               </SelectOption>

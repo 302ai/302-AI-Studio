@@ -1,30 +1,22 @@
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import { useState } from "react";
-import { DEFAULT_PROVIDERS } from "../config/providers";
-import { useModelSettingStore } from "../store/settings-store/model-setting-store";
+import {
+  deleteModelsByProviderId,
+  deleteProvider,
+  insertModels,
+  insertProvider,
+  updateProvider,
+} from "../services/provider-db-service";
 
-const { configService, providerService } = window.service;
+const {  providerService } = window.service;
 
 export type ModelActionType = "add" | "edit" | "delete";
 
 export function useProviderList() {
-  const {
-    modelProviders,
-    updateSelectedModelProvider,
-  } = useModelSettingStore();
-
   const [state, setState] = useState<ModelActionType | null>(null);
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
     null,
-  );
-
-  // * Show providers that are NOT already in the modelProvider array
-  const canSelectProviders = DEFAULT_PROVIDERS.filter(
-    (initialProvider) =>
-      !modelProviders.some(
-        (existingProvider) => existingProvider.id === initialProvider.id,
-      ),
   );
 
   const closeModal = () => {
@@ -37,7 +29,9 @@ export function useProviderList() {
       return;
     }
 
-    await configService.deleteProvider(selectedProvider.id);
+    await deleteProvider(selectedProvider.id);
+    await deleteModelsByProviderId(selectedProvider.id);
+
     setSelectedProvider(null);
   };
 
@@ -50,20 +44,13 @@ export function useProviderList() {
       apiKey,
       apiType,
     });
-
-    updateSelectedModelProvider({
-      name,
-      baseUrl,
-      apiKey,
-      apiType,
-    });
   };
 
   const handleAddProvider = async (provider: CreateProviderData) => {
-    const newProvider = await configService.addProvider(provider);
+    const newProvider = await insertProvider(provider);
     const models = await providerService.fetchModels(newProvider);
     console.log("🚀 ~ :66 ~ handleAddProvider ~ models:", models);
-    await configService.addModels(models);
+    await insertModels(models);
   };
 
   const handleCheckKey = async (
@@ -108,7 +95,7 @@ export function useProviderList() {
 
       // Update the order for all affected providers
       const updatePromises = updatedProviders.map((provider, index) => {
-        return configService.updateProvider(provider.id, {
+        return updateProvider(provider.id, {
           order: index,
         });
       });
@@ -120,9 +107,7 @@ export function useProviderList() {
   };
 
   return {
-    modelProviders,
     state,
-    canSelectProviders,
     setState,
     closeModal,
     handleDelete,

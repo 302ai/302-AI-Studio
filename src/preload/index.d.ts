@@ -1,11 +1,6 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type { CheckApiKeyParams } from "@main/services/provider-service";
-import type {
-  CreateModelData,
-  CreateProviderData,
-  Provider,
-  UpdateProviderData,
-} from "@shared/triplit/types";
+import type { CreateModelData, Provider } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
 import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
@@ -26,13 +21,14 @@ declare global {
         setProviderModels: (providerId: string, models: Model[]) => void;
         // getModelSettings: () => Promise<ModelSettingData>;
 
-        addProvider: (provider: CreateProviderData) => Promise<Provider>;
-        deleteProvider: (providerId: string) => Promise<void>;
-        updateProvider: (
-          providerId: string,
-          provider: UpdateProviderData,
-        ) => Promise<void>;
-        addModels: (models: CreateModelData[]) => Promise<void>;
+        // addProvider: (provider: CreateProviderData) => Promise<Provider>;
+        // deleteProvider: (providerId: string) => Promise<void>;
+        // updateProvider: (
+        //   providerId: string,
+        //   provider: UpdateProviderData,
+        // ) => Promise<void>;
+        // addModels: (models: CreateModelData[]) => Promise<void>;
+        // deleteModelsByProviderId: (providerId: string) => Promise<void>;
       };
       threadsService: {
         setActiveThreadId: (threadId: string) => void;
