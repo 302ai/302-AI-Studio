@@ -55,7 +55,7 @@ export function AddProvider({
   const canSelectProviders = DEFAULT_PROVIDERS.filter(
     (initialProvider) =>
       !providers.some(
-        (existingProvider) => existingProvider.id === initialProvider.id,
+        (existingProvider) => existingProvider.name === initialProvider.name,
       ),
   );
 
