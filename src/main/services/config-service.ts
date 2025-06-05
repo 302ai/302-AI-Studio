@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { CreateModelData, CreateProviderData, Provider } from "@shared/triplit/types";
+import type { CreateModelData, CreateProviderData, Provider, UpdateProviderData } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
 import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
@@ -66,15 +66,15 @@ export class ConfigService {
     this.windowService.setTitleBarOverlay(theme);
   }
 
-  async updateProvider(updatedProvider: Provider): Promise<void> {
-    const providers = await this.getProviders();
-    const index = providers.findIndex((p) => p.id === updatedProvider.id);
+  // async updateProvider(updatedProvider: Provider): Promise<void> {
+  //   const providers = await this.getProviders();
+  //   const index = providers.findIndex((p) => p.id === updatedProvider.id);
 
-    if (index !== -1) {
-      providers[index] = updatedProvider;
-      this.configStore.set(ConfigKeys.Providers, providers);
-    }
-  }
+  //   if (index !== -1) {
+  //     providers[index] = updatedProvider;
+  //     this.configStore.set(ConfigKeys.Providers, providers);
+  //   }
+  // }
 
   private initProviderModelsDir(): void {
     const modelsDir = path.join(this.userDataPath, PROVIDER_MODELS_DIR);
@@ -169,6 +169,21 @@ export class ConfigService {
       Logger.info("addModels success");
     } catch (error) {
       Logger.error("addModels error ---->", error);
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateProvider(
+    _event: Electron.IpcMainEvent,
+    providerId: string,
+    provider: UpdateProviderData,
+  ) {
+    try {
+      await this.configDbService.updateProvider(providerId, provider);
+      Logger.info("updateProvider success ---->", providerId);
+    } catch (error) {
+      Logger.error("updateProvider error ---->", error);
       throw error;
     }
   }

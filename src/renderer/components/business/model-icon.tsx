@@ -123,26 +123,30 @@ const icons = {
 };
 
 interface ModelIconProps {
-  modelId: string;
+  modelName: string;
   className?: string;
 }
 
-export function ModelIcon({ modelId, className }: ModelIconProps) {
+export function ModelIcon({ modelName, className }: ModelIconProps) {
   const iconKey = useMemo(() => {
-    const modelIdLower = modelId.toLowerCase();
+    if (!modelName || typeof modelName !== 'string') {
+      return "default";
+    }
+
+    const modelNameLower = modelName.toLowerCase();
     const iconEntries = Object.keys(icons);
 
     const matchedIcon = iconEntries.find((key) => {
-      return modelIdLower.includes(key);
+      return modelNameLower.includes(key);
     });
     return matchedIcon ? matchedIcon : "default";
-  }, [modelId]);
+  }, [modelName]);
 
   return (
     <img
       src={icons[iconKey]}
       className={cn("h-4 w-4 rounded-full dark:bg-white", className)}
-      alt={modelId}
+      alt={modelName || "Model Icon"}
     />
   );
 }

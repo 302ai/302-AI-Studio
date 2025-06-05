@@ -10,7 +10,7 @@ import {
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
 import { triplitClient } from "@shared/triplit/client";
-import type { CreateProviderData, Model, Provider } from "@shared/triplit/types";
+import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
@@ -33,6 +33,7 @@ const ListRow = React.memo(function ListRow({
   setSelectedProvider,
   selectedProvider,
   setState,
+  modelCounts,
 }: {
   index: number;
   style: React.CSSProperties;
@@ -40,13 +41,11 @@ const ListRow = React.memo(function ListRow({
   selectedProvider: Provider | null;
   setSelectedProvider: (provider: Provider | null) => void;
   setState: (state: ModelActionType) => void;
+  modelCounts: Record<string, number>;
 }) {
-  const [providerModels, setProviderModels] = useState<Model[]>([]);
-
   const provider = data[index];
 
   const handleProviderSelect = _.debounce(() => {
-    // * Toggle selection: if already selected, deselect; otherwise select
     setSelectedProvider(selectedProvider?.id === provider.id ? null : provider);
   }, 100);
 
@@ -60,42 +59,6 @@ const ListRow = React.memo(function ListRow({
     setState("delete");
   };
 
-  useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-
-    const initAndSubscribe = async () => {
-      try {
-        await triplitClient.connect();
-
-        const query = triplitClient
-          .query("models")
-          .Where("providerId", "=", provider.id);
-
-        unsubscribe = triplitClient.subscribe(
-          query,
-          (results) => {
-            console.log("收到models数据更新:", results);
-            // Update the providers state with the new data
-            setProviderModels(results);
-          },
-          (error) => {
-            console.error("models订阅错误:", error);
-          },
-        );
-      } catch (error) {
-        console.error("models初始化错误:", error);
-      }
-    };
-
-    initAndSubscribe();
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, [provider.id]);
-
   return (
     <Draggable draggableId={provider.id} index={index} key={provider.id}>
       {(provided) => (
@@ -104,7 +67,7 @@ const ListRow = React.memo(function ListRow({
           provided={provided}
           provider={provider}
           isSelected={selectedProvider?.id === provider.id}
-          providerModels={providerModels}
+          modelCount={modelCounts[provider.id] || 0}
           actionGroup={
             <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
           }
@@ -135,8 +98,8 @@ export function ProviderList() {
   const [listHeight, setListHeight] = useState<number>(0);
   const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
   const [providerCfg, setProviderCfg] = useState<ModelProvider | null>(null);
-
   const [providers, setProviders] = useState<Provider[]>([]);
+  const [modelCounts, setModelCounts] = useState<Record<string, number>>({});
 
   const actionType = (action: ModelActionType | null) => {
     const initialsState = {
@@ -248,6 +211,7 @@ export function ProviderList() {
       selectedProvider={selectedProvider}
       setSelectedProvider={setSelectedProvider}
       setState={setState}
+      modelCounts={modelCounts}
     />
   );
 
@@ -324,6 +288,52 @@ export function ProviderList() {
     };
   }, []);
 
+  // Add this useEffect to track model counts for all providers
+  useEffect(() => {
+    const unsubscribes: (() => void)[] = [];
+
+    const subscribeToModelCounts = async () => {
+      try {
+        await triplitClient.connect();
+
+        // Subscribe to model counts for each provider
+        for (const provider of providers) {
+          const query = triplitClient
+            .query("models")
+            .Where("providerId", "=", provider.id);
+
+          const unsubscribe = triplitClient.subscribe(
+            query,
+            (results) => {
+              setModelCounts((prev) => ({
+                ...prev,
+                [provider.id]: results.length,
+              }));
+            },
+            (error) => {
+              console.error(
+                `模型计数订阅错误 for provider ${provider.id}:`,
+                error,
+              );
+            },
+          );
+
+          unsubscribes.push(unsubscribe);
+        }
+      } catch (error) {
+        console.error("模型计数初始化错误:", error);
+      }
+    };
+
+    if (providers.length > 0) {
+      subscribeToModelCounts();
+    }
+
+    return () => {
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [providers]);
+
   return (
     <>
       <div className="flex h-full flex-col">
@@ -350,7 +360,7 @@ export function ProviderList() {
                       isDragging={snapshot.isDragging}
                       isSelected={selectedProvider?.id === provider.id}
                       provider={provider}
-                      providerModels={[]}
+                      modelCount={modelCounts[provider.id] || 0}
                       actionGroup={
                         <ActionGroup onEdit={() => {}} onDelete={() => {}} />
                       }

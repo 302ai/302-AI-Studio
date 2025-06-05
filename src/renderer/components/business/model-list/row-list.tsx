@@ -1,9 +1,8 @@
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import type { Model } from "@shared/types/model";
-import type { ModelProvider } from "@shared/types/provider";
-import { memo } from "react";
+import { triplitClient } from "@shared/triplit/client";
+import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
+import { memo, useEffect, useState } from "react";
 import { areEqual } from "react-window";
 import { ActionGroup } from "../action-group";
 import { ModelIcon } from "../model-icon";
@@ -15,21 +14,16 @@ export const RowList = memo(function RowList({
 }: {
   index: number;
   style: React.CSSProperties;
-  data: { models: Model[]; providerMap: Record<string, ModelProvider> };
+  data: { models: Model[] };
 }) {
-  const { models, providerMap } = data;
+  const { models } = data;
   const item = models[index];
-  const provider = providerMap[item.providerId];
   const isLast = index === models.length - 1;
 
-  const { providerModelMap, updateProviderModelMap } = useModelSettingStore();
+  const [provider, setProvider] = useState<Provider>();
 
-  const handleUpdateModel = (updatedConfig: Partial<Model>) => {
-    const targetModels = providerModelMap[provider.id];
-    const updatedModels = targetModels.map((model) =>
-      model.id === item.id ? { ...model, ...updatedConfig } : model
-    );
-    updateProviderModelMap(provider.id, updatedModels);
+  const handleUpdateModel = async (updateModelData: UpdateModelData) => {
+    await triplitClient.update("models", item.id, updateModelData);
   };
 
   const handleCheckboxChange = () => {
@@ -42,12 +36,23 @@ export const RowList = memo(function RowList({
     handleUpdateModel({ collected: !item.collected });
   };
 
+  useEffect(() => {
+    const fetchProvider = async () => {
+    const query = triplitClient
+      .query("providers")
+      .Where("id", "=", item.providerId);
+      const provider = await triplitClient.fetch(query);
+      setProvider(provider[0]);
+    };
+    fetchProvider();
+  }, [item.providerId]);
+
   return (
     <div
       style={style}
       className={cn(
         "outline-transparent ring-primary hover:bg-hover-primary",
-        !isLast ? "border-border border-b" : ""
+        !isLast ? "border-border border-b" : "",
       )}
     >
       <div className="flex items-center">
@@ -63,8 +68,8 @@ export const RowList = memo(function RowList({
 
         <div className="mr-4 px-4 py-2.5 align-middle outline-hidden">
           <div className="flex items-center gap-2">
-            <ModelIcon modelId={provider.id} />
-            {provider.name}
+            <ModelIcon modelName={provider?.name ?? ""} />
+            {provider?.name}
           </div>
         </div>
 
@@ -78,5 +83,4 @@ export const RowList = memo(function RowList({
       </div>
     </div>
   );
-},
-areEqual);
+}, areEqual);

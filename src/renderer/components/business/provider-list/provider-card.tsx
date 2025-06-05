@@ -8,14 +8,13 @@ import {
 } from "@renderer/components/ui/card";
 import { cn } from "@renderer/lib/utils";
 import type { Provider } from "@shared/triplit/types";
-import type { Model } from "@shared/types/model";
 import { useTranslation } from "react-i18next";
 import { ModelIcon } from "../model-icon";
 
 interface ProviderCardProps {
   provided: DraggableProvided;
   provider: Provider;
-  providerModels: Model[];
+  modelCount: number;
   actionGroup: React.ReactNode;
   style?: React.CSSProperties;
   isDragging?: boolean;
@@ -26,7 +25,7 @@ interface ProviderCardProps {
 export function ProviderCard({
   provided,
   provider,
-  providerModels,
+  modelCount,
   actionGroup,
   style,
   isDragging,
@@ -72,11 +71,11 @@ export function ProviderCard({
       aria-label={provider.name}
     >
       <CardHeader className="flex items-center gap-3 pl-4">
-        <ModelIcon modelId={provider.id} className="size-8" />
+        <ModelIcon modelName={provider.name ?? ""} className="size-8" />
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">
-            {providerModels?.length || 0}
+            {modelCount}
             {t("settings.model-settings.model-provider.description")}
           </CardDescription>
         </div>

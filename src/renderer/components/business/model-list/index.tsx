@@ -1,6 +1,6 @@
 import { useProviderList } from "@renderer/hooks/use-provider-list";
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import type { ModelProvider } from "@shared/types/provider";
+import { triplitClient } from "@shared/triplit/client";
+import type { Model } from "@shared/triplit/types";
 import { PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,8 +13,6 @@ export function ModelList() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-list",
   });
-  const { modelProviders, providerModelMap, getAllModels } =
-    useModelSettingStore();
   const { selectedProvider } = useProviderList();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,20 +20,23 @@ export function ModelList() {
   const [containerHeight, setContainerHeight] = useState(0);
   const [tabKey, setTabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
+  const [models, setModels] = useState<Model[]>([]);
 
   const collected = tabKey === "collected";
 
   // * Get base models based on selected provider and tab
   const baseModels = useMemo(() => {
     if (!selectedProvider?.id) {
-      return getAllModels({ collected });
+      return models;
     }
 
-    const providerModels = providerModelMap[selectedProvider.id] || [];
+    const providerModels = models.filter(
+      (model) => model.providerId === selectedProvider.id,
+    );
     return providerModels.filter((model) =>
       collected ? model.collected : true,
     );
-  }, [getAllModels, providerModelMap, selectedProvider?.id, collected]);
+  }, [models, selectedProvider?.id, collected]);
 
   // * Apply search filter to base models
   const filteredModels = useMemo(() => {
@@ -44,22 +45,16 @@ export function ModelList() {
     }
 
     const query = searchQuery.toLowerCase().trim();
-    return baseModels.filter((model) => model.id.toLowerCase().includes(query));
+    return baseModels.filter((model) =>
+      model.name.toLowerCase().includes(query),
+    );
   }, [baseModels, searchQuery]);
-
-  const providerMap = useMemo<Record<string, ModelProvider>>(() => {
-    return modelProviders.reduce((acc, provider) => {
-      acc[provider.id] = provider;
-      return acc;
-    }, {});
-  }, [modelProviders]);
 
   const listData = useMemo(
     () => ({
       models: filteredModels,
-      providerMap,
     }),
-    [filteredModels, providerMap],
+    [filteredModels],
   );
 
   useEffect(() => {
@@ -74,6 +69,38 @@ export function ModelList() {
     updateHeight();
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+
+  useEffect(() => {
+    let unsubscribe: (() => void) | null = null;
+
+    const initAndSubscribe = async () => {
+      try {
+        const modelsQuery = triplitClient.query("models");
+
+        unsubscribe =
+            triplitClient.subscribe(
+            modelsQuery,
+            (results) => {
+              console.log("收到model list数据更新");
+              setModels(results);
+            },
+            (error) => {
+              console.error("model list订阅错误:", error);
+            },
+          );
+      } catch (error) {
+        console.error("初始化错误:", error);
+      }
+    };
+
+    initAndSubscribe();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   return (
