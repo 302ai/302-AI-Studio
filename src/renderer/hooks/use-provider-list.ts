@@ -1,3 +1,4 @@
+import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import { useState } from "react";
 import { DEFAULT_PROVIDERS } from "../config/providers";
@@ -10,38 +11,34 @@ export type ModelActionType = "add" | "edit" | "delete";
 export function useProviderList() {
   const {
     modelProviders,
-    selectedModelProvider,
-    providerModelMap,
-    moveModelProvider,
-    setSelectedModelProvider,
-    removeModelProvider,
-    addModelProvider,
-    setProviderModelMap,
     updateSelectedModelProvider,
   } = useModelSettingStore();
 
   const [state, setState] = useState<ModelActionType | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
+    null,
+  );
 
   // * Show providers that are NOT already in the modelProvider array
   const canSelectProviders = DEFAULT_PROVIDERS.filter(
     (initialProvider) =>
       !modelProviders.some(
-        (existingProvider) => existingProvider.id === initialProvider.id
-      )
+        (existingProvider) => existingProvider.id === initialProvider.id,
+      ),
   );
 
   const closeModal = () => {
     setState(null);
   };
 
-  const handleDelete = () => {
-    if (!selectedModelProvider) {
+  const handleDelete = async () => {
+    if (!selectedProvider) {
       closeModal();
       return;
     }
 
-    removeModelProvider(selectedModelProvider.id);
-    setSelectedModelProvider(null);
+    await configService.deleteProvider(selectedProvider.id);
+    setSelectedProvider(null);
     closeModal();
   };
 
@@ -63,18 +60,16 @@ export function useProviderList() {
     });
   };
 
-  const handleAddProvider = async (provider: ModelProvider) => {
-    const models = await configService.getProviderModels(provider.id);
-    setProviderModelMap(provider.id, models);
-
-    addModelProvider(provider);
-    // * Auto-select the newly added provider to show its models
-    setSelectedModelProvider(provider);
+  const handleAddProvider = async (provider: CreateProviderData) => {
+    const newProvider = await configService.addProvider(provider);
+    const models = await providerService.fetchModels(newProvider);
+    console.log("🚀 ~ :66 ~ handleAddProvider ~ models:", models);
+    await configService.addModels(models);
   };
 
   const handleCheckKey = async (
     providerCfg: ModelProvider,
-    condition: "add" | "edit"
+    condition: "add" | "edit",
   ): Promise<{
     isOk: boolean;
     errorMsg: string | null;
@@ -100,19 +95,44 @@ export function useProviderList() {
     });
   };
 
+  // * Move provider using triplit instead of store
+  const moveProvider = async (
+    fromIndex: number,
+    toIndex: number,
+    providers: Provider[],
+  ) => {
+    try {
+      // Create a copy of providers array to work with
+      const updatedProviders = [...providers];
+      const [movedProvider] = updatedProviders.splice(fromIndex, 1);
+      updatedProviders.splice(toIndex, 0, movedProvider);
+
+      // Update the order for all affected providers
+      const updatePromises = updatedProviders.map((provider, index) => {
+        return configService.updateProvider(provider.id, {
+          order: index,
+        });
+      });
+
+      await Promise.all(updatePromises);
+    } catch (error) {
+      console.error("Failed to move provider:", error);
+    }
+  };
+
   return {
     modelProviders,
-    selectedModelProvider,
     state,
     canSelectProviders,
-    providerModelMap,
     setState,
     closeModal,
     handleDelete,
-    moveModelProvider,
-    setSelectedModelProvider,
     handleAddProvider,
     handleCheckKey,
     handleUpdateProvider,
+
+    selectedProvider,
+    setSelectedProvider,
+    moveProvider,
   };
 }

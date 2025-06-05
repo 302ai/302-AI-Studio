@@ -9,6 +9,7 @@ export const providersSchema = {
     baseUrl: S.String(),
     enabled: S.Boolean({ default: true }),
     custom: S.Boolean({ default: false }),
+    order: S.Number({ default: 0 }),
     websites: S.Optional(
       S.Record({
         official: S.String(),

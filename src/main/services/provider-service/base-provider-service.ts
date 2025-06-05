@@ -1,34 +1,28 @@
-import type { Model } from "@shared/types/model";
-import type { ModelProvider } from "@shared/types/provider";
+import type { CreateModelData, Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { ConfigService } from "../config-service";
 
 export abstract class BaseProviderService {
-  protected provider: ModelProvider;
-  protected models: Model[] = [];
-  protected configService: ConfigService;
+  protected provider: Provider;
+  protected models: CreateModelData[] = [];
 
-  constructor(provider: ModelProvider) {
+  constructor(provider: Provider) {
     this.provider = provider;
-    this.configService = new ConfigService();
   }
 
   abstract checkApiKey(): Promise<{
     isOk: boolean;
     errorMsg: string | null;
-    models?: Model[];
   }>;
 
-  async fetchModels(): Promise<Model[]> {
+  async fetchModels(): Promise<CreateModelData[]> {
     try {
       const models = await this.fetchProviderModels();
       this.models = models;
-      this.configService._setProviderModels(this.provider.id, models);
       Logger.debug(
         "Fetch models successfully:",
         this.provider.name,
         "model count:",
-        models.length
+        models.length,
       );
 
       return models;
@@ -41,5 +35,5 @@ export abstract class BaseProviderService {
     }
   }
 
-  protected abstract fetchProviderModels(): Promise<Model[]>;
+  protected abstract fetchProviderModels(): Promise<CreateModelData[]>;
 }

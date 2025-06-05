@@ -3,61 +3,32 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
-import type { ModelProvider } from "@shared/types/provider";
+import type { CreateModelData, Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { ConfigService } from "../config-service";
-import { EventNames, emitter } from "../event-service";
 import type { BaseProviderService } from "./base-provider-service";
 import { OpenAIProviderService } from "./openAI-provider-service";
 
 export type CheckApiKeyParams =
   | {
       condition: "add";
-      providerCfg: ModelProvider;
+      providerCfg: Provider;
     }
   | {
       condition: "edit";
       providerId: string;
       providerCfg: Pick<
-        ModelProvider,
+      Provider,
         "name" | "baseUrl" | "apiKey" | "apiType"
       >;
     };
 
 @ServiceRegister("providerService")
 export class ProviderService {
-  private configService: ConfigService;
-  private providerMap: Map<string, ModelProvider> = new Map();
+  private providerMap: Map<string, Provider> = new Map();
   private providerInstMap: Map<string, BaseProviderService> = new Map();
 
-  constructor() {
-    this.configService = new ConfigService();
-    this.init();
-
-    // TODO: The current implementation is not efficient, we should use a more efficient way to update the provider service
-    emitter.on(EventNames.PROVIDERS_UPDATE, () => {
-      Logger.info("PROVIDERS_UPDATE");
-      this.init();
-    });
-  }
-
-  private init() {
-    const providers = this.configService.getProviders();
-    providers.forEach((provider) => {
-      this.providerMap.set(provider.id, provider);
-
-      if (provider.enabled) {
-        const providerInst = this.createProviderInst(provider);
-        if (providerInst) {
-          this.providerInstMap.set(provider.id, providerInst);
-          Logger.info("Provider initialized successfully:", provider.name);
-        }
-      }
-    });
-  }
-
   private createProviderInst(
-    provider: ModelProvider
+    provider: Provider,
   ): BaseProviderService | undefined {
     switch (provider.apiType) {
       case "openai":
@@ -79,7 +50,7 @@ export class ProviderService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async checkApiKey(
     _event: Electron.IpcMainEvent,
-    params: CheckApiKeyParams
+    params: CheckApiKeyParams,
   ): Promise<{
     isOk: boolean;
     errorMsg: string | null;
@@ -90,18 +61,11 @@ export class ProviderService {
         return { isOk: false, errorMsg: "Failed to create provider instance" };
       }
 
-      const { isOk, errorMsg, models } = await providerInst.checkApiKey();
-      if (isOk) {
-        this.configService._setProviderModels(
-          params.providerCfg.id,
-          models || []
-        );
-      }
+      const { isOk, errorMsg } = await providerInst.checkApiKey();
 
       Logger.debug("checkApiKey (add): ", params.providerCfg.name, {
         isOk,
         errorMsg,
-        models: models?.length,
       });
 
       return { isOk, errorMsg };
@@ -110,7 +74,7 @@ export class ProviderService {
     if (params.condition === "edit") {
       try {
         const originalProvider = this.getProviderById(params.providerId);
-        const tempProvider: ModelProvider = {
+        const tempProvider: Provider = {
           ...originalProvider,
           ...params.providerCfg,
         };
@@ -122,15 +86,14 @@ export class ProviderService {
           };
         }
 
-        const result = await tempProviderInst.checkApiKey();
+        const { isOk, errorMsg } = await tempProviderInst.checkApiKey();
 
         Logger.debug("checkApiKey (edit): ", tempProvider.name, {
-          isOk: result.isOk,
-          errorMsg: result.errorMsg,
-          models: result.models?.length,
+          isOk,
+          errorMsg,
         });
 
-        return result;
+        return { isOk, errorMsg };
       } catch (error) {
         return {
           isOk: false,
@@ -142,7 +105,7 @@ export class ProviderService {
     return { isOk: false, errorMsg: "Invalid condition" };
   }
 
-  getProviderById(id: string): ModelProvider {
+  getProviderById(id: string): Provider {
     const provider = this.providerMap.get(id);
     if (!provider) {
       throw new Error(`Provider ${id} not found`);
@@ -154,7 +117,7 @@ export class ProviderService {
   updateProviderConfig(
     _event: Electron.IpcMainEvent,
     providerId: string,
-    updates: Partial<ModelProvider>
+    updates: Partial<Provider>,
   ): void {
     const provider = this.providerMap.get(providerId);
     if (!provider) {
@@ -164,8 +127,6 @@ export class ProviderService {
     const updatedProvider = { ...provider, ...updates };
     this.providerMap.set(providerId, updatedProvider);
 
-    this.configService.updateProvider(updatedProvider);
-
     if (updatedProvider.enabled) {
       const newInstance = this.createProviderInst(updatedProvider);
       if (newInstance) {
@@ -173,5 +134,17 @@ export class ProviderService {
         Logger.info("Provider instance updated:", updatedProvider.name);
       }
     }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async fetchModels(
+    _event: Electron.IpcMainEvent,
+    provider: Provider,
+  ): Promise<CreateModelData[]> {
+    const providerInst = this.createProviderInst(provider);
+    if (!providerInst) {
+      throw new Error(`Provider ${provider.id} not found`);
+    }
+    return await providerInst.fetchModels();
   }
 }

@@ -9,7 +9,8 @@ import {
   type ModelActionType,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
-import type { Model } from "@shared/types/model";
+import { triplitClient } from "@shared/triplit/client";
+import type { CreateProviderData, Model, Provider } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
@@ -29,37 +30,71 @@ const ListRow = React.memo(function ListRow({
   index,
   style,
   data,
-  selectedModelProvider,
-  providerModelMap,
-  setSelectedModelProvider,
+  setSelectedProvider,
+  selectedProvider,
   setState,
 }: {
   index: number;
   style: React.CSSProperties;
-  data: ModelProvider[];
-  selectedModelProvider: ModelProvider | null;
-  providerModelMap: Record<string, Model[]>;
-  setSelectedModelProvider: (provider: ModelProvider | null) => void;
+  data: Provider[];
+  selectedProvider: Provider | null;
+  setSelectedProvider: (provider: Provider | null) => void;
   setState: (state: ModelActionType) => void;
 }) {
+  const [providerModels, setProviderModels] = useState<Model[]>([]);
+
   const provider = data[index];
 
   const handleProviderSelect = _.debounce(() => {
     // * Toggle selection: if already selected, deselect; otherwise select
-    setSelectedModelProvider(
-      selectedModelProvider?.id === provider.id ? null : provider
-    );
+    setSelectedProvider(selectedProvider?.id === provider.id ? null : provider);
   }, 100);
 
   const handleEdit = () => {
-    setSelectedModelProvider(provider);
+    setSelectedProvider(provider);
     setState("edit");
   };
 
   const handleDelete = () => {
-    setSelectedModelProvider(provider);
+    setSelectedProvider(provider);
     setState("delete");
   };
+
+  useEffect(() => {
+    let unsubscribe: (() => void) | null = null;
+
+    const initAndSubscribe = async () => {
+      try {
+        await triplitClient.connect();
+
+        const query = triplitClient
+          .query("models")
+          .Where("providerId", "=", provider.id);
+
+        unsubscribe = triplitClient.subscribe(
+          query,
+          (results) => {
+            console.log("收到models数据更新:", results);
+            // Update the providers state with the new data
+            setProviderModels(results);
+          },
+          (error) => {
+            console.error("models订阅错误:", error);
+          },
+        );
+      } catch (error) {
+        console.error("models初始化错误:", error);
+      }
+    };
+
+    initAndSubscribe();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [provider.id]);
 
   return (
     <Draggable draggableId={provider.id} index={index} key={provider.id}>
@@ -68,8 +103,8 @@ const ListRow = React.memo(function ListRow({
           style={style}
           provided={provided}
           provider={provider}
-          isSelected={selectedModelProvider?.id === provider.id}
-          providerModels={providerModelMap[provider.id]}
+          isSelected={selectedProvider?.id === provider.id}
+          providerModels={providerModels}
           actionGroup={
             <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
           }
@@ -78,24 +113,21 @@ const ListRow = React.memo(function ListRow({
       )}
     </Draggable>
   );
-},
-areEqual);
+}, areEqual);
 
 export function ProviderList() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider",
   });
   const {
-    modelProviders,
-    selectedModelProvider,
-    providerModelMap,
+    selectedProvider,
     state,
     setState,
     closeModal,
     handleDelete,
     handleUpdateProvider,
-    moveModelProvider,
-    setSelectedModelProvider,
+    moveProvider,
+    setSelectedProvider,
     handleAddProvider,
   } = useProviderList();
 
@@ -103,6 +135,8 @@ export function ProviderList() {
   const [listHeight, setListHeight] = useState<number>(0);
   const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
   const [providerCfg, setProviderCfg] = useState<ModelProvider | null>(null);
+
+  const [providers, setProviders] = useState<Provider[]>([]);
 
   const actionType = (action: ModelActionType | null) => {
     const initialsState = {
@@ -129,23 +163,31 @@ export function ProviderList() {
           ),
           confirmText: t("modal-action.add-provider-confirm"),
           disabled: !isApiKeyValidated,
-          action: () => {
+          action: async () => {
             if (providerCfg) {
-              handleAddProvider(providerCfg);
+              const provider: CreateProviderData = {
+                name: providerCfg.name,
+                baseUrl: providerCfg.baseUrl,
+                apiKey: providerCfg.apiKey,
+                apiType: providerCfg.apiType,
+                custom: providerCfg.custom ?? false,
+                enabled: true,
+              };
+              await handleAddProvider(provider);
               handleCloseModal();
             }
           },
         };
       case "edit":
-        if (!selectedModelProvider) {
+        if (!selectedProvider) {
           return initialsState;
         }
         return {
-          title: `${t("modal-action.edit")} ${selectedModelProvider.name}`,
+          title: `${t("modal-action.edit")} ${selectedProvider.name}`,
           descriptions: [],
           body: (
             <EditProvider
-              provider={selectedModelProvider}
+              provider={selectedProvider}
               onValidationStatusChange={(isValid) => {
                 setIsApiKeyValidated(isValid);
               }}
@@ -163,14 +205,14 @@ export function ProviderList() {
           },
         };
       case "delete":
-        if (!selectedModelProvider) {
+        if (!selectedProvider) {
           return initialsState;
         }
         return {
           title: t("modal-action.delete"),
           descriptions: [
             `${t("modal-action.delete-description")} ${
-              selectedModelProvider.name
+              selectedProvider.name
             } ?`,
             t("modal-action.delete-description-2"),
             t("modal-action.delete-description-3"),
@@ -185,7 +227,7 @@ export function ProviderList() {
 
   const handleDragEnd = (result: DropResult) => {
     if (result.destination) {
-      moveModelProvider(result.source.index, result.destination.index);
+      moveProvider(result.source.index, result.destination.index, providers);
     }
   };
 
@@ -199,13 +241,12 @@ export function ProviderList() {
   const renderListRow = (props: {
     index: number;
     style: React.CSSProperties;
-    data: ModelProvider[];
+    data: Provider[];
   }) => (
     <ListRow
       {...props}
-      selectedModelProvider={selectedModelProvider}
-      providerModelMap={providerModelMap}
-      setSelectedModelProvider={setSelectedModelProvider}
+      selectedProvider={selectedProvider}
+      setSelectedProvider={setSelectedProvider}
       setState={setState}
     />
   );
@@ -218,9 +259,22 @@ export function ProviderList() {
       }
     };
 
+    const getHeightWithDelay = () => {
+      requestAnimationFrame(() => {
+        setTimeout(updateHeight, 0);
+      });
+    };
+
     updateHeight();
 
-    const resizeObserver = new ResizeObserver(updateHeight);
+    if (listHeight === 0) {
+      getHeightWithDelay();
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      getHeightWithDelay();
+    });
+
     if (listContainerRef.current) {
       resizeObserver.observe(listContainerRef.current);
     }
@@ -228,6 +282,44 @@ export function ProviderList() {
     return () => {
       if (listContainerRef.current) {
         resizeObserver.unobserve(listContainerRef.current);
+      }
+    };
+  }, [listHeight]);
+
+  // * Get providers from triplit with order
+  useEffect(() => {
+    let unsubscribe: (() => void) | null = null;
+
+    const initAndSubscribe = async () => {
+      try {
+        await triplitClient.connect();
+
+        const query = triplitClient
+          .query("providers")
+          .Where("enabled", "=", true)
+          .Order("order", "ASC"); // Add order by order field
+
+        unsubscribe = triplitClient.subscribe(
+          query,
+          (results) => {
+            console.log("收到providers数据更新:", results);
+            // Update the providers state with the new data
+            setProviders(results);
+          },
+          (error) => {
+            console.error("providers订阅错误:", error);
+          },
+        );
+      } catch (error) {
+        console.error("providers初始化错误:", error);
+      }
+    };
+
+    initAndSubscribe();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
       }
     };
   }, []);
@@ -244,21 +336,21 @@ export function ProviderList() {
           <Plus className="size-4" />
           {t("add-provider")}
         </Button>
-        {modelProviders.length > 0 ? (
+        {providers.length > 0 ? (
           <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable
                 droppableId="provider-list"
                 mode="virtual"
                 renderClone={(provided, snapshot, rubric) => {
-                  const provider = modelProviders[rubric.source.index];
+                  const provider = providers[rubric.source.index];
                   return (
                     <ProviderCard
                       provided={provided}
                       isDragging={snapshot.isDragging}
-                      isSelected={selectedModelProvider?.id === provider.id}
+                      isSelected={selectedProvider?.id === provider.id}
                       provider={provider}
-                      providerModels={providerModelMap[provider.id]}
+                      providerModels={[]}
                       actionGroup={
                         <ActionGroup onEdit={() => {}} onDelete={() => {}} />
                       }
@@ -269,11 +361,11 @@ export function ProviderList() {
                 {(provided) => (
                   <FixedSizeList
                     height={listHeight}
-                    itemCount={modelProviders.length}
+                    itemCount={providers.length}
                     itemSize={65}
                     width="100%"
                     outerRef={provided.innerRef}
-                    itemData={modelProviders}
+                    itemData={providers}
                   >
                     {renderListRow}
                   </FixedSizeList>

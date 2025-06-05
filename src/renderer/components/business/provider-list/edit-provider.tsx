@@ -1,4 +1,5 @@
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import type { Provider } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,7 +7,7 @@ import { toast } from "sonner";
 import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface EditProviderProps {
-  provider: ModelProvider;
+  provider: Provider;
   onValidationStatusChange: (isValid: boolean) => void;
   onProviderCfgSet: (providerCfg: ModelProvider) => void;
 }
@@ -97,7 +98,8 @@ export function EditProvider({
       name: customName,
       apiKey,
       baseUrl,
-      apiType: apiType,
+      apiType,
+      websites: provider.websites ?? undefined,
     };
 
     const { isOk, errorMsg } = await handleCheckKey(updatedProvider, "edit");
@@ -118,7 +120,7 @@ export function EditProvider({
 
   const handleKeyFieldChange = (
     value: string,
-    onChange: (value: string) => void
+    onChange: (value: string) => void,
   ) => {
     onChange(value);
 
@@ -146,6 +148,7 @@ export function EditProvider({
       apiKey,
       baseUrl,
       apiType: apiType,
+      websites: provider.websites ?? undefined,
     };
 
     const isValid = isCurrentConfigValid();

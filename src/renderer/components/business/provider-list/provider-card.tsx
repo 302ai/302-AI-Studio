@@ -7,14 +7,14 @@ import {
   CardTitle,
 } from "@renderer/components/ui/card";
 import { cn } from "@renderer/lib/utils";
+import type { Provider } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
-import type { ModelProvider } from "@shared/types/provider";
 import { useTranslation } from "react-i18next";
 import { ModelIcon } from "../model-icon";
 
 interface ProviderCardProps {
   provided: DraggableProvided;
-  provider: ModelProvider;
+  provider: Provider;
   providerModels: Model[];
   actionGroup: React.ReactNode;
   style?: React.CSSProperties;
@@ -55,7 +55,7 @@ export function ProviderCard({
       className={cn(
         "group flex h-[60px] flex-row items-center justify-between rounded-xl border bg-bg py-4 hover:bg-hover-primary",
         isDragging && "bg-hover-primary opacity-50",
-        isSelected && "border-primary"
+        isSelected && "border-primary",
       )}
       ref={provided.innerRef}
       {...provided.draggableProps}
@@ -76,7 +76,7 @@ export function ProviderCard({
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">
-            {providerModels.length}
+            {providerModels?.length || 0}
             {t("settings.model-settings.model-provider.description")}
           </CardDescription>
         </div>

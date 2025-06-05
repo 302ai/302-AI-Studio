@@ -10,10 +10,9 @@ interface ModelSettingStore {
   providerMap: Record<string, ModelProvider>;
   providerModelMap: Record<string, Model[]>;
 
-  initializeStore: () => Promise<void>;
+  // initializeStore: () => Promise<void>;
 
   addModelProvider: (newProvider: ModelProvider) => void;
-  moveModelProvider: (fromIndex: number, toIndex: number) => void;
   removeModelProvider: (providerId: string) => void;
   setSelectedModelProvider: (provider: ModelProvider | null) => void;
   updateSelectedModelProvider: (data: Partial<ModelProvider>) => void;
@@ -39,16 +38,16 @@ export const useModelSettingStore = create<ModelSettingStore>()(
     providerMap: {},
     providerModelMap: {},
 
-    initializeStore: async () => {
-      const { modelProviders, providerModelMap, providerMap } =
-        await configService.getModelSettings();
+    // initializeStore: async () => {
+    //   const { modelProviders, providerModelMap, providerMap } =
+    //     await configService.getModelSettings();
 
-      set({
-        modelProviders,
-        providerModelMap,
-        providerMap,
-      });
-    },
+    //   set({
+    //     modelProviders,
+    //     providerModelMap,
+    //     providerMap,
+    //   });
+    // },
 
     addModelProvider: (newProvider) => {
       set({
@@ -57,15 +56,6 @@ export const useModelSettingStore = create<ModelSettingStore>()(
           ...get().providerMap,
           [newProvider.id]: newProvider,
         },
-      });
-    },
-
-    moveModelProvider: (fromIndex, toIndex) => {
-      set((state) => {
-        const provider = state.modelProviders[fromIndex];
-        state.modelProviders.splice(fromIndex, 1);
-        state.modelProviders.splice(toIndex, 0, provider);
-        return state;
       });
     },
 
@@ -168,13 +158,13 @@ export const useModelSettingStore = create<ModelSettingStore>()(
   }))
 );
 
-useModelSettingStore.getState().initializeStore();
+// useModelSettingStore.getState().initializeStore();
 
 /**
  * * This effect is used to sync the model providers to the main process
  */
-useModelSettingStore.subscribe((state, prevState) => {
-  if (state.modelProviders !== prevState.modelProviders) {
-    configService.setProviders(state.modelProviders);
-  }
-});
+// useModelSettingStore.subscribe((state, prevState) => {
+//   if (state.modelProviders !== prevState.modelProviders) {
+//     configService.setProviders(state.modelProviders);
+//   }
+// });

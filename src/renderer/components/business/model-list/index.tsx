@@ -1,3 +1,4 @@
+import { useProviderList } from "@renderer/hooks/use-provider-list";
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import type { ModelProvider } from "@shared/types/provider";
 import { PackageOpen } from "lucide-react";
@@ -12,12 +13,9 @@ export function ModelList() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-list",
   });
-  const {
-    modelProviders,
-    selectedModelProvider,
-    providerModelMap,
-    getAllModels,
-  } = useModelSettingStore();
+  const { modelProviders, providerModelMap, getAllModels } =
+    useModelSettingStore();
+  const { selectedProvider } = useProviderList();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -29,15 +27,15 @@ export function ModelList() {
 
   // * Get base models based on selected provider and tab
   const baseModels = useMemo(() => {
-    if (!selectedModelProvider?.id) {
+    if (!selectedProvider?.id) {
       return getAllModels({ collected });
     }
 
-    const providerModels = providerModelMap[selectedModelProvider.id] || [];
+    const providerModels = providerModelMap[selectedProvider.id] || [];
     return providerModels.filter((model) =>
-      collected ? model.collected : true
+      collected ? model.collected : true,
     );
-  }, [getAllModels, providerModelMap, selectedModelProvider?.id, collected]);
+  }, [getAllModels, providerModelMap, selectedProvider?.id, collected]);
 
   // * Apply search filter to base models
   const filteredModels = useMemo(() => {
@@ -61,7 +59,7 @@ export function ModelList() {
       models: filteredModels,
       providerMap,
     }),
-    [filteredModels, providerMap]
+    [filteredModels, providerMap],
   );
 
   useEffect(() => {

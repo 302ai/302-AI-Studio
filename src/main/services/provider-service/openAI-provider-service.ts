@@ -1,14 +1,13 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@shared/api/ai";
-import type { Model } from "@shared/types/model";
-import type { ModelProvider } from "@shared/types/provider";
+import type { CreateModelData, Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
 import { BaseProviderService } from "./base-provider-service";
 
 export class OpenAIProviderService extends BaseProviderService {
   protected openai: OpenAIProvider;
 
-  constructor(provider: ModelProvider) {
+  constructor(provider: Provider) {
     super(provider);
     this.openai = createOpenAI({
       apiKey: provider.apiKey,
@@ -19,14 +18,12 @@ export class OpenAIProviderService extends BaseProviderService {
   async checkApiKey(): Promise<{
     isOk: boolean;
     errorMsg: string | null;
-    models?: Model[];
   }> {
     try {
-      const models = await this.fetchProviderModels();
+      await this.fetchProviderModels();
       return {
         isOk: true,
         errorMsg: null,
-        models,
       };
     } catch (error: unknown) {
       let errorMessage = "An unknown error occurred during provider check.";
@@ -45,7 +42,7 @@ export class OpenAIProviderService extends BaseProviderService {
 
   protected async fetchProviderModels(options?: {
     timeout: number;
-  }): Promise<Model[]> {
+  }): Promise<CreateModelData[]> {
     try {
       const response = await fetchOpenAIModels({
         apiKey: this.provider.apiKey,
@@ -56,18 +53,18 @@ export class OpenAIProviderService extends BaseProviderService {
       const modelIds = response.data.map((model) => model.id.trim()) || [];
       const formatedModels = modelIds.map((id) => {
         return {
-          id,
           name: id,
           providerId: this.provider.id,
           custom: false,
           enabled: true,
           collected: false,
+          capabilities: new Set(["vision", "file"]),
         };
       });
 
       Logger.info(
         "Fetched OpenAI models successfully, the count is:",
-        formatedModels.length
+        formatedModels.length,
       );
 
       return formatedModels;
