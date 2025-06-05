@@ -1,5 +1,6 @@
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import { triplitClient } from "@shared/triplit/client";
+import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -24,6 +25,23 @@ export function ModelList() {
   // 使用 useQuery 获取模型数据
   const modelsQuery = triplitClient.query("models");
   const { results: models } = useQuery(triplitClient, modelsQuery);
+
+  // 使用 useQuery 获取所有 providers 数据
+  const providersQuery = triplitClient.query("providers");
+  const { results: providers } = useQuery(triplitClient, providersQuery);
+
+  // 创建 providers 映射表，方便快速查找
+  const providersMap = useMemo(() => {
+    if (!providers) return {};
+
+    return providers.reduce(
+      (map, provider) => {
+        map[provider.id] = provider;
+        return map;
+      },
+      {} as Record<string, Provider>,
+    );
+  }, [providers]);
 
   const collected = tabKey === "collected";
 
@@ -65,8 +83,9 @@ export function ModelList() {
   const listData = useMemo(
     () => ({
       models: filteredModels,
+      providersMap, // 将 providers 映射表传递给子组件
     }),
-    [filteredModels],
+    [filteredModels, providersMap],
   );
 
   useEffect(() => {
@@ -104,7 +123,7 @@ export function ModelList() {
               itemCount={filteredModels.length}
               itemSize={40}
               itemData={listData}
-              overscanCount={5}
+              overscanCount={20}
               width="100%"
               style={{
                 scrollbarGutter: "stable",

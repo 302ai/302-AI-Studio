@@ -2,7 +2,7 @@ import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
 import { triplitClient } from "@shared/triplit/client";
 import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import { areEqual } from "react-window";
 import { ActionGroup } from "../action-group";
 import { ModelIcon } from "../model-icon";
@@ -14,13 +14,17 @@ export const RowList = memo(function RowList({
 }: {
   index: number;
   style: React.CSSProperties;
-  data: { models: Model[] };
+  data: {
+    models: Model[];
+    providersMap: Record<string, Provider>;
+  };
 }) {
-  const { models } = data;
+  const { models, providersMap } = data;
   const item = models[index];
   const isLast = index === models.length - 1;
 
-  const [provider, setProvider] = useState<Provider>();
+  // 直接从传入的 providersMap 中获取 provider
+  const provider = providersMap[item.providerId];
 
   const handleUpdateModel = async (updateModelData: UpdateModelData) => {
     await triplitClient.update("models", item.id, updateModelData);
@@ -35,17 +39,6 @@ export const RowList = memo(function RowList({
   const handleStar = () => {
     handleUpdateModel({ collected: !item.collected });
   };
-
-  useEffect(() => {
-    const fetchProvider = async () => {
-    const query = triplitClient
-      .query("providers")
-      .Where("id", "=", item.providerId);
-      const provider = await triplitClient.fetch(query);
-      setProvider(provider[0]);
-    };
-    fetchProvider();
-  }, [item.providerId]);
 
   return (
     <div
