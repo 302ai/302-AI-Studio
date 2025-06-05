@@ -2,7 +2,7 @@ import { TriplitClient } from "@triplit/client";
 import { schema } from "./schema";
 
 export const triplitClient = new TriplitClient({
-  storage: "memory",
+  storage: process.env.NODE_ENV === "development" ? "indexeddb" : "memory",
   schema,
   serverUrl: "http://localhost:8080",
   token:

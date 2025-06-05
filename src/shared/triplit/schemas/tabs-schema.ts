@@ -6,6 +6,6 @@ export const tabsSchema = {
     title: S.String(),
     type: S.String({
       enum: ["chat", "setting"],
-    }),
+    })
   }),
 };

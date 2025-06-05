@@ -11,6 +11,11 @@ export type Model = Entity<Schema, "models">;
 export type CreateModelData = Omit<Model, "id" | "createdAt">;
 export type UpdateModelData = Partial<Omit<Model, "id">>;
 
+// * Tabs
+export type Tab = Entity<Schema, "tabs">;
+export type CreateTabData = Omit<Tab, "id">;
+export type UpdateTabData = Partial<Omit<Tab, "id">>;
+
 // * Threads
 export type Thread = Entity<Schema, "threads">;
 export type CreateThreadData = Omit<
