@@ -57,7 +57,7 @@ export const ModelRowList = memo(function ModelRowList({
       aria-selected={isSelected}
     >
       <div className="flex w-full flex-row items-center gap-2 overflow-hidden">
-        <ModelIcon modelId={item.model.id} className="size-4 flex-shrink-0" />
+        <ModelIcon modelName={item.model.name} className="size-4 flex-shrink-0" />
         <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap">
           {item.name}
         </span>
