@@ -5,6 +5,7 @@ import {
   type DropResult,
 } from "@hello-pangea/dnd";
 import { Button } from "@renderer/components/ui/button";
+import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import {
   type ModelActionType,
   useProviderList,
@@ -12,9 +13,10 @@ import {
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
+import { useQuery } from "@triplit/react";
 import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
 import { ActionGroup } from "../action-group";
@@ -23,29 +25,24 @@ import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
 
-/**
- * ! This component can not be extracted to a separate file
- */
 const ListRow = React.memo(function ListRow({
   index,
   style,
   data,
-  setSelectedProvider,
-  selectedProvider,
   setState,
   modelCounts,
 }: {
   index: number;
   style: React.CSSProperties;
   data: Provider[];
-  selectedProvider: Provider | null;
-  setSelectedProvider: (provider: Provider | null) => void;
   setState: (state: ModelActionType) => void;
   modelCounts: Record<string, number>;
 }) {
   const provider = data[index];
+  const { selectedProvider, setSelectedProvider } = useActiveProvider();
 
   const handleProviderSelect = _.debounce(() => {
+    console.log("ProviderList - selecting provider:", provider);
     setSelectedProvider(selectedProvider?.id === provider.id ? null : provider);
   }, 100);
 
@@ -83,23 +80,42 @@ export function ProviderList() {
     keyPrefix: "settings.model-settings.model-provider",
   });
   const {
-    selectedProvider,
     state,
     setState,
     closeModal,
     handleDelete,
     handleUpdateProvider,
     moveProvider,
-    setSelectedProvider,
     handleAddProvider,
   } = useProviderList();
+
+  const { selectedProvider, setSelectedProvider } = useActiveProvider();
 
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
   const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
   const [providerCfg, setProviderCfg] = useState<ModelProvider | null>(null);
   const [providers, setProviders] = useState<Provider[]>([]);
-  const [modelCounts, setModelCounts] = useState<Record<string, number>>({});
+
+  // 使用 useQuery 获取所有模型数据
+  const modelsQuery = triplitClient.query("models");
+  const { results: allModels } = useQuery(triplitClient, modelsQuery);
+
+  // 使用 useMemo 计算每个 provider 的模型数量
+  const modelCounts = useMemo(() => {
+    if (!allModels || !providers.length) {
+      return {};
+    }
+
+    const counts: Record<string, number> = {};
+    providers.forEach((provider) => {
+      counts[provider.id] = allModels.filter(
+        (model) => model.providerId === provider.id,
+      ).length;
+    });
+
+    return counts;
+  }, [allModels, providers]);
 
   const actionType = (action: ModelActionType | null) => {
     const initialsState = {
@@ -183,7 +199,8 @@ export function ProviderList() {
           ],
           confirmText: t("modal-action.delete-confirm"),
           action: async () => {
-            await handleDelete();
+            await handleDelete(selectedProvider);
+            setSelectedProvider(null);
             handleCloseModal();
           },
         };
@@ -221,7 +238,6 @@ export function ProviderList() {
   const handleCloseModal = () => {
     setIsApiKeyValidated(false);
     setProviderCfg(null);
-
     closeModal();
   };
 
@@ -229,15 +245,7 @@ export function ProviderList() {
     index: number;
     style: React.CSSProperties;
     data: Provider[];
-  }) => (
-    <ListRow
-      {...props}
-      selectedProvider={selectedProvider}
-      setSelectedProvider={setSelectedProvider}
-      setState={setState}
-      modelCounts={modelCounts}
-    />
-  );
+  }) => <ListRow {...props} setState={setState} modelCounts={modelCounts} />;
 
   useEffect(() => {
     const updateHeight = () => {
@@ -274,7 +282,6 @@ export function ProviderList() {
     };
   }, [listHeight]);
 
-  // * Get providers from triplit with order
   useEffect(() => {
     let unsubscribe: (() => void) | null = null;
 
@@ -288,7 +295,6 @@ export function ProviderList() {
           query,
           (results) => {
             console.log("收到providers数据更新:", results);
-            // Update the providers state with the new data
             setProviders(results);
           },
           (error) => {
@@ -308,52 +314,6 @@ export function ProviderList() {
       }
     };
   }, []);
-
-  // Add this useEffect to track model counts for all providers
-  useEffect(() => {
-    const unsubscribes: (() => void)[] = [];
-
-    const subscribeToModelCounts = async () => {
-      try {
-        await triplitClient.connect();
-
-        // Subscribe to model counts for each provider
-        for (const provider of providers) {
-          const query = triplitClient
-            .query("models")
-            .Where("providerId", "=", provider.id);
-
-          const unsubscribe = triplitClient.subscribe(
-            query,
-            (results) => {
-              setModelCounts((prev) => ({
-                ...prev,
-                [provider.id]: results.length,
-              }));
-            },
-            (error) => {
-              console.error(
-                `模型计数订阅错误 for provider ${provider.id}:`,
-                error,
-              );
-            },
-          );
-
-          unsubscribes.push(unsubscribe);
-        }
-      } catch (error) {
-        console.error("模型计数初始化错误:", error);
-      }
-    };
-
-    if (providers.length > 0) {
-      subscribeToModelCounts();
-    }
-
-    return () => {
-      unsubscribes.forEach((unsubscribe) => unsubscribe());
-    };
-  }, [providers]);
 
   return (
     <>

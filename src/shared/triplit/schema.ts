@@ -5,6 +5,7 @@ import {
   providersSchema,
   tabsSchema,
   threadsSchema,
+  uiSchema,
 } from "./schemas";
 
 export const schema = S.Collections({
@@ -13,6 +14,7 @@ export const schema = S.Collections({
   tabs: tabsSchema,
   threads: threadsSchema,
   messages: messagesSchema,
+  ui: uiSchema,
 });
 
 export type Schema = typeof schema;

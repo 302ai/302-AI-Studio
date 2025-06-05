@@ -7,23 +7,20 @@ import {
   insertModels,
   insertProvider,
   updateProvider,
-} from "../services/provider-db-service";
+} from "../services/db-service/provider-db-service";
 
-const {  providerService } = window.service;
+const { providerService } = window.service;
 
 export type ModelActionType = "add" | "edit" | "delete";
 
 export function useProviderList() {
   const [state, setState] = useState<ModelActionType | null>(null);
-  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
-    null,
-  );
 
   const closeModal = () => {
     setState(null);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (selectedProvider: Provider | null) => {
     if (!selectedProvider) {
       closeModal();
       return;
@@ -31,8 +28,6 @@ export function useProviderList() {
 
     await deleteProvider(selectedProvider.id);
     await deleteModelsByProviderId(selectedProvider.id);
-
-    setSelectedProvider(null);
   };
 
   const handleUpdateProvider = (updatedProvider: ModelProvider) => {
@@ -49,7 +44,7 @@ export function useProviderList() {
   const handleAddProvider = async (provider: CreateProviderData) => {
     const newProvider = await insertProvider(provider);
     const models = await providerService.fetchModels(newProvider);
-    console.log("🚀 ~ :66 ~ handleAddProvider ~ models:", models);
+    console.log("🚀 ~ handleAddProvider ~ models:", models);
     await insertModels(models);
   };
 
@@ -74,26 +69,22 @@ export function useProviderList() {
       });
     }
 
-    // * Handle the condition "add"
     return await providerService.checkApiKey({
       condition,
       providerCfg,
     });
   };
 
-  // * Move provider using triplit instead of store
   const moveProvider = async (
     fromIndex: number,
     toIndex: number,
     providers: Provider[],
   ) => {
     try {
-      // Create a copy of providers array to work with
       const updatedProviders = [...providers];
       const [movedProvider] = updatedProviders.splice(fromIndex, 1);
       updatedProviders.splice(toIndex, 0, movedProvider);
 
-      // Update the order for all affected providers
       const updatePromises = updatedProviders.map((provider, index) => {
         return updateProvider(provider.id, {
           order: index,
@@ -114,9 +105,6 @@ export function useProviderList() {
     handleAddProvider,
     handleCheckKey,
     handleUpdateProvider,
-
-    selectedProvider,
-    setSelectedProvider,
     moveProvider,
   };
 }

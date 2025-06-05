@@ -1,3 +1,4 @@
+import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
@@ -10,7 +11,6 @@ import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -46,7 +46,7 @@ export function useToolBar() {
   };
 
   const createThread = async (
-    threadData: CreateThreadData
+    threadData: CreateThreadData,
   ): Promise<Thread | null> => {
     try {
       const { title, providerId, modelId } = threadData;
@@ -70,7 +70,7 @@ export function useToolBar() {
   const handleSendMessage = async (attachments?: AttachmentFile[]) => {
     const isHomepage = tabs.length === 0;
     const threadNotExists = !threads.some(
-      (thread) => thread.id === activeTabId
+      (thread) => thread.id === activeTabId,
     );
 
     let activeThreadId: string | null = _activeThreadId;
@@ -134,7 +134,7 @@ export function useToolBar() {
       const { providerId, modelId } = event.thread;
       const isProviderAvailable = providerModelMap[providerId];
       const isModelAvailable = isProviderAvailable?.some(
-        (model) => model.id === modelId && model.enabled
+        (model) => model.id === modelId && model.enabled,
       );
 
       if (isProviderAvailable && isModelAvailable) {

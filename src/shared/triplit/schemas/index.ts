@@ -3,6 +3,7 @@ import { modelsSchema } from "./models-schema";
 import { providersSchema } from "./providers-schema";
 import { tabsSchema } from "./tabs-schema";
 import { threadsSchema } from "./threads-schema";
+import { uiSchema } from "./ui-schema";
 
 export {
   tabsSchema,
@@ -10,4 +11,5 @@ export {
   providersSchema,
   modelsSchema,
   messagesSchema,
+  uiSchema,
 };
