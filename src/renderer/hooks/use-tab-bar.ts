@@ -1,5 +1,5 @@
 import type { DropResult } from "@hello-pangea/dnd";
-import type { ThreadItem } from "@shared/types/thread";
+import type { Thread } from "@shared/triplit/types";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
@@ -127,9 +127,9 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
    * * This effect is used to handle the click event for a thread in the sidebar
    */
   useEffect(() => {
-    const handleThreadSelect = (event: { thread: ThreadItem }) => {
+    const handleThreadSelect = (event: { thread: Thread }) => {
       const { thread } = event;
-      const { id, title, favicon } = thread;
+      const { id, title } = thread;
 
       const currentTabs = useTabBarStore.getState().tabs;
       const existingTab = currentTabs.find((tab) => tab.id === id);
@@ -137,7 +137,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
       if (existingTab) {
         setActiveTabId(id);
       } else {
-        addTab({ title, id, favicon });
+        addTab({ title, id });
       }
     };
 

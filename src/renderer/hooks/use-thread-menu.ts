@@ -1,11 +1,11 @@
 import { deleteThread, updateThread } from "@renderer/services/db-service/threads-db-service";
-import type { ThreadItem } from "@shared/types/thread";
+import type { Thread } from "@shared/triplit/types";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
 
 export type MenuModelActionType = "rename" | "clean-messages" | "delete";
 
-export function useThreadMenu(thread: ThreadItem) {
+export function useThreadMenu(thread: Thread) {
   const [state, setState] = useState<MenuModelActionType | null>(null);
   const [newTitle, setNewTitle] = useState(thread.title);
 

@@ -1,4 +1,4 @@
-import type { ThreadItem } from "@shared/types/thread";
+import type { Thread } from "@shared/triplit/types";
 import mitt from "mitt";
 
 export enum EventNames {
@@ -22,7 +22,7 @@ type Events = {
     threadId: string;
   };
   [EventNames.THREAD_SELECT]: {
-    thread: ThreadItem;
+    thread: Thread;
   };
   [EventNames.TAB_SELECT]: {
     tabId: string;

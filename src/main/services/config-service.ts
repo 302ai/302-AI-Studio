@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { CreateProviderData } from "@main/triplit/types";
-import type { Model } from "@shared/types/model";
+import type { CreateProviderData, Model } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 import { app } from "electron";

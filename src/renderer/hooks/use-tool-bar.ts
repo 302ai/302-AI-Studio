@@ -7,7 +7,6 @@ import { EventNames, emitter } from "@renderer/services/event-service";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
-import type { ThreadItem } from "@shared/types/thread";
 import { useQuery } from "@triplit/react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -165,7 +164,7 @@ export function useToolBar() {
   };
 
   useEffect(() => {
-    const handleThreadActive = (event: { thread: ThreadItem }) => {
+    const handleThreadActive = (event: { thread: Thread }) => {
       const { providerId, modelId } = event.thread;
 
       // Check both provider and model availability

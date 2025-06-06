@@ -1,10 +1,11 @@
+import { clearActiveThread } from "@renderer/services/db-service/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
-import type { ThreadItem } from "@shared/types/thread";
+import type { Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { EventNames, emitter } from "../services/event-service";
-import { useThreadsStore } from "../store/threads-store";
+import { useActiveThread } from "./use-active-thread";
 
 type SidebarSection =
   | "collected"
@@ -17,12 +18,12 @@ type SidebarSection =
 export type GroupedThreads = {
   key: SidebarSection;
   label: string;
-  threads: ThreadItem[];
+  threads: Thread[];
 };
 
 export function useThread() {
   const { t } = useTranslation();
-  const { activeThreadId, setActiveThreadId } = useThreadsStore();
+  const { activeThreadId, setActiveThreadId } = useActiveThread();
 
   const threadsQuery = triplitClient
     .query("threads")
@@ -31,10 +32,13 @@ export function useThread() {
   const threads = threadItems ?? [];
 
   const threadMap = useMemo(() => {
-    return threads.reduce((acc, thread) => {
-      acc[thread.id] = thread;
-      return acc;
-    }, {} as Record<string, ThreadItem>);
+    return threads.reduce(
+      (acc, thread) => {
+        acc[thread.id] = thread;
+        return acc;
+      },
+      {} as Record<string, Thread>,
+    );
   }, [threads]);
 
   const collectedThreads = threads.filter((thread) => thread.collected);
@@ -51,12 +55,12 @@ export function useThread() {
       {
         key: "collected",
         label: t("sidebar.section.collected"),
-        filter: (thread: ThreadItem) => thread.collected,
+        filter: (thread: Thread) => thread.collected,
       },
       {
         key: "today",
         label: t("sidebar.section.today"),
-        filter: (thread: ThreadItem) => {
+        filter: (thread: Thread) => {
           if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           return date >= now;
@@ -65,7 +69,7 @@ export function useThread() {
       {
         key: "yesterday",
         label: t("sidebar.section.yesterday"),
-        filter: (thread: ThreadItem) => {
+        filter: (thread: Thread) => {
           if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const yesterday = new Date(now);
@@ -76,7 +80,7 @@ export function useThread() {
       {
         key: "last7Days",
         label: t("sidebar.section.last7Days"),
-        filter: (thread: ThreadItem) => {
+        filter: (thread: Thread) => {
           if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const last7Days = new Date(now);
@@ -89,7 +93,7 @@ export function useThread() {
       {
         key: "last30Days",
         label: t("sidebar.section.last30Days"),
-        filter: (thread: ThreadItem) => {
+        filter: (thread: Thread) => {
           if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const last30Days = new Date(now);
@@ -102,7 +106,7 @@ export function useThread() {
       {
         key: "earlier",
         label: t("sidebar.section.earlier"),
-        filter: (thread: ThreadItem) => {
+        filter: (thread: Thread) => {
           if (thread.collected) return false;
           const date = new Date(thread.createdAt);
           const last30Days = new Date(now);
@@ -137,8 +141,8 @@ export function useThread() {
    * * Else if the thread is not open, it will be added to the tabs and set as the active tab
    * @param threadId The id of the thread to be clicked
    */
-  const handleClickThread = (threadId: string) => {
-    setActiveThreadId(threadId);
+  const handleClickThread = async (threadId: string) => {
+    await setActiveThreadId(threadId);
     emitter.emit(EventNames.THREAD_SELECT, { thread: threadMap[threadId] });
   };
 
@@ -146,21 +150,24 @@ export function useThread() {
     /**
      * Handles the tab select event
      */
-    const handleTabSelect = (event: { tabId: string }) => {
+    const handleTabSelect = async (event: { tabId: string }) => {
       const thread = threads.find((thread) => thread.id === event.tabId);
-      setActiveThreadId(thread ? thread.id : "");
+      await setActiveThreadId(thread ? thread.id : "");
     };
     /**
      * Handles the tab close event
      */
-    const handleTabClose = (event: { tabId: string; nextActiveId: string }) => {
-      setActiveThreadId(event.nextActiveId);
+    const handleTabClose = async (event: {
+      tabId: string;
+      nextActiveId: string;
+    }) => {
+      await setActiveThreadId(event.nextActiveId);
     };
     /**
      * Handles the tab close all event
      */
-    const handleTabCloseAll = () => {
-      setActiveThreadId("");
+    const handleTabCloseAll = async () => {
+      await clearActiveThread();
     };
 
     const unsubs = [

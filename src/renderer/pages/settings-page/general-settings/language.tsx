@@ -16,8 +16,8 @@ export function LanguageSelector() {
   const language = useSettingsStore((state) => state.language);
   const setLanguage = useSettingsStore((state) => state.setLanguage);
 
-  const handleLanguageChange = (key: Key) => {
-    const newLang = key.toString();
+  const handleLanguageChange = (key: Key | null) => {
+    const newLang = key?.toString() ?? "";
     setLanguage(newLang);
     i18n.changeLanguage(newLang);
   };

@@ -10,13 +10,13 @@ import {
   type MenuModelActionType,
   useThreadMenu,
 } from "@renderer/hooks/use-thread-menu";
-import type { ThreadItem } from "@shared/types/thread";
+import type { Thread } from "@shared/triplit/types";
 import { Eraser, Package, Pencil, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ModalAction } from "../modal-action";
 
 interface ThreadMenuProps {
-  thread: ThreadItem;
+  thread: Thread;
 }
 
 export function ThreadMenu({ thread }: ThreadMenuProps) {

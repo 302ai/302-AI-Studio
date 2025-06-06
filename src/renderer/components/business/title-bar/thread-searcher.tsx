@@ -57,7 +57,7 @@ export function ThreadSearcher({
         >
           {groupedThreads.map(({ key, label, threads }) => (
             <ListBoxSection key={key} id={key} title={label}>
-              {threads.map(({ id, title, favicon }) => (
+              {threads.map(({ id, title }) => (
                 <ListBoxItem
                   className="flex cursor-pointer p-0"
                   key={id}
@@ -69,7 +69,7 @@ export function ThreadSearcher({
                     onPointerDown={() => handleThreadClick(id)}
                   >
                     <img
-                      src={favicon || placeholder}
+                      src={placeholder}
                       alt={title}
                       className="h-4 w-4"
                     />

@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/nursery/useUniqueElementIds: ignore */
-import placeholder from "@renderer/assets/llm-icons/logo.png?url";
 import {
   Sidebar,
   SidebarContent,
@@ -60,7 +59,7 @@ export function AppSidebar(props: AppSidebarProps) {
                 </SidebarDisclosureTrigger>
                 <SidebarDisclosurePanel>
                   {threads.map((thread) => {
-                    const { id, favicon } = thread;
+                    const { id } = thread;
                     return (
                       <SidebarItem
                         className="flex flex-1"
@@ -68,11 +67,6 @@ export function AppSidebar(props: AppSidebarProps) {
                         isCurrent={id === activeThreadId}
                         onClick={() => handleClickThread(id)}
                       >
-                        <img
-                          src={favicon || placeholder}
-                          alt="favicon"
-                          className="h-4 w-4 flex-shrink-0"
-                        />
                         <ThreadMenu thread={thread} />
                       </SidebarItem>
                     );
