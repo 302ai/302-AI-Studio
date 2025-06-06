@@ -1,71 +1,84 @@
-// import type {
-//   CreateModelData,
-//   CreateProviderData,
-//   Provider,
-//   UpdateProviderData,
-// } from "@shared/triplit/types";
-// import { BaseDbService } from "./base-db-service";
+import { triplitClient } from "@main/triplit/client";
+import type { schema } from "@shared/triplit/schema";
+import type {
+  CreateModelData,
+  CreateProviderData,
+  Provider,
+  UpdateProviderData,
+} from "@shared/triplit/types";
+import type { TriplitClient } from "@triplit/client";
 
-// export class ConfigDbService extends BaseDbService {
-//   async insertProvider(provider: CreateProviderData) {
-//     const query = this.client.query("providers")
-//     const existingProviders = await this.client.fetch(query);
-//     const maxOrder = existingProviders.reduce(
-//       (max, p) => Math.max(max, p.order || 0),
-//       -1,
-//     );
+export class ConfigDbService {
+  private client: TriplitClient<typeof schema>;
 
-//     return await this.client.insert("providers", {
-//       ...provider,
-//       order: maxOrder + 1,
-//     });
-//   }
+  constructor() {
+    this.client = triplitClient;
+    this.client.connect();
+  }
 
-//   async deleteProvider(providerId: string) {
-//     await this.client.delete("providers", providerId);
-//     await this.reorderProviders();
-//   }
+  async insertProvider(provider: CreateProviderData) {
+    console.log("insertProvider", provider);
+    const query = this.client.query("providers");
+    console.log("query", query);
+    const existingProviders = await this.client.fetch(query);
+    console.log("existingProviders", existingProviders);
+    const maxOrder = existingProviders.reduce(
+      (max, p) => Math.max(max, p.order || 0),
+      -1,
+    );
+    console.log("maxOrder", maxOrder);
 
-//   async updateProvider(providerId: string, provider: UpdateProviderData) {
-//     await this.client.update("providers", providerId, provider);
-//     await this.reorderProviders();
-//   }
+    return await this.client.insert("providers", {
+      ...provider,
+      order: maxOrder + 1,
+    });
+  }
 
-//   async getProviders(): Promise<Provider[]> {
-//     const query = this.client.query("providers").Where("enabled", "=", true);
-//     const providers = await this.client.fetch(query);
-//     return providers;
-//   }
+  async deleteProvider(providerId: string) {
+    await this.client.delete("providers", providerId);
+    await this.reorderProviders();
+  }
 
-//   async insertModels(models: CreateModelData[]) {
-//     const addModels = models.map((model) => {
-//       return this.client.insert("models", model);
-//     });
+  async updateProvider(providerId: string, provider: UpdateProviderData) {
+    await this.client.update("providers", providerId, provider);
+    await this.reorderProviders();
+  }
 
-//     await Promise.all(addModels);
-//   }
+  async getProviders(): Promise<Provider[]> {
+    const query = this.client.query("providers").Where("enabled", "=", true);
+    const providers = await this.client.fetch(query);
+    return providers;
+  }
 
-//   async deleteModels(providerId: string) {
-//     const query = this.client.query("models").Where("providerId", "=", providerId);
-//     const models = await this.client.fetch(query);
-//     const deleteModels = models.map((model) => {
-//       return this.client.delete("models", model.id);
-//     });
-//     await Promise.all(deleteModels);
-//   }
+  async insertModels(models: CreateModelData[]) {
+    const addModels = models.map((model) => {
+      return this.client.insert("models", model);
+    });
 
-//   private async reorderProviders() {
-//     const query = this.client
-//       .query("providers")
-//       .Order("order", "ASC");
-//     const providers = await this.client.fetch(query);
+    await Promise.all(addModels);
+  }
 
-//     const updatePromises = providers.map((provider, index) => {
-//       return this.client.update("providers", provider.id, {
-//         order: index,
-//       });
-//     });
+  async deleteModels(providerId: string) {
+    const query = this.client
+      .query("models")
+      .Where("providerId", "=", providerId);
+    const models = await this.client.fetch(query);
+    const deleteModels = models.map((model) => {
+      return this.client.delete("models", model.id);
+    });
+    await Promise.all(deleteModels);
+  }
 
-//     await Promise.all(updatePromises);
-//   }
-// }
+  private async reorderProviders() {
+    const query = this.client.query("providers").Order("order", "ASC");
+    const providers = await this.client.fetch(query);
+
+    const updatePromises = providers.map((provider, index) => {
+      return this.client.update("providers", provider.id, {
+        order: index,
+      });
+    });
+
+    await Promise.all(updatePromises);
+  }
+}
