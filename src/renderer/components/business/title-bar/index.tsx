@@ -40,11 +40,12 @@ export function BasicTitleBar() {
 
   const handleSettingsClick = () => {
     addSettingsTab({ title: t("settings.tab-title") });
+    emitter.emit(EventNames.TAB_SELECT, { tabId: "" });
   };
 
   const handleAddNewTab = () => {
-    const newTabId = addTab({ title: t("thread.new-thread-title") });
-    emitter.emit(EventNames.TAB_SELECT, { tabId: newTabId });
+    addTab({ title: t("thread.new-thread-title") });
+    emitter.emit(EventNames.TAB_SELECT, { tabId: "" });
   };
 
   const handleSearchThread = () => {

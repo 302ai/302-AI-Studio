@@ -152,6 +152,7 @@ export function useThread() {
      */
     const handleTabSelect = async (event: { tabId: string }) => {
       const thread = threads.find((thread) => thread.id === event.tabId);
+      console.log("🔄 thread", thread);
       await setActiveThreadId(thread ? thread.id : "");
     };
     /**

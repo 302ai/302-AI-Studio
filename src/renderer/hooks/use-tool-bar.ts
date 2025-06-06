@@ -8,7 +8,7 @@ import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveThread } from "./use-active-thread";
@@ -62,6 +62,42 @@ export function useToolBar() {
     return providerModelMap;
   }, [models, enabledProviderIds]);
 
+  // Function to sync model selection with thread
+  const syncModelSelectionWithThread = useCallback((thread: Thread | null) => {
+    if (!thread) {
+      // Clear selection when no thread is active (placeholder state)
+      setSelectedProviderId("");
+      setSelectedModelId("");
+      console.log("🔄 Cleared model selection (no active thread)");
+      return;
+    }
+
+    const { providerId, modelId } = thread;
+
+    // Check both provider and model availability
+    const isProviderEnabled = enabledProviderIds.has(providerId);
+    const isProviderAvailable = providerModelMap[providerId];
+    const isModelAvailable = isProviderAvailable?.some(
+      (model) => model.id === modelId && model.enabled,
+    );
+
+    if (isProviderEnabled && isProviderAvailable && isModelAvailable) {
+      setSelectedProviderId(providerId);
+      setSelectedModelId(modelId);
+      console.log(`🔄 Synced model selection: ${providerId}/${modelId}`);
+    } else {
+      // If thread model not available, clear selection (placeholder state)
+      console.warn(`⚠️ Thread model not available: ${providerId}/${modelId}`);
+      console.warn(
+        `Provider enabled: ${isProviderEnabled}, Provider available: ${!!isProviderAvailable}, Model available: ${!!isModelAvailable}`,
+      );
+
+      setSelectedProviderId("");
+      setSelectedModelId("");
+      console.log("🔄 Cleared model selection (invalid thread model)");
+    }
+  }, [enabledProviderIds, providerModelMap]);
+
   const handleModelSelect = async (providerId: string, modelId: string) => {
     setSelectedProviderId(providerId);
     setSelectedModelId(modelId);
@@ -70,6 +106,7 @@ export function useToolBar() {
       try {
         await updateThread(activeThreadId, async (thread) => {
           thread.providerId = providerId;
+          thread.modelId = modelId;
         });
       } catch (error) {
         console.error("update thread error", error);
@@ -101,15 +138,17 @@ export function useToolBar() {
 
   const handleSendMessage = async (attachments?: AttachmentFile[]) => {
     const isHomepage = tabs.length === 0;
-    const threadNotExists = !threads.some(
-      (thread) => thread.id === activeTabId,
-    );
+    const currentThread = threads.find((thread) => thread.id === activeTabId);
+    const hasActiveTab = tabs.some((tab) => tab.id === activeTabId);
+    const needCreateThread = isHomepage || (hasActiveTab && !currentThread);
 
     let currentActiveThreadId: string | null = activeThreadId;
 
-    if (isHomepage) {
-      // * Handle homepage condition
-      const title = t("new-thread-title");
+    if (needCreateThread) {
+      const isNewTab = hasActiveTab && !currentThread;
+      const title = isNewTab
+        ? tabs.find((tab) => tab.id === activeTabId)?.title ?? t("new-thread-title")
+        : t("new-thread-title");
 
       const createThreadData: CreateThreadData = {
         title,
@@ -119,30 +158,24 @@ export function useToolBar() {
 
       const thread = await createThread(createThreadData);
       if (thread) {
-        addTab({
-          title,
-          id: thread.id,
-        });
-        currentActiveThreadId = thread.id;
-        console.log("Thread created successfully:", thread);
-        console.log("activeThreadId", currentActiveThreadId);
-      }
-    } else if (threadNotExists) {
-      // * Handle new tab condition - tab exists but thread doesn't
-      const activeTab = tabs.find((tab) => tab.id === activeTabId);
-
-      const createThreadData: CreateThreadData = {
-        title: activeTab?.title ?? t("new-thread-title"),
-        providerId: selectedProviderId,
-        modelId: selectedModelId,
-      };
-
-      const thread = await createThread(createThreadData);
-      if (thread) {
-        addTab({
-          title: activeTab?.title ?? t("new-thread-title"),
-          id: thread.id,
-        });
+        if (isHomepage) {
+          // 只有在homepage时才创建新tab
+          addTab({
+            title,
+            id: thread.id,
+          });
+        } else {
+          // 新tab情况：更新现有tab的ID为thread ID
+          const currentTab = tabs.find((tab) => tab.id === activeTabId);
+          if (currentTab) {
+            // 移除旧tab并添加新的带thread ID的tab
+            useTabBarStore.getState().removeTab(activeTabId);
+            addTab({
+              title: currentTab.title,
+              id: thread.id,
+            });
+          }
+        }
         currentActiveThreadId = thread.id;
         console.log("Thread created successfully:", thread);
         console.log("activeThreadId", currentActiveThreadId);
@@ -150,47 +183,43 @@ export function useToolBar() {
     }
 
     // * If thread already exists, continue conversation on existing thread
-    // * No need to create new thread
     const activeThread = threads.find(
       (thread) => thread.id === currentActiveThreadId,
     );
     console.log("activeThread", activeThread);
 
     // TODO: Send message logic (work with existing or newly created thread)
-    // Now you have access to attachments here for sending with the message
     if (attachments && attachments.length > 0) {
       console.log("Sending message with attachments:", attachments);
     }
   };
 
+  // Effect: Sync model selection when activeThreadId changes
+  useEffect(() => {
+    const currentThread = threads.find((thread) => thread.id === activeThreadId);
+    syncModelSelectionWithThread(currentThread || null);
+  }, [activeThreadId, threads, syncModelSelectionWithThread]);
+
+  // Effect: Handle tab selection events to sync model
+  useEffect(() => {
+    const handleTabSelect = (event: { tabId: string }) => {
+      const thread = threads.find((thread) => thread.id === event.tabId);
+      syncModelSelectionWithThread(thread || null);
+    };
+
+    const unsub = emitter.on(EventNames.TAB_SELECT, handleTabSelect);
+    return () => unsub();
+  }, [threads, syncModelSelectionWithThread]);
+
+  // Effect: Handle thread selection events (legacy support)
   useEffect(() => {
     const handleThreadActive = (event: { thread: Thread }) => {
-      const { providerId, modelId } = event.thread;
-
-      // Check both provider and model availability
-      const isProviderEnabled = enabledProviderIds.has(providerId);
-      const isProviderAvailable = providerModelMap[providerId];
-      const isModelAvailable = isProviderAvailable?.some(
-        (model) => model.id === modelId && model.enabled,
-      );
-
-      if (isProviderEnabled && isProviderAvailable && isModelAvailable) {
-        setSelectedProviderId(providerId);
-        setSelectedModelId(modelId);
-
-        console.log(`🔄 Synced model selection: ${providerId}/${modelId}`);
-      } else {
-        // TODO: If thread model not available, set default model
-        console.warn(`⚠️ Thread model not available: ${providerId}/${modelId}`);
-        console.warn(
-          `Provider enabled: ${isProviderEnabled}, Provider available: ${!!isProviderAvailable}, Model available: ${!!isModelAvailable}`,
-        );
-      }
+      syncModelSelectionWithThread(event.thread);
     };
 
     const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadActive);
     return () => unsub();
-  }, [providerModelMap, enabledProviderIds]);
+  }, [syncModelSelectionWithThread]);
 
   return {
     selectedProviderId,
