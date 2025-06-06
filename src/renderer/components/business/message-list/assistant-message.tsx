@@ -1,7 +1,7 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import type { Message } from "@shared/triplit/types";
 import { format } from "date-fns";
-import { Bot, Copy, PencilLine, RefreshCcw } from "lucide-react";
+import { Bot, Copy, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { MessageAttachments } from "./message-attachments";
 
@@ -35,13 +35,6 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
     // TODO: 实现重新生成消息的逻辑
     console.log("重新生成消息:", message.id);
   };
-
-
-  const handleEdit = () => {
-    // TODO: 实现编辑消息的逻辑
-    console.log("编辑消息:", message.id);
-  };
-  
 
   return (
     <div className="flex justify-start">
@@ -86,36 +79,30 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
           </div>
         )}
 
-        {/* 操作按钮 */}
+        {/* 操作按钮和时间 - 同一行 */}
         {message.status === "success" && (
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
-              title="复制"
-            >
-              <Copy className="h-3 w-3" />
-              {copied ? "已复制" : "复制"}
-            </button>
+          <div className="mt-1 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
+                title="复制"
+              >
+                <Copy className="h-3 w-3" />
+                {copied ? "已复制" : "复制"}
+              </button>
 
-            <button
-              type="button"
-              onClick={handleRefresh}
-              className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
-              title="重新生成"
-            >
-              <RefreshCcw className="h-3 w-3" />
-            </button>
-
-            <button
-              type="button"
-              onClick={handleEdit}
-              className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
-              title="编辑"
-            >
-              <PencilLine className="h-3 w-3" />
-            </button>
+              <button
+                type="button"
+                onClick={handleRefresh}
+                className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
+                title="重新生成"
+              >
+                <RefreshCcw className="h-3 w-3" />
+              </button>
+            </div>
+            <div className="text-muted-foreground text-xs">3秒前</div>
           </div>
         )}
       </div>

@@ -47,18 +47,24 @@ export function UserMessage({ message }: UserMessageProps) {
           )}
         </div>
 
-        {message.status === "pending" && (
-          <div className="flex items-center justify-end gap-1 text-muted-foreground text-xs">
-            <div className="h-2 w-2 animate-pulse rounded-full bg-current" />
-            发送中...
-          </div>
-        )}
-        {message.status === "error" && (
-          <div className="flex items-center justify-end gap-1 text-destructive text-xs">
-            <div className="h-2 w-2 rounded-full bg-current" />
-            发送失败
-          </div>
-        )}
+        {/* 时间和状态 */}
+        <div className="mt-1 flex items-center justify-end">
+          {message.status === "pending" && (
+            <div className="flex items-center gap-1 text-muted-foreground text-xs">
+              <div className="h-2 w-2 animate-pulse rounded-full bg-current" />
+              发送中...
+            </div>
+          )}
+          {message.status === "error" && (
+            <div className="flex items-center gap-1 text-destructive text-xs">
+              <div className="h-2 w-2 rounded-full bg-current" />
+              发送失败
+            </div>
+          )}
+          {message.status === "success" && (
+            <div className="text-muted-foreground text-xs">刚刚</div>
+          )}
+        </div>
       </div>
     </div>
   );

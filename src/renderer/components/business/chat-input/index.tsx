@@ -24,6 +24,7 @@ export function ChatInput({ className }: ChatInputProps) {
   const {
     selectedProviderId,
     selectedModelId,
+    handleModelSelect,
     handleSendMessage: sendMessage,
   } = useToolBar();
 
@@ -105,6 +106,9 @@ export function ChatInput({ className }: ChatInputProps) {
           attachments={attachments}
           input={input}
           onSendMessage={handleSendMessage}
+          selectedProviderId={selectedProviderId}
+          selectedModelId={selectedModelId}
+          onModelSelect={handleModelSelect}
         />
       </div>
     </div>
