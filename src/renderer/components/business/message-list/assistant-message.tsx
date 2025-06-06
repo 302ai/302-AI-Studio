@@ -79,7 +79,7 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
           <button
             type="button"
             onClick={handleCopy}
-            className="flex items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
+            className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
             title="复制"
           >
             <Copy className="h-3 w-3" />
