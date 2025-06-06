@@ -1,5 +1,4 @@
-import { triplitClient } from "@shared/triplit/client";
-import { updateThread } from "@shared/triplit/helpers";
+import { deleteThread, updateThread } from "@renderer/services/db-service/threads-db-service";
 import type { ThreadItem } from "@shared/types/thread";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
@@ -34,7 +33,7 @@ export function useThreadMenu(thread: ThreadItem) {
   };
 
   const handleDelete = async () => {
-    await triplitClient.delete("threads", thread.id);
+    await deleteThread(thread.id);
 
     emitter.emit(EventNames.THREAD_DELETE, {
       threadId: thread.id,

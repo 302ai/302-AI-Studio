@@ -10,6 +10,7 @@ import {
   type ModalAction,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
+import { clearActiveProvider } from "@renderer/services/db-service/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -96,11 +97,9 @@ export function ProviderList() {
   const [providerCfg, setProviderCfg] = useState<Provider | null>(null);
   const [providers, setProviders] = useState<Provider[]>([]);
 
-  // 使用 useQuery 获取所有模型数据
   const modelsQuery = triplitClient.query("models");
   const { results: allModels } = useQuery(triplitClient, modelsQuery);
 
-  // 使用 useMemo 计算每个 provider 的模型数量
   const modelCounts = useMemo(() => {
     if (!allModels || !providers.length) {
       return {};
@@ -195,9 +194,7 @@ export function ProviderList() {
         return {
           title: t("modal-action.delete"),
           descriptions: [
-            `${t("modal-action.delete-description")} ${
-              action.provider.name
-            } ?`,
+            `${t("modal-action.delete-description")} ${action.provider.name} ?`,
             t("modal-action.delete-description-2"),
             t("modal-action.delete-description-3"),
           ],
@@ -299,9 +296,12 @@ export function ProviderList() {
 
         unsubscribe = triplitClient.subscribe(
           query,
-          (results) => {
+          async (results) => {
             console.log("收到providers数据更新:", results);
             setProviders(results);
+            if (results.length === 0) {
+              await clearActiveProvider();
+            }
           },
           (error) => {
             console.error("providers订阅错误:", error);

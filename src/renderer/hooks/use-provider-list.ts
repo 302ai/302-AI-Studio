@@ -6,7 +6,7 @@ import {
   insertModels,
   insertProvider,
   updateProvider,
-} from "../services/db-service/provider-db-service";
+} from "../services/db-service/providers-db-service";
 
 const { providerService } = window.service;
 

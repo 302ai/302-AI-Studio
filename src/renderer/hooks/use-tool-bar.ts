@@ -1,22 +1,24 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import {
+  insertThread,
+  updateThread,
+} from "@renderer/services/db-service/threads-db-service";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
-import { useThreadsStore } from "@renderer/store/threads-store";
 import { triplitClient } from "@shared/triplit/client";
-import { updateThread } from "@shared/triplit/helpers";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import type { ThreadItem } from "@shared/types/thread";
 import { useQuery } from "@triplit/react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useActiveThread } from "./use-active-thread";
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
     keyPrefix: "thread",
   });
-  const { activeThreadId: _activeThreadId, setActiveThreadId } =
-    useThreadsStore();
+  const { activeThreadId, setActiveThreadId } = useActiveThread();
   const { tabs, activeTabId, addTab } = useTabBarStore();
 
   // Use triplit queries instead of model-setting-store
@@ -25,9 +27,7 @@ export function useToolBar() {
     .Where("enabled", "=", true);
   const { results: providers } = useQuery(triplitClient, providersQuery);
 
-  const modelsQuery = triplitClient
-    .query("models")
-    .Where("enabled", "=", true);
+  const modelsQuery = triplitClient.query("models").Where("enabled", "=", true);
   const { results: models } = useQuery(triplitClient, modelsQuery);
 
   const threadsQuery = triplitClient
@@ -42,7 +42,7 @@ export function useToolBar() {
   // Create enabled provider IDs set for validation
   const enabledProviderIds = useMemo(() => {
     const providersArray = providers ?? [];
-    return new Set(providersArray.map(provider => provider.id));
+    return new Set(providersArray.map((provider) => provider.id));
   }, [providers]);
 
   // Create provider model map from triplit data
@@ -67,9 +67,9 @@ export function useToolBar() {
     setSelectedProviderId(providerId);
     setSelectedModelId(modelId);
 
-    if (_activeThreadId) {
+    if (activeThreadId) {
       try {
-        await updateThread(_activeThreadId, async (thread) => {
+        await updateThread(activeThreadId, async (thread) => {
           thread.providerId = providerId;
         });
       } catch (error) {
@@ -89,8 +89,8 @@ export function useToolBar() {
         modelId,
       };
 
-      const thread = await triplitClient.insert("threads", createData);
-      setActiveThreadId(thread.id);
+      const thread = await insertThread(createData);
+      await setActiveThreadId(thread.id);
 
       return thread;
     } catch (error) {
@@ -106,7 +106,7 @@ export function useToolBar() {
       (thread) => thread.id === activeTabId,
     );
 
-    let activeThreadId: string | null = _activeThreadId;
+    let currentActiveThreadId: string | null = activeThreadId;
 
     if (isHomepage) {
       // * Handle homepage condition
@@ -124,9 +124,9 @@ export function useToolBar() {
           title,
           id: thread.id,
         });
-        activeThreadId = thread.id;
+        currentActiveThreadId = thread.id;
         console.log("Thread created successfully:", thread);
-        console.log("activeThreadId", activeThreadId);
+        console.log("activeThreadId", currentActiveThreadId);
       }
     } else if (threadNotExists) {
       // * Handle new tab condition - tab exists but thread doesn't
@@ -144,15 +144,17 @@ export function useToolBar() {
           title: activeTab?.title ?? t("new-thread-title"),
           id: thread.id,
         });
-        activeThreadId = thread.id;
+        currentActiveThreadId = thread.id;
         console.log("Thread created successfully:", thread);
-        console.log("activeThreadId", activeThreadId);
+        console.log("activeThreadId", currentActiveThreadId);
       }
     }
 
     // * If thread already exists, continue conversation on existing thread
     // * No need to create new thread
-    const activeThread = threads.find((thread) => thread.id === activeThreadId);
+    const activeThread = threads.find(
+      (thread) => thread.id === currentActiveThreadId,
+    );
     console.log("activeThread", activeThread);
 
     // TODO: Send message logic (work with existing or newly created thread)
@@ -181,7 +183,9 @@ export function useToolBar() {
       } else {
         // TODO: If thread model not available, set default model
         console.warn(`⚠️ Thread model not available: ${providerId}/${modelId}`);
-        console.warn(`Provider enabled: ${isProviderEnabled}, Provider available: ${!!isProviderAvailable}, Model available: ${!!isModelAvailable}`);
+        console.warn(
+          `Provider enabled: ${isProviderEnabled}, Provider available: ${!!isProviderAvailable}, Model available: ${!!isModelAvailable}`,
+        );
       }
     };
 
