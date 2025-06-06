@@ -14,13 +14,13 @@ interface ToolBarProps {
   onFilesSelect: (files: FileList) => void;
   attachments: AttachmentFile[];
   input: string;
+  onSendMessage: () => Promise<void>;
 }
 
 export function ToolBar({
   className,
   onFilesSelect,
-  attachments,
-  input,
+  onSendMessage,
 }: ToolBarProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
@@ -29,19 +29,18 @@ export function ToolBar({
     selectedProviderId,
     selectedModelId,
     handleModelSelect,
-    handleSendMessage,
   } = useToolBar();
 
   const canSendMessage = selectedProviderId && selectedModelId;
 
-  const handleSendMessageClick = () => {
+  const handleSendMessageClick = async () => {
     if (!canSendMessage) {
       const msg = selectedProviderId ? t("lack-model") : t("lack-provider");
       toast.error(msg);
       return;
     }
 
-    handleSendMessage(input, attachments);
+    await onSendMessage();
   };
 
   return (

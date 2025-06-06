@@ -1,8 +1,10 @@
 import { Textarea } from "@renderer/components/ui/textarea";
 import { useAttachments } from "@renderer/hooks/use-attachments";
+import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { AttachmentList } from "./attachment-list";
 import { ToolBar } from "./tool-bar";
 
@@ -15,11 +17,54 @@ export function ChatInput({ className }: ChatInputProps) {
     keyPrefix: "chat",
   });
 
-  const { attachments, addAttachments, removeAttachment } = useAttachments();
+  const { attachments, addAttachments, removeAttachment, clearAttachments } =
+    useAttachments();
   const [input, setInput] = useState("");
+  
+  const {
+    selectedProviderId,
+    selectedModelId,
+    handleSendMessage: sendMessage,
+  } = useToolBar();
 
   const handleInputChange = (value: string) => {
     setInput(value);
+  };
+
+  const clearInput = () => {
+    setInput("");
+    clearAttachments();
+  };
+
+  // Send message function that will be passed to ToolBar
+  const handleSendMessage = async () => {
+    if (!selectedProviderId || !selectedModelId) {
+      const msg = selectedProviderId ? t("lack-model") : t("lack-provider");
+      toast.error(msg);
+      return;
+    }
+
+    if (!input.trim()) {
+      return;
+    }
+
+    try {
+      await sendMessage(input, attachments);
+      clearInput();
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      toast.error("Failed to send message");
+    }
+  };
+
+  // Handle keyboard events
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      if (input.trim()) {
+        handleSendMessage();
+      }
+    }
   };
 
   return (
@@ -51,6 +96,7 @@ export function ChatInput({ className }: ChatInputProps) {
           resize="none"
           value={input}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
 
         <ToolBar
@@ -58,6 +104,7 @@ export function ChatInput({ className }: ChatInputProps) {
           onFilesSelect={addAttachments}
           attachments={attachments}
           input={input}
+          onSendMessage={handleSendMessage}
         />
       </div>
     </div>
