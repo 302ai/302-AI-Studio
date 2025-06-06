@@ -1,3 +1,4 @@
+import logo from "@renderer/assets/llm-icons/logo.png?url";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import type { Message } from "@shared/triplit/types";
 import { format } from "date-fns";
@@ -25,9 +26,7 @@ export function UserMessage({ message }: UserMessageProps) {
           <div className="text-right text-muted-foreground text-xs">
             {format(new Date(message.createdAt), "HH:mm")}
           </div>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground text-sm">
-            U
-          </div>
+          <img src={logo} alt="logo" className="size-8" />
         </div>
 
         {/* 聊天气泡 - 包含消息内容和附件 */}
