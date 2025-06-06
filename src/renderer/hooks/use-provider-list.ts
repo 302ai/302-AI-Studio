@@ -12,14 +12,19 @@ const { providerService } = window.service;
 
 export type ModelActionType = "add" | "edit" | "delete";
 
+export interface ModalAction {
+  type: ModelActionType;
+  provider?: Provider;
+}
+
 export function useProviderList() {
-  const [state, setState] = useState<ModelActionType | null>(null);
+  const [state, setState] = useState<ModalAction | null>(null);
 
   const closeModal = () => {
     setState(null);
   };
 
-  const handleDelete = async (selectedProvider: Provider | null) => {
+  const handleDelete = async (selectedProvider: Provider) => {
     if (!selectedProvider) {
       closeModal();
       return;

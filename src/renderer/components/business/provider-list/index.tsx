@@ -7,7 +7,7 @@ import {
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import {
-  type ModelActionType,
+  type ModalAction,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
 import { triplitClient } from "@shared/triplit/client";
@@ -19,7 +19,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
 import { ActionGroup } from "../action-group";
-import { ModalAction } from "../modal-action";
+import { ModalAction as ModalActionComponent } from "../modal-action";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
@@ -34,24 +34,25 @@ const ListRow = React.memo(function ListRow({
   index: number;
   style: React.CSSProperties;
   data: Provider[];
-  setState: (state: ModelActionType) => void;
+  setState: (state: ModalAction) => void;
   modelCounts: Record<string, number>;
 }) {
   const provider = data[index];
   const { selectedProvider, setSelectedProvider } = useActiveProvider();
 
-  const handleProviderSelect = _.debounce(() => {
-    setSelectedProvider(selectedProvider?.id === provider.id ? null : provider);
+  const handleProviderSelect = _.debounce(async () => {
+    await setSelectedProvider(
+      selectedProvider?.id === provider.id ? null : provider,
+    );
   }, 100);
 
   const handleEdit = () => {
-    setSelectedProvider(provider);
-    setState("edit");
+    console.log("handleEdit", provider);
+    setState({ type: "edit", provider });
   };
 
   const handleDelete = () => {
-    setSelectedProvider(provider);
-    setState("delete");
+    setState({ type: "delete", provider });
   };
 
   return (
@@ -115,7 +116,7 @@ export function ProviderList() {
     return counts;
   }, [allModels, providers]);
 
-  const actionType = (action: ModelActionType | null) => {
+  const actionType = (action: ModalAction | null) => {
     const initialsState = {
       title: "",
       descriptions: [""],
@@ -123,7 +124,11 @@ export function ProviderList() {
       action: () => {},
     };
 
-    switch (action) {
+    if (!action) {
+      return initialsState;
+    }
+
+    switch (action.type) {
       case "add":
         return {
           title: t("modal-action.add-provider"),
@@ -158,15 +163,15 @@ export function ProviderList() {
           },
         };
       case "edit":
-        if (!selectedProvider) {
+        if (!action.provider) {
           return initialsState;
         }
         return {
-          title: `${t("modal-action.edit")} ${selectedProvider.name}`,
+          title: `${t("modal-action.edit")} ${action.provider.name}`,
           descriptions: [],
           body: (
             <EditProvider
-              provider={selectedProvider}
+              provider={action.provider}
               onValidationStatusChange={(isValid) => {
                 setIsApiKeyValidated(isValid);
               }}
@@ -184,21 +189,23 @@ export function ProviderList() {
           },
         };
       case "delete":
-        if (!selectedProvider) {
+        if (!action.provider) {
           return initialsState;
         }
         return {
           title: t("modal-action.delete"),
           descriptions: [
             `${t("modal-action.delete-description")} ${
-              selectedProvider.name
+              action.provider.name
             } ?`,
             t("modal-action.delete-description-2"),
             t("modal-action.delete-description-3"),
           ],
           confirmText: t("modal-action.delete-confirm"),
           action: async () => {
-            await handleDelete(selectedProvider);
+            if (action.provider) {
+              await handleDelete(action.provider);
+            }
             setSelectedProvider(null);
             handleCloseModal();
           },
@@ -321,7 +328,7 @@ export function ProviderList() {
           className="w-fit shrink-0"
           size="small"
           intent="outline"
-          onClick={() => setState("add")}
+          onClick={() => setState({ type: "add" })}
         >
           <Plus className="size-4" />
           {t("add-provider")}
@@ -373,8 +380,8 @@ export function ProviderList() {
         )}
       </div>
 
-      <ModalAction
-        state={state}
+      <ModalActionComponent
+        state={state?.type ?? null}
         onOpenChange={handleCloseModal}
         actionType={actionType(state)}
       />
