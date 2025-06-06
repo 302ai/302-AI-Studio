@@ -1,5 +1,9 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import {
+  getMessagesByThreadId,
+  insertMessage,
+} from "@renderer/services/db-service/messages-db-service";
+import {
   insertThread,
   updateThread,
 } from "@renderer/services/db-service/threads-db-service";
@@ -8,7 +12,7 @@ import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveThread } from "./use-active-thread";
@@ -20,15 +24,6 @@ export function useToolBar() {
   const { activeThreadId, setActiveThreadId } = useActiveThread();
   const { tabs, activeTabId, addTab } = useTabBarStore();
 
-  // Use triplit queries instead of model-setting-store
-  const providersQuery = triplitClient
-    .query("providers")
-    .Where("enabled", "=", true);
-  const { results: providers } = useQuery(triplitClient, providersQuery);
-
-  const modelsQuery = triplitClient.query("models").Where("enabled", "=", true);
-  const { results: models } = useQuery(triplitClient, modelsQuery);
-
   const threadsQuery = triplitClient
     .query("threads")
     .Order("createdAt", "DESC");
@@ -38,69 +33,14 @@ export function useToolBar() {
   const [selectedProviderId, setSelectedProviderId] = useState<string>("");
   const [selectedModelId, setSelectedModelId] = useState<string>("");
 
-  // Create enabled provider IDs set for validation
-  const enabledProviderIds = useMemo(() => {
-    const providersArray = providers ?? [];
-    return new Set(providersArray.map((provider) => provider.id));
-  }, [providers]);
-
-  // Create provider model map from triplit data
-  const providerModelMap = useMemo(() => {
-    const modelsArray = models ?? [];
-    const providerModelMap: Record<string, typeof modelsArray> = {};
-
-    modelsArray.forEach((model) => {
-      // Only include models from enabled providers
-      if (enabledProviderIds.has(model.providerId)) {
-        if (!providerModelMap[model.providerId]) {
-          providerModelMap[model.providerId] = [];
-        }
-        providerModelMap[model.providerId].push(model);
-      }
-    });
-
-    return providerModelMap;
-  }, [models, enabledProviderIds]);
-
-  // Function to sync model selection with thread
-  const syncModelSelectionWithThread = useCallback((thread: Thread | null) => {
-    if (!thread) {
-      // Clear selection when no thread is active (placeholder state)
-      setSelectedProviderId("");
-      setSelectedModelId("");
-      console.log("🔄 Cleared model selection (no active thread)");
-      return;
-    }
-
-    const { providerId, modelId } = thread;
-
-    // Check both provider and model availability
-    const isProviderEnabled = enabledProviderIds.has(providerId);
-    const isProviderAvailable = providerModelMap[providerId];
-    const isModelAvailable = isProviderAvailable?.some(
-      (model) => model.id === modelId && model.enabled,
-    );
-
-    if (isProviderEnabled && isProviderAvailable && isModelAvailable) {
-      setSelectedProviderId(providerId);
-      setSelectedModelId(modelId);
-      console.log(`🔄 Synced model selection: ${providerId}/${modelId}`);
-    } else {
-      // If thread model not available, clear selection (placeholder state)
-      console.warn(`⚠️ Thread model not available: ${providerId}/${modelId}`);
-      console.warn(
-        `Provider enabled: ${isProviderEnabled}, Provider available: ${!!isProviderAvailable}, Model available: ${!!isModelAvailable}`,
-      );
-
-      setSelectedProviderId("");
-      setSelectedModelId("");
-      console.log("🔄 Cleared model selection (invalid thread model)");
-    }
-  }, [enabledProviderIds, providerModelMap]);
-
   const handleModelSelect = async (providerId: string, modelId: string) => {
+    console.log("handleModelSelect", providerId, modelId);
+
     setSelectedProviderId(providerId);
     setSelectedModelId(modelId);
+
+    console.log("selectedProviderId", selectedProviderId);
+    console.log("selectedModelId", selectedModelId);
 
     if (activeThreadId) {
       try {
@@ -136,95 +76,140 @@ export function useToolBar() {
     }
   };
 
-  const handleSendMessage = async (attachments?: AttachmentFile[]) => {
-    const isHomepage = tabs.length === 0;
-    const currentThread = threads.find((thread) => thread.id === activeTabId);
-    const hasActiveTab = tabs.some((tab) => tab.id === activeTabId);
-    const needCreateThread = isHomepage || (hasActiveTab && !currentThread);
+  const handleSendMessage = async (
+    content: string,
+    attachments?: AttachmentFile[],
+  ): Promise<void> => {
+    try {
+      const isHomepage = tabs.length === 0;
+      const currentThread = threads.find((thread) => thread.id === activeTabId);
+      const hasActiveTab = tabs.some((tab) => tab.id === activeTabId);
+      const needCreateThread = isHomepage || (hasActiveTab && !currentThread);
 
-    let currentActiveThreadId: string | null = activeThreadId;
+      let currentActiveThreadId: string | null = activeThreadId;
 
-    if (needCreateThread) {
-      const isNewTab = hasActiveTab && !currentThread;
-      const title = isNewTab
-        ? tabs.find((tab) => tab.id === activeTabId)?.title ?? t("new-thread-title")
-        : t("new-thread-title");
+      if (needCreateThread) {
+        const isNewTab = hasActiveTab && !currentThread;
+        const title = isNewTab
+          ? tabs.find((tab) => tab.id === activeTabId)?.title ?? t("new-thread-title")
+          : t("new-thread-title");
 
-      const createThreadData: CreateThreadData = {
-        title,
-        providerId: selectedProviderId,
-        modelId: selectedModelId,
-      };
+        const createThreadData: CreateThreadData = {
+          title,
+          providerId: selectedProviderId,
+          modelId: selectedModelId,
+        };
 
-      const thread = await createThread(createThreadData);
-      if (thread) {
-        if (isHomepage) {
-          // 只有在homepage时才创建新tab
-          addTab({
-            title,
-            id: thread.id,
-          });
-        } else {
-          // 新tab情况：更新现有tab的ID为thread ID
-          const currentTab = tabs.find((tab) => tab.id === activeTabId);
-          if (currentTab) {
-            // 移除旧tab并添加新的带thread ID的tab
-            useTabBarStore.getState().removeTab(activeTabId);
+        const thread = await createThread(createThreadData);
+        if (thread) {
+          if (isHomepage) {
+            // 只有在homepage时才创建新tab
             addTab({
-              title: currentTab.title,
+              title,
               id: thread.id,
             });
+          } else {
+            // 新tab情况：更新现有tab的ID为thread ID
+            const currentTab = tabs.find((tab) => tab.id === activeTabId);
+            if (currentTab) {
+              // 移除旧tab并添加新的带thread ID的tab
+              useTabBarStore.getState().removeTab(activeTabId);
+              addTab({
+                title: currentTab.title,
+                id: thread.id,
+              });
+            }
           }
+          currentActiveThreadId = thread.id;
+          console.log("Thread created successfully:", thread);
+          console.log("activeThreadId", currentActiveThreadId);
         }
-        currentActiveThreadId = thread.id;
-        console.log("Thread created successfully:", thread);
-        console.log("activeThreadId", currentActiveThreadId);
       }
-    }
 
-    // * If thread already exists, continue conversation on existing thread
-    const activeThread = threads.find(
-      (thread) => thread.id === currentActiveThreadId,
-    );
-    console.log("activeThread", activeThread);
+      // 确保有活动线程
+      if (!currentActiveThreadId) {
+        throw new Error("No active thread available");
+      }
 
-    // TODO: Send message logic (work with existing or newly created thread)
-    if (attachments && attachments.length > 0) {
-      console.log("Sending message with attachments:", attachments);
+      // 获取当前消息数量用于orderSeq
+      const existingMessages = await getMessagesByThreadId(
+        currentActiveThreadId,
+      );
+      const nextOrderSeq = existingMessages.length + 1;
+
+      // 准备附件数据
+      const attachmentsData =
+        attachments && attachments.length > 0
+          ? JSON.stringify(attachments)
+          : null;
+
+      // 插入用户消息
+      await insertMessage({
+        threadId: currentActiveThreadId,
+        parentMessageId: null,
+        role: "user",
+        content,
+        attachments: attachmentsData,
+        orderSeq: nextOrderSeq,
+        tokenCount: content.length,
+        status: "success",
+      });
+
+      console.log("Message sent successfully");
+
+      // 这里可以添加AI回复逻辑
+      // 暂时插入一个mock的AI回复
+      setTimeout(async () => {
+        try {
+          await insertMessage({
+            threadId: currentActiveThreadId,
+            parentMessageId: null,
+            role: "assistant",
+            content:
+              "这是一个模拟的AI回复。在实际应用中，这里会调用真实的AI API来生成回复。",
+            attachments: null,
+            orderSeq: nextOrderSeq + 1,
+            tokenCount: 50,
+            status: "success",
+          });
+        } catch (error) {
+          console.error("Failed to insert AI reply:", error);
+        }
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      throw error; // 重新抛出错误供上层处理
     }
   };
-
-  // Effect: Sync model selection when activeThreadId changes
-  useEffect(() => {
-    const currentThread = threads.find((thread) => thread.id === activeThreadId);
-    syncModelSelectionWithThread(currentThread || null);
-  }, [activeThreadId, threads, syncModelSelectionWithThread]);
 
   // Effect: Handle tab selection events to sync model
   useEffect(() => {
     const handleTabSelect = (event: { tabId: string }) => {
       const thread = threads.find((thread) => thread.id === event.tabId);
-      syncModelSelectionWithThread(thread || null);
+      setSelectedProviderId(thread?.providerId ?? "");
+      setSelectedModelId(thread?.modelId ?? "");
     };
 
     const unsub = emitter.on(EventNames.TAB_SELECT, handleTabSelect);
     return () => unsub();
-  }, [threads, syncModelSelectionWithThread]);
+  }, [threads]);
 
   // Effect: Handle thread selection events (legacy support)
   useEffect(() => {
     const handleThreadActive = (event: { thread: Thread }) => {
-      syncModelSelectionWithThread(event.thread);
+      setSelectedProviderId(event.thread.providerId ?? "");
+      setSelectedModelId(event.thread.modelId ?? "");
     };
 
     const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadActive);
     return () => unsub();
-  }, [syncModelSelectionWithThread]);
+  }, []);
 
   return {
     selectedProviderId,
     selectedModelId,
     handleModelSelect,
     handleSendMessage,
+    createThread,
   };
 }

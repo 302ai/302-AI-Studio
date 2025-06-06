@@ -126,7 +126,9 @@
   },
   "thread": {
     "new-thread-title": "新会话",
-    "create-thread-error": "抱歉，新会话创建失败！"
+    "create-thread-error": "抱歉，新会话创建失败！",
+    "lack-model": "请先选择一个模型！",
+    "lack-provider": "缺少模型提供商！"
   },
   "thread-menu": {
     "actions": {

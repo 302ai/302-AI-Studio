@@ -126,7 +126,9 @@
   },
   "thread": {
     "new-thread-title": "New Chat",
-    "create-thread-error": "Sorry, the new conversation creation failed!"
+    "create-thread-error": "Sorry, the new conversation creation failed!",
+    "lack-model": "Please select a model first!",
+    "lack-provider": "Missing model provider!"
   },
   "thread-menu": {
     "actions": {

@@ -59,7 +59,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
               placeholder={t("thread-menu.actions.rename.edit.placeholder")}
             />
           ),
-          action: handleRename,
+          action: async () => await handleRename(),
           disabled: formattedTitle.length === 0,
         };
 
@@ -68,7 +68,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           title: t("thread-menu.actions.clean-messages.title"),
           descriptions: [t("thread-menu.actions.clean-messages.description")],
           confirmText: t("thread-menu.actions.clean-messages.confirmText"),
-          action: handleCleanMessages,
+          action: async () => await handleCleanMessages(),
         };
 
       case "delete":
@@ -76,7 +76,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           title: t("thread-menu.actions.delete.title"),
           descriptions: [t("thread-menu.actions.delete.description")],
           confirmText: t("thread-menu.actions.delete.confirmText"),
-          action: handleDelete,
+          action: async () => await handleDelete(),
         };
       default:
         return initialsState;

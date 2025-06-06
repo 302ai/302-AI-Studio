@@ -13,12 +13,14 @@ interface ToolBarProps {
   className?: string;
   onFilesSelect: (files: FileList) => void;
   attachments: AttachmentFile[];
+  input: string;
 }
 
 export function ToolBar({
   className,
   onFilesSelect,
   attachments,
+  input,
 }: ToolBarProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
@@ -39,7 +41,7 @@ export function ToolBar({
       return;
     }
 
-    handleSendMessage(attachments);
+    handleSendMessage(input, attachments);
   };
 
   return (

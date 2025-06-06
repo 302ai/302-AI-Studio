@@ -1,6 +1,7 @@
 import { Textarea } from "@renderer/components/ui/textarea";
 import { useAttachments } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AttachmentList } from "./attachment-list";
 import { ToolBar } from "./tool-bar";
@@ -15,6 +16,11 @@ export function ChatInput({ className }: ChatInputProps) {
   });
 
   const { attachments, addAttachments, removeAttachment } = useAttachments();
+  const [input, setInput] = useState("");
+
+  const handleInputChange = (value: string) => {
+    setInput(value);
+  };
 
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>
@@ -43,12 +49,15 @@ export function ChatInput({ className }: ChatInputProps) {
           placeholder={t("input-placeholder")}
           aria-label={t("input-label")}
           resize="none"
+          value={input}
+          onChange={handleInputChange}
         />
 
         <ToolBar
           className="mb-2"
           onFilesSelect={addAttachments}
           attachments={attachments}
+          input={input}
         />
       </div>
     </div>
