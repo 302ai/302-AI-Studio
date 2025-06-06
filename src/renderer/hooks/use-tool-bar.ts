@@ -7,7 +7,6 @@ import {
   insertThread,
   updateThread,
 } from "@renderer/services/db-service/threads-db-service";
-import { EventNames, emitter } from "@renderer/services/event-service";
 import { useTabBarStore } from "@renderer/store/tab-bar-store";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
@@ -34,13 +33,8 @@ export function useToolBar() {
   const [selectedModelId, setSelectedModelId] = useState<string>("");
 
   const handleModelSelect = async (providerId: string, modelId: string) => {
-    console.log("handleModelSelect", providerId, modelId);
-
     setSelectedProviderId(providerId);
     setSelectedModelId(modelId);
-
-    console.log("selectedProviderId", selectedProviderId);
-    console.log("selectedModelId", selectedModelId);
 
     if (activeThreadId) {
       try {
@@ -91,7 +85,8 @@ export function useToolBar() {
       if (needCreateThread) {
         const isNewTab = hasActiveTab && !currentThread;
         const title = isNewTab
-          ? tabs.find((tab) => tab.id === activeTabId)?.title ?? t("new-thread-title")
+          ? (tabs.find((tab) => tab.id === activeTabId)?.title ??
+            t("new-thread-title"))
           : t("new-thread-title");
 
         const createThreadData: CreateThreadData = {
@@ -182,28 +177,23 @@ export function useToolBar() {
     }
   };
 
-  // Effect: Handle tab selection events to sync model
+  // Effect: Sync model selection with active thread
   useEffect(() => {
-    const handleTabSelect = (event: { tabId: string }) => {
-      const thread = threads.find((thread) => thread.id === event.tabId);
-      setSelectedProviderId(thread?.providerId ?? "");
-      setSelectedModelId(thread?.modelId ?? "");
-    };
-
-    const unsub = emitter.on(EventNames.TAB_SELECT, handleTabSelect);
-    return () => unsub();
-  }, [threads]);
-
-  // Effect: Handle thread selection events (legacy support)
-  useEffect(() => {
-    const handleThreadActive = (event: { thread: Thread }) => {
-      setSelectedProviderId(event.thread.providerId ?? "");
-      setSelectedModelId(event.thread.modelId ?? "");
-    };
-
-    const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadActive);
-    return () => unsub();
-  }, []);
+    if (activeThreadId) {
+      // 当有活动线程时，同步模型选择
+      const activeThread = threads.find(
+        (thread) => thread.id === activeThreadId,
+      );
+      if (activeThread) {
+        setSelectedProviderId(activeThread.providerId ?? "");
+        setSelectedModelId(activeThread.modelId ?? "");
+      }
+    } else {
+      // 当没有活动线程时，重置为待选状态
+      setSelectedProviderId("");
+      setSelectedModelId("");
+    }
+  }, [activeThreadId, threads]);
 
   return {
     selectedProviderId,
