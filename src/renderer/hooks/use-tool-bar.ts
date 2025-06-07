@@ -98,16 +98,13 @@ export function useToolBar() {
         const thread = await createThread(createThreadData);
         if (thread) {
           if (isHomepage) {
-            // 只有在homepage时才创建新tab
             addTab({
               title,
               id: thread.id,
             });
           } else {
-            // 新tab情况：更新现有tab的ID为thread ID
             const currentTab = tabs.find((tab) => tab.id === activeTabId);
             if (currentTab) {
-              // 移除旧tab并添加新的带thread ID的tab
               useTabBarStore.getState().removeTab(activeTabId);
               addTab({
                 title: currentTab.title,
@@ -116,12 +113,10 @@ export function useToolBar() {
             }
           }
           currentActiveThreadId = thread.id;
-          console.log("Thread created successfully:", thread);
-          console.log("activeThreadId", currentActiveThreadId);
+          console.log("activeThread", thread);
         }
       }
 
-      // 确保有活动线程
       if (!currentActiveThreadId) {
         throw new Error("No active thread available");
       }
@@ -173,14 +168,13 @@ export function useToolBar() {
       }, 1000);
     } catch (error) {
       console.error("Failed to send message:", error);
-      throw error; // 重新抛出错误供上层处理
+      throw error;
     }
   };
 
   // Effect: Sync model selection with active thread
   useEffect(() => {
     if (activeThreadId) {
-      // 当有活动线程时，同步模型选择
       const activeThread = threads.find(
         (thread) => thread.id === activeThreadId,
       );
@@ -189,7 +183,6 @@ export function useToolBar() {
         setSelectedModelId(activeThread.modelId ?? "");
       }
     } else {
-      // 当没有活动线程时，重置为待选状态
       setSelectedProviderId("");
       setSelectedModelId("");
     }
