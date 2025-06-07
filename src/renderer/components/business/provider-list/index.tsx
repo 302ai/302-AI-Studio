@@ -10,7 +10,6 @@ import {
   type ModalAction,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
-import { clearActiveProvider } from "@renderer/services/db-service/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -96,6 +95,9 @@ export function ProviderList() {
   const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
   const [providerCfg, setProviderCfg] = useState<Provider | null>(null);
   const [providers, setProviders] = useState<Provider[]>([]);
+
+  const providersQuery = triplitClient.query("providers").Order("order", "ASC");
+  const { results: allProviders, fetching } = useQuery(triplitClient, providersQuery);
 
   const modelsQuery = triplitClient.query("models");
   const { results: allModels } = useQuery(triplitClient, modelsQuery);
@@ -286,40 +288,10 @@ export function ProviderList() {
   }, [listHeight]);
 
   useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-
-    const initAndSubscribe = async () => {
-      try {
-        await triplitClient.connect();
-
-        const query = triplitClient.query("providers").Order("order", "ASC");
-
-        unsubscribe = triplitClient.subscribe(
-          query,
-          async (results) => {
-            console.log("收到providers数据更新:", results);
-            setProviders(results);
-            if (results.length === 0) {
-              await clearActiveProvider();
-            }
-          },
-          (error) => {
-            console.error("providers订阅错误:", error);
-          },
-        );
-      } catch (error) {
-        console.error("providers初始化错误:", error);
-      }
-    };
-
-    initAndSubscribe();
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, []);
+    if (!fetching) {
+      setProviders(allProviders ?? []);
+    }
+  }, [allProviders, fetching]);
 
   return (
     <>

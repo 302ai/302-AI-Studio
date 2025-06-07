@@ -5,7 +5,13 @@ export const tabsSchema = {
     id: S.Id({ format: "nanoid" }),
     title: S.String(),
     type: S.String({
-      enum: ["chat", "setting"],
-    })
+      enum: ["thread", "setting"],
+    }),
+    threadId: S.String({
+      nullable: true,
+    }),
   }),
+  relationships: {
+    threads: S.RelationById("threads", "$threadId"),
+  },
 };

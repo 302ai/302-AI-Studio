@@ -18,3 +18,9 @@ export async function updateThread(
     thread.updatedAt = new Date();
   });
 }
+
+export async function getThread(threadId: string): Promise<Thread | null> {
+  const query = triplitClient.query("threads").Where("id", "=", threadId);
+  const threads = await triplitClient.fetch(query);
+  return threads[0] || null;
+}

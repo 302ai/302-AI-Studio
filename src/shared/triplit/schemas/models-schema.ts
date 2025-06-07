@@ -11,6 +11,6 @@ export const modelsSchema = {
     collected: S.Boolean({ default: false }),
   }),
   relationships: {
-    providers: S.RelationById("providers", "$providerId"),
+    provider: S.RelationById("providers", "$providerId"),
   },
 };

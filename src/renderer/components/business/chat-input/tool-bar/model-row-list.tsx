@@ -22,7 +22,7 @@ export const ModelRowList = memo(function ModelRowList({
   style: React.CSSProperties;
   data: {
     items: ListItem[];
-    onSelect: (providerId: string, modelId: string) => void;
+    onSelect: (modelId: string) => void;
     selectedModelId: string;
   };
 }) {
@@ -46,10 +46,10 @@ export const ModelRowList = memo(function ModelRowList({
     <div
       style={style}
       className="flex cursor-pointer items-center rounded-md px-2 text-accent-fg text-sm outline-hidden hover:bg-hover-primary"
-      onClick={() => onSelect(item.providerId, item.model.id)}
+      onClick={() => onSelect(item.model.id)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
-          onSelect(item.providerId, item.model.id);
+          onSelect(item.model.id);
         }
       }}
       role="option"

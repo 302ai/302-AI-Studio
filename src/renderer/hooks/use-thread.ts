@@ -1,3 +1,4 @@
+import { getThread } from "@renderer/services/db-service/threads-db-service";
 import { clearActiveThread } from "@renderer/services/db-service/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { Thread } from "@shared/triplit/types";
@@ -162,7 +163,8 @@ export function useThread() {
       tabId: string;
       nextActiveId: string;
     }) => {
-      await setActiveThreadId(event.nextActiveId);
+      const thread = await getThread(event.nextActiveId);
+      await setActiveThreadId(thread ? thread.id : "");
     };
     /**
      * Handles the tab close all event

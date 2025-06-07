@@ -16,7 +16,25 @@ export async function insertProvider(provider: CreateProviderData) {
 }
 
 export async function deleteProvider(providerId: string) {
+  const providerQuery = triplitClient
+    .query("providers")
+    .Where("id", "=", providerId)
+    .Include("models");
+  const providerData = await triplitClient.fetchOne(providerQuery);
+
+  if (!providerData) {
+    return;
+  }
+
+  if (providerData.models && providerData.models.length > 0) {
+    const deleteModels = providerData.models.map((model) => {
+      return triplitClient.delete("models", model.id);
+    });
+    await Promise.all(deleteModels);
+  }
+
   await triplitClient.delete("providers", providerId);
+
   await reorderProviders();
 }
 
@@ -26,7 +44,7 @@ export async function updateProvider(providerId: string, provider: UpdateProvide
 }
 
 export async function getProviders(): Promise<Provider[]> {
-  const query = triplitClient.query("providers")
+  const query = triplitClient.query("providers").Order("order", "ASC");
   const providers = await triplitClient.fetch(query);
   return providers;
 }
@@ -37,17 +55,6 @@ export async function insertModels(models: CreateModelData[]) {
   });
 
   await Promise.all(addModels);
-}
-
-export async function deleteModelsByProviderId(providerId: string) {
-  const query = triplitClient
-    .query("models")
-    .Where("providerId", "=", providerId);
-  const models = await triplitClient.fetch(query);
-  const deleteModels = models.map((model) => {
-    return triplitClient.delete("models", model.id);
-  });
-  await Promise.all(deleteModels);
 }
 
 async function reorderProviders() {

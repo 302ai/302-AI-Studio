@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { CreateProviderData, Model } from "@shared/triplit/types";
+import type { Model } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 import { app } from "electron";
@@ -11,7 +11,6 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
-import { ConfigDbService } from "./db-service/config-db-service";
 import { WindowService } from "./window-service";
 
 interface IModelStore {
@@ -40,11 +39,11 @@ export class ConfigService {
     new Map();
   private windowService: WindowService;
   private userDataPath: string;
-  private configDbService: ConfigDbService;
+  // private configDbService: ConfigDbService;
 
   constructor() {
     this.windowService = new WindowService();
-    this.configDbService = new ConfigDbService();
+    // this.configDbService = new ConfigDbService();
     this.userDataPath = app.getPath("userData");
     this.initProviderModelsDir();
   }
@@ -127,20 +126,20 @@ export class ConfigService {
   }
 
   // ***************** Refactor: 使用 triplit 数据库 ***************** //
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async addProvider(
-    _event: Electron.IpcMainEvent,
-    provider: CreateProviderData,
-  ) {
-    try {
-      const newProvider = await this.configDbService.insertProvider(provider);
-      Logger.info("addProvider success ---->", newProvider);
-      return newProvider;
-    } catch (error) {
-      Logger.error("addProvider error ---->", error);
-      throw error;
-    }
-  }
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  // async addProvider(
+  //   _event: Electron.IpcMainEvent,
+  //   provider: CreateProviderData,
+  // ) {
+  //   try {
+  //     const newProvider = await this.configDbService.insertProvider(provider);
+  //     Logger.info("addProvider success ---->", newProvider);
+  //     return newProvider;
+  //   } catch (error) {
+  //     Logger.error("addProvider error ---->", error);
+  //     throw error;
+  //   }
+  // }
 
   // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   // async deleteProvider(

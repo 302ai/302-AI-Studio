@@ -29,17 +29,15 @@ export function useToolBar() {
   const { results: threadItems } = useQuery(triplitClient, threadsQuery);
   const threads = threadItems ?? [];
 
-  const [selectedProviderId, setSelectedProviderId] = useState<string>("");
   const [selectedModelId, setSelectedModelId] = useState<string>("");
 
-  const handleModelSelect = async (providerId: string, modelId: string) => {
-    setSelectedProviderId(providerId);
+  const handleModelSelect = async (modelId: string) => {
     setSelectedModelId(modelId);
+    console.log("selectedModelId", modelId);
 
     if (activeThreadId) {
       try {
         await updateThread(activeThreadId, async (thread) => {
-          thread.providerId = providerId;
           thread.modelId = modelId;
         });
       } catch (error) {
@@ -52,10 +50,9 @@ export function useToolBar() {
     threadData: CreateThreadData,
   ): Promise<Thread | null> => {
     try {
-      const { title, providerId, modelId } = threadData;
+      const { title, modelId } = threadData;
       const createData: CreateThreadData = {
         title,
-        providerId,
         modelId,
       };
 
@@ -91,7 +88,6 @@ export function useToolBar() {
 
         const createThreadData: CreateThreadData = {
           title,
-          providerId: selectedProviderId,
           modelId: selectedModelId,
         };
 
@@ -179,17 +175,14 @@ export function useToolBar() {
         (thread) => thread.id === activeThreadId,
       );
       if (activeThread) {
-        setSelectedProviderId(activeThread.providerId ?? "");
         setSelectedModelId(activeThread.modelId ?? "");
       }
     } else {
-      setSelectedProviderId("");
       setSelectedModelId("");
     }
   }, [activeThreadId, threads]);
 
   return {
-    selectedProviderId,
     selectedModelId,
     handleModelSelect,
     handleSendMessage,

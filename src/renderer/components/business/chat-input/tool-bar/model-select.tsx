@@ -21,7 +21,7 @@ interface GroupedModel {
 }
 
 interface ModelSelectProps {
-  onSelect: (providerId: string, modelId: string) => void;
+  onSelect: (modelId: string) => void;
   selectedModelId?: string;
 }
 
@@ -52,9 +52,9 @@ export const ModelSelect = ({
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const handleModelSelect = useCallback(
-    (providerId: string, modelId: string) => {
+    (modelId: string) => {
       setIsOpen(false);
-      onSelect(providerId, modelId);
+      onSelect(modelId);
     },
     [onSelect]
   );

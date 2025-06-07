@@ -20,13 +20,14 @@ export function ChatInput({ className }: ChatInputProps) {
   const { attachments, addAttachments, removeAttachment, clearAttachments } =
     useAttachments();
   const [input, setInput] = useState("");
-  
+
   const {
-    selectedProviderId,
     selectedModelId,
     handleModelSelect,
     handleSendMessage: sendMessage,
   } = useToolBar();
+
+  const canSendMessage = input.trim();
 
   const handleInputChange = (value: string) => {
     setInput(value);
@@ -39,17 +40,11 @@ export function ChatInput({ className }: ChatInputProps) {
 
   // Send message function that will be passed to ToolBar
   const handleSendMessage = async () => {
-    if (!selectedProviderId || !selectedModelId) {
-      const msg = selectedProviderId ? t("lack-model") : t("lack-provider");
-      toast.error(msg);
-      return;
-    }
-
-    if (!input.trim()) {
-      return;
-    }
-
     try {
+      if (!selectedModelId) {
+        toast.error(t("lack-model"));
+        return;
+      }
       await sendMessage(input, attachments);
       clearInput();
     } catch (error) {
@@ -62,9 +57,7 @@ export function ChatInput({ className }: ChatInputProps) {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      if (input.trim()) {
-        handleSendMessage();
-      }
+      handleSendMessage();
     }
   };
 
@@ -104,11 +97,10 @@ export function ChatInput({ className }: ChatInputProps) {
           className="mb-2"
           onFilesSelect={addAttachments}
           attachments={attachments}
-          input={input}
           onSendMessage={handleSendMessage}
-          selectedProviderId={selectedProviderId}
           selectedModelId={selectedModelId}
           onModelSelect={handleModelSelect}
+          isDisabled={!canSendMessage}
         />
       </div>
     </div>

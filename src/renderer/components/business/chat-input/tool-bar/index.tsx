@@ -3,8 +3,7 @@ import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import { useEffect } from "react";
 import { AttachmentUploader } from "./attachment-uploader";
 import { ModelSelect } from "./model-select";
 
@@ -12,36 +11,27 @@ interface ToolBarProps {
   className?: string;
   onFilesSelect: (files: FileList) => void;
   attachments: AttachmentFile[];
-  input: string;
   onSendMessage: () => Promise<void>;
-  selectedProviderId: string;
   selectedModelId: string;
-  onModelSelect: (providerId: string, modelId: string) => Promise<void>;
+  onModelSelect: (modelId: string) => Promise<void>;
+  isDisabled: boolean;
 }
 
 export function ToolBar({
   className,
   onFilesSelect,
   onSendMessage,
-  selectedProviderId,
   selectedModelId,
   onModelSelect,
+  isDisabled,
 }: ToolBarProps) {
-  const { t } = useTranslation("translation", {
-    keyPrefix: "chat",
-  });
-
-  const canSendMessage = selectedProviderId && selectedModelId;
-
   const handleSendMessageClick = async () => {
-    if (!canSendMessage) {
-      const msg = selectedProviderId ? t("lack-model") : t("lack-provider");
-      toast.error(msg);
-      return;
-    }
-
     await onSendMessage();
   };
+
+  useEffect(() => {
+    console.log("selectedModelId", selectedModelId);
+  }, [selectedModelId]);
 
   return (
     <div
@@ -68,6 +58,7 @@ export function ToolBar({
             size="square-petite"
             shape="circle"
             onClick={handleSendMessageClick}
+            isDisabled={isDisabled}
           >
             <ArrowUpCircleIcon className="!size-8" />
           </Button>

@@ -1,7 +1,6 @@
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useState } from "react";
 import {
-  deleteModelsByProviderId,
   deleteProvider,
   insertModels,
   insertProvider,
@@ -31,7 +30,6 @@ export function useProviderList() {
     }
 
     await deleteProvider(selectedProvider.id);
-    await deleteModelsByProviderId(selectedProvider.id);
   };
 
   const handleUpdateProvider = async (updatedProvider: Provider) => {
