@@ -2,7 +2,6 @@ import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
-import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -14,34 +13,34 @@ interface ToolBarProps {
   onFilesSelect: (files: FileList) => void;
   attachments: AttachmentFile[];
   input: string;
+  onSendMessage: () => Promise<void>;
+  selectedProviderId: string;
+  selectedModelId: string;
+  onModelSelect: (providerId: string, modelId: string) => Promise<void>;
 }
 
 export function ToolBar({
   className,
   onFilesSelect,
-  attachments,
-  input,
+  onSendMessage,
+  selectedProviderId,
+  selectedModelId,
+  onModelSelect,
 }: ToolBarProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
-  const {
-    selectedProviderId,
-    selectedModelId,
-    handleModelSelect,
-    handleSendMessage,
-  } = useToolBar();
 
   const canSendMessage = selectedProviderId && selectedModelId;
 
-  const handleSendMessageClick = () => {
+  const handleSendMessageClick = async () => {
     if (!canSendMessage) {
       const msg = selectedProviderId ? t("lack-model") : t("lack-provider");
       toast.error(msg);
       return;
     }
 
-    handleSendMessage(input, attachments);
+    await onSendMessage();
   };
 
   return (
@@ -58,7 +57,7 @@ export function ToolBar({
 
         <div className="flex flex-row items-center gap-x-2">
           <ModelSelect
-            onSelect={handleModelSelect}
+            onSelect={onModelSelect}
             selectedModelId={selectedModelId}
           />
 
