@@ -15,6 +15,8 @@ export function useThreadMenu(thread: Thread) {
   const [newTitle, setNewTitle] = useState(thread.title);
   const { activeThreadId, setActiveThreadId } = useActiveThread();
 
+  const isActiveThread = activeThreadId === thread.id;
+
   const formattedTitle = newTitle.trim();
 
   const closeModal = () => {
@@ -41,14 +43,12 @@ export function useThreadMenu(thread: Thread) {
   };
 
   const handleDelete = async () => {
-    const isActiveThread = activeThreadId === thread.id;
-
-    await deleteThread(thread.id);
-    await cleanMessagesByThreadId(thread.id);
-
     if (isActiveThread) {
       await setActiveThreadId("");
     }
+
+    await deleteThread(thread.id);
+    await cleanMessagesByThreadId(thread.id);
 
     emitter.emit(EventNames.THREAD_DELETE, {
       threadId: thread.id,
