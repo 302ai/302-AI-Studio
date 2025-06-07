@@ -38,8 +38,11 @@ export async function deleteProvider(providerId: string) {
   await reorderProviders();
 }
 
-export async function updateProvider(providerId: string, provider: UpdateProviderData) {
-  await triplitClient.update("providers", providerId, provider);
+export async function updateProvider(
+  providerId: string,
+  updateData: UpdateProviderData,
+) {
+  await triplitClient.update("providers", providerId, updateData);
   await reorderProviders();
 }
 

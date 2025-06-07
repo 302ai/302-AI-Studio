@@ -2,18 +2,19 @@ import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import {
   getMessagesByThreadId,
   insertMessage,
-} from "@renderer/services/db-service/messages-db-service";
+} from "@renderer/services/db-services/messages-db-service";
 import {
   insertThread,
   updateThread,
-} from "@renderer/services/db-service/threads-db-service";
-import { useTabBarStore } from "@renderer/store/tab-bar-store";
+} from "@renderer/services/db-services/threads-db-service";
+import { EventNames, emitter } from "@renderer/services/event-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
 export function useToolBar() {
@@ -21,7 +22,10 @@ export function useToolBar() {
     keyPrefix: "thread",
   });
   const { activeThreadId, setActiveThreadId } = useActiveThread();
-  const { tabs, activeTabId, addTab } = useTabBarStore();
+  const { activeTab } = useActiveTab();
+
+  const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
+  const { results: tabs } = useQuery(triplitClient, tabsQuery);
 
   const threadsQuery = triplitClient
     .query("threads")
@@ -72,44 +76,21 @@ export function useToolBar() {
     attachments?: AttachmentFile[],
   ): Promise<void> => {
     try {
-      const isHomepage = tabs.length === 0;
-      const currentThread = threads.find((thread) => thread.id === activeTabId);
-      const hasActiveTab = tabs.some((tab) => tab.id === activeTabId);
-      const needCreateThread = isHomepage || (hasActiveTab && !currentThread);
-
       let currentActiveThreadId: string | null = activeThreadId;
 
+      const needCreateTab = tabs?.length === 0;
+      const needCreateThread = needCreateTab || !activeTab?.threadId;
       if (needCreateThread) {
-        const isNewTab = hasActiveTab && !currentThread;
-        const title = isNewTab
-          ? (tabs.find((tab) => tab.id === activeTabId)?.title ??
-            t("new-thread-title"))
-          : t("new-thread-title");
-
-        const createThreadData: CreateThreadData = {
-          title,
+        const thread = await createThread({
+          title: t("new-thread-title"),
           modelId: selectedModelId,
-        };
+        });
 
-        const thread = await createThread(createThreadData);
         if (thread) {
-          if (isHomepage) {
-            addTab({
-              title,
-              id: thread.id,
-            });
-          } else {
-            const currentTab = tabs.find((tab) => tab.id === activeTabId);
-            if (currentTab) {
-              useTabBarStore.getState().removeTab(activeTabId);
-              addTab({
-                title: currentTab.title,
-                id: thread.id,
-              });
-            }
-          }
+          emitter.emit(EventNames.THREAD_SELECT, { thread: thread });
+
           currentActiveThreadId = thread.id;
-          console.log("activeThread", thread);
+          console.log("current active thread id: ", currentActiveThreadId);
         }
       }
 

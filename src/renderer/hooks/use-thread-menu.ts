@@ -1,8 +1,8 @@
-import { cleanMessagesByThreadId } from "@renderer/services/db-service/messages-db-service";
+import { cleanMessagesByThreadId } from "@renderer/services/db-services/messages-db-service";
 import {
   deleteThread,
   updateThread,
-} from "@renderer/services/db-service/threads-db-service";
+} from "@renderer/services/db-services/threads-db-service";
 import type { Thread } from "@shared/triplit/types";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";

@@ -2,7 +2,7 @@ import { triplitClient } from "@shared/triplit/client";
 import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
-import { updateActiveProviderId } from "../services/db-service/ui-db-service";
+import { updateActiveProviderId } from "../services/db-services/ui-db-service";
 
 export function useActiveProvider() {
   const [selectedProvider, setSelectedProviderState] = useState<Provider | null>(null);

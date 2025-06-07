@@ -13,7 +13,7 @@ export type UpdateModelData = Partial<Omit<Model, "id">>;
 
 // * Tabs
 export type Tab = Entity<Schema, "tabs">;
-export type CreateTabData = Omit<Tab, "id">;
+export type CreateTabData = Omit<Tab, "id" | "order">;
 export type UpdateTabData = Partial<Omit<Tab, "id">>;
 
 // * Threads

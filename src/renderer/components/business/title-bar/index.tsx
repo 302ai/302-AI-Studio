@@ -12,9 +12,9 @@ import {
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
 import { isMac } from "@renderer/config/constant";
+import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { cn } from "@renderer/lib/utils";
-import { EventNames, emitter } from "@renderer/services/event-service";
-import { useTabBarStore } from "@renderer/store/tab-bar-store";
+import { insertTab } from "@renderer/services/db-services/tabs-db-service";
 import {
   PanelLeftClose,
   PanelLeftOpen,
@@ -32,20 +32,18 @@ const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
-  const { addTab, addSettingsTab } = useTabBarStore();
+  const { setActiveTabId } = useActiveTab();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const isSidebarCollapsed = state === "collapsed";
 
-  const handleSettingsClick = () => {
-    addSettingsTab({ title: t("settings.tab-title") });
-    emitter.emit(EventNames.TAB_SELECT, { tabId: "" });
-  };
-
-  const handleAddNewTab = () => {
-    addTab({ title: t("thread.new-thread-title") });
-    emitter.emit(EventNames.TAB_SELECT, { tabId: "" });
+  const handleAddNewTab = async (type: "thread" | "setting") => {
+    const newTab = await insertTab({
+      title: type === "thread" ? t("thread.new-thread-title") : t("settings.tab-title"),
+      type,
+    });
+    await setActiveTabId(newTab.id);
   };
 
   const handleSearchThread = () => {
@@ -65,8 +63,8 @@ export function BasicTitleBar() {
                 ? "w-[calc(var(--sidebar-width)-60px)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
                 : "w-[var(--sidebar-width)] border-r border-r-[color-mix(in_oklch,var(--color-sidebar)_25%,black_6%)] dark:border-r-[color-mix(in_oklch,var(--color-sidebar)_55%,white_10%)]"
               : isMac
-              ? "w-[var(--sidebar-width-dock)]"
-              : "w-[var(--sidebar-width-collapsed)]"
+                ? "w-[var(--sidebar-width-dock)]"
+                : "w-[var(--sidebar-width-collapsed)]",
           )}
         >
           {/* Sidebar Toggle */}
@@ -115,7 +113,7 @@ export function BasicTitleBar() {
               intent="plain"
               size="square-petite"
               style={noDragRegion}
-              onClick={handleAddNewTab}
+              onClick={() => handleAddNewTab("thread")}
             >
               <SquarePlus className="h-4 w-4" />
             </TooltipTrigger>
@@ -127,7 +125,7 @@ export function BasicTitleBar() {
           orientation="vertical"
           className={cn(
             "h-[20px] w-[1px]",
-            state === "expanded" ? "hidden" : ""
+            state === "expanded" ? "hidden" : "",
           )}
         />
 
@@ -144,7 +142,7 @@ export function BasicTitleBar() {
               intent="plain"
               size="square-petite"
               style={noDragRegion}
-              onClick={handleSettingsClick}
+              onClick={() => handleAddNewTab("setting")}
             >
               <Settings className="h-4 w-4" />
             </TooltipTrigger>

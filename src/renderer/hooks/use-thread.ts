@@ -1,5 +1,6 @@
-import { getThread } from "@renderer/services/db-service/threads-db-service";
-import { clearActiveThread } from "@renderer/services/db-service/ui-db-service";
+import { getTab } from "@renderer/services/db-services/tabs-db-service";
+import { getThread } from "@renderer/services/db-services/threads-db-service";
+import { clearActiveThread } from "@renderer/services/db-services/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -152,9 +153,8 @@ export function useThread() {
      * Handles the tab select event
      */
     const handleTabSelect = async (event: { tabId: string }) => {
-      const thread = threads.find((thread) => thread.id === event.tabId);
-      console.log("🔄 thread", thread);
-      await setActiveThreadId(thread ? thread.id : "");
+      const tab = await getTab(event.tabId);
+      await setActiveThreadId(tab?.threadId ?? "");
     };
     /**
      * Handles the tab close event
@@ -180,7 +180,7 @@ export function useThread() {
     ];
 
     return () => unsubs.forEach((unsub) => unsub());
-  }, [threads, setActiveThreadId]);
+  }, [setActiveThreadId]);
 
   return {
     activeThreadId,

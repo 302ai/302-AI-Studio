@@ -2,7 +2,7 @@ import { triplitClient } from "@shared/triplit/client";
 import type { Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
-import { updateActiveThreadId } from "../services/db-service/ui-db-service";
+import { updateActiveThreadId } from "../services/db-services/ui-db-service";
 
 export function useActiveThread() {
   const [selectedThread, setSelectedThreadState] = useState<Thread | null>(null);
@@ -29,11 +29,6 @@ export function useActiveThread() {
     setSelectedThreadState(activeThread || null);
   }, [activeThreadId, threads]);
 
-  const setActiveThread = useCallback(async (thread: Thread | null) => {
-    console.log("Setting active thread:", thread?.title || "none");
-    await updateActiveThreadId(thread?.id || "");
-  }, []);
-
   const setActiveThreadId = useCallback(async (threadId: string) => {
     console.log("Setting active thread ID:", threadId || "none");
     await updateActiveThreadId(threadId || "");
@@ -42,7 +37,6 @@ export function useActiveThread() {
   return {
     activeThreadId,
     selectedThread,
-    setActiveThread,
     setActiveThreadId,
   };
 }

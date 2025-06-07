@@ -9,7 +9,6 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
-import { TabType, useTabBarStore } from "@renderer/store/tab-bar-store";
 import { CopyX, Settings2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -17,11 +16,10 @@ interface TabProps {
   id: string;
   index: number;
   title: string;
-  favicon?: string;
   isActive: boolean;
   onClick: () => void;
   width: number;
-  type: TabType;
+  type: "thread" | "setting";
 }
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
@@ -29,14 +27,12 @@ export function Tab({
   id,
   index,
   title,
-  favicon,
   isActive,
   onClick,
   width,
   type,
 }: TabProps) {
   const { t } = useTranslation();
-  const { draggingTabId } = useTabBarStore();
   const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
     id,
     index,
@@ -65,9 +61,7 @@ export function Tab({
                   ? "justify-center px-0"
                   : "justify-between px-2",
                 isActive ? "bg-bg" : "bg-transparent hover:bg-hover-primary",
-                draggingTabId === id || snapshot.isDragging
-                  ? "opacity-50"
-                  : "opacity-100"
+                snapshot.isDragging ? "opacity-50" : "opacity-100",
               )}
               onClick={onClick}
               onKeyDown={(e) => {
@@ -92,11 +86,11 @@ export function Tab({
               {isCompressedThree ? (
                 <div className="relative flex items-center justify-center">
                   {!isActive ? (
-                    type === TabType.settings ? (
+                    type === "setting" ? (
                       <Settings2 className="h-4 w-4 flex-shrink-0" />
                     ) : (
                       <img
-                        src={favicon || placeholder}
+                        src={placeholder}
                         alt="favicon"
                         className="h-4 w-4 flex-shrink-0"
                       />
@@ -113,27 +107,27 @@ export function Tab({
                 </div>
               ) : (
                 <>
-                  {type === TabType.settings ? (
+                  {type === "setting" ? (
                     <Settings2
                       className={cn(
                         "h-4 w-4 flex-shrink-0",
-                        isCompressedTwo ? "mr-0" : "mr-2"
+                        isCompressedTwo ? "mr-0" : "mr-2",
                       )}
                     />
                   ) : (
                     <img
-                      src={favicon || placeholder}
+                      src={placeholder}
                       alt="favicon"
                       className={cn(
                         "h-4 w-4 flex-shrink-0",
-                        isCompressedTwo ? "mr-0" : "mr-2"
+                        isCompressedTwo ? "mr-0" : "mr-2",
                       )}
                     />
                   )}
                   <span
                     className={cn(
                       "truncate text-left text-xs",
-                      isCompressedOne ? "flex-shrink" : "flex-1"
+                      isCompressedOne ? "flex-shrink" : "flex-1",
                     )}
                   >
                     {title}
@@ -144,7 +138,7 @@ export function Tab({
                       isActive
                         ? "hover:bg-hover-primary"
                         : "hover:bg-hover-secondary",
-                      isCompressedTwo ? "size-5" : "size-6"
+                      isCompressedTwo ? "size-5" : "size-6",
                     )}
                     onClick={(e) => {
                       e.stopPropagation();

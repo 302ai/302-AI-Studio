@@ -10,6 +10,7 @@ export const tabsSchema = {
     threadId: S.String({
       nullable: true,
     }),
+    order: S.Number({ default: 0 }),
   }),
   relationships: {
     threads: S.RelationById("threads", "$threadId"),
