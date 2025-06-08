@@ -14,19 +14,8 @@ declare global {
         getLanguage: () => Promise<LanguageVarious>;
         setLanguage: (language: LanguageVarious) => void;
         setTheme: (theme: ThemeMode) => void;
-        // setProviders: (providers: ModelProvider[]) => void;
         getProviderModels: (providerId: string) => Promise<Model[]>;
         setProviderModels: (providerId: string, models: Model[]) => void;
-        // getModelSettings: () => Promise<ModelSettingData>;
-
-        // addProvider: (provider: CreateProviderData) => Promise<Provider>;
-        // deleteProvider: (providerId: string) => Promise<void>;
-        // updateProvider: (
-        //   providerId: string,
-        //   provider: UpdateProviderData,
-        // ) => Promise<void>;
-        // addModels: (models: CreateModelData[]) => Promise<void>;
-        // deleteModelsByProviderId: (providerId: string) => Promise<void>;
       };
       threadsService: {
         setActiveThreadId: (threadId: string) => void;
@@ -37,6 +26,19 @@ declare global {
           errorMsg: string | null;
         }>;
         fetchModels: (provider: Provider) => Promise<CreateModelData[]>;
+        startStreamChat: (params: {
+          tabId: string;
+          threadId: string;
+          userMessageId: string;
+          messages: Array<{
+            role: "user" | "assistant" | "system" | "function";
+            content: string;
+            attachments?: string | null;
+          }>;
+          provider: Provider;
+          modelName: string;
+        }) => Promise<{ success: boolean; error?: string }>;
+        stopStreamChat: (params: { tabId: string }) => Promise<{ success: boolean }>;
       };
       triplitService: {
         getServerStatus: () => Promise<{

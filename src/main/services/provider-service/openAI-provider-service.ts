@@ -2,7 +2,7 @@ import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@shared/api/ai";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { BaseProviderService } from "./base-provider-service";
+import { BaseProviderService, type StreamChatParams } from "./base-provider-service";
 
 export class OpenAIProviderService extends BaseProviderService {
   protected openai: OpenAIProvider;
@@ -72,6 +72,82 @@ export class OpenAIProviderService extends BaseProviderService {
       Logger.error("Failed to fetch OpenAI models:", error);
 
       throw error;
+    }
+  }
+
+  async startStreamChat(
+    params: StreamChatParams
+  ): Promise<{ success: boolean; error?: string }> {
+    const { tabId, threadId, userMessageId, messages, modelName } = params;
+
+    try {
+      const model = this.openai(modelName);
+
+      Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
+
+      // Start streaming
+      const { streamText: streamTextFn } = await import("ai");
+      const result = streamTextFn({
+        model,
+        messages: messages
+          .filter((msg) => msg.role !== "function") // Filter out function messages
+          .map((msg) => ({
+            role: msg.role as "user" | "assistant" | "system",
+            content: msg.content,
+          })),
+      });
+
+      // Send stream start event
+      this.sendToAllWindows("chat:stream-start", {
+        tabId,
+        threadId,
+        userMessageId,
+      });
+
+      let fullContent = "";
+
+      // Process stream
+      for await (const delta of result.textStream) {
+        fullContent += delta;
+
+        // Send delta to renderer
+        this.sendToAllWindows("chat:stream-delta", {
+          tabId,
+          threadId,
+          userMessageId,
+          delta,
+          fullContent,
+        });
+      }
+
+      // Send stream end event
+      const usage = await result.usage;
+      this.sendToAllWindows("chat:stream-end", {
+        tabId,
+        threadId,
+        userMessageId,
+        fullContent,
+        usage,
+      });
+
+      Logger.info(`Stream chat completed for tab ${tabId}`);
+      return { success: true };
+
+    } catch (error) {
+      Logger.error(`Stream chat error for tab ${tabId}:`, error);
+
+      // Send error event
+      this.sendToAllWindows("chat:stream-error", {
+        tabId,
+        threadId,
+        userMessageId,
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error"
+      };
     }
   }
 }

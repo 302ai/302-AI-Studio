@@ -1,4 +1,5 @@
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
+import { useStreamChat } from "@renderer/hooks/use-stream-chat";
 import { triplitClient } from "@shared/triplit/client";
 import type { Message } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -8,6 +9,7 @@ import { UserMessage } from "./user-message";
 
 export function MessageList() {
   const { activeThreadId } = useActiveThread();
+  const { streamingMessages } = useStreamChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -22,19 +24,40 @@ export function MessageList() {
 
   const { results: messages } = useQuery(
     triplitClient,
-    messagesQuery || triplitClient.query("messages").Where("id", "=", "non-existent")
+    messagesQuery ||
+      triplitClient.query("messages").Where("id", "=", "non-existent"),
   );
 
   const messagesList = useMemo(() => {
-    return messages || [];
-  }, [messages]);
+    const dbMessages = messages || [];
+    const streamingMessagesForThread = streamingMessages.filter(
+      msg => msg.threadId === activeThreadId
+    );
+
+    // Combine database messages with streaming messages
+    return [
+      ...dbMessages,
+      ...streamingMessagesForThread.map(streamMsg => ({
+        id: streamMsg.id,
+        threadId: streamMsg.threadId,
+        parentMessageId: streamMsg.parentMessageId,
+        role: streamMsg.role,
+        content: streamMsg.content,
+        attachments: null,
+        createdAt: new Date(),
+        orderSeq: streamMsg.orderSeq,
+        tokenCount: streamMsg.content.length,
+        status: streamMsg.status,
+      }))
+    ].sort((a, b) => a.orderSeq - b.orderSeq);
+  }, [messages, streamingMessages, activeThreadId]);
 
   // 自动滚动到底部的函数
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "end"
+        block: "end",
       });
     }
   }, []);
@@ -43,7 +66,8 @@ export function MessageList() {
   const shouldAutoScroll = useCallback(() => {
     if (!scrollContainerRef.current) return true;
 
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    const { scrollTop, scrollHeight, clientHeight } =
+      scrollContainerRef.current;
     // 如果用户在距离底部50px以内，就认为应该自动滚动
     return scrollHeight - scrollTop - clientHeight < 50;
   }, []);

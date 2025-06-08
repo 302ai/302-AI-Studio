@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
+import { useStreamChat } from "./use-stream-chat";
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -23,6 +24,7 @@ export function useToolBar() {
   });
   const { activeThreadId, setActiveThreadId } = useActiveThread();
   const { activeTab } = useActiveTab();
+  const { startStreamChat } = useStreamChat();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
   const { results: tabs } = useQuery(triplitClient, tabsQuery);
@@ -32,6 +34,13 @@ export function useToolBar() {
     .Order("createdAt", "DESC");
   const { results: threadItems } = useQuery(triplitClient, threadsQuery);
   const threads = threadItems ?? [];
+
+  // Query providers and models
+  const providersQuery = triplitClient.query("providers");
+  const { results: providers } = useQuery(triplitClient, providersQuery);
+
+  const modelsQuery = triplitClient.query("models");
+  const { results: models } = useQuery(triplitClient, modelsQuery);
 
   const [selectedModelId, setSelectedModelId] = useState<string>("");
 
@@ -88,7 +97,6 @@ export function useToolBar() {
 
         if (thread) {
           emitter.emit(EventNames.THREAD_SELECT, { thread: thread });
-
           currentActiveThreadId = thread.id;
           console.log("current active thread id: ", currentActiveThreadId);
         }
@@ -98,20 +106,39 @@ export function useToolBar() {
         throw new Error("No active thread available");
       }
 
-      // 获取当前消息数量用于orderSeq
+      if (!selectedModelId) {
+        throw new Error("No model selected");
+      }
+
+      // Find the selected model and its provider
+      const selectedModel = models?.find(
+        (model) => model.id === selectedModelId,
+      );
+      if (!selectedModel) {
+        throw new Error("Selected model not found");
+      }
+
+      const provider = providers?.find(
+        (p) => p.id === selectedModel.providerId,
+      );
+      if (!provider) {
+        throw new Error("Provider not found for selected model");
+      }
+
+      // Get existing messages for context
       const existingMessages = await getMessagesByThreadId(
         currentActiveThreadId,
       );
       const nextOrderSeq = existingMessages.length + 1;
 
-      // 准备附件数据
+      // Prepare attachments data
       const attachmentsData =
         attachments && attachments.length > 0
           ? JSON.stringify(attachments)
           : null;
 
-      // 插入用户消息
-      await insertMessage({
+      // Insert user message
+      const userMessage = await insertMessage({
         threadId: currentActiveThreadId,
         parentMessageId: null,
         role: "user",
@@ -122,27 +149,35 @@ export function useToolBar() {
         status: "success",
       });
 
-      console.log("Message sent successfully");
+      console.log("User message sent successfully:", userMessage);
 
-      // 这里可以添加AI回复逻辑
-      // 暂时插入一个mock的AI回复
-      setTimeout(async () => {
-        try {
-          await insertMessage({
-            threadId: currentActiveThreadId,
-            parentMessageId: null,
-            role: "assistant",
-            content:
-              "这是一个模拟的AI回复。在实际应用中，这里会调用真实的AI API来生成回复。",
-            attachments: null,
-            orderSeq: nextOrderSeq + 1,
-            tokenCount: 50,
-            status: "success",
-          });
-        } catch (error) {
-          console.error("Failed to insert AI reply:", error);
-        }
-      }, 1000);
+      // Prepare conversation context for AI
+      const conversationMessages = [
+        ...existingMessages.map((msg) => ({
+          role: msg.role as "user" | "assistant" | "system" | "function",
+          content: msg.content,
+          attachments: msg.attachments,
+        })),
+        {
+          role: "user" as const,
+          content,
+          attachments: attachmentsData,
+        },
+      ];
+
+      // Start streaming chat
+      try {
+        await startStreamChat(
+          userMessage.id,
+          conversationMessages,
+          provider,
+          selectedModel.name, // Use model name for the API call
+        );
+      } catch (streamError) {
+        console.error("Failed to start streaming chat:", streamError);
+        toast.error("Failed to start AI response");
+        // Error handling is now done in the streaming hook
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
       throw error;

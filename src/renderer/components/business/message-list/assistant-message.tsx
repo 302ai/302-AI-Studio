@@ -68,8 +68,12 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
         {/* 消息状态 */}
         {message.status === "pending" && (
           <div className="flex items-center gap-1 text-muted-foreground text-xs">
-            <div className="h-2 w-2 animate-pulse rounded-full bg-current" />
-            生成中...
+            <div className="flex gap-1">
+              <div className="h-2 w-2 animate-pulse rounded-full bg-current" style={{ animationDelay: '0ms' }} />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-current" style={{ animationDelay: '150ms' }} />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-current" style={{ animationDelay: '300ms' }} />
+            </div>
+            AI正在思考...
           </div>
         )}
         {message.status === "error" && (

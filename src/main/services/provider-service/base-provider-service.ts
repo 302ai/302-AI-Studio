@@ -1,5 +1,21 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 import type { CreateModelData, Provider } from "@shared/triplit/types";
+import { BrowserWindow } from "electron";
 import Logger from "electron-log";
+
+export interface ChatMessage {
+  role: "user" | "assistant" | "system" | "function";
+  content: string;
+  attachments?: string | null;
+}
+
+export interface StreamChatParams {
+  tabId: string;
+  threadId: string;
+  userMessageId: string;
+  messages: ChatMessage[];
+  modelName: string;
+}
 
 export abstract class BaseProviderService {
   protected provider: Provider;
@@ -36,4 +52,16 @@ export abstract class BaseProviderService {
   }
 
   protected abstract fetchProviderModels(): Promise<CreateModelData[]>;
+
+  // Abstract method for streaming chat - to be implemented by each provider
+  abstract startStreamChat(
+    params: StreamChatParams,
+  ): Promise<{ success: boolean; error?: string }>;
+
+  // Helper method to send IPC events to all windows
+  protected sendToAllWindows(channel: string, data: any) {
+    BrowserWindow.getAllWindows().forEach((window) => {
+      window.webContents.send(channel, data);
+    });
+  }
 }

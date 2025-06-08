@@ -5,7 +5,7 @@ import {
 } from "@main/shared/reflect";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
-import type { BaseProviderService } from "./base-provider-service";
+import type { BaseProviderService, StreamChatParams } from "./base-provider-service";
 import { OpenAIProviderService } from "./openAI-provider-service";
 
 @ServiceRegister("providerService")
@@ -67,5 +67,43 @@ export class ProviderService {
       throw new Error(`Provider ${provider.id} not found`);
     }
     return await providerInst.fetchModels();
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async startStreamChat(
+    _event: Electron.IpcMainEvent,
+    params: StreamChatParams & { provider: Provider }
+  ): Promise<{ success: boolean; error?: string }> {
+    const { provider, ...streamParams } = params;
+
+    try {
+      const providerInst = this.createProviderInst(provider);
+      if (!providerInst) {
+                return {
+          success: false,
+          error: "Failed to create provider instance"
+        };
+      }
+
+      return await providerInst.startStreamChat(streamParams);
+    } catch (error) {
+      Logger.error("Failed to start stream chat:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error"
+      };
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async stopStreamChat(
+    _event: Electron.IpcMainEvent,
+    params: { tabId: string }
+  ): Promise<{ success: boolean }> {
+    const { tabId } = params;
+    // For now, we'll just log this. In a more advanced implementation,
+    // we could track active streams and abort them
+    Logger.info(`Stream chat stop requested for tab ${tabId}`);
+    return { success: true };
   }
 }
