@@ -3,7 +3,6 @@ import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
-import { useEffect } from "react";
 import { AttachmentUploader } from "./attachment-uploader";
 import { ModelSelect } from "./model-select";
 
@@ -28,10 +27,6 @@ export function ToolBar({
   const handleSendMessageClick = async () => {
     await onSendMessage();
   };
-
-  useEffect(() => {
-    console.log("selectedModelId", selectedModelId);
-  }, [selectedModelId]);
 
   return (
     <div

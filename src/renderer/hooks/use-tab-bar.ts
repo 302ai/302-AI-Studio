@@ -133,24 +133,18 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
       if (existingTab) {
         await setActiveTabId(existingTab.id);
       } else {
-        const newTab = await insertTab({ title, threadId: id, type: "thread" });
+        const newTab = await insertTab({
+          title,
+          threadId: id,
+          type: "thread",
+        });
         await setActiveTabId(newTab.id);
       }
     };
 
-    const handleThreadAdd = async (event: { thread: Thread }) => {
-      const { id, title } = event.thread;
+    const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadSelect);
 
-      const newTab = await insertTab({ title, threadId: id, type: "thread" });
-      await setActiveTabId(newTab.id);
-    };
-
-    const unsub = [
-      emitter.on(EventNames.THREAD_SELECT, handleThreadSelect),
-      emitter.on(EventNames.THREAD_ADD, handleThreadAdd),
-    ];
-
-    return () => unsub.forEach((unsub) => unsub());
+    return () => unsub();
   }, [setActiveTabId, tabs]);
 
   return {

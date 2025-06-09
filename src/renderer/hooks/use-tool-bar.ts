@@ -4,10 +4,13 @@ import {
   insertMessage,
 } from "@renderer/services/db-services/messages-db-service";
 import {
+  insertTab,
+  updateTab,
+} from "@renderer/services/db-services/tabs-db-service";
+import {
   insertThread,
   updateThread,
 } from "@renderer/services/db-services/threads-db-service";
-import { EventNames, emitter } from "@renderer/services/event-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -23,7 +26,7 @@ export function useToolBar() {
     keyPrefix: "thread",
   });
   const { activeThreadId, setActiveThreadId } = useActiveThread();
-  const { activeTab } = useActiveTab();
+  const { activeTab, activeTabId, setActiveTabId } = useActiveTab();
   const { startStreamChat, reGenerateStreamChat } = useStreamChat();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
@@ -86,6 +89,7 @@ export function useToolBar() {
   ): Promise<void> => {
     try {
       let currentActiveThreadId: string | null = activeThreadId;
+      let currentActiveTabId: string | null = activeTabId;
 
       const needCreateTab = tabs?.length === 0;
       const needCreateThread = needCreateTab || !activeTab?.threadId;
@@ -96,14 +100,28 @@ export function useToolBar() {
         });
 
         if (thread) {
-          emitter.emit(EventNames.THREAD_ADD, { thread: thread });
+          if (activeTab) {
+            await updateTab(activeTab.id, {
+              threadId: thread.id,
+            });
+          } else {
+            const { id, title } = thread;
+            const newTab = await insertTab({
+              title,
+              threadId: id,
+              type: "thread",
+            });
+            await setActiveTabId(newTab.id);
+            currentActiveTabId = newTab.id;
+          }
+
           currentActiveThreadId = thread.id;
           console.log("current active thread id: ", currentActiveThreadId);
         }
       }
 
-      if (!currentActiveThreadId) {
-        throw new Error("No active thread available");
+      if (!currentActiveThreadId || !currentActiveTabId) {
+        throw new Error("No active thread or tab available");
       }
 
       if (!selectedModelId) {
@@ -168,6 +186,8 @@ export function useToolBar() {
       // Start streaming chat
       try {
         await startStreamChat(
+          currentActiveTabId,
+          currentActiveThreadId,
           userMessage.id,
           conversationMessages,
           provider,
