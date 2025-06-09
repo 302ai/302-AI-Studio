@@ -272,6 +272,7 @@ class StreamChatEventService {
             message.content = data.fullContent || "";
             message.status = "success";
             message.tokenCount = data.usage?.totalTokens || (data.fullContent?.length || 0);
+            message.createdAt = new Date(); // Update the timestamp to current time
           });
 
           Logger.info("Regenerated message updated in DB");
