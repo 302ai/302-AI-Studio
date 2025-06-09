@@ -1,7 +1,9 @@
 import logo from "@renderer/assets/llm-icons/logo.png?url";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import { formatTimeAgo } from "@renderer/lib/utils";
 import type { Message } from "@shared/triplit/types";
 import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
 import { useMemo } from "react";
 import { MessageAttachments } from "./message-attachments";
 
@@ -61,7 +63,9 @@ export function UserMessage({ message }: UserMessageProps) {
             </div>
           )}
           {message.status === "success" && (
-            <div className="text-muted-foreground text-xs">刚刚</div>
+            <div className="text-muted-foreground text-xs">
+              {formatTimeAgo(message.createdAt.toISOString(), zhCN)}
+            </div>
           )}
         </div>
       </div>
