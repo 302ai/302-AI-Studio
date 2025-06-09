@@ -1,6 +1,7 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
 import {
+  Eye,
   File,
   FileAudio,
   FileCode,
@@ -107,15 +108,22 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
           </div>
         )}
 
-        {/* File size overlay - only show on hover */}
+        {/* Full overlay with preview icon and file size - only show on hover */}
         <div
           className={cn(
-            "absolute right-0 bottom-0 left-0 bg-black/60 text-white text-xs",
-            "px-1.5 py-0.5 text-center font-medium",
-            "opacity-0 transition-opacity group-hover:opacity-100",
+            "absolute inset-0 bg-black/70 text-white",
+            "flex flex-col items-center justify-center",
+            "opacity-0 transition-opacity duration-200 group-hover:opacity-100",
           )}
         >
-          {formatFileSize(attachment.size)}
+          {/* Preview icon in center */}
+          
+          <Eye className="size-4 cursor-pointer" onClick={() => {}} />
+
+          {/* File size at bottom */}
+          <div className="absolute right-0 bottom-0 left-0 px-1.5 py-0.5 text-center font-medium text-xs">
+            {formatFileSize(attachment.size)}
+          </div>
         </div>
 
         {/* Remove button */}
