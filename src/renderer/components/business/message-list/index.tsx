@@ -1,5 +1,6 @@
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { useStreamChat } from "@renderer/hooks/use-stream-chat";
+import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { triplitClient } from "@shared/triplit/client";
 import type { Message } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -12,6 +13,7 @@ export function MessageList() {
   const { streamingMessages } = useStreamChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { handleRefreshMessage } = useToolBar();
 
   // 查询当前线程的消息
   const messagesQuery = useMemo(() => {
@@ -31,13 +33,26 @@ export function MessageList() {
   const messagesList = useMemo(() => {
     const dbMessages = messages || [];
     const streamingMessagesForThread = streamingMessages.filter(
-      msg => msg.threadId === activeThreadId
+      (msg) => msg.threadId === activeThreadId,
     );
 
-    // Combine database messages with streaming messages
-    return [
-      ...dbMessages,
-      ...streamingMessagesForThread.map(streamMsg => ({
+    // Create a map to track which messages are being regenerated
+    const regeneratingMessageIds = new Set(
+      streamingMessagesForThread
+        .filter(msg => msg.id.startsWith('temp-regenerate-'))
+        .map(msg => msg.id.replace('temp-regenerate-', ''))
+    );
+
+
+    // Filter out database messages that are currently being regenerated
+    const filteredDbMessages = dbMessages.filter(
+      msg => !regeneratingMessageIds.has(msg.id)
+    );
+
+    // Combine filtered database messages with streaming messages
+    const result = [
+      ...filteredDbMessages,
+      ...streamingMessagesForThread.map((streamMsg) => ({
         id: streamMsg.id,
         threadId: streamMsg.threadId,
         parentMessageId: streamMsg.parentMessageId,
@@ -48,8 +63,12 @@ export function MessageList() {
         orderSeq: streamMsg.orderSeq,
         tokenCount: streamMsg.content.length,
         status: streamMsg.status,
-      }))
+      })),
     ].sort((a, b) => a.orderSeq - b.orderSeq);
+
+
+
+    return result;
   }, [messages, streamingMessages, activeThreadId]);
 
   // 自动滚动到底部的函数
@@ -106,7 +125,10 @@ export function MessageList() {
             {message.role === "user" ? (
               <UserMessage message={message} />
             ) : (
-              <AssistantMessage message={message} />
+              <AssistantMessage
+                message={message}
+                handleRefreshMessage={handleRefreshMessage}
+              />
             )}
           </div>
         ))}

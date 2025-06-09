@@ -150,4 +150,85 @@ export class OpenAIProviderService extends BaseProviderService {
       };
     }
   }
+
+  async reGenerateStreamChat(
+    params: StreamChatParams,
+    regenerateMessageId: string
+  ): Promise<{ success: boolean; error?: string }> {
+    const { tabId, threadId, userMessageId, messages, modelName } = params;
+
+    try {
+      const model = this.openai(modelName);
+
+      Logger.info(`Starting regenerate stream chat for tab ${tabId}, thread ${threadId}, regenerating message ${regenerateMessageId}`);
+
+      // Start streaming
+      const { streamText: streamTextFn } = await import("ai");
+      const result = streamTextFn({
+        model,
+        messages: messages
+          .filter((msg) => msg.role !== "function") // Filter out function messages
+          .map((msg) => ({
+            role: msg.role as "user" | "assistant" | "system",
+            content: msg.content,
+          })),
+      });
+
+      // Send regenerate stream start event
+      this.sendToAllWindows("chat:regenerate-stream-start", {
+        tabId,
+        threadId,
+        userMessageId,
+        regenerateMessageId,
+      });
+
+      let fullContent = "";
+
+      // Process stream
+      for await (const delta of result.textStream) {
+        fullContent += delta;
+
+        // Send delta to renderer
+        this.sendToAllWindows("chat:regenerate-stream-delta", {
+          tabId,
+          threadId,
+          userMessageId,
+          regenerateMessageId,
+          delta,
+          fullContent,
+        });
+      }
+
+      // Send regenerate stream end event
+      const usage = await result.usage;
+      this.sendToAllWindows("chat:regenerate-stream-end", {
+        tabId,
+        threadId,
+        userMessageId,
+        regenerateMessageId,
+        fullContent,
+        usage,
+      });
+
+      Logger.info(`Regenerate stream chat completed for tab ${tabId}`);
+      return { success: true };
+
+    } catch (error) {
+      Logger.error(`Regenerate stream chat error for tab ${tabId}:`, error);
+
+      // Send error event
+      this.sendToAllWindows("chat:regenerate-stream-error", {
+        tabId,
+        threadId,
+        userMessageId,
+        regenerateMessageId,
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error"
+      };
+    }
+  }
 }

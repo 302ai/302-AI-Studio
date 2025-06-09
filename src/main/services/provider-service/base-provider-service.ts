@@ -58,6 +58,12 @@ export abstract class BaseProviderService {
     params: StreamChatParams,
   ): Promise<{ success: boolean; error?: string }>;
 
+  // Abstract method for regenerating streaming chat - to be implemented by each provider
+  abstract reGenerateStreamChat(
+    params: StreamChatParams,
+    regenerateMessageId: string,
+  ): Promise<{ success: boolean; error?: string }>;
+
   // Helper method to send IPC events to all windows
   protected sendToAllWindows(channel: string, data: any) {
     BrowserWindow.getAllWindows().forEach((window) => {

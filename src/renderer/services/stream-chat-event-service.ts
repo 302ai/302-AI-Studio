@@ -1,5 +1,9 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
-import { getMessagesByThreadId, insertMessage } from "@renderer/services/db-services/messages-db-service";
+import {
+  getMessagesByThreadId,
+  insertMessage,
+  updateMessage,
+} from "@renderer/services/db-services/messages-db-service";
 import Logger from "electron-log";
 import { toast } from "sonner";
 
@@ -11,6 +15,7 @@ export interface StreamChatEvent {
   fullContent?: string;
   usage?: any;
   error?: string;
+  regenerateMessageId?: string;
 }
 
 export interface StreamingMessage {
@@ -36,8 +41,11 @@ class StreamChatEventService {
   private onStreamDeltaCallbacks: StreamEventCallback[] = [];
   private onStreamEndCallbacks: StreamEventCallback[] = [];
   private onStreamErrorCallbacks: StreamEventCallback[] = [];
-  private onStreamingStateChangeCallbacks: ((isStreaming: boolean) => void)[] = [];
-  private onStreamingMessagesChangeCallbacks: ((messages: StreamingMessage[]) => void)[] = [];
+  private onStreamingStateChangeCallbacks: ((isStreaming: boolean) => void)[] =
+    [];
+  private onStreamingMessagesChangeCallbacks: ((
+    messages: StreamingMessage[],
+  ) => void)[] = [];
 
   constructor() {
     this.initializeIpcListeners();
@@ -73,7 +81,7 @@ class StreamChatEventService {
       this.notifyStreamingMessagesChange();
 
       // Notify callbacks
-      this.onStreamStartCallbacks.forEach(callback => callback(data));
+      this.onStreamStartCallbacks.forEach((callback) => callback(data));
     };
 
     const handleStreamDelta = (_event: any, data: StreamChatEvent) => {
@@ -89,7 +97,7 @@ class StreamChatEventService {
       }
 
       // Notify callbacks
-      this.onStreamDeltaCallbacks.forEach(callback => callback(data));
+      this.onStreamDeltaCallbacks.forEach((callback) => callback(data));
     };
 
     const handleStreamEnd = async (_event: any, data: StreamChatEvent) => {
@@ -132,7 +140,7 @@ class StreamChatEventService {
       this.notifyStreamingMessagesChange();
 
       // Notify callbacks
-      this.onStreamEndCallbacks.forEach(callback => callback(data));
+      this.onStreamEndCallbacks.forEach((callback) => callback(data));
     };
 
     const handleStreamError = async (_event: any, data: StreamChatEvent) => {
@@ -155,7 +163,8 @@ class StreamChatEventService {
           threadId: data.threadId,
           parentMessageId: data.userMessageId,
           role: "assistant",
-          content: "Sorry, I encountered an error while processing your request. Please try again.",
+          content:
+            "Sorry, I encountered an error while processing your request. Please try again.",
           attachments: null,
           orderSeq: nextOrderSeq,
           tokenCount: 0,
@@ -172,7 +181,133 @@ class StreamChatEventService {
       this.notifyStreamingMessagesChange();
 
       // Notify callbacks
-      this.onStreamErrorCallbacks.forEach(callback => callback(data));
+      this.onStreamErrorCallbacks.forEach((callback) => callback(data));
+    };
+
+    // Regenerate event handlers
+    const handleRegenerateStreamStart = async (
+      _event: any,
+      data: StreamChatEvent,
+    ) => {
+      Logger.info("Regenerate stream started:", data);
+
+      // Only handle events for current tab
+      if (this.activeTabId !== data.tabId) return;
+
+      this.setIsStreaming(true);
+
+      // Get current messages to determine correct orderSeq for the regenerating message
+      const existingMessages = await getMessagesByThreadId(data.threadId);
+      const originalMessage = existingMessages.find(msg => msg.id === data.regenerateMessageId);
+      const orderSeq = originalMessage?.orderSeq || existingMessages.length + 1;
+
+      // Create a temporary streaming message for regeneration
+      const tempMessage: StreamingMessage = {
+        id: `temp-regenerate-${data.regenerateMessageId}`,
+        threadId: data.threadId,
+        parentMessageId: data.userMessageId,
+        role: "assistant",
+        content: "",
+        status: "pending",
+        orderSeq: orderSeq,
+      };
+
+      this.streamingMessages.set(tempMessage.id, tempMessage);
+      this.notifyStreamingMessagesChange();
+
+      // Notify callbacks
+      this.onStreamStartCallbacks.forEach((callback) => callback(data));
+    };
+
+    const handleRegenerateStreamDelta = (
+      _event: any,
+      data: StreamChatEvent,
+    ) => {
+      // Only handle events for current tab
+      if (this.activeTabId !== data.tabId) return;
+
+      const tempId = `temp-regenerate-${data.regenerateMessageId}`;
+      const existing = this.streamingMessages.get(tempId);
+
+      Logger.info("Regenerate delta received:", {
+        tempId,
+        hasExisting: !!existing,
+        deltaLength: data.delta?.length || 0,
+        fullContentLength: data.fullContent?.length || 0,
+        regenerateMessageId: data.regenerateMessageId
+      });
+
+      if (existing && data.fullContent !== undefined) {
+        existing.content = data.fullContent;
+        this.streamingMessages.set(tempId, { ...existing });
+        this.notifyStreamingMessagesChange();
+
+        Logger.info("Updated streaming message content:", {
+          tempId,
+          contentLength: existing.content.length
+        });
+      }
+
+      // Notify callbacks
+      this.onStreamDeltaCallbacks.forEach((callback) => callback(data));
+    };
+
+    const handleRegenerateStreamEnd = async (
+      _event: any,
+      data: StreamChatEvent,
+    ) => {
+      Logger.info("Regenerate stream ended:", data);
+
+      // Only handle events for current tab
+      if (this.activeTabId !== data.tabId) return;
+
+      this.setIsStreaming(false);
+
+      const tempId = `temp-regenerate-${data.regenerateMessageId}`;
+
+      try {
+        if (data.fullContent && data.regenerateMessageId) {
+          // Update the existing message instead of creating a new one
+          await updateMessage(data.regenerateMessageId, (message) => {
+            message.content = data.fullContent || "";
+            message.status = "success";
+            message.tokenCount = data.usage?.totalTokens || (data.fullContent?.length || 0);
+          });
+
+          Logger.info("Regenerated message updated in DB");
+        }
+      } catch (error) {
+        Logger.error("Failed to update regenerated message:", error);
+      }
+
+      // Remove temporary message
+      this.streamingMessages.delete(tempId);
+      this.notifyStreamingMessagesChange();
+
+      // Notify callbacks
+      this.onStreamEndCallbacks.forEach((callback) => callback(data));
+    };
+
+    const handleRegenerateStreamError = async (
+      _event: any,
+      data: StreamChatEvent,
+    ) => {
+      Logger.error("Regenerate stream error:", data);
+
+      // Only handle events for current tab
+      if (this.activeTabId !== data.tabId) return;
+
+      this.setIsStreaming(false);
+      toast.error(`Regenerate error: ${data.error}`);
+
+      const tempId = `temp-regenerate-${data.regenerateMessageId}`;
+
+      // Remove temporary message
+      this.streamingMessages.delete(tempId);
+      this.notifyStreamingMessagesChange();
+
+      // Notify callbacks
+      this.onStreamErrorCallbacks.forEach((callback) => callback(data));
     };
 
     // Setup IPC listeners (only once globally)
@@ -180,6 +315,24 @@ class StreamChatEventService {
     window.electron.ipcRenderer.on("chat:stream-delta", handleStreamDelta);
     window.electron.ipcRenderer.on("chat:stream-end", handleStreamEnd);
     window.electron.ipcRenderer.on("chat:stream-error", handleStreamError);
+
+    // Setup regenerate IPC listeners
+    window.electron.ipcRenderer.on(
+      "chat:regenerate-stream-start",
+      handleRegenerateStreamStart,
+    );
+    window.electron.ipcRenderer.on(
+      "chat:regenerate-stream-delta",
+      handleRegenerateStreamDelta,
+    );
+    window.electron.ipcRenderer.on(
+      "chat:regenerate-stream-end",
+      handleRegenerateStreamEnd,
+    );
+    window.electron.ipcRenderer.on(
+      "chat:regenerate-stream-error",
+      handleRegenerateStreamError,
+    );
 
     this.initialized = true;
     Logger.info("Stream chat event service initialized");
@@ -191,12 +344,16 @@ class StreamChatEventService {
 
   private setIsStreaming(isStreaming: boolean) {
     this.isStreaming = isStreaming;
-    this.onStreamingStateChangeCallbacks.forEach(callback => callback(isStreaming));
+    this.onStreamingStateChangeCallbacks.forEach((callback) =>
+      callback(isStreaming),
+    );
   }
 
   private notifyStreamingMessagesChange() {
     const messages = Array.from(this.streamingMessages.values());
-    this.onStreamingMessagesChangeCallbacks.forEach(callback => callback(messages));
+    this.onStreamingMessagesChangeCallbacks.forEach((callback) =>
+      callback(messages),
+    );
   }
 
   // Public API for components to subscribe to events

@@ -96,6 +96,21 @@ export class ProviderService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async reGenerateStreamChat(
+    _event: Electron.IpcMainEvent,
+    params: StreamChatParams & { provider: Provider, regenerateMessageId: string }
+  ): Promise<{ success: boolean; error?: string }> {
+    const { provider, ...streamParams } = params;
+    const { regenerateMessageId } = params;
+    const providerInst = this.createProviderInst(provider);
+    if (!providerInst) {
+      return { success: false, error: "Failed to create provider instance" };
+    }
+    
+    return await providerInst.reGenerateStreamChat(streamParams, regenerateMessageId);
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async stopStreamChat(
     _event: Electron.IpcMainEvent,
     params: { tabId: string }

@@ -20,7 +20,6 @@ export function ChatInput({ className }: ChatInputProps) {
   const { attachments, addAttachments, removeAttachment, clearAttachments } =
     useAttachments();
   const [input, setInput] = useState("");
-  const [isSending, setIsSending] = useState(false);
 
   const {
     selectedModelId,
@@ -28,7 +27,7 @@ export function ChatInput({ className }: ChatInputProps) {
     handleSendMessage: sendMessage,
   } = useToolBar();
 
-  const canSendMessage = input.trim() && !isSending;
+  const canSendMessage = input.trim();
 
   const handleInputChange = (value: string) => {
     setInput(value);
@@ -39,44 +38,26 @@ export function ChatInput({ className }: ChatInputProps) {
     clearAttachments();
   };
 
+  // Send message function that will be passed to ToolBar
   const handleSendMessage = async () => {
-    if (isSending || !input.trim()) {
-      return;
-    }
-
-    // Store current input and attachments before clearing
-    const currentInput = input;
-    const currentAttachments = attachments;
-
     try {
-      setIsSending(true);
-
       if (!selectedModelId) {
         toast.error(t("lack-model"));
         return;
       }
-
+      await sendMessage(input, attachments);
       clearInput();
-
-      // Send message with stored values
-      await sendMessage(currentInput, currentAttachments);
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error("Failed to send message");
-      // Restore input on error
-      setInput(currentInput);
-      // Note: attachments are already cleared, but that's probably fine for error cases
-    } finally {
-      setIsSending(false);
     }
   };
 
+  // Handle keyboard events
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      if (!isSending && input.trim()) {
-        handleSendMessage();
-      }
+      handleSendMessage();
     }
   };
 

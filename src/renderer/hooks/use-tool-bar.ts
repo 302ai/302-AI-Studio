@@ -24,7 +24,7 @@ export function useToolBar() {
   });
   const { activeThreadId, setActiveThreadId } = useActiveThread();
   const { activeTab } = useActiveTab();
-  const { startStreamChat } = useStreamChat();
+  const { startStreamChat, reGenerateStreamChat } = useStreamChat();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
   const { results: tabs } = useQuery(triplitClient, tabsQuery);
@@ -198,10 +198,72 @@ export function useToolBar() {
     }
   }, [activeThreadId, threads]);
 
+
+  const handleRefreshMessage = async (messageId: string) => {
+       // Find the selected model and its provider
+       const selectedModel = models?.find(
+        (model) => model.id === selectedModelId,
+      );
+      if (!selectedModel) {
+        throw new Error("Selected model not found");
+      }
+
+      const provider = providers?.find(
+        (p) => p.id === selectedModel.providerId,
+      );
+      if (!provider) {
+        throw new Error("Provider not found for selected model");
+      }
+
+    const existingMessages = await getMessagesByThreadId(activeThreadId ?? "");
+    const messageToRefresh = existingMessages.find(
+      (m) => m.id === messageId,
+    );
+    if (!messageToRefresh) {
+      throw new Error("Message not found");
+    }
+    const context = existingMessages.slice(
+      0,
+      existingMessages.findIndex((m) => m.id === messageToRefresh.id),
+    );
+    // 重新生成AI消息
+    const conversationMessages = [
+      ...context.map((msg) => ({
+        role: msg.role as "user" | "assistant" | "system" | "function",
+        content: msg.content,
+        attachments: msg.attachments,
+      })),
+    ];
+
+    // Find the last user message before the message to refresh
+    const lastUserMessage = context.reverse().find(msg => msg.role === "user");
+    const userMessageId = lastUserMessage?.id || "";
+
+
+    // Use regenerate stream chat instead of regular stream chat
+    try {
+      const data = await reGenerateStreamChat(
+        messageId, // regenerateMessageId
+        userMessageId, // userMessageId - the last user message that triggered this response
+        conversationMessages,
+        provider,
+        selectedModel.name, // Use model name for the API call
+      );
+      console.log("Regenerate data", data);
+
+    } catch (streamError) {
+      console.error("Failed to regenerate streaming chat:", streamError);
+      toast.error("Failed to regenerate AI response");
+      // Error handling is now done in the streaming hook
+    }
+   
+  };
+
   return {
     selectedModelId,
     handleModelSelect,
     handleSendMessage,
     createThread,
+    handleRefreshMessage,
   };
 }

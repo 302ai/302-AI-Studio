@@ -89,6 +89,46 @@ export function useStreamChat() {
     [activeTab?.id, activeThreadId],
   );
 
+  const reGenerateStreamChat = useCallback(
+    async (
+      regenerateMessageId: string,
+      userMessageId: string,
+      messages: Array<{
+        role: "user" | "assistant" | "system" | "function";
+        content: string;
+        attachments?: string | null;
+      }>,
+      provider: Provider,
+      modelId: string,
+    ) => {
+      if (!activeTab?.id || !activeThreadId) {
+        throw new Error("No active tab or thread");
+      }
+
+      try {
+        const result = await window.service.providerService.reGenerateStreamChat({
+          tabId: activeTab.id,
+          threadId: activeThreadId,
+          userMessageId,
+          messages,
+          provider,
+          modelName: modelId,
+          regenerateMessageId,
+        });
+
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        return result;
+      } catch (error) {
+        Logger.error("Failed to regenerate stream chat:", error);
+        throw error;
+      }
+    },
+    [activeTab?.id, activeThreadId],
+  );
+
   const stopStreamChat = useCallback(async () => {
     if (!activeTab?.id) {
       return;
@@ -107,6 +147,7 @@ export function useStreamChat() {
     streamingMessages,
     isStreaming,
     startStreamChat,
+    reGenerateStreamChat,
     stopStreamChat,
   };
 }

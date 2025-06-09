@@ -9,9 +9,10 @@ import { MessageAttachments } from "./message-attachments";
 
 interface AssistantMessageProps {
   message: Message;
+  handleRefreshMessage: (messageId: string) => Promise<void>;
 }
 
-export function AssistantMessage({ message }: AssistantMessageProps) {
+export function AssistantMessage({ message, handleRefreshMessage }: AssistantMessageProps) {
   const [copied, setCopied] = useState(false);
 
   const attachments = useMemo(() => {
@@ -34,8 +35,7 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
   };
 
   const handleRefresh = () => {
-    // TODO: 实现重新生成消息的逻辑
-    console.log("重新生成消息:", message.id);
+    handleRefreshMessage(message.id);
   };
 
   return (

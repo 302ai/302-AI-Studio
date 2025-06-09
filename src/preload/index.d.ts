@@ -38,6 +38,19 @@ declare global {
           provider: Provider;
           modelName: string;
         }) => Promise<{ success: boolean; error?: string }>;
+        reGenerateStreamChat: (params: {
+          tabId: string;
+          threadId: string;
+          userMessageId: string;
+          messages: Array<{
+            role: "user" | "assistant" | "system" | "function";
+            content: string;
+            attachments?: string | null;
+          }>;
+          provider: Provider;
+          modelName: string;
+          regenerateMessageId: string;
+        }) => Promise<{ success: boolean; error?: string }>;
         stopStreamChat: (params: { tabId: string }) => Promise<{ success: boolean }>;
       };
       triplitService: {
