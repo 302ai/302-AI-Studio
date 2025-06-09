@@ -150,14 +150,14 @@ export function useThread() {
 
   useEffect(() => {
     /**
-     * Handles the tab select event
+     * * Handles the tab select event
      */
     const handleTabSelect = async (event: { tabId: string }) => {
       const tab = await getTab(event.tabId);
       await setActiveThreadId(tab?.threadId ?? "");
     };
     /**
-     * Handles the tab close event
+     * * Handles the tab close event
      */
     const handleTabClose = async (event: {
       tabId: string;
@@ -169,7 +169,7 @@ export function useThread() {
       await setActiveThreadId(thread ? thread.id : "");
     };
     /**
-     * Handles the tab close all event
+     * * Handles the tab close all event
      */
     const handleTabCloseAll = async () => {
       await clearActiveThread();

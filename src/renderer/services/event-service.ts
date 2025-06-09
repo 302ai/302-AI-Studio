@@ -12,7 +12,6 @@ export enum EventNames {
   TAB_CLOSE = "tab:close",
   TAB_CLOSE_ALL = "tab:close-all",
   TAB_SELECT = "tab:select",
-  TAB_ADD = "tab:add",
 }
 
 type Events = {
@@ -45,7 +44,7 @@ export const emitter = {
   ...mittInstance,
   on<Key extends keyof Events>(
     type: Key,
-    handler: (event: Events[Key]) => void
+    handler: (event: Events[Key]) => void,
   ): () => void {
     mittInstance.on(type, handler);
     return () => mittInstance.off(type, handler);

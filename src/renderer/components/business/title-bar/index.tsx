@@ -13,6 +13,7 @@ import {
 } from "@renderer/components/ui/tooltip";
 import { isMac } from "@renderer/config/constant";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
+import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { cn } from "@renderer/lib/utils";
 import { insertTab } from "@renderer/services/db-services/tabs-db-service";
 import {
@@ -33,6 +34,7 @@ export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
   const { setActiveTabId } = useActiveTab();
+  const { setActiveThreadId } = useActiveThread();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -43,7 +45,8 @@ export function BasicTitleBar() {
       title: type === "thread" ? t("thread.new-thread-title") : t("settings.tab-title"),
       type,
     });
-    await setActiveTabId(newTab.id);
+    const promises = [setActiveTabId(newTab.id), setActiveThreadId('')];
+    await Promise.all(promises);
   };
 
   const handleSearchThread = () => {
