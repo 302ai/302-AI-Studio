@@ -96,7 +96,7 @@ export function useToolBar() {
         });
 
         if (thread) {
-          emitter.emit(EventNames.THREAD_SELECT, { thread: thread });
+          emitter.emit(EventNames.THREAD_ADD, { thread: thread });
           currentActiveThreadId = thread.id;
           console.log("current active thread id: ", currentActiveThreadId);
         }

@@ -1,5 +1,8 @@
 import type { DropResult } from "@hello-pangea/dnd";
-import { insertTab, moveTab, updateTab } from "@renderer/services/db-services/tabs-db-service";
+import {
+  insertTab,
+  moveTab,
+} from "@renderer/services/db-services/tabs-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { Tab, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -93,7 +96,9 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
    */
   useEffect(() => {
     if (activeTab) {
-      navigate(activeTab.type === "setting" ? "/settings/general-settings" : "/");
+      navigate(
+        activeTab.type === "setting" ? "/settings/general-settings" : "/",
+      );
     }
   }, [activeTab, navigate]);
 
@@ -126,9 +131,6 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
       const existingTab = tabs.find((tab) => tab.threadId === id);
 
       if (existingTab) {
-        await updateTab(existingTab.id, {
-          threadId: id,
-        });
         await setActiveTabId(existingTab.id);
       } else {
         const newTab = await insertTab({ title, threadId: id, type: "thread" });
@@ -136,8 +138,19 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
       }
     };
 
-    const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadSelect);
-    return () => unsub();
+    const handleThreadAdd = async (event: { thread: Thread }) => {
+      const { id, title } = event.thread;
+
+      const newTab = await insertTab({ title, threadId: id, type: "thread" });
+      await setActiveTabId(newTab.id);
+    };
+
+    const unsub = [
+      emitter.on(EventNames.THREAD_SELECT, handleThreadSelect),
+      emitter.on(EventNames.THREAD_ADD, handleThreadAdd),
+    ];
+
+    return () => unsub.forEach((unsub) => unsub());
   }, [setActiveTabId, tabs]);
 
   return {

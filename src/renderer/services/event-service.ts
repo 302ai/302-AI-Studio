@@ -6,11 +6,13 @@ export enum EventNames {
   THREAD_RENAME = "thread:rename",
   THREAD_DELETE = "thread:delete",
   THREAD_SELECT = "thread:select",
+  THREAD_ADD = "thread:add",
 
   // * Tab events
   TAB_CLOSE = "tab:close",
   TAB_CLOSE_ALL = "tab:close-all",
   TAB_SELECT = "tab:select",
+  TAB_ADD = "tab:add",
 }
 
 type Events = {
@@ -22,6 +24,9 @@ type Events = {
     threadId: string;
   };
   [EventNames.THREAD_SELECT]: {
+    thread: Thread;
+  };
+  [EventNames.THREAD_ADD]: {
     thread: Thread;
   };
   [EventNames.TAB_SELECT]: {
