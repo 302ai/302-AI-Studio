@@ -115,7 +115,8 @@
       "last30Days": "Last 30 Days",
       "last7Days": "Last 7 Days",
       "today": "Today",
-      "yesterday": "Yesterday"
+      "yesterday": "Yesterday",
+      "justNow": "Just Now"
     }
   },
   "tab-bar": {

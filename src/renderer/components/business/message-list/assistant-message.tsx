@@ -3,7 +3,7 @@ import { formatTimeAgo } from "@renderer/lib/utils";
 import type { Message } from "@shared/triplit/types";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import { Bot, Copy, RefreshCcw } from "lucide-react";
+import { Bot, Check, Copy, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { MessageAttachments } from "./message-attachments";
 
@@ -104,8 +104,9 @@ export function AssistantMessage({ message, handleRefreshMessage }: AssistantMes
                 className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
                 title="复制"
               >
-                <Copy className="h-3 w-3" />
-                {copied ? "已复制" : "复制"}
+                {
+                  copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />
+                }
               </button>
 
               <button

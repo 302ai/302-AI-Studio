@@ -115,7 +115,8 @@
       "last30Days": "过去30天",
       "last7Days": "过去7天",
       "today": "今天",
-      "yesterday": "昨天"
+      "yesterday": "昨天",
+      "justNow": "刚刚"
     }
   },
   "tab-bar": {
