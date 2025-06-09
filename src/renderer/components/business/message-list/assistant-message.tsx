@@ -1,6 +1,8 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import { formatTimeAgo } from "@renderer/lib/utils";
 import type { Message } from "@shared/triplit/types";
 import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
 import { Bot, Copy, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { MessageAttachments } from "./message-attachments";
@@ -69,9 +71,18 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
         {message.status === "pending" && (
           <div className="flex items-center gap-1 text-muted-foreground text-xs">
             <div className="flex gap-1">
-              <div className="h-2 w-2 animate-pulse rounded-full bg-current" style={{ animationDelay: '0ms' }} />
-              <div className="h-2 w-2 animate-pulse rounded-full bg-current" style={{ animationDelay: '150ms' }} />
-              <div className="h-2 w-2 animate-pulse rounded-full bg-current" style={{ animationDelay: '300ms' }} />
+              <div
+                className="h-2 w-2 animate-pulse rounded-full bg-current"
+                style={{ animationDelay: "0ms" }}
+              />
+              <div
+                className="h-2 w-2 animate-pulse rounded-full bg-current"
+                style={{ animationDelay: "150ms" }}
+              />
+              <div
+                className="h-2 w-2 animate-pulse rounded-full bg-current"
+                style={{ animationDelay: "300ms" }}
+              />
             </div>
             AI正在思考...
           </div>
@@ -106,7 +117,9 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
                 <RefreshCcw className="h-3 w-3" />
               </button>
             </div>
-            <div className="text-muted-foreground text-xs">3秒前</div>
+            <div className="text-muted-foreground text-xs">
+              {formatTimeAgo(message.createdAt.toISOString(), zhCN)}
+            </div>
           </div>
         )}
       </div>
