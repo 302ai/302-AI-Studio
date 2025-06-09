@@ -18,8 +18,8 @@ export function useDragableTab({ id }: HookParams) {
 
   const handleTabClose = useCallback(async () => {
     try {
-      const nextActiveId = await deleteTab(id);
-      emitter.emit(EventNames.TAB_CLOSE, { tabId: id, nextActiveId });
+      const nextActiveTabId = await deleteTab(id);
+      emitter.emit(EventNames.TAB_CLOSE, { tabId: id, nextActiveTabId });
     } catch (error) {
       console.error("Error closing tab:", error);
     }

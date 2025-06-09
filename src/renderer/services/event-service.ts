@@ -29,7 +29,7 @@ type Events = {
   };
   [EventNames.TAB_CLOSE]: {
     tabId: string;
-    nextActiveId: string;
+    nextActiveTabId: string;
   };
   [EventNames.TAB_CLOSE_ALL]: null;
 };

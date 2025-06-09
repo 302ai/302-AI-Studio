@@ -161,9 +161,11 @@ export function useThread() {
      */
     const handleTabClose = async (event: {
       tabId: string;
-      nextActiveId: string;
+      nextActiveTabId: string;
     }) => {
-      const thread = await getThread(event.nextActiveId);
+      const nextActiveTab = await getTab(event.nextActiveTabId);
+      const thread = await getThread(nextActiveTab?.threadId ?? "");
+
       await setActiveThreadId(thread ? thread.id : "");
     };
     /**
