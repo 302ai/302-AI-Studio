@@ -6,6 +6,7 @@ import { enUS, ja, zhCN } from "date-fns/locale";
 import i18next from "i18next";
 import { Bot, Check, Copy, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { MessageAttachments } from "./message-attachments";
 
 const localeMap = {
@@ -25,8 +26,9 @@ export function AssistantMessage({
 }: AssistantMessageProps) {
   const [copied, setCopied] = useState(false);
   const currentLanguage = i18next.language;
-  console.log(currentLanguage);
-
+  const { t } = useTranslation("translation", {
+    keyPrefix: "message",
+  });
   const attachments = useMemo(() => {
     if (!message.attachments) return [];
     try {
@@ -114,7 +116,7 @@ export function AssistantMessage({
                 type="button"
                 onClick={handleCopy}
                 className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
-                title="复制"
+                title={t("copy")}
               >
                 {copied ? (
                   <Check className="h-3 w-3" />
@@ -127,7 +129,7 @@ export function AssistantMessage({
                 type="button"
                 onClick={handleRefresh}
                 className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
-                title="重新生成"
+                title={t("refresh")}
               >
                 <RefreshCcw className="h-3 w-3" />
               </button>

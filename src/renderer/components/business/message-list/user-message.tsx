@@ -32,7 +32,7 @@ export function UserMessage({ message }: UserMessageProps) {
         </div>
 
         {/* 聊天气泡 - 包含消息内容和附件 */}
-        <div className="rounded-2xl rounded-br-sm bg-primary px-4 py-3 text-primary-foreground">
+        <div className="rounded-2xl bg-primary px-4 py-3 text-primary-foreground">
           {/* 附件 - 在消息内容之前显示 */}
           {attachments.length > 0 && (
             <div className="mb-3">
