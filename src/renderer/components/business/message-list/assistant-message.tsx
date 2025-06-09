@@ -2,18 +2,30 @@ import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { formatTimeAgo } from "@renderer/lib/utils";
 import type { Message } from "@shared/triplit/types";
 import { format } from "date-fns";
-import { zhCN } from "date-fns/locale";
+import { enUS, ja, zhCN } from "date-fns/locale";
+import i18next from "i18next";
 import { Bot, Check, Copy, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { MessageAttachments } from "./message-attachments";
+
+const localeMap = {
+  zh: zhCN,
+  en: enUS,
+  ja: ja,
+};
 
 interface AssistantMessageProps {
   message: Message;
   handleRefreshMessage: (messageId: string) => Promise<void>;
 }
 
-export function AssistantMessage({ message, handleRefreshMessage }: AssistantMessageProps) {
+export function AssistantMessage({
+  message,
+  handleRefreshMessage,
+}: AssistantMessageProps) {
   const [copied, setCopied] = useState(false);
+  const currentLanguage = i18next.language;
+  console.log(currentLanguage);
 
   const attachments = useMemo(() => {
     if (!message.attachments) return [];
@@ -104,9 +116,11 @@ export function AssistantMessage({ message, handleRefreshMessage }: AssistantMes
                 className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
                 title="复制"
               >
-                {
-                  copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />
-                }
+                {copied ? (
+                  <Check className="h-3 w-3" />
+                ) : (
+                  <Copy className="h-3 w-3" />
+                )}
               </button>
 
               <button
@@ -119,7 +133,10 @@ export function AssistantMessage({ message, handleRefreshMessage }: AssistantMes
               </button>
             </div>
             <div className="text-muted-foreground text-xs">
-              {formatTimeAgo(message.createdAt.toISOString(), zhCN)}
+              {formatTimeAgo(
+                message.createdAt.toISOString(),
+                localeMap[currentLanguage],
+              )}
             </div>
           </div>
         )}
