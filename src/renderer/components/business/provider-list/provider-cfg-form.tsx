@@ -117,7 +117,7 @@ export function ProviderCfgForm({
       <div className="flex flex-row items-center gap-2">
         <div className="flex-1">
           <div className="mb-[calc(var(--spacing)*1.5)] flex items-center gap-x-2">
-            <Label className="font-medium text-foreground text-sm">
+            <Label className="font-medium text-fg text-sm">
               API Key
             </Label>
             <Badge intent={getBadgeIntent(keyValidationStatus)} shape="square">

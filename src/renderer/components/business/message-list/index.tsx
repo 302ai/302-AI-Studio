@@ -4,16 +4,17 @@ import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { triplitClient } from "@shared/triplit/client";
 import type { Message } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { AssistantMessage } from "./assistant-message";
 import { UserMessage } from "./user-message";
 
 export function MessageList() {
   const { activeThreadId } = useActiveThread();
-  const { streamingMessages } = useStreamChat();
+  const { streamingMessages, isStreaming } = useStreamChat();
+  const { handleRefreshMessage } = useToolBar();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { handleRefreshMessage } = useToolBar();
 
   // 查询当前线程的消息
   const messagesQuery = useMemo(() => {
@@ -39,14 +40,13 @@ export function MessageList() {
     // Create a map to track which messages are being regenerated
     const regeneratingMessageIds = new Set(
       streamingMessagesForThread
-        .filter(msg => msg.id.startsWith('temp-regenerate-'))
-        .map(msg => msg.id.replace('temp-regenerate-', ''))
+        .filter((msg) => msg.id.startsWith("temp-regenerate-"))
+        .map((msg) => msg.id.replace("temp-regenerate-", "")),
     );
-
 
     // Filter out database messages that are currently being regenerated
     const filteredDbMessages = dbMessages.filter(
-      msg => !regeneratingMessageIds.has(msg.id)
+      (msg) => !regeneratingMessageIds.has(msg.id),
     );
 
     // Combine filtered database messages with streaming messages
@@ -66,18 +66,21 @@ export function MessageList() {
       })),
     ].sort((a, b) => a.orderSeq - b.orderSeq);
 
-
-
     return result;
   }, [messages, streamingMessages, activeThreadId]);
 
   // 自动滚动到底部的函数
-  const scrollToBottom = useCallback(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
+  const scrollToBottom = useCallback((instant = false) => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      if (instant) {
+        container.scrollTop = container.scrollHeight;
+      } else {
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: "smooth"
+        });
+      }
     }
   }, []);
 
@@ -87,30 +90,33 @@ export function MessageList() {
 
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current;
-    // 如果用户在距离底部50px以内，就认为应该自动滚动
-    return scrollHeight - scrollTop - clientHeight < 50;
+    // 如果用户在距离底部100px以内，就认为应该自动滚动
+    return scrollHeight - scrollTop - clientHeight < 100;
   }, []);
 
-  // 当消息列表发生变化时，自动滚动到底部
-  useEffect(() => {
+  // 监听消息列表变化（包括流式消息内容变化），实时滚动到底部
+  useLayoutEffect(() => {
     if (messagesList.length > 0) {
-      // 使用 setTimeout 确保 DOM 更新完成后再滚动
-      const timeoutId = setTimeout(() => {
-        if (shouldAutoScroll()) {
-          scrollToBottom();
-        }
-      }, 100);
+      // 使用双重 requestAnimationFrame 确保 DOM 完全更新后再滚动
+      const rafId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (shouldAutoScroll()) {
+            scrollToBottom(isStreaming); // 流式输出时使用瞬时滚动
+          }
+        });
+      });
 
-      return () => clearTimeout(timeoutId);
+      return () => cancelAnimationFrame(rafId);
     }
 
     return undefined;
-  }, [messagesList.length, shouldAutoScroll, scrollToBottom]);
+  }, [messagesList, isStreaming, shouldAutoScroll, scrollToBottom]);
 
-  // 当切换线程时，立即滚动到底部
   useEffect(() => {
     if (activeThreadId && messagesList.length > 0) {
-      setTimeout(scrollToBottom, 150);
+      setTimeout(() => {
+        scrollToBottom(false);
+      }, 100);
     }
   }, [activeThreadId, messagesList.length, scrollToBottom]);
 
