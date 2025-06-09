@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
-
 import {
   type StreamingMessage,
   streamChatEventService,
@@ -8,11 +7,9 @@ import type { Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
 import { useCallback, useEffect, useState } from "react";
 import { useActiveTab } from "./use-active-tab";
-import { useActiveThread } from "./use-active-thread";
 
 export function useStreamChat() {
-  const { activeTab } = useActiveTab();
-  const { activeThreadId } = useActiveThread();
+  const { activeTabId } = useActiveTab();
   const [streamingMessages, setStreamingMessages] = useState<
     StreamingMessage[]
   >([]);
@@ -20,8 +17,8 @@ export function useStreamChat() {
 
   // Set active tab for the global service
   useEffect(() => {
-    streamChatEventService.setActiveTab(activeTab?.id || null);
-  }, [activeTab?.id]);
+    streamChatEventService.setActiveTab(activeTabId || null);
+  }, [activeTabId]);
 
   // Subscribe to streaming messages changes
   useEffect(() => {
@@ -53,6 +50,8 @@ export function useStreamChat() {
 
   const startStreamChat = useCallback(
     async (
+      tabId: string,
+      threadId: string,
       userMessageId: string,
       messages: Array<{
         role: "user" | "assistant" | "system" | "function";
@@ -62,14 +61,10 @@ export function useStreamChat() {
       provider: Provider,
       modelId: string,
     ) => {
-      if (!activeTab?.id || !activeThreadId) {
-        throw new Error("No active tab or thread");
-      }
-
       try {
         const result = await window.service.providerService.startStreamChat({
-          tabId: activeTab.id,
-          threadId: activeThreadId,
+          tabId,
+          threadId,
           userMessageId,
           messages,
           provider,
@@ -86,22 +81,22 @@ export function useStreamChat() {
         throw error;
       }
     },
-    [activeTab?.id, activeThreadId],
+    [],
   );
 
   const stopStreamChat = useCallback(async () => {
-    if (!activeTab?.id) {
+    if (!activeTabId) {
       return;
     }
 
     try {
       await window.service.providerService.stopStreamChat({
-        tabId: activeTab.id,
+        tabId: activeTabId,
       });
     } catch (error) {
       Logger.error("Failed to stop stream chat:", error);
     }
-  }, [activeTab?.id]);
+  }, [activeTabId]);
 
   return {
     streamingMessages,
