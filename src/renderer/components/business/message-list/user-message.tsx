@@ -23,13 +23,13 @@ export function UserMessage({ message }: UserMessageProps) {
   }, [message.attachments]);
 
   return (
-    <div className="w-full px-6 py-6">
+    <div className="group w-full px-6 py-6">
       <div className="flex w-full justify-end">
         <div className="w-full max-w-4xl">
           {/* 消息头部 - 右对齐 */}
           <div className="mb-4 flex items-center justify-end gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-muted-fg text-xs">
+              <span className="text-muted-fg text-xs opacity-0 transition-opacity group-hover:opacity-100">
                 {format(new Date(message.createdAt), "HH:mm")}
               </span>
               <span className="font-medium text-sm">You</span>
@@ -75,7 +75,7 @@ export function UserMessage({ message }: UserMessageProps) {
               </div>
             )}
             {message.status === "success" && (
-              <div className="text-muted-fg text-xs">
+              <div className="text-muted-fg text-xs opacity-0 transition-opacity group-hover:opacity-100">
                 {formatTimeAgo(message.createdAt.toISOString(), zhCN)}
               </div>
             )}

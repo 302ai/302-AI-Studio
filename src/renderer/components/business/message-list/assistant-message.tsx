@@ -1,4 +1,6 @@
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
+import { ButtonWithTooltip } from "@renderer/components/ui/button-with-tooltip";
+import { Spinner } from "@renderer/components/ui/loader-ldrs";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { formatTimeAgo } from "@renderer/lib/utils";
 import type { Message } from "@shared/triplit/types";
@@ -54,7 +56,7 @@ export function AssistantMessage({
   };
 
   return (
-    <div className="w-full px-6 py-6">
+    <div className="group w-full px-6 py-6">
       <div className="flex w-full justify-start">
         <div className="w-full">
           {/* 消息头部 - 左对齐 */}
@@ -64,7 +66,7 @@ export function AssistantMessage({
             </div>
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">AI Assistant</span>
-              <span className="text-muted-fg text-xs">
+              <span className="text-muted-fg text-xs opacity-0 transition-opacity group-hover:opacity-100">
                 {format(new Date(message.createdAt), "HH:mm")}
               </span>
             </div>
@@ -92,21 +94,10 @@ export function AssistantMessage({
           {/* 消息状态 */}
           {message.status === "pending" && (
             <div className="mt-3 flex items-center gap-2 text-muted-fg text-sm">
-              <div className="flex gap-1">
-                <div
-                  className="h-2 w-2 animate-pulse rounded-full bg-current"
-                  style={{ animationDelay: "0ms" }}
-                />
-                <div
-                  className="h-2 w-2 animate-pulse rounded-full bg-current"
-                  style={{ animationDelay: "150ms" }}
-                />
-                <div
-                  className="h-2 w-2 animate-pulse rounded-full bg-current"
-                  style={{ animationDelay: "300ms" }}
-                />
+              <div className="flex gap-x-4">
+                <Spinner />
+                AI正在思考...
               </div>
-              AI正在思考...
             </div>
           )}
 
@@ -117,40 +108,47 @@ export function AssistantMessage({
             </div>
           )}
 
-        {/* 操作按钮和时间 - 同一行 */}
-        {message.status === "success" && (
-          <div className="mt-1 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-fg text-xs transition-colors hover:bg-muted hover:text-fg"
-                title={t("copy")}
-              >
-                {copied ? (
-                  <Check className="h-3 w-3" />
-                ) : (
-                  <Copy className="h-3 w-3" />
-                )}
-              </button>
+          {/* 操作按钮和时间 - 同一行，hover时显示 */}
+          {message.status === "success" && (
+            <div className="mt-1 flex items-center justify-between opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="flex items-center gap-2">
+                <ButtonWithTooltip
+                  type="button"
+                  onClick={handleCopy}
+                  title={t("copy")}
+                  showArrow
+                  size="extra-small"
+                  intent="plain"
+                  className="flex cursor-pointer items-center gap-1 text-muted-fg text-xs transition-colors hover:bg-muted hover:text-fg"
+                >
+                  {copied ? (
+                    <Check className="h-3 w-3" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
+                </ButtonWithTooltip>
 
-              <button
-                type="button"
-                onClick={handleRefresh}
-                className="flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-muted-fg text-xs transition-colors hover:bg-muted hover:text-fg"
-                title={t("refresh")}
-              >
-                <RefreshCcw className="h-3 w-3" />
-              </button>
+                <ButtonWithTooltip
+                  type="button"
+                  onClick={handleRefresh}
+                  className="flex cursor-pointer items-center gap-1 text-muted-fg text-xs transition-colors hover:bg-muted hover:text-fg"
+                  title={t("refresh")}
+                  showArrow
+                  size="extra-small"
+                  intent="plain"
+                >
+                  <RefreshCcw className="h-3 w-3" />
+                </ButtonWithTooltip>
+
+                <div className="ml-2 text-muted-fg text-xs">
+                  {formatTimeAgo(
+                    message.createdAt.toISOString(),
+                    localeMap[currentLanguage],
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="text-muted-fg text-xs">
-              {formatTimeAgo(
-                message.createdAt.toISOString(),
-                localeMap[currentLanguage],
-              )}
-            </div>
-          </div>
-        )}
+          )}
         </div>
       </div>
     </div>
