@@ -1,15 +1,14 @@
-import { Tailspin } from 'ldrs/react';
-import 'ldrs/react/Tailspin.css';
+import { DotPulse } from 'ldrs/react';
+import 'ldrs/react/DotPulse.css';
 
-const Spinner = () => {
+const PulseLoader = () => {
   return (
-    <Tailspin
-      size="20"
+    <DotPulse
+      size="30"
       speed="0.9"
       color="white"
-      stroke={3}
     />
   );
 };
 
-export { Spinner };
+export { PulseLoader };

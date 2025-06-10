@@ -1,6 +1,6 @@
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
 import { ButtonWithTooltip } from "@renderer/components/ui/button-with-tooltip";
-import { Spinner } from "@renderer/components/ui/loader-ldrs";
+import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { formatTimeAgo } from "@renderer/lib/utils";
 import type { Message } from "@shared/triplit/types";
@@ -94,8 +94,8 @@ export function AssistantMessage({
           {/* 消息状态 */}
           {message.status === "pending" && (
             <div className="mt-3 flex items-center gap-2 text-muted-fg text-sm">
-              <div className="flex gap-x-4">
-                <Spinner />
+              <div className="flex items-center gap-x-4">
+                <PulseLoader />
                 AI正在思考...
               </div>
             </div>
