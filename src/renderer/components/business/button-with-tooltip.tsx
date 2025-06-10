@@ -18,10 +18,9 @@ const ButtonWithTooltip = ({
   return (
     <Tooltip delay={tooltipDelay}>
       <Button {...buttonProps} />
-      <TooltipContent 
+      <TooltipContent
         placement={tooltipPlacement}
         showArrow={showArrow}
-        className="text-xs"
       >
         {title}
       </TooltipContent>

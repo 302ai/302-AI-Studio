@@ -5,6 +5,7 @@ import mermaid from "mermaid";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { bundledLanguages, codeToTokens } from "shiki";
+import { CopyButton } from "../copy-button";
 
 interface CodeBlockProps {
   children: React.ReactNode;
@@ -28,7 +29,7 @@ export function MarkdownCodeBlock({
   }
 
   const preClass = cn(
-    "overflow-x-scroll rounded-md border bg-background/50 p-4 font-mono text-sm [scrollbar-width:none]",
+    "overflow-x-scroll rounded-xl bg-muted p-3 font-mono text-sm [scrollbar-width:none]",
     className,
   );
 
@@ -44,6 +45,10 @@ export function MarkdownCodeBlock({
         <HighlightedPre language={language} className={preClass}>
           {code}
         </HighlightedPre>
+
+        <div className="invisible absolute top-2 right-2 flex space-x-1 opacity-0 transition-all duration-200 group-hover/code:visible group-hover/code:opacity-100">
+          <CopyButton content={code} />
+        </div>
       </Suspense>
     </div>
   );
@@ -122,7 +127,7 @@ const MermaidWrapper = ({ children }: { children: string }) => {
   if (!svg && !error) {
     return (
       <div ref={elementRef} className="text-muted-fg">
-        {t("generatingDiagram")}
+        {t("generating-diagram")}
       </div>
     );
   }
@@ -132,7 +137,7 @@ const MermaidWrapper = ({ children }: { children: string }) => {
       error.includes("Syntax error") || error.includes("Invalid");
     return (
       <div ref={elementRef} className="text-muted-fg">
-        {isIncomplete ? t("waitingForDiagram") : t("diagramSyntaxError")}
+        {isIncomplete ? t("waiting-for-diagram") : t("diagram-syntax-error")}
       </div>
     );
   }
@@ -140,6 +145,9 @@ const MermaidWrapper = ({ children }: { children: string }) => {
   return (
     <div className="group/mermaid relative my-4">
       <div ref={elementRef} className="flex justify-center overflow-x-auto" />
+      <div className="invisible absolute top-2 right-2 flex space-x-1 p-1 opacity-0 transition-all duration-200 group-hover/mermaid:visible group-hover/mermaid:opacity-100">
+        <CopyButton content={children} />
+      </div>
     </div>
   );
 };

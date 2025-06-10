@@ -107,7 +107,6 @@ export function ChatInput({ className }: ChatInputProps) {
         )}
         onPaste={handlePaste}
       >
-        <div>
         <Textarea
           className={cn(
             "w-full flex-1 rounded-none border-0 bg-transparent p-0",
@@ -121,8 +120,6 @@ export function ChatInput({ className }: ChatInputProps) {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
-
-        </div>
 
         <ToolBar
           onFilesSelect={addAttachments}

@@ -154,5 +154,17 @@
         "title": "会話名を変更"
       }
     }
+  },
+  "common": {
+    "copied-success": "コピー",
+    "copied-failed": "コピーが失敗しました",
+    "copy-to-clipboard": "コピー"
+  },
+  "message-list": {
+    "markdown": {
+      "generating-diagram": "チャートの生成...",
+      "waiting-for-diagram": "チャートの内容を待っています...",
+      "diagram-syntax-error": "グラフ構文エラー"
+    }
   }
 }

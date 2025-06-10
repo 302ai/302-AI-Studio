@@ -116,10 +116,9 @@ export function AssistantMessage({
                   type="button"
                   onClick={handleCopy}
                   title={t("copy")}
-                  showArrow
                   size="extra-small"
                   intent="plain"
-                  className="flex cursor-pointer items-center gap-1 text-muted-fg text-xs transition-colors hover:bg-muted hover:text-fg"
+                  className="flex cursor-pointer items-center gap-1 text-muted-fg transition-colors hover:bg-muted hover:text-fg"
                 >
                   {copied ? (
                     <Check className="h-3 w-3" />
@@ -131,9 +130,8 @@ export function AssistantMessage({
                 <ButtonWithTooltip
                   type="button"
                   onClick={handleRefresh}
-                  className="flex cursor-pointer items-center gap-1 text-muted-fg text-xs transition-colors hover:bg-muted hover:text-fg"
+                  className="flex cursor-pointer items-center gap-1 text-muted-fg transition-colors hover:bg-muted hover:text-fg"
                   title={t("refresh")}
-                  showArrow
                   size="extra-small"
                   intent="plain"
                 >

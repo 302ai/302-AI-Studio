@@ -154,5 +154,17 @@
         "title": "Rename Conversation"
       }
     }
+  },
+  "common": {
+    "copied-success": "Copied",
+    "copied-failed": "Copy failed",
+    "copy-to-clipboard": "Copy"
+  },
+  "message-list": {
+    "markdown": {
+      "generating-diagram": "Generating a chart...",
+      "waiting-for-diagram": "Waiting for the content of the chart...",
+      "diagram-syntax-error": "Graph syntax error"
+    }
   }
 }
