@@ -1,5 +1,5 @@
-import { Button, type ButtonProps } from "./button";
-import { Tooltip, TooltipContent } from "./tooltip";
+import { Button, type ButtonProps } from "@renderer/components/ui/button";
+import { Tooltip, TooltipContent } from "@renderer/components/ui/tooltip";
 
 interface ButtonWithTooltipProps extends ButtonProps {
   title: string;

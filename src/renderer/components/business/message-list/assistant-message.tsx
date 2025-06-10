@@ -1,5 +1,4 @@
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
-import { ButtonWithTooltip } from "@renderer/components/ui/button-with-tooltip";
 import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { formatTimeAgo } from "@renderer/lib/utils";
@@ -10,6 +9,7 @@ import i18next from "i18next";
 import { Bot, Check, Copy, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ButtonWithTooltip } from "../button-with-tooltip";
 import { MessageAttachments } from "./message-attachments";
 
 const localeMap = {
