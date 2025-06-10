@@ -264,7 +264,3 @@
 .katex .frac-line {
   border-bottom-width: 0.04em !important;
 }
-
-/* .katex .mord, .katex .mbin, .katex .mrel, .katex .mopen, .katex .mclose {
-  font-family: KaTeX_Math !important;
-} */

@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { visit } from "unist-util-visit";
 import { COMPONENTS } from "./markdown-components";
-import { MarkdownMathWrapper } from "./markdown-math-wrapper";
+import { MarkdownMathWrapper, processLaTeX } from "./markdown-math-wrapper";
 
 const katexOptions = {
   strict: false,
@@ -47,55 +47,6 @@ const katexOptions = {
     'split',
   ],
 }
-
-// Regex to check if the processed content contains any potential LaTeX patterns
-const containsLatexRegex =
-  /\\\(.*?\\\)|\\\[.*?\\\]|\$.*?\$|\\begin\{equation\}.*?\\end\{equation\}/;
-
-// Regex for inline and block LaTeX expressions
-const inlineLatex = new RegExp(/\\\((.+?)\\\)/, "g");
-const blockLatex = new RegExp(/\\\[(.*?[^\\])\\\]/, "gs");
-
-// Function to restore code blocks
-const restoreCodeBlocks = (content: string, codeBlocks: string[]) => {
-  return content.replace(
-    /<<CODE_BLOCK_(\d+)>>/g,
-    (_match, index) => codeBlocks[index]
-  );
-};
-
-// Regex to identify code blocks and inline code
-const codeBlockRegex = /(```[\s\S]*?```|`.*?`)/g;
-
-const processLaTeX = (_content: string) => {
-  let content = _content;
-  // Temporarily replace code blocks and inline code with placeholders
-  const codeBlocks: string[] = [];
-  let index = 0;
-  content = content.replace(codeBlockRegex, (match) => {
-    codeBlocks[index] = match;
-    return `<<CODE_BLOCK_${index++}>>`;
-  });
-
-  // Escape dollar signs followed by a digit or space and digit
-  let processedContent = content.replace(/(\$)(?=\s?\d)/g, "\\$");
-
-  // If no LaTeX patterns are found, restore code blocks and return the processed content
-  if (!containsLatexRegex.test(processedContent)) {
-    return restoreCodeBlocks(processedContent, codeBlocks);
-  }
-
-  // Convert LaTeX expressions to a markdown compatible format
-  processedContent = processedContent
-    .replace(inlineLatex, (_match: string, equation: string) => `$${equation}$`) // Convert inline LaTeX
-    .replace(
-      blockLatex,
-      (_match: string, equation: string) => `$$${equation}$$`
-    ); // Convert block LaTeX
-
-  // Restore code blocks
-  return restoreCodeBlocks(processedContent, codeBlocks);
-};
 
 export function MarkdownRenderer({ children }: { children: string }) {
   const components: Components = {
