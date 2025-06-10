@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export interface AttachmentFile {
   id: string;
@@ -8,9 +8,10 @@ export interface AttachmentFile {
   type: string;
   file: File;
   preview?: string; // base64 data URL for images
+  fileData?: string; // base64 file data for non-image files (for preview)
 }
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024; // 10MB
+export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 10MB
 export const ALLOWED_TYPES = [
   // JSON and JavaScript
   "application/json",
@@ -104,21 +105,60 @@ export function useAttachments() {
         continue;
       }
 
+      const attachmentId = nanoid();
+      console.log("Generated attachment ID:", attachmentId, "for file:", file.name);
+
       const attachment: AttachmentFile = {
-        id: nanoid(),
+        id: attachmentId,
         name: file.name,
         size: file.size,
         type: file.type,
         file,
       };
 
+      console.log("Created attachment object:", {
+        id: attachment.id,
+        name: attachment.name,
+        type: attachment.type,
+        preview: attachment.preview,
+      });
+
       // Generate preview for images
       if (file.type.startsWith("image/")) {
         try {
+          console.log("Starting to generate preview for", file.name);
           const preview = await readFileAsDataURL(file);
+          console.log("Generated preview for", file.name, ":", {
+            length: preview.length,
+            start: preview.substring(0, 100),
+            isValidDataURL: preview.startsWith("data:"),
+          });
           attachment.preview = preview;
+          console.log("Attachment after setting preview:", {
+            name: attachment.name,
+            previewLength: attachment.preview?.length,
+            previewStart: attachment.preview?.substring(0, 100),
+          });
         } catch (error) {
           console.error("Failed to generate preview:", error);
+        }
+      } else {
+        // For non-image files (including audio), generate file data for preview if file is small enough
+        const maxPreviewSize = MAX_FILE_SIZE; // 5MB limit for preview data
+        if (file.size <= maxPreviewSize) {
+          try {
+            console.log("Generating file data for", file.name);
+            const fileData = await readFileAsDataURL(file);
+            attachment.fileData = fileData;
+            console.log("Generated file data for", file.name, ":", {
+              length: fileData.length,
+              start: fileData.substring(0, 100),
+            });
+          } catch (error) {
+            console.error("Failed to generate file data:", error);
+          }
+        } else {
+          console.log("File too large for preview data generation:", file.name);
         }
       }
 
@@ -143,6 +183,7 @@ export function useAttachments() {
     clearAttachments,
   };
 }
+
 
 function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {

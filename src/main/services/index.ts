@@ -1,4 +1,5 @@
 import { ConfigService } from "./config-service";
+import { FilePreviewService } from "./file-preview-service";
 import { ProviderService } from "./provider-service";
 import { ThreadsService } from "./threads-service";
 import { TriplitService } from './triplit-service';
@@ -10,4 +11,5 @@ export const services = [
   ConfigService,
   ThreadsService,
   ProviderService,
+  FilePreviewService,
 ];
