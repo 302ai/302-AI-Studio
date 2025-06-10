@@ -80,6 +80,14 @@ export function ChatInput({ className }: ChatInputProps) {
     }
   };
 
+  const handlePaste = async (event: React.ClipboardEvent) => {
+    const files = event.clipboardData?.files;
+    if (files && files.length > 0) {
+      event.preventDefault();
+      addAttachments(files);
+    }
+  };
+
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>
       {attachments.length > 0 && (
@@ -97,7 +105,9 @@ export function ChatInput({ className }: ChatInputProps) {
           "flex max-h-60 min-h-36 w-full flex-col rounded-[20px] border border-input pt-2 pr-2 pb-0 pl-4",
           "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-4 focus-within:ring-ring/20",
         )}
+        onPaste={handlePaste}
       >
+        <div>
         <Textarea
           className={cn(
             "w-full flex-1 rounded-none border-0 bg-transparent p-0",
@@ -111,6 +121,8 @@ export function ChatInput({ className }: ChatInputProps) {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
+
+        </div>
 
         <ToolBar
           onFilesSelect={addAttachments}
