@@ -30,7 +30,7 @@ export const COMPONENTS = {
     ) : (
       <code
         className={cn(
-          "font-mono [:not(pre)>&]:rounded-md [:not(pre)>&]:bg-background/50 [:not(pre)>&]:px-1 [:not(pre)>&]:py-0.5",
+          "font-mono [:not(pre)>&]:rounded-md [:not(pre)>&]:bg-bg/50 [:not(pre)>&]:px-1 [:not(pre)>&]:py-0.5",
         )}
         {...rest}
       >

@@ -75,7 +75,7 @@ export function MarkdownMathWrapper({
     <span
       ref={ref}
       className={cn(
-        "group/math relative",
+        "group/math relative rounded-xl bg-muted p-3 text-sm",
         isDisplay ? "block" : "inline-block",
       )}
     >
@@ -84,7 +84,7 @@ export function MarkdownMathWrapper({
         <span
           className={cn(
             "invisible absolute flex space-x-1 opacity-0 transition-all duration-200 group-hover/math:visible group-hover/math:opacity-100",
-            isDisplay ? "top-0 right-0" : "-top-6 -translate-x-1/2 left-1/2",
+            isDisplay ? "top-2 right-2" : "-top-6 -translate-x-1/2 left-1/2",
           )}
         >
           <CopyButton content={latex} />

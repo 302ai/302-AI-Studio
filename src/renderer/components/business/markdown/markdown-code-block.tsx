@@ -29,7 +29,7 @@ export function MarkdownCodeBlock({
   }
 
   const preClass = cn(
-    "overflow-x-scroll rounded-md border bg-background/50 p-4 font-mono text-sm [scrollbar-width:none]",
+    "overflow-x-scroll rounded-xl bg-muted p-3 font-mono text-sm [scrollbar-width:none]",
     className,
   );
 
