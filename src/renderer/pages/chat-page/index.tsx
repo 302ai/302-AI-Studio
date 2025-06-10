@@ -8,7 +8,7 @@ export function ChatPage() {
         <MessageList />
       </div>
 
-      <div className="flex-shrink-0 border-border/40 border-t bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex-shrink-0 pt-4">
         <ChatInput />
       </div>
     </div>
