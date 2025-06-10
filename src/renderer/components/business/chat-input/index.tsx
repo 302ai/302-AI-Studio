@@ -113,7 +113,6 @@ export function ChatInput({ className }: ChatInputProps) {
         />
 
         <ToolBar
-          className="mb-2"
           onFilesSelect={addAttachments}
           attachments={attachments}
           onSendMessage={handleSendMessage}

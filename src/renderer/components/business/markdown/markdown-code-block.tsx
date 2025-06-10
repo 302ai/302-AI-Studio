@@ -33,7 +33,7 @@ export function MarkdownCodeBlock({
   );
 
   return (
-    <div className="group/code relative mb-4">
+    <div className="group/code relative my-3">
       <Suspense
         fallback={
           <pre className={preClass} {...restProps}>

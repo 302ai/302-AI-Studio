@@ -34,7 +34,7 @@ export function AttachmentUploader({ onFilesSelect }: AttachmentUploaderProps) {
     <>
       <Tooltip>
         <TooltipTrigger
-          className="size-9"
+          className="size-8"
           intent="plain"
           size="square-petite"
           onClick={handleClick}
