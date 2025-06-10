@@ -158,5 +158,17 @@
   "message": {
     "copy": "复制",
     "refresh": "重新生成"
+  },
+  "common": {
+    "copied-success": "已复制",
+    "copied-failed": "复制失败",
+    "copy-to-clipboard": "复制"
+  },
+  "message-list": {
+    "markdown": {
+      "generating-diagram": "正在生成图表...",
+      "waiting-for-diagram": "等待图表内容...",
+      "diagram-syntax-error": "图表语法错误"
+    }
   }
 }

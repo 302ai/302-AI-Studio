@@ -1,5 +1,6 @@
-import { cn } from '@renderer/lib/utils'
-import { useEffect, useRef, useState } from 'react'
+import { cn } from "@renderer/lib/utils";
+import { useEffect, useRef, useState } from "react";
+import { CopyButton } from "../copy-button";
 
 // Regex to check if the processed content contains any potential LaTeX patterns
 const containsLatexRegex =
@@ -13,7 +14,7 @@ const blockLatex = new RegExp(/\\\[(.*?[^\\])\\\]/, "gs");
 const restoreCodeBlocks = (content: string, codeBlocks: string[]) => {
   return content.replace(
     /<<CODE_BLOCK_(\d+)>>/g,
-    (_match, index) => codeBlocks[index]
+    (_match, index) => codeBlocks[index],
   );
 };
 
@@ -43,32 +44,52 @@ export const processLaTeX = (_content: string) => {
     .replace(inlineLatex, (_match: string, equation: string) => `$${equation}$`) // Convert inline LaTeX
     .replace(
       blockLatex,
-      (_match: string, equation: string) => `$$${equation}$$`
+      (_match: string, equation: string) => `$$${equation}$$`,
     ); // Convert block LaTeX
 
   // Restore code blocks
   return restoreCodeBlocks(processedContent, codeBlocks);
 };
 
-export function MarkdownMathWrapper({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const [, setLatex] = useState('')
-  const [isDisplay, setIsDisplay] = useState(false)
+export function MarkdownMathWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [latex, setLatex] = useState("");
+  const [isDisplay, setIsDisplay] = useState(false);
 
   useEffect(() => {
     if (ref.current) {
-      const annotation = ref.current.querySelector('.katex-mathml annotation')
+      const annotation = ref.current.querySelector(".katex-mathml annotation");
       if (annotation) {
-        setLatex(annotation.textContent || '')
+        setLatex(annotation.textContent || "");
       }
 
-      setIsDisplay(!!ref.current.closest('.katex-display'))
+      setIsDisplay(!!ref.current.closest(".katex-display"));
     }
-  }, [])
+  }, []);
 
   return (
-    <span ref={ref} className={cn('group/math relative', isDisplay ? 'block' : 'inline-block')}>
+    <span
+      ref={ref}
+      className={cn(
+        "group/math relative",
+        isDisplay ? "block" : "inline-block",
+      )}
+    >
       {children}
+      {latex && (
+        <span
+          className={cn(
+            "invisible absolute flex space-x-1 opacity-0 transition-all duration-200 group-hover/math:visible group-hover/math:opacity-100",
+            isDisplay ? "top-0 right-0" : "-top-6 -translate-x-1/2 left-1/2",
+          )}
+        >
+          <CopyButton content={latex} />
+        </span>
+      )}
     </span>
-  )
+  );
 }
