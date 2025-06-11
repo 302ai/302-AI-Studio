@@ -77,7 +77,7 @@ export class OpenAIProviderService extends BaseProviderService {
             Logger.info("Using pre-parsed file content from database");
             contentParts.push({
               type: "text",
-              text: `\n\n[File: ${attachment.name}]\n${attachment.fileContent}\n[End of file]\n`,
+              text: `${attachment.name}]\n${attachment.fileContent}`,
             });
 
             Logger.info("Successfully added pre-parsed file content:", {
@@ -105,7 +105,7 @@ export class OpenAIProviderService extends BaseProviderService {
               // Add parsed content as text with file context
               contentParts.push({
                 type: "text",
-                text: `\n\n[File: ${attachment.name}]\n${parsedContent}\n[End of file]\n`,
+                text: `${attachment.name}]\n${parsedContent}`,
               });
 
               Logger.info("Successfully added parsed file content:", {
