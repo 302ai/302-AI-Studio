@@ -81,7 +81,7 @@ export class OpenAIProviderService extends BaseProviderService {
                 base64Length: match[2].length,
               });
             }
-            
+
             contentParts.push({
               type: "file",
               data: attachment.fileData,
@@ -95,7 +95,7 @@ export class OpenAIProviderService extends BaseProviderService {
             });
           }
         }
-        
+
         const result = {
           role: "user",
           content: contentParts,
@@ -239,6 +239,7 @@ export class OpenAIProviderService extends BaseProviderService {
         tabId,
         threadId,
         userMessageId,
+        providerId: this.provider.id,
       });
 
       let fullContent = "";
@@ -319,6 +320,7 @@ export class OpenAIProviderService extends BaseProviderService {
         threadId,
         userMessageId,
         regenerateMessageId,
+        providerId: this.provider.id,
       });
 
       let fullContent = "";
@@ -347,6 +349,7 @@ export class OpenAIProviderService extends BaseProviderService {
         regenerateMessageId,
         fullContent,
         usage,
+        providerId: this.provider.id,
       });
 
       Logger.info(`Regenerate stream chat completed for tab ${tabId}`);
@@ -361,6 +364,7 @@ export class OpenAIProviderService extends BaseProviderService {
         userMessageId,
         regenerateMessageId,
         error: error instanceof Error ? error.message : "Unknown error",
+        providerId: this.provider.id,
       });
 
       return {

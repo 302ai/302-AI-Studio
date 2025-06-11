@@ -16,6 +16,7 @@ export interface StreamChatEvent {
   usage?: any;
   error?: string;
   regenerateMessageId?: string;
+  providerId?: string;
 }
 
 export interface StreamingMessage {
@@ -126,6 +127,7 @@ class StreamChatEventService {
             orderSeq: nextOrderSeq,
             tokenCount: data.usage?.totalTokens || data.fullContent.length,
             status: "success",
+            providerId: data.providerId,
           });
 
           Logger.info("Assistant message saved to DB:", savedMessage);
@@ -169,6 +171,7 @@ class StreamChatEventService {
           orderSeq: nextOrderSeq,
           tokenCount: 0,
           status: "error",
+          providerId: data.providerId,
         });
 
         Logger.info("Error message saved to DB");

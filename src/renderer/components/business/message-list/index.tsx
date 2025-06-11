@@ -123,10 +123,7 @@ export function MessageList() {
     <div className="flex h-full flex-col">
       <div
         ref={scrollContainerRef}
-        className="flex-1 space-y-4 overflow-y-auto pr-4"
-        style={{
-          scrollbarGutter: "stable",
-        }}
+        className="flex-1 space-y-4"
       >
         {messagesList.map((message: Message) => (
           <div key={message.id}>
