@@ -158,7 +158,15 @@
   "message": {
     "copy": "复制",
     "refresh": "重新生成",
-    "thinking": "AI正在思考"
+    "edit": "编辑",
+    "thinking": "AI正在思考",
+    "edit-dialog": {
+      "title": "编辑消息",
+      "save": "保存",
+      "cancel": "取消",
+      "save-success": "消息更新成功",
+      "save-error": "消息更新失败"
+    }
   },
   "common": {
     "copied-success": "已复制",

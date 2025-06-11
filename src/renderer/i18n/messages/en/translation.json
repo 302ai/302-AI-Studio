@@ -168,6 +168,16 @@
     }
   },
   "message": {
-    "thinking": "AI is thinking"
+    "copy": "Copy",
+    "refresh": "Regenerate",
+    "edit": "Edit",
+    "thinking": "AI is thinking",
+    "edit-dialog": {
+      "title": "Edit Message",
+      "save": "Save",
+      "cancel": "Cancel",
+      "save-success": "Message updated successfully",
+      "save-error": "Failed to update message"
+    }
   }
 }
