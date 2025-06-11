@@ -268,7 +268,7 @@ export function ProviderList() {
 
     updateHeight();
 
-    if (listHeight === 0) {
+    if (listHeight === 0 || providers.length > 0) {
       getHeightWithDelay();
     }
 
@@ -285,7 +285,7 @@ export function ProviderList() {
         resizeObserver.unobserve(listContainerRef.current);
       }
     };
-  }, [listHeight]);
+  }, [listHeight, providers]);
 
   useEffect(() => {
     if (!fetching) {
