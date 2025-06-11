@@ -5,6 +5,7 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
+import Logger from 'electron-log';
 
 export class ConfigDbService {
   constructor() {
@@ -49,12 +50,24 @@ export class ConfigDbService {
   }
 
   async updateProvider(providerId: string, updateData: UpdateProviderData) {
+    const existingProvider = await this.getProviderById(providerId);
+    if (!existingProvider) {
+      Logger.error(`Provider with id ${providerId} not found, skipping update`);
+      return;
+    }
+
     await triplitClient.update("providers", providerId, async (provider) => {
       Object.assign(provider, updateData);
     });
   }
 
   async updateProviderOrder(providerId: string, order: number) {
+    const existingProvider = await this.getProviderById(providerId);
+    if (!existingProvider) {
+      Logger.error(`Provider with id ${providerId} not found, skipping update`);
+      return;
+    }
+
     await triplitClient.update("providers", providerId, async (provider) => {
       provider.order = order;
     });
@@ -85,5 +98,11 @@ export class ConfigDbService {
     });
 
     await Promise.all(updatePromises);
+  }
+
+  private async getProviderById(providerId: string): Promise<Provider | null> {
+    const query = triplitClient.query("providers").Where("id", "=", providerId);
+    const providers = await triplitClient.fetch(query);
+    return providers[0] || null;
   }
 }

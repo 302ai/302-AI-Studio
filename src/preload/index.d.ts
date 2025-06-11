@@ -1,5 +1,13 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
-import type { CreateModelData, CreateProviderData, Provider } from "@shared/triplit/types";
+import type {
+  CreateModelData,
+  CreateProviderData,
+  CreateThreadData,
+  Provider,
+  Thread,
+  UpdateProviderData,
+  UpdateThreadData,
+} from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 
@@ -19,13 +27,25 @@ declare global {
         // * Provider and models settings
         insertProvider: (provider: CreateProviderData) => Promise<Provider>;
         deleteProvider: (providerId: string) => Promise<void>;
-        updateProvider: (providerId: string, updateData: UpdateProviderData) => Promise<void>;
-        updateProviderOrder: (providerId: string, order: number) => Promise<void>;
+        updateProvider: (
+          providerId: string,
+          updateData: UpdateProviderData,
+        ) => Promise<void>;
+        updateProviderOrder: (
+          providerId: string,
+          order: number,
+        ) => Promise<void>;
         insertModels: (models: CreateModelData[]) => Promise<void>;
         getProviderModels: (providerId: string) => Promise<Model[]>;
       };
-      threadsService: {
-        setActiveThreadId: (threadId: string) => void;
+      threadService: {
+        insertThread: (thread: CreateThreadData) => Promise<Thread>;
+        deleteThread: (threadId: string) => Promise<void>;
+        updateThread: (
+          threadId: string,
+          updateData: UpdateThreadData,
+        ) => Promise<void>;
+        getThreadById: (threadId: string) => Promise<Thread | null>;
       };
       providerService: {
         checkApiKey: (provider: Provider) => Promise<{
@@ -58,7 +78,9 @@ declare global {
           modelName: string;
           regenerateMessageId: string;
         }) => Promise<{ success: boolean; error?: string }>;
-        stopStreamChat: (params: { tabId: string }) => Promise<{ success: boolean }>;
+        stopStreamChat: (params: {
+          tabId: string;
+        }) => Promise<{ success: boolean }>;
       };
       triplitService: {
         getServerStatus: () => Promise<{
@@ -75,11 +97,18 @@ declare global {
         }>;
       };
       filePreviewService: {
-        previewImage: (fileName: string, base64Data: string) => Promise<{
+        previewImage: (
+          fileName: string,
+          base64Data: string,
+        ) => Promise<{
           success: boolean;
           error?: string;
         }>;
-        previewFile: (fileName: string, fileData: string, mimeType: string) => Promise<{
+        previewFile: (
+          fileName: string,
+          fileData: string,
+          mimeType: string,
+        ) => Promise<{
           success: boolean;
           error?: string;
         }>;

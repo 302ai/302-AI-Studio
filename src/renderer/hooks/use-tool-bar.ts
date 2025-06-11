@@ -8,10 +8,6 @@ import {
   insertTab,
   updateTab,
 } from "@renderer/services/db-services/tabs-db-service";
-import {
-  insertThread,
-  updateThread,
-} from "@renderer/services/db-services/threads-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -21,6 +17,8 @@ import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 import { useStreamChat } from "./use-stream-chat";
+
+const { threadService } = window.service;
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -54,8 +52,8 @@ export function useToolBar() {
 
     if (activeThreadId) {
       try {
-        await updateThread(activeThreadId, async (thread) => {
-          thread.modelId = modelId;
+        await threadService.updateThread(activeThreadId, {
+          modelId,
         });
       } catch (error) {
         console.error("update thread error", error);
@@ -73,7 +71,7 @@ export function useToolBar() {
         modelId,
       };
 
-      const thread = await insertThread(createData);
+      const thread = await threadService.insertThread(createData);
       await setActiveThreadId(thread.id);
 
       return thread;

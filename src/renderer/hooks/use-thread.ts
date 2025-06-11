@@ -1,5 +1,4 @@
 import { getTab } from "@renderer/services/db-services/tabs-db-service";
-import { getThread } from "@renderer/services/db-services/threads-db-service";
 import { clearActiveThread } from "@renderer/services/db-services/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { Thread } from "@shared/triplit/types";
@@ -22,6 +21,8 @@ export type GroupedThreads = {
   label: string;
   threads: Thread[];
 };
+
+const { threadService } = window.service;
 
 export function useThread() {
   const { t } = useTranslation();
@@ -164,7 +165,7 @@ export function useThread() {
       nextActiveTabId: string;
     }) => {
       const nextActiveTab = await getTab(event.nextActiveTabId);
-      const thread = await getThread(nextActiveTab?.threadId ?? "");
+      const thread = await threadService.getThreadById(nextActiveTab?.threadId ?? "");
 
       await setActiveThreadId(thread ? thread.id : "");
     };

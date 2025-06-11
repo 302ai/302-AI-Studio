@@ -1,9 +1,11 @@
 import { triplitClient } from "@main/triplit/client";
-import type { CreateThreadData, Thread } from "@shared/triplit/types";
+import type { CreateThreadData, Thread, UpdateThreadData } from "@shared/triplit/types";
 
 export class ThreadDbService {
   constructor() {
-    triplitClient.connect();
+    if (!triplitClient.connectionStatus || triplitClient.connectionStatus === 'CLOSED') {
+      triplitClient.connect();
+    }
   }
 
   async insertThread(thread: CreateThreadData): Promise<Thread> {
@@ -16,15 +18,21 @@ export class ThreadDbService {
 
   async updateThread(
     threadId: string,
-    updateFn: (thread: Thread) => void | Promise<void>,
+    updateData: UpdateThreadData,
   ) {
+    const existingThread = await this.getThreadById(threadId);
+    if (!existingThread) {
+      console.warn(`Thread with id ${threadId} not found, skipping update`);
+      return;
+    }
+
     await triplitClient.update("threads", threadId, async (thread) => {
-      await updateFn(thread);
+      Object.assign(thread, updateData);
       thread.updatedAt = new Date();
     });
   }
 
-  async getThread(threadId: string): Promise<Thread | null> {
+  async getThreadById(threadId: string): Promise<Thread | null> {
     const query = triplitClient.query("threads").Where("id", "=", threadId);
     const threads = await triplitClient.fetch(query);
     return threads[0] || null;
