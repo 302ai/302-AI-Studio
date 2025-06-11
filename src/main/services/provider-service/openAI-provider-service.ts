@@ -3,7 +3,7 @@ import { betterFetch } from "@better-fetch/fetch";
 import { fetchOpenAIModels } from "@shared/api/ai";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
-import type { ModelMessage } from "ai";
+import { type ModelMessage, smoothStream, streamText } from "ai";
 import Logger from "electron-log";
 import {
   BaseProviderService,
@@ -205,7 +205,7 @@ export class OpenAIProviderService extends BaseProviderService {
                 contentLength: parsedContent.length,
               });
             } catch (error) {
-  Logger.error("Failed to parse file:", error);
+              Logger.error("Failed to parse file:", error);
 
               // Add error message as text
               contentParts.push({
@@ -335,9 +335,6 @@ export class OpenAIProviderService extends BaseProviderService {
 
       Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
 
-      // Start streaming
-      const { streamText: streamTextFn } = await import("ai");
-
       // Convert messages to ModelMessage format with attachment support
       const modelMessages = await Promise.all(
         messages
@@ -370,9 +367,10 @@ export class OpenAIProviderService extends BaseProviderService {
         });
       });
 
-      const result = streamTextFn({
+      const result = streamText({
         model,
         messages: modelMessages,
+        experimental_transform: smoothStream(),
       });
 
       // Send stream start event
@@ -442,9 +440,6 @@ export class OpenAIProviderService extends BaseProviderService {
         `Starting regenerate stream chat for tab ${tabId}, thread ${threadId}, regenerating message ${regenerateMessageId}`,
       );
 
-      // Start streaming
-      const { streamText: streamTextFn } = await import("ai");
-
       // Convert messages to ModelMessage format with attachment support
       const modelMessages = await Promise.all(
         messages
@@ -452,9 +447,10 @@ export class OpenAIProviderService extends BaseProviderService {
           .map((msg) => this.convertToModelMessage(msg)),
       );
 
-      const result = streamTextFn({
+      const result = streamText({
         model,
         messages: modelMessages,
+        experimental_transform: smoothStream(),
       });
 
       // Send regenerate stream start event
