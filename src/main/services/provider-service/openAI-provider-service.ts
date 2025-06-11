@@ -46,7 +46,7 @@ export class OpenAIProviderService extends BaseProviderService {
       const base64Data = match[2];
 
       // Convert base64 to buffer
-      const buffer = Buffer.from(base64Data, 'base64');
+      const buffer = Buffer.from(base64Data, "base64");
 
       // Create FormData for multipart/form-data
       const formData = new FormData();
@@ -55,7 +55,7 @@ export class OpenAIProviderService extends BaseProviderService {
       const blob = new Blob([buffer], { type: mimeType });
 
       // Add the file to FormData
-      formData.append('file', blob, attachment.name);
+      formData.append("file", blob, attachment.name);
 
       // Step 1: Upload file
       Logger.info("Uploading file to 302.ai...");
@@ -67,23 +67,25 @@ export class OpenAIProviderService extends BaseProviderService {
         body: formData,
         timeout,
       });
-      console.log("调用了302.ai的api");
-      
+
       const fileUrl = (uploadResponse.data as any).data;
       Logger.info("File uploaded successfully:", fileUrl);
 
       // Step 2: Parse file content
       Logger.info("Parsing file content...");
-      const parseResponse = await betterFetch(`https://api.302.ai/302/file/parsing`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
+      const parseResponse = await betterFetch(
+        `https://api.302.ai/302/file/parsing`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+          },
+          query: {
+            url: fileUrl,
+          },
+          timeout,
         },
-        query: {
-          url: fileUrl,
-        },
-        timeout,
-      });
+      );
 
       const fileContent = (parseResponse.data as any).data.msg;
       Logger.info("File parsed successfully:", {
@@ -94,11 +96,16 @@ export class OpenAIProviderService extends BaseProviderService {
       return fileContent;
     } catch (error) {
       Logger.error("File parsing failed:", error);
-      throw new Error(`Failed to parse file ${attachment.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to parse file ${attachment.name}: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     }
   }
 
-  private async convertToModelMessage(message: ChatMessage): Promise<ModelMessage> {
+  private async convertToModelMessage(
+    message: ChatMessage,
+    messageId?: string,
+  ): Promise<ModelMessage> {
     if (message.role === "user" && message.attachments) {
       let attachments: Array<{
         id: string;
@@ -107,6 +114,7 @@ export class OpenAIProviderService extends BaseProviderService {
         type: string;
         preview?: string;
         fileData?: string;
+        fileContent?: string;
       }> = [];
       try {
         attachments = JSON.parse(message.attachments);
@@ -115,6 +123,8 @@ export class OpenAIProviderService extends BaseProviderService {
         Logger.warn("Failed to parse attachments:", error);
         attachments = [];
       }
+
+      let attachmentsUpdated = false;
 
       if (attachments.length > 0) {
         const contentParts: Array<
@@ -149,6 +159,7 @@ export class OpenAIProviderService extends BaseProviderService {
             type: attachment.type,
             hasPreview: !!attachment.preview,
             hasFileData: !!attachment.fileData,
+            hasFileContent: !!attachment.fileContent,
           });
 
           if (attachment.type?.startsWith("image/") && attachment.preview) {
@@ -157,15 +168,31 @@ export class OpenAIProviderService extends BaseProviderService {
               type: "image",
               image: attachment.preview,
             });
+          } else if (attachment.fileContent) {
+            // Use pre-parsed file content if available (from database)
+            Logger.info("Using pre-parsed file content from database");
+            contentParts.push({
+              type: "text",
+              text: `\n\n[File: ${attachment.name}]\n${attachment.fileContent}\n[End of file]\n`,
+            });
+
+            Logger.info("Successfully added pre-parsed file content:", {
+              fileName: attachment.name,
+              contentLength: attachment.fileContent.length,
+            });
           } else if (attachment.fileData && attachment.type) {
             try {
-              // Use the new async file parsing function
+              // Parse file content on-demand (first time)
               const parsedContent = await this.parseFileContent({
                 id: attachment.id,
                 name: attachment.name,
                 type: attachment.type,
                 fileData: attachment.fileData,
               });
+
+              // Cache the parsed content back to the attachment for future use
+              attachment.fileContent = parsedContent;
+              attachmentsUpdated = true;
 
               // Add parsed content as text with file context
               contentParts.push({
@@ -183,7 +210,7 @@ export class OpenAIProviderService extends BaseProviderService {
               // Add error message as text
               contentParts.push({
                 type: "text",
-                text: `\n\n[File: ${attachment.name} - Failed to parse: ${error instanceof Error ? error.message : 'Unknown error'}]\n`,
+                text: `\n\n[File: ${attachment.name} - Failed to parse: ${error instanceof Error ? error.message : "Unknown error"}]\n`,
               });
             }
           } else {
@@ -191,6 +218,7 @@ export class OpenAIProviderService extends BaseProviderService {
               hasFileData: !!attachment.fileData,
               hasType: !!attachment.type,
               hasPreview: !!attachment.preview,
+              hasFileContent: !!attachment.fileContent,
             });
           }
         }
@@ -199,6 +227,14 @@ export class OpenAIProviderService extends BaseProviderService {
           role: "user",
           content: contentParts,
         } as ModelMessage;
+
+        // If attachments were updated with parsed content, notify renderer to update database
+        if (attachmentsUpdated && messageId) {
+          this.sendToAllWindows("chat:attachments-updated", {
+            messageId,
+            attachments: JSON.stringify(attachments),
+          });
+        }
 
         return result;
       }
@@ -306,7 +342,11 @@ export class OpenAIProviderService extends BaseProviderService {
       const modelMessages = await Promise.all(
         messages
           .filter((msg) => msg.role !== "function") // Filter out function messages
-          .map((msg) => this.convertToModelMessage(msg))
+          .map((msg, index) => {
+            // For user messages, try to find the messageId (usually the last user message)
+            const messageId = msg.role === "user" && index === messages.length - 1 ? userMessageId : undefined;
+            return this.convertToModelMessage(msg, messageId);
+          }),
       );
 
       Logger.info("Converted messages for AI SDK:", modelMessages);
@@ -408,7 +448,7 @@ export class OpenAIProviderService extends BaseProviderService {
       const modelMessages = await Promise.all(
         messages
           .filter((msg) => msg.role !== "function") // Filter out function messages
-          .map((msg) => this.convertToModelMessage(msg))
+          .map((msg) => this.convertToModelMessage(msg)),
       );
 
       const result = streamTextFn({

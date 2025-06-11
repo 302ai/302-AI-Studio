@@ -1,11 +1,14 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 import {
+  getMessageById,
   getMessagesByThreadId,
   insertMessage,
   updateMessage,
 } from "@renderer/services/db-services/messages-db-service";
 import Logger from "electron-log";
 import { toast } from "sonner";
+import { getActiveProvider } from "./db-services/ui-db-service";
+import { FileParsingService } from "./file-parsing-service";
 
 export interface StreamChatEvent {
   tabId: string;
@@ -29,6 +32,103 @@ export interface StreamingMessage {
 }
 
 type StreamEventCallback = (event: StreamChatEvent) => void;
+
+/**
+ * Parse file attachments and update user message with parsed content
+ */
+async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
+  try {
+    // Get the user message
+    const userMessage = await getMessageById(userMessageId);
+
+    if (!userMessage || !userMessage.attachments) {
+      return;
+    }
+
+    // Parse attachments JSON
+    let attachments: Array<{
+      id: string;
+      name: string;
+      size: number;
+      type: string;
+      preview?: string;
+      fileData?: string;
+      fileContent?: string;
+    }> = [];
+
+    try {
+      attachments = JSON.parse(userMessage.attachments);
+    } catch (error) {
+      Logger.warn("Failed to parse attachments JSON:", error);
+      return;
+    }
+
+    // Check if any attachments need parsing
+    const needsParsing = attachments.some(
+      (att) =>
+        !att.fileContent &&
+        att.fileData &&
+        FileParsingService.shouldParseFile(att.type),
+    );
+
+    if (!needsParsing) {
+      return;
+    }
+
+    // Get active provider for parsing
+    const activeProvider = await getActiveProvider();
+
+    if (!activeProvider || !activeProvider.apiKey || !activeProvider.baseUrl) {
+      Logger.warn("No active provider available for file parsing");
+      return;
+    }
+
+    const parsingService = new FileParsingService({
+      apiKey: activeProvider.apiKey,
+      baseUrl: activeProvider.baseUrl,
+    });
+
+    // Parse each attachment that needs parsing
+    let hasUpdates = false;
+    for (const attachment of attachments) {
+      if (
+        !attachment.fileContent &&
+        attachment.fileData &&
+        FileParsingService.shouldParseFile(attachment.type)
+      ) {
+        try {
+          const fileContent = await parsingService.parseFileContent({
+            id: attachment.id,
+            name: attachment.name,
+            type: attachment.type,
+            fileData: attachment.fileData,
+          });
+
+          attachment.fileContent = fileContent;
+          hasUpdates = true;
+
+          Logger.info(
+            `Successfully parsed file content for ${attachment.name}`,
+          );
+        } catch (error) {
+          Logger.error("Failed to parse file content:", error);
+          // Continue with other attachments
+        }
+      }
+    }
+
+    // Update the message with parsed content if there were updates
+    if (hasUpdates) {
+      await updateMessage(userMessageId, (message) => {
+        message.attachments = JSON.stringify(attachments);
+      });
+
+      Logger.info("Successfully updated user message with parsed file content");
+    }
+  } catch (error) {
+    Logger.error("Failed to parse and update attachments:", error);
+  }
+}
 
 class StreamChatEventService {
   private initialized = false;
@@ -129,6 +229,14 @@ class StreamChatEventService {
           });
 
           Logger.info("Assistant message saved to DB:", savedMessage);
+
+          // Parse file attachments in the user message after successful AI response
+          try {
+            await parseAndUpdateAttachments(data.userMessageId);
+          } catch (error) {
+            Logger.error("Failed to parse file attachments:", error);
+            // Don't show error to user as this is a background operation
+          }
         }
       } catch (error) {
         Logger.error("Failed to save assistant message:", error);
@@ -198,7 +306,9 @@ class StreamChatEventService {
 
       // Get current messages to determine correct orderSeq for the regenerating message
       const existingMessages = await getMessagesByThreadId(data.threadId);
-      const originalMessage = existingMessages.find(msg => msg.id === data.regenerateMessageId);
+      const originalMessage = existingMessages.find(
+        (msg) => msg.id === data.regenerateMessageId,
+      );
       const orderSeq = originalMessage?.orderSeq || existingMessages.length + 1;
 
       // Create a temporary streaming message for regeneration
@@ -234,7 +344,7 @@ class StreamChatEventService {
         hasExisting: !!existing,
         deltaLength: data.delta?.length || 0,
         fullContentLength: data.fullContent?.length || 0,
-        regenerateMessageId: data.regenerateMessageId
+        regenerateMessageId: data.regenerateMessageId,
       });
 
       if (existing && data.fullContent !== undefined) {
@@ -244,7 +354,7 @@ class StreamChatEventService {
 
         Logger.info("Updated streaming message content:", {
           tempId,
-          contentLength: existing.content.length
+          contentLength: existing.content.length,
         });
       }
 
@@ -271,7 +381,8 @@ class StreamChatEventService {
           await updateMessage(data.regenerateMessageId, (message) => {
             message.content = data.fullContent || "";
             message.status = "success";
-            message.tokenCount = data.usage?.totalTokens || (data.fullContent?.length || 0);
+            message.tokenCount =
+              data.usage?.totalTokens || data.fullContent?.length || 0;
             message.createdAt = new Date(); // Update the timestamp to current time
           });
 
@@ -311,11 +422,31 @@ class StreamChatEventService {
       this.onStreamErrorCallbacks.forEach((callback) => callback(data));
     };
 
+    // Handle attachment updates from main process
+    const handleAttachmentsUpdated = async (
+      _event: any,
+      data: { messageId: string; attachments: string },
+    ) => {
+      try {
+        await updateMessage(data.messageId, (message) => {
+          message.attachments = data.attachments;
+        });
+
+        Logger.info("Updated message attachments in database");
+      } catch (error) {
+        Logger.error("Failed to update message attachments:", error);
+      }
+    };
+
     // Setup IPC listeners (only once globally)
     window.electron.ipcRenderer.on("chat:stream-start", handleStreamStart);
     window.electron.ipcRenderer.on("chat:stream-delta", handleStreamDelta);
     window.electron.ipcRenderer.on("chat:stream-end", handleStreamEnd);
     window.electron.ipcRenderer.on("chat:stream-error", handleStreamError);
+    window.electron.ipcRenderer.on(
+      "chat:attachments-updated",
+      handleAttachmentsUpdated,
+    );
 
     // Setup regenerate IPC listeners
     window.electron.ipcRenderer.on(
@@ -432,6 +563,9 @@ class StreamChatEventService {
       window.electron.ipcRenderer.removeAllListeners("chat:stream-delta");
       window.electron.ipcRenderer.removeAllListeners("chat:stream-end");
       window.electron.ipcRenderer.removeAllListeners("chat:stream-error");
+      window.electron.ipcRenderer.removeAllListeners(
+        "chat:attachments-updated",
+      );
       this.initialized = false;
     }
   }
