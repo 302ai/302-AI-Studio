@@ -1,4 +1,5 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
+import { betterFetch } from "@better-fetch/fetch";
 import { fetchOpenAIModels } from "@shared/api/ai";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
@@ -13,7 +14,91 @@ import {
 export class OpenAIProviderService extends BaseProviderService {
   protected openai: OpenAIProvider;
 
-  private convertToModelMessage(message: ChatMessage): ModelMessage {
+  /**
+   * Parse file content using 302.ai API
+   */
+  private async parseFileContent(attachment: {
+    id: string;
+    name: string;
+    type: string;
+    fileData: string;
+  }): Promise<string> {
+    const baseUrl = this.provider.baseUrl;
+    const apiKey = this.provider.apiKey;
+    const timeout = 30000; // Increase timeout for file processing
+
+    try {
+      Logger.info("Starting file parsing for:", {
+        fileName: attachment.name,
+        fileType: attachment.type,
+        fileSize: attachment.fileData.length,
+      });
+
+      // Convert data URL to File object for multipart/form-data
+      const dataURLPattern = /^data:([^;]+);base64,(.+)$/;
+      const match = attachment.fileData.match(dataURLPattern);
+
+      if (!match) {
+        throw new Error("Invalid file data format");
+      }
+
+      const mimeType = match[1];
+      const base64Data = match[2];
+
+      // Convert base64 to buffer
+      const buffer = Buffer.from(base64Data, 'base64');
+
+      // Create FormData for multipart/form-data
+      const formData = new FormData();
+
+      // Create a Blob from the buffer
+      const blob = new Blob([buffer], { type: mimeType });
+
+      // Add the file to FormData
+      formData.append('file', blob, attachment.name);
+
+      // Step 1: Upload file
+      Logger.info("Uploading file to 302.ai...");
+      const uploadResponse = await betterFetch(`${baseUrl}/302/upload-file`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: formData,
+        timeout,
+      });
+      console.log("调用了302.ai的api");
+      
+      const fileUrl = (uploadResponse.data as any).data;
+      Logger.info("File uploaded successfully:", fileUrl);
+
+      // Step 2: Parse file content
+      Logger.info("Parsing file content...");
+      const parseResponse = await betterFetch(`https://api.302.ai/302/file/parsing`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+        query: {
+          url: fileUrl,
+        },
+        timeout,
+      });
+
+      const fileContent = (parseResponse.data as any).data.msg;
+      Logger.info("File parsed successfully:", {
+        contentLength: fileContent.length,
+        contentPreview: fileContent.substring(0, 200),
+      });
+
+      return fileContent;
+    } catch (error) {
+      Logger.error("File parsing failed:", error);
+      throw new Error(`Failed to parse file ${attachment.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  private async convertToModelMessage(message: ChatMessage): Promise<ModelMessage> {
     if (message.role === "user" && message.attachments) {
       let attachments: Array<{
         id: string;
@@ -56,7 +141,16 @@ export class OpenAIProviderService extends BaseProviderService {
           });
         }
 
+        // Process attachments
         for (const attachment of attachments) {
+          Logger.info("Processing attachment:", {
+            id: attachment.id,
+            name: attachment.name,
+            type: attachment.type,
+            hasPreview: !!attachment.preview,
+            hasFileData: !!attachment.fileData,
+          });
+
           if (attachment.type?.startsWith("image/") && attachment.preview) {
             Logger.info("Adding image attachment");
             contentParts.push({
@@ -64,29 +158,34 @@ export class OpenAIProviderService extends BaseProviderService {
               image: attachment.preview,
             });
           } else if (attachment.fileData && attachment.type) {
-            if (!attachment.fileData.startsWith("data:")) {
-              Logger.warn(
-                "File data does not start with 'data:', this might cause issues",
-              );
-            }
+            try {
+              // Use the new async file parsing function
+              const parsedContent = await this.parseFileContent({
+                id: attachment.id,
+                name: attachment.name,
+                type: attachment.type,
+                fileData: attachment.fileData,
+              });
 
-            // Check if the data URL format is correct
-            const dataURLPattern = /^data:([^;]+);base64,(.+)$/;
-            const match = attachment.fileData.match(dataURLPattern);
-            if (!match) {
-              Logger.warn("File data does not match expected data URL pattern");
-            } else {
-              Logger.info("File data validation passed:", {
-                mimeType: match[1],
-                base64Length: match[2].length,
+              // Add parsed content as text with file context
+              contentParts.push({
+                type: "text",
+                text: `\n\n[File: ${attachment.name}]\n${parsedContent}\n[End of file]\n`,
+              });
+
+              Logger.info("Successfully added parsed file content:", {
+                fileName: attachment.name,
+                contentLength: parsedContent.length,
+              });
+            } catch (error) {
+              Logger.error("Failed to parse file:", error);
+
+              // Add error message as text
+              contentParts.push({
+                type: "text",
+                text: `\n\n[File: ${attachment.name} - Failed to parse: ${error instanceof Error ? error.message : 'Unknown error'}]\n`,
               });
             }
-            
-            contentParts.push({
-              type: "file",
-              data: attachment.fileData,
-              mimeType: attachment.type,
-            });
           } else {
             Logger.warn("Skipping attachment due to missing data:", {
               hasFileData: !!attachment.fileData,
@@ -95,7 +194,7 @@ export class OpenAIProviderService extends BaseProviderService {
             });
           }
         }
-        
+
         const result = {
           role: "user",
           content: contentParts,
@@ -204,9 +303,11 @@ export class OpenAIProviderService extends BaseProviderService {
       const { streamText: streamTextFn } = await import("ai");
 
       // Convert messages to ModelMessage format with attachment support
-      const modelMessages = messages
-        .filter((msg) => msg.role !== "function") // Filter out function messages
-        .map((msg) => this.convertToModelMessage(msg));
+      const modelMessages = await Promise.all(
+        messages
+          .filter((msg) => msg.role !== "function") // Filter out function messages
+          .map((msg) => this.convertToModelMessage(msg))
+      );
 
       Logger.info("Converted messages for AI SDK:", modelMessages);
 
@@ -304,9 +405,11 @@ export class OpenAIProviderService extends BaseProviderService {
       const { streamText: streamTextFn } = await import("ai");
 
       // Convert messages to ModelMessage format with attachment support
-      const modelMessages = messages
-        .filter((msg) => msg.role !== "function") // Filter out function messages
-        .map((msg) => this.convertToModelMessage(msg));
+      const modelMessages = await Promise.all(
+        messages
+          .filter((msg) => msg.role !== "function") // Filter out function messages
+          .map((msg) => this.convertToModelMessage(msg))
+      );
 
       const result = streamTextFn({
         model,
