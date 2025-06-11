@@ -9,6 +9,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
+const { providerService } = window.service;
+
 export function useStreamChat() {
   const { activeTabId,activeTab } = useActiveTab();
   const { activeThreadId } = useActiveThread();
@@ -64,7 +66,7 @@ export function useStreamChat() {
       modelId: string,
     ) => {
       try {
-        const result = await window.service.providerService.startStreamChat({
+        const result = await providerService.startStreamChat({
           tabId,
           threadId,
           userMessageId,
@@ -103,7 +105,7 @@ export function useStreamChat() {
       }
 
       try {
-        const result = await window.service.providerService.reGenerateStreamChat({
+        const result = await providerService.reGenerateStreamChat({
           tabId: activeTab.id,
           threadId: activeThreadId,
           userMessageId,
@@ -132,7 +134,7 @@ export function useStreamChat() {
     }
 
     try {
-      await window.service.providerService.stopStreamChat({
+      await providerService.stopStreamChat({
         tabId: activeTabId,
       });
     } catch (error) {

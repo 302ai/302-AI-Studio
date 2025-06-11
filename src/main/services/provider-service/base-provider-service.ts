@@ -15,6 +15,7 @@ export interface StreamChatParams {
   userMessageId: string;
   messages: ChatMessage[];
   modelName: string;
+  provider: Provider;
 }
 
 export abstract class BaseProviderService {
