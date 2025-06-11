@@ -1,9 +1,9 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
-import { betterFetch } from "@better-fetch/fetch";
 import { fetchOpenAIModels } from "@shared/api/ai";
+import { uploadAndParseFile } from "@shared/api/file-parsing";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
-import type { ModelMessage } from "ai";
+import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
 import Logger from "electron-log";
 import {
   BaseProviderService,
@@ -11,111 +11,29 @@ import {
   type StreamChatParams,
 } from "./base-provider-service";
 
+// Type definitions for AI SDK content parts - using the actual AI SDK types
+type ContentPart = TextPart | ImagePart | FilePart;
+
+// Type definition for attachment objects
+interface AttachmentData {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  preview?: string;
+  fileData?: string;
+  fileContent?: string;
+}
+
 export class OpenAIProviderService extends BaseProviderService {
   protected openai: OpenAIProvider;
-
-  /**
-   * Parse file content using 302.ai API
-   */
-  private async parseFileContent(attachment: {
-    id: string;
-    name: string;
-    type: string;
-    fileData: string;
-  }): Promise<string> {
-    const baseUrl = this.provider.baseUrl;
-    const apiKey = this.provider.apiKey;
-    const timeout = 30000; // Increase timeout for file processing
-
-    try {
-      Logger.info("Starting file parsing for:", {
-        fileName: attachment.name,
-        fileType: attachment.type,
-        fileSize: attachment.fileData.length,
-      });
-
-      // Convert data URL to File object for multipart/form-data
-      const dataURLPattern = /^data:([^;]+);base64,(.+)$/;
-      const match = attachment.fileData.match(dataURLPattern);
-
-      if (!match) {
-        throw new Error("Invalid file data format");
-      }
-
-      const mimeType = match[1];
-      const base64Data = match[2];
-
-      // Convert base64 to buffer
-      const buffer = Buffer.from(base64Data, "base64");
-
-      // Create FormData for multipart/form-data
-      const formData = new FormData();
-
-      // Create a Blob from the buffer
-      const blob = new Blob([buffer], { type: mimeType });
-
-      // Add the file to FormData
-      formData.append("file", blob, attachment.name);
-
-      // Step 1: Upload file
-      Logger.info("Uploading file to 302.ai...");
-      const uploadResponse = await betterFetch(`${baseUrl}/302/upload-file`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: formData,
-        timeout,
-      });
-
-      const fileUrl = (uploadResponse.data as any).data;
-      Logger.info("File uploaded successfully:", fileUrl);
-
-      // Step 2: Parse file content
-      Logger.info("Parsing file content...");
-      const parseResponse = await betterFetch(
-        `https://api.302.ai/302/file/parsing`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-          },
-          query: {
-            url: fileUrl,
-          },
-          timeout,
-        },
-      );
-
-      const fileContent = (parseResponse.data as any).data.msg;
-      Logger.info("File parsed successfully:", {
-        contentLength: fileContent.length,
-        contentPreview: fileContent.substring(0, 200),
-      });
-
-      return fileContent;
-    } catch (error) {
-      Logger.error("File parsing failed:", error);
-      throw new Error(
-        `Failed to parse file ${attachment.name}: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-    }
-  }
 
   private async convertToModelMessage(
     message: ChatMessage,
     messageId?: string,
   ): Promise<ModelMessage> {
     if (message.role === "user" && message.attachments) {
-      let attachments: Array<{
-        id: string;
-        name: string;
-        size: number;
-        type: string;
-        preview?: string;
-        fileData?: string;
-        fileContent?: string;
-      }> = [];
+      let attachments: AttachmentData[] = [];
       try {
         attachments = JSON.parse(message.attachments);
         Logger.info("Parsed attachments:", attachments.length);
@@ -127,21 +45,7 @@ export class OpenAIProviderService extends BaseProviderService {
       let attachmentsUpdated = false;
 
       if (attachments.length > 0) {
-        const contentParts: Array<
-          | {
-              type: "text";
-              text: string;
-            }
-          | {
-              type: "image";
-              image: string;
-            }
-          | {
-              type: "file";
-              data: string;
-              mimeType: string;
-            }
-        > = [];
+        const contentParts: ContentPart[] = [];
 
         // Add text content if it exists
         if (message.content.trim()) {
@@ -183,11 +87,15 @@ export class OpenAIProviderService extends BaseProviderService {
           } else if (attachment.fileData && attachment.type) {
             try {
               // Parse file content on-demand (first time)
-              const parsedContent = await this.parseFileContent({
+              const parsedContent = await uploadAndParseFile({
                 id: attachment.id,
                 name: attachment.name,
                 type: attachment.type,
                 fileData: attachment.fileData,
+              }, {
+                apiKey: this.provider.apiKey,
+                baseUrl: this.provider.baseUrl,
+                timeout: 30000,
               });
 
               // Cache the parsed content back to the attachment for future use
@@ -205,7 +113,7 @@ export class OpenAIProviderService extends BaseProviderService {
                 contentLength: parsedContent.length,
               });
             } catch (error) {
-  Logger.error("Failed to parse file:", error);
+              Logger.error("Failed to parse file:", error);
 
               // Add error message as text
               contentParts.push({
@@ -344,7 +252,10 @@ export class OpenAIProviderService extends BaseProviderService {
           .filter((msg) => msg.role !== "function") // Filter out function messages
           .map((msg, index) => {
             // For user messages, try to find the messageId (usually the last user message)
-            const messageId = msg.role === "user" && index === messages.length - 1 ? userMessageId : undefined;
+            const messageId =
+              msg.role === "user" && index === messages.length - 1
+                ? userMessageId
+                : undefined;
             return this.convertToModelMessage(msg, messageId);
           }),
       );
@@ -361,12 +272,7 @@ export class OpenAIProviderService extends BaseProviderService {
             : typeof msg.content === "string"
               ? msg.content.length
               : "unknown",
-          contentParts: Array.isArray(msg.content)
-            ? msg.content.map((part: any) => ({
-                type: part.type,
-                hasData: "data" in part || "image" in part || "text" in part,
-              }))
-            : "not-array",
+          hasContentParts: Array.isArray(msg.content),
         });
       });
 
