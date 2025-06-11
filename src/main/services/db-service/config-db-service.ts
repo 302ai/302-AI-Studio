@@ -49,8 +49,15 @@ export class ConfigDbService {
   }
 
   async updateProvider(providerId: string, updateData: UpdateProviderData) {
-    await triplitClient.update("providers", providerId, updateData);
-    await this.reorderProviders();
+    await triplitClient.update("providers", providerId, async (provider) => {
+      Object.assign(provider, updateData);
+    });
+  }
+
+  async updateProviderOrder(providerId: string, order: number) {
+    await triplitClient.update("providers", providerId, async (provider) => {
+      provider.order = order;
+    });
   }
 
   async getProviders(): Promise<Provider[]> {
@@ -72,8 +79,8 @@ export class ConfigDbService {
     const providers = await triplitClient.fetch(query);
 
     const updatePromises = providers.map((provider, index) => {
-      return triplitClient.update("providers", provider.id, {
-        order: index,
+      return triplitClient.update("providers", provider.id, async (provider) => {
+        provider.order = index;
       });
     });
 

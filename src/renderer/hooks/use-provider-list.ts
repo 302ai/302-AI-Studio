@@ -62,9 +62,7 @@ export function useProviderList() {
       updatedProviders.splice(toIndex, 0, movedProvider);
 
       const updatePromises = updatedProviders.map((provider, index) => {
-        return configService.updateProvider(provider.id, {
-          order: index,
-        });
+        return configService.updateProviderOrder(provider.id, index);
       });
 
       await Promise.all(updatePromises);

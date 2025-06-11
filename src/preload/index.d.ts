@@ -20,6 +20,7 @@ declare global {
         insertProvider: (provider: CreateProviderData) => Promise<Provider>;
         deleteProvider: (providerId: string) => Promise<void>;
         updateProvider: (providerId: string, updateData: UpdateProviderData) => Promise<void>;
+        updateProviderOrder: (providerId: string, order: number) => Promise<void>;
         insertModels: (models: CreateModelData[]) => Promise<void>;
         getProviderModels: (providerId: string) => Promise<Model[]>;
       };

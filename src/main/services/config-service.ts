@@ -97,6 +97,21 @@ export class ConfigService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateProviderOrder(
+    _event: Electron.IpcMainEvent,
+    providerId: string,
+    order: number,
+  ) {
+    try {
+      await this.configDbService.updateProviderOrder(providerId, order);
+      Logger.info("updateProviderOrder success ---->", providerId, order);
+    } catch (error) {
+      Logger.error("updateProviderOrder error ---->", error);
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async insertModels(_event: Electron.IpcMainEvent, models: CreateModelData[]): Promise<void> {
     try {
       await this.configDbService.insertModels(models);
