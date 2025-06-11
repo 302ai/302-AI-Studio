@@ -1,8 +1,6 @@
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import type { Message } from "@shared/triplit/types";
-import { format } from "date-fns";
-import { User } from "lucide-react";
 import { useMemo } from "react";
 import { MessageAttachments } from "./message-attachments";
 
@@ -21,27 +19,20 @@ export function UserMessage({ message }: UserMessageProps) {
   }, [message.attachments]);
 
   return (
-    <div className="group w-full">
-      <div className="mb-4 flex items-center justify-end gap-3">
-        <span className="text-muted-fg text-xs opacity-0 transition-opacity group-hover:opacity-100">
-          {format(new Date(message.createdAt), "HH:mm")}
-        </span>
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-          <User className="h-5 w-5 text-primary-fg" />
-        </div>
+    <div className="flex w-full justify-end">
+      <div className="w-fit max-w-[80%] rounded-2xl bg-accent px-4 py-2">
+        {attachments.length > 0 && (
+          <div className="mb-2">
+            <MessageAttachments attachments={attachments} />
+          </div>
+        )}
+
+        {message.content && (
+          <div className="whitespace-pre-wrap break-words">
+            <MarkdownRenderer>{message.content}</MarkdownRenderer>
+          </div>
+        )}
       </div>
-
-      {attachments.length > 0 && (
-        <div className="mb-3 flex justify-end">
-          <MessageAttachments attachments={attachments} />
-        </div>
-      )}
-
-      {message.content && (
-        <div className="whitespace-pre-wrap break-words text-right text-fg">
-          <MarkdownRenderer>{message.content}</MarkdownRenderer>
-        </div>
-      )}
     </div>
   );
 }

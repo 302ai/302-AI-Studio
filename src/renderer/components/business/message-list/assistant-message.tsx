@@ -58,7 +58,7 @@ export function AssistantMessage({
   return (
     <div className="group w-full">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
           <Bot className="h-5 w-5 text-primary-fg" />
         </div>
         <span className="text-muted-fg text-xs opacity-0 transition-opacity group-hover:opacity-100">
