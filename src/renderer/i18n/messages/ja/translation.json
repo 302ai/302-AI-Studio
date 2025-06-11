@@ -168,6 +168,16 @@
     }
   },
   "message": {
-    "thinking": "AIは考えています"
+    "copy": "コピー",
+    "refresh": "再生成",
+    "edit": "編集",
+    "thinking": "AIは考えています",
+    "edit-dialog": {
+      "title": "メッセージを編集",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "save-success": "メッセージが正常に更新されました",
+      "save-error": "メッセージの更新に失敗しました"
+    }
   }
 }

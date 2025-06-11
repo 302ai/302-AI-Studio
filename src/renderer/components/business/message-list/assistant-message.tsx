@@ -7,11 +7,12 @@ import type { Message } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { enUS, ja, zhCN } from "date-fns/locale";
 import i18next from "i18next";
-import { Check, Copy, RefreshCcw } from "lucide-react";
+import { Check, Copy, Pencil, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ButtonWithTooltip } from "../button-with-tooltip";
 import { ModelIcon } from "../model-icon";
+import { EditMessageDialog } from "./edit-message-dialog";
 import { MessageAttachments } from "./message-attachments";
 
 const localeMap = {
@@ -30,6 +31,7 @@ export function AssistantMessage({
   handleRefreshMessage,
 }: AssistantMessageProps) {
   const [copied, setCopied] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const currentLanguage = i18next.language;
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
@@ -37,7 +39,7 @@ export function AssistantMessage({
 
   const providerQuery = triplitClient
     .query("providers")
-    .Where("id", "=", message.providerId)
+    .Where("id", "=", message.providerId);
   const { results: providerResults } = useQuery(triplitClient, providerQuery);
   const providerName = useMemo(() => {
     const provider = providerResults?.[0];
@@ -65,6 +67,10 @@ export function AssistantMessage({
 
   const handleRefresh = () => {
     handleRefreshMessage(message.id);
+  };
+
+  const handleEdit = () => {
+    setIsEditDialogOpen(true);
   };
 
   return (
@@ -128,6 +134,17 @@ export function AssistantMessage({
               <RefreshCcw className="h-3 w-3" />
             </ButtonWithTooltip>
 
+            <ButtonWithTooltip
+              type="button"
+              onClick={handleEdit}
+              className="flex cursor-pointer items-center gap-1 text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+              title={t("edit")}
+              size="extra-small"
+              intent="plain"
+            >
+              <Pencil className="h-3 w-3" />
+            </ButtonWithTooltip>
+
             <div className="ml-2 text-muted-fg text-xs">
               {formatTimeAgo(
                 message.createdAt.toISOString(),
@@ -137,6 +154,13 @@ export function AssistantMessage({
           </div>
         )}
       </div>
+
+      {/* Edit Dialog */}
+      <EditMessageDialog
+        message={message}
+        isOpen={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+      />
     </div>
   );
 }
