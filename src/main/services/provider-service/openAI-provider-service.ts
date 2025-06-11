@@ -1,169 +1,17 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
+import { convertMessagesToModelMessages } from "@main/utils/message-converter";
 import { fetchOpenAIModels } from "@shared/api/ai";
-import { uploadAndParseFile } from "@shared/api/file-parsing";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
-import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
+import { smoothStream, streamText } from "ai";
 import Logger from "electron-log";
 import {
   BaseProviderService,
-  type ChatMessage,
   type StreamChatParams,
 } from "./base-provider-service";
 
-// Type definitions for AI SDK content parts - using the actual AI SDK types
-type ContentPart = TextPart | ImagePart | FilePart;
-
-// Type definition for attachment objects
-interface AttachmentData {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-  preview?: string;
-  fileData?: string;
-  fileContent?: string;
-}
-
 export class OpenAIProviderService extends BaseProviderService {
   protected openai: OpenAIProvider;
-
-  private async convertToModelMessage(
-    message: ChatMessage,
-    messageId?: string,
-  ): Promise<ModelMessage> {
-    if (message.role === "user" && message.attachments) {
-      let attachments: AttachmentData[] = [];
-      try {
-        attachments = JSON.parse(message.attachments);
-        Logger.info("Parsed attachments:", attachments.length);
-      } catch (error) {
-        Logger.warn("Failed to parse attachments:", error);
-        attachments = [];
-      }
-
-      let attachmentsUpdated = false;
-
-      if (attachments.length > 0) {
-        const contentParts: ContentPart[] = [];
-
-        // Add text content if it exists
-        if (message.content.trim()) {
-          contentParts.push({
-            type: "text",
-            text: message.content,
-          });
-        }
-
-        // Process attachments
-        for (const attachment of attachments) {
-          Logger.info("Processing attachment:", {
-            id: attachment.id,
-            name: attachment.name,
-            type: attachment.type,
-            hasPreview: !!attachment.preview,
-            hasFileData: !!attachment.fileData,
-            hasFileContent: !!attachment.fileContent,
-          });
-
-          if (attachment.type?.startsWith("image/") && attachment.preview) {
-            Logger.info("Adding image attachment");
-            contentParts.push({
-              type: "image",
-              image: attachment.preview,
-            });
-          } else if (attachment.fileContent) {
-            // Use pre-parsed file content if available (from database)
-            Logger.info("Using pre-parsed file content from database");
-            contentParts.push({
-              type: "text",
-              text: `${attachment.name}]\n${attachment.fileContent}`,
-            });
-
-            Logger.info("Successfully added pre-parsed file content:", {
-              fileName: attachment.name,
-              contentLength: attachment.fileContent.length,
-            });
-          } else if (attachment.fileData && attachment.type) {
-            try {
-              // Parse file content on-demand (first time)
-              const parsedContent = await uploadAndParseFile({
-                id: attachment.id,
-                name: attachment.name,
-                type: attachment.type,
-                fileData: attachment.fileData,
-              }, {
-                apiKey: this.provider.apiKey,
-                baseUrl: this.provider.baseUrl,
-                timeout: 30000,
-              });
-
-              // Cache the parsed content back to the attachment for future use
-              attachment.fileContent = parsedContent;
-              attachmentsUpdated = true;
-
-              // Add parsed content as text with file context
-              contentParts.push({
-                type: "text",
-                text: `${attachment.name}]\n${parsedContent}`,
-              });
-
-              Logger.info("Successfully added parsed file content:", {
-                fileName: attachment.name,
-                contentLength: parsedContent.length,
-              });
-            } catch (error) {
-              Logger.error("Failed to parse file:", error);
-
-              // Add error message as text
-              contentParts.push({
-                type: "text",
-                text: `\n\n[File: ${attachment.name} - Failed to parse: ${error instanceof Error ? error.message : "Unknown error"}]\n`,
-              });
-            }
-          } else {
-            Logger.warn("Skipping attachment due to missing data:", {
-              hasFileData: !!attachment.fileData,
-              hasType: !!attachment.type,
-              hasPreview: !!attachment.preview,
-              hasFileContent: !!attachment.fileContent,
-            });
-          }
-        }
-
-        const result = {
-          role: "user",
-          content: contentParts,
-        } as ModelMessage;
-
-        // If attachments were updated with parsed content, notify renderer to update database
-        if (attachmentsUpdated && messageId) {
-          this.sendToAllWindows("chat:attachments-updated", {
-            messageId,
-            attachments: JSON.stringify(attachments),
-          });
-        }
-
-        return result;
-      }
-    }
-
-    // For messages without attachments or non-user messages
-    const result = {
-      role: message.role as "user" | "assistant" | "system",
-      content: message.content,
-    } as ModelMessage;
-
-    Logger.info("Created simple message:", {
-      role: result.role,
-      contentLength:
-        typeof result.content === "string"
-          ? result.content.length
-          : "not-string",
-    });
-
-    return result;
-  }
 
   constructor(provider: Provider) {
     super(provider);
@@ -243,21 +91,14 @@ export class OpenAIProviderService extends BaseProviderService {
 
       Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
 
-      // Start streaming
-      const { streamText: streamTextFn } = await import("ai");
-
       // Convert messages to ModelMessage format with attachment support
-      const modelMessages = await Promise.all(
-        messages
-          .filter((msg) => msg.role !== "function") // Filter out function messages
-          .map((msg, index) => {
-            // For user messages, try to find the messageId (usually the last user message)
-            const messageId =
-              msg.role === "user" && index === messages.length - 1
-                ? userMessageId
-                : undefined;
-            return this.convertToModelMessage(msg, messageId);
-          }),
+      const modelMessages = await convertMessagesToModelMessages(
+        messages,
+        {
+          apiKey: this.provider.apiKey,
+          baseUrl: this.provider.baseUrl,
+        },
+        userMessageId,
       );
 
       Logger.info("Converted messages for AI SDK:", modelMessages);
@@ -276,9 +117,10 @@ export class OpenAIProviderService extends BaseProviderService {
         });
       });
 
-      const result = streamTextFn({
+      const result = streamText({
         model,
         messages: modelMessages,
+        experimental_transform: smoothStream(),
       });
 
       // Send stream start event
@@ -348,19 +190,16 @@ export class OpenAIProviderService extends BaseProviderService {
         `Starting regenerate stream chat for tab ${tabId}, thread ${threadId}, regenerating message ${regenerateMessageId}`,
       );
 
-      // Start streaming
-      const { streamText: streamTextFn } = await import("ai");
-
       // Convert messages to ModelMessage format with attachment support
-      const modelMessages = await Promise.all(
-        messages
-          .filter((msg) => msg.role !== "function") // Filter out function messages
-          .map((msg) => this.convertToModelMessage(msg)),
-      );
+      const modelMessages = await convertMessagesToModelMessages(messages, {
+        apiKey: this.provider.apiKey,
+        baseUrl: this.provider.baseUrl,
+      });
 
-      const result = streamTextFn({
+      const result = streamText({
         model,
         messages: modelMessages,
+        experimental_transform: smoothStream(),
       });
 
       // Send regenerate stream start event
