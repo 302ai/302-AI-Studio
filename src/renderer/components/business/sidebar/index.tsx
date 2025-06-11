@@ -78,7 +78,7 @@ export function AppSidebar(props: AppSidebarProps) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset className="min-h-[calc(100vh-var(--title-bar-height))] p-4">
+      <SidebarInset className="min-h-[calc(100vh-var(--title-bar-height))] p-6 pr-0">
         {props.children}
       </SidebarInset>
     </div>

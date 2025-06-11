@@ -4,7 +4,13 @@ import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { triplitClient } from "@shared/triplit/client";
 import type { Message } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { AssistantMessage } from "./assistant-message";
 import { UserMessage } from "./user-message";
 
@@ -69,7 +75,6 @@ export function MessageList() {
     return result;
   }, [messages, streamingMessages, activeThreadId]);
 
-  // 自动滚动到底部的函数
   const scrollToBottom = useCallback((instant = false) => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
@@ -78,32 +83,26 @@ export function MessageList() {
       } else {
         container.scrollTo({
           top: container.scrollHeight,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       }
     }
   }, []);
 
-  // 检查是否应该自动滚动（用户是否在底部附近）
   const shouldAutoScroll = useCallback(() => {
     if (!scrollContainerRef.current) return true;
 
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current;
-    // 如果用户在距离底部100px以内，就认为应该自动滚动
     return scrollHeight - scrollTop - clientHeight < 100;
   }, []);
 
-  // 监听消息列表变化（包括流式消息内容变化），实时滚动到底部
   useLayoutEffect(() => {
     if (messagesList.length > 0) {
-      // 使用双重 requestAnimationFrame 确保 DOM 完全更新后再滚动
       const rafId = requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          if (shouldAutoScroll()) {
-            scrollToBottom(isStreaming); // 流式输出时使用瞬时滚动
-          }
-        });
+        if (shouldAutoScroll()) {
+          scrollToBottom(isStreaming);
+        }
       });
 
       return () => cancelAnimationFrame(rafId);
@@ -124,7 +123,10 @@ export function MessageList() {
     <div className="flex h-full flex-col">
       <div
         ref={scrollContainerRef}
-        className="flex-1 space-y-4 overflow-y-auto p-4"
+        className="flex-1 space-y-4 overflow-y-auto pr-4"
+        style={{
+          scrollbarGutter: "stable",
+        }}
       >
         {messagesList.map((message: Message) => (
           <div key={message.id}>
@@ -138,7 +140,6 @@ export function MessageList() {
             )}
           </div>
         ))}
-        {/* 滚动锚点 */}
         <div ref={messagesEndRef} className="h-1" />
       </div>
     </div>

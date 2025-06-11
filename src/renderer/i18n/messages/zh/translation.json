@@ -157,7 +157,8 @@
   },
   "message": {
     "copy": "复制",
-    "refresh": "重新生成"
+    "refresh": "重新生成",
+    "thinking": "AI正在思考"
   },
   "common": {
     "copied-success": "已复制",
