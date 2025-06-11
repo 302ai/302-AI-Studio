@@ -3,8 +3,8 @@ import { MessageList } from "@renderer/components/business/message-list";
 
 export function ChatPage() {
   return (
-    <div className="flex size-full flex-col">
-      <div className="flex-1 overflow-hidden">
+    <div className="flex size-full flex-col p-6 pr-0">
+      <div className="flex-1 overflow-y-auto pr-6">
         <MessageList />
       </div>
 

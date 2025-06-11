@@ -166,5 +166,8 @@
       "waiting-for-diagram": "チャートの内容を待っています...",
       "diagram-syntax-error": "グラフ構文エラー"
     }
+  },
+  "message": {
+    "thinking": "AIは考えています"
   }
 }

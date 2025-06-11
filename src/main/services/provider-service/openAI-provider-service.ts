@@ -205,7 +205,7 @@ export class OpenAIProviderService extends BaseProviderService {
                 contentLength: parsedContent.length,
               });
             } catch (error) {
-              Logger.error("Failed to parse file:", error);
+  Logger.error("Failed to parse file:", error);
 
               // Add error message as text
               contentParts.push({
@@ -380,6 +380,7 @@ export class OpenAIProviderService extends BaseProviderService {
         tabId,
         threadId,
         userMessageId,
+        providerId: this.provider.id,
       });
 
       let fullContent = "";
@@ -462,6 +463,7 @@ export class OpenAIProviderService extends BaseProviderService {
         threadId,
         userMessageId,
         regenerateMessageId,
+        providerId: this.provider.id,
       });
 
       let fullContent = "";
@@ -490,6 +492,7 @@ export class OpenAIProviderService extends BaseProviderService {
         regenerateMessageId,
         fullContent,
         usage,
+        providerId: this.provider.id,
       });
 
       Logger.info(`Regenerate stream chat completed for tab ${tabId}`);
@@ -504,6 +507,7 @@ export class OpenAIProviderService extends BaseProviderService {
         userMessageId,
         regenerateMessageId,
         error: error instanceof Error ? error.message : "Unknown error",
+        providerId: this.provider.id,
       });
 
       return {
