@@ -1,5 +1,5 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
-import type { CreateModelData, Provider } from "@shared/triplit/types";
+import type { CreateModelData, CreateProviderData, Provider } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 
@@ -11,11 +11,17 @@ declare global {
     };
     service: {
       configService: {
+        // * General settings
         getLanguage: () => Promise<LanguageVarious>;
         setLanguage: (language: LanguageVarious) => void;
         setTheme: (theme: ThemeMode) => void;
+
+        // * Provider and models settings
+        insertProvider: (provider: CreateProviderData) => Promise<Provider>;
+        deleteProvider: (providerId: string) => Promise<void>;
+        updateProvider: (providerId: string, updateData: UpdateProviderData) => Promise<void>;
+        insertModels: (models: CreateModelData[]) => Promise<void>;
         getProviderModels: (providerId: string) => Promise<Model[]>;
-        setProviderModels: (providerId: string, models: Model[]) => void;
       };
       threadsService: {
         setActiveThreadId: (threadId: string) => void;

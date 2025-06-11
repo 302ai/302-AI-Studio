@@ -1,13 +1,17 @@
-import type { ModelProvider } from "@shared/types/provider";
+import type { Provider } from "@shared/triplit/types";
 import mitt from "mitt";
 
 export enum EventNames {
-  PROVIDERS_UPDATE = "providers:update",
+  PROVIDER_ADD = "provider:add",
+  PROVIDER_DELETE = "provider:delete",
 }
 
 type Events = {
-  [EventNames.PROVIDERS_UPDATE]: {
-    providers: ModelProvider[];
+  [EventNames.PROVIDER_ADD]: {
+    provider: Provider;
+  };
+  [EventNames.PROVIDER_DELETE]: {
+    providerId: string;
   };
 };
 

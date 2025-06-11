@@ -1,13 +1,7 @@
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useState } from "react";
-import {
-  deleteProvider,
-  insertModels,
-  insertProvider,
-  updateProvider,
-} from "../services/db-services/providers-db-service";
 
-const { providerService } = window.service;
+const { configService, providerService } = window.service;
 
 export type ModelActionType = "add" | "edit" | "delete";
 
@@ -29,12 +23,12 @@ export function useProviderList() {
       return;
     }
 
-    await deleteProvider(selectedProvider.id);
+    await configService.deleteProvider(selectedProvider.id);
   };
 
   const handleUpdateProvider = async (updatedProvider: Provider) => {
     const { id, name, baseUrl, apiKey, apiType } = updatedProvider;
-    await updateProvider(id, {
+    await configService.updateProvider(id, {
       name,
       baseUrl,
       apiKey,
@@ -43,9 +37,9 @@ export function useProviderList() {
   };
 
   const handleAddProvider = async (provider: CreateProviderData) => {
-    const newProvider = await insertProvider(provider);
+    const newProvider = await configService.insertProvider(provider);
     const models = await providerService.fetchModels(newProvider);
-    await insertModels(models);
+    await configService.insertModels(models);
   };
 
   const handleCheckKey = async (
@@ -68,7 +62,7 @@ export function useProviderList() {
       updatedProviders.splice(toIndex, 0, movedProvider);
 
       const updatePromises = updatedProviders.map((provider, index) => {
-        return updateProvider(provider.id, {
+        return configService.updateProvider(provider.id, {
           order: index,
         });
       });
