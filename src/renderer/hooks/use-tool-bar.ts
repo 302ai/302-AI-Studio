@@ -1,5 +1,6 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import {
+  deleteMessage,
   getMessagesByThreadId,
   insertMessage,
 } from "@renderer/services/db-services/messages-db-service";
@@ -27,7 +28,7 @@ export function useToolBar() {
   });
   const { activeThreadId, setActiveThreadId } = useActiveThread();
   const { activeTab, activeTabId, setActiveTabId } = useActiveTab();
-  const { startStreamChat, reGenerateStreamChat } = useStreamChat();
+  const { startStreamChat } = useStreamChat();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
   const { results: tabs } = useQuery(triplitClient, tabsQuery);
@@ -218,34 +219,39 @@ export function useToolBar() {
     }
   }, [activeThreadId, threads]);
 
-
   const handleRefreshMessage = async (messageId: string) => {
-       // Find the selected model and its provider
-       const selectedModel = models?.find(
-        (model) => model.id === selectedModelId,
-      );
-      if (!selectedModel) {
-        throw new Error("Selected model not found");
-      }
+    // Find the selected model and its provider
+    const selectedModel = models?.find((model) => model.id === selectedModelId);
+    if (!selectedModel) {
+      throw new Error("Selected model not found");
+    }
 
-      const provider = providers?.find(
-        (p) => p.id === selectedModel.providerId,
-      );
-      if (!provider) {
-        throw new Error("Provider not found for selected model");
-      }
+    const provider = providers?.find((p) => p.id === selectedModel.providerId);
+    if (!provider) {
+      throw new Error("Provider not found for selected model");
+    }
 
     const existingMessages = await getMessagesByThreadId(activeThreadId ?? "");
-    const messageToRefresh = existingMessages.find(
-      (m) => m.id === messageId,
-    );
+    const messageToRefresh = existingMessages.find((m) => m.id === messageId);
     if (!messageToRefresh) {
       throw new Error("Message not found");
     }
-    const context = existingMessages.slice(
-      0,
-      existingMessages.findIndex((m) => m.id === messageToRefresh.id),
+
+    const messageIndex = existingMessages.findIndex(
+      (m) => m.id === messageToRefresh.id,
     );
+    const context = existingMessages.slice(0, messageIndex);
+
+    // Delete all messages after the message to refresh (including the message itself)
+    const messagesToDelete = existingMessages.slice(messageIndex);
+    for (const msg of messagesToDelete) {
+      try {
+        await deleteMessage(msg.id);
+      } catch (error) {
+        console.error("Failed to delete message:", msg.id, error);
+      }
+    }
+
     // 重新生成AI消息
     const conversationMessages = [
       ...context.map((msg) => ({
@@ -256,27 +262,27 @@ export function useToolBar() {
     ];
 
     // Find the last user message before the message to refresh
-    const lastUserMessage = context.reverse().find(msg => msg.role === "user");
+    const lastUserMessage = context
+      .reverse()
+      .find((msg) => msg.role === "user");
     const userMessageId = lastUserMessage?.id || "";
 
-
-    // Use regenerate stream chat instead of regular stream chat
+    // Use regular stream chat since we deleted the original message
     try {
-      const data = await reGenerateStreamChat(
-        messageId, // regenerateMessageId
+      const data = await startStreamChat(
+        activeTab?.id || "", // tabId
+        activeThreadId || "", // threadId
         userMessageId, // userMessageId - the last user message that triggered this response
         conversationMessages,
         provider,
         selectedModel.name, // Use model name for the API call
       );
       console.log("Regenerate data", data);
-
     } catch (streamError) {
       console.error("Failed to regenerate streaming chat:", streamError);
       toast.error("Failed to regenerate AI response");
       // Error handling is now done in the streaming hook
     }
-   
   };
 
   return {
