@@ -14,6 +14,17 @@ export interface AttachmentForParsing {
   fileData: string;
 }
 
+// Type definitions for 302.ai API responses
+interface FileUploadResponse {
+  data: string; // The file URL
+}
+
+interface FileParsingResponse {
+  data: {
+    msg: string; // The parsed file content
+  };
+}
+
 /**
  * File parsing service for processing file content using 302.ai API
  */
@@ -65,7 +76,7 @@ export class FileParsingService {
 
       // Step 1: Upload file
       Logger.info("Uploading file to 302.ai...");
-      const uploadResponse = await betterFetch(`${baseUrl}/302/upload-file`, {
+      const { data: uploadData, error: uploadError } = await betterFetch<FileUploadResponse>(`${baseUrl}/302/upload-file`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -73,13 +84,21 @@ export class FileParsingService {
         body: formData,
         timeout,
       });
-      
-      const fileUrl = (uploadResponse.data as any).data;
+
+      if (uploadError) {
+        throw new Error(`Failed to upload file: ${uploadError}`);
+      }
+
+      if (!uploadData) {
+        throw new Error("Failed to upload file: No response data");
+      }
+
+      const fileUrl = uploadData.data;
       Logger.info("File uploaded successfully:", fileUrl);
 
       // Step 2: Parse file content
       Logger.info("Parsing file content...");
-      const parseResponse = await betterFetch(`https://api.302.ai/302/file/parsing`, {
+      const { data: parseData, error: parseError } = await betterFetch<FileParsingResponse>(`https://api.302.ai/302/file/parsing`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -90,7 +109,15 @@ export class FileParsingService {
         timeout,
       });
 
-      const fileContent = (parseResponse.data as any).data.msg;
+      if (parseError) {
+        throw new Error(`Failed to parse file: ${parseError}`);
+      }
+
+      if (!parseData) {
+        throw new Error("Failed to parse file: No response data");
+      }
+
+      const fileContent = parseData.data.msg;
       Logger.info("File parsed successfully:", {
         contentLength: fileContent.length,
         contentPreview: fileContent.substring(0, 200),
