@@ -1,6 +1,6 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { betterFetch } from "@better-fetch/fetch";
-import { fetchOpenAIModels } from "@shared/api/ai";
+import { fetchOpenAIModels } from "@main/api/ai";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
 import { type ModelMessage, smoothStream, streamText } from "ai";
