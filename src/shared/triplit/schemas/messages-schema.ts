@@ -15,7 +15,7 @@ export const messagesSchema = {
     tokenCount: S.Number({ default: 0 }),
     status: S.String({
       default: "pending",
-      enum: ["pending", "success", "error"],
+      enum: ["pending", "success", "error", "stop"],
     }),
     providerId: S.String({ nullable: true }),
   }),

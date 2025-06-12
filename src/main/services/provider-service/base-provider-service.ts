@@ -2,6 +2,10 @@
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 import { BrowserWindow } from "electron";
 import Logger from "electron-log";
+import {
+  cleanupAbortController as cleanupAbortControllerForTab,
+  createAbortController as createAbortControllerForTab,
+} from "./stream-manager";
 
 export interface ChatMessage {
   role: "user" | "assistant" | "system" | "function";
@@ -24,6 +28,16 @@ export abstract class BaseProviderService {
 
   constructor(provider: Provider) {
     this.provider = provider;
+  }
+
+  // Helper to create and store an AbortController
+  protected createAbortController(tabId: string): AbortController {
+    return createAbortControllerForTab(tabId);
+  }
+
+  // Helper to clean up the AbortController after the stream is done
+  protected cleanupAbortController(tabId: string) {
+    cleanupAbortControllerForTab(tabId);
   }
 
   abstract checkApiKey(): Promise<{

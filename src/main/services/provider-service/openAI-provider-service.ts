@@ -85,6 +85,9 @@ export class OpenAIProviderService extends BaseProviderService {
     params: StreamChatParams,
   ): Promise<{ success: boolean; error?: string }> {
     const { tabId, threadId, userMessageId, messages, modelName } = params;
+    const controller = this.createAbortController(tabId);
+
+    let fullContent = "";
 
     try {
       const model = this.openai(modelName);
@@ -121,6 +124,7 @@ export class OpenAIProviderService extends BaseProviderService {
         model,
         messages: modelMessages,
         experimental_transform: smoothStream(),
+        abortSignal: controller.signal,
       });
 
       // Send stream start event
@@ -131,11 +135,11 @@ export class OpenAIProviderService extends BaseProviderService {
         providerId: this.provider.id,
       });
 
-      let fullContent = "";
-
       // Process stream
       for await (const delta of result.textStream) {
         fullContent += delta;
+
+        Logger.info("Regenerate stream delta:", delta);
 
         // Send delta to renderer
         this.sendToAllWindows("chat:stream-delta", {
@@ -160,6 +164,18 @@ export class OpenAIProviderService extends BaseProviderService {
       Logger.info(`Stream chat completed for tab ${tabId}`);
       return { success: true };
     } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        Logger.info(`Stream aborted for tab ${tabId}`);
+        // Send a specific event for abortion, or handle silently
+        this.sendToAllWindows("chat:stream-stop", {
+          tabId,
+          threadId,
+          userMessageId,
+          fullContent,
+        });
+        return { success: true };
+      }
+
       Logger.error(`Stream chat error for tab ${tabId}:`, error);
 
       // Send error event
@@ -174,6 +190,8 @@ export class OpenAIProviderService extends BaseProviderService {
         success: false,
         error: extractErrorMessage(error),
       };
+    } finally {
+      this.cleanupAbortController(tabId);
     }
   }
 
@@ -182,6 +200,7 @@ export class OpenAIProviderService extends BaseProviderService {
     regenerateMessageId: string,
   ): Promise<{ success: boolean; error?: string }> {
     const { tabId, threadId, userMessageId, messages, modelName } = params;
+    const controller = this.createAbortController(tabId);
 
     try {
       const model = this.openai(modelName);
@@ -200,6 +219,7 @@ export class OpenAIProviderService extends BaseProviderService {
         model,
         messages: modelMessages,
         experimental_transform: smoothStream(),
+        abortSignal: controller.signal,
       });
 
       // Send regenerate stream start event
@@ -243,6 +263,18 @@ export class OpenAIProviderService extends BaseProviderService {
       Logger.info(`Regenerate stream chat completed for tab ${tabId}`);
       return { success: true };
     } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        Logger.info(`Regenerate stream aborted for tab ${tabId}`);
+        this.sendToAllWindows("chat:regenerate-stream-error", {
+          tabId,
+          threadId,
+          userMessageId,
+          regenerateMessageId,
+          error: "Cancelled by user.",
+          providerId: this.provider.id,
+        });
+        return { success: true }; // Successful cancellation
+      }
       Logger.error(`Regenerate stream chat error for tab ${tabId}:`, error);
 
       // Send error event
@@ -259,6 +291,8 @@ export class OpenAIProviderService extends BaseProviderService {
         success: false,
         error: extractErrorMessage(error),
       };
+    } finally {
+      this.cleanupAbortController(tabId);
     }
   }
 }

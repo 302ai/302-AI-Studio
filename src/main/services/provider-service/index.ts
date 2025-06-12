@@ -5,6 +5,7 @@ import {
 } from "@main/shared/reflect";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
+import { ipcMain } from "electron";
 import Logger from "electron-log";
 import { ConfigService } from "../config-service";
 import { EventNames, emitter } from "../event-service";
@@ -13,6 +14,7 @@ import type {
   StreamChatParams,
 } from "./base-provider-service";
 import { OpenAIProviderService } from "./openAI-provider-service";
+import { abortStream } from "./stream-manager";
 
 @ServiceRegister("providerService")
 export class ProviderService {
@@ -24,6 +26,7 @@ export class ProviderService {
     this.configService = new ConfigService();
     this.init();
     this.setupEventListeners();
+    this.setupStreamStopListener();
   }
 
   private async init() {
@@ -53,6 +56,15 @@ export class ProviderService {
     emitter.on(EventNames.PROVIDER_DELETE, ({ providerId }) => {
       this.handleProviderDeleted(providerId);
     });
+  }
+
+  private setupStreamStopListener() {
+    ipcMain.on(
+      "chat:stream-stop",
+      (_event, data: { tabId: string; userMessageId: string }) => {
+        abortStream(data.tabId);
+      },
+    );
   }
 
   private handleProviderAdded(provider: Provider) {
@@ -207,9 +219,10 @@ export class ProviderService {
     params: { tabId: string },
   ): Promise<{ success: boolean }> {
     const { tabId } = params;
-    // For now, we'll just log this. In a more advanced implementation,
-    // we could track active streams and abort them
-    Logger.info(`Stream chat stop requested for tab ${tabId}`);
+    const aborted = abortStream(tabId);
+    Logger.info(
+      `Stream chat stop requested for tab ${tabId}. Active stream aborted: ${aborted}`,
+    );
     return { success: true };
   }
 }

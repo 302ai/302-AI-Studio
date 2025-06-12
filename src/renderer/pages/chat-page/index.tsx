@@ -1,5 +1,6 @@
 import { ChatInput } from "@renderer/components/business/chat-input";
 import { MessageList } from "@renderer/components/business/message-list";
+import { Button } from "@renderer/components/ui/button";
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { useStreamChat } from "@renderer/hooks/use-stream-chat";
 import { triplitClient } from "@shared/triplit/client";
@@ -14,9 +15,13 @@ import {
 
 export function ChatPage() {
   const { activeThreadId } = useActiveThread();
-  const { streamingMessages, isStreaming } = useStreamChat();
+  const { streamingMessages, isStreaming, stopStreamChat } = useStreamChat();
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleStopStreaming = useCallback(() => {
+    stopStreamChat();
+  }, [stopStreamChat]);
 
   const messagesQuery = useMemo(() => {
     if (!activeThreadId) return null;
@@ -122,6 +127,19 @@ export function ChatPage() {
       >
         <MessageList messages={messagesList} />
       </div>
+
+      {isStreaming && (
+        <div className="flex justify-center py-2 pr-6">
+          <Button
+            intent="outline"
+            size="small"
+            className="shrink-0"
+            onClick={handleStopStreaming}
+          >
+            Stop Generating
+          </Button>
+        </div>
+      )}
 
       <div className="flex-shrink-0 pt-4 pr-6">
         <ChatInput />

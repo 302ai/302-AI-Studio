@@ -21,7 +21,7 @@ export interface StreamingMessage {
   parentMessageId: string;
   role: "assistant";
   content: string;
-  status: "pending" | "success" | "error";
+  status: "pending" | "success" | "error" | "stop";
   orderSeq: number;
 }
 
@@ -428,6 +428,56 @@ class StreamChatEventService {
       this.onStreamErrorCallbacks.forEach((callback) => callback(data));
     };
 
+    const handleStreamStop = async (_event: any, data: StreamChatEvent) => {
+      Logger.info("Stream stop requested:", data);
+      this.setIsStreaming(false);
+
+      const tempId = `temp-${data.userMessageId}`;
+
+      try {
+        // Save the complete message to database
+        if (data.fullContent) {
+          // Get the current message count for orderSeq
+          const existingMessages = await messageService.getMessagesByThreadId(
+            data.threadId,
+          );
+          const nextOrderSeq = (existingMessages?.length || 0) + 1;
+
+          const savedMessage = await messageService.insertMessage({
+            threadId: data.threadId,
+            parentMessageId: data.userMessageId,
+            role: "assistant",
+            content: data.fullContent,
+            attachments: null,
+            orderSeq: nextOrderSeq,
+            tokenCount: data.fullContent.length,
+            status: "stop",
+            providerId: data.providerId,
+          });
+
+          Logger.info("Assistant message saved to DB:", savedMessage);
+
+          // Parse file attachments in the user message after successful AI response
+          try {
+            await parseAndUpdateAttachments(data.userMessageId);
+          } catch (error) {
+            Logger.error("Failed to parse file attachments:", error);
+            // Don't show error to user as this is a background operation
+          }
+        }
+      } catch (error) {
+        Logger.error("Failed to save assistant message:", error);
+        toast.error("Failed to save assistant message");
+      }
+
+      // Remove temporary message
+      this.streamingMessages.delete(tempId);
+      this.notifyStreamingMessagesChange();
+
+      // Notify callbacks
+      this.onStreamEndCallbacks.forEach((callback) => callback(data));
+    };
+
     // Handle attachment updates from main process
     const handleAttachmentsUpdated = async (
       _event: any,
@@ -449,6 +499,7 @@ class StreamChatEventService {
     window.electron.ipcRenderer.on("chat:stream-delta", handleStreamDelta);
     window.electron.ipcRenderer.on("chat:stream-end", handleStreamEnd);
     window.electron.ipcRenderer.on("chat:stream-error", handleStreamError);
+    window.electron.ipcRenderer.on("chat:stream-stop", handleStreamStop);
     window.electron.ipcRenderer.on(
       "chat:attachments-updated",
       handleAttachmentsUpdated,
@@ -501,6 +552,16 @@ class StreamChatEventService {
 
   getIsStreaming(): boolean {
     return this.isStreaming;
+  }
+
+  stopStreaming(tabId: string, userMessageId: string) {
+    if (!this.isStreaming) return;
+
+    Logger.info(`Requesting to stop stream for tab: ${tabId}`);
+    window.electron.ipcRenderer.send("chat:stream-stop", {
+      tabId,
+      userMessageId,
+    });
   }
 
   onStreamingStateChange(callback: (isStreaming: boolean) => void) {
@@ -571,6 +632,19 @@ class StreamChatEventService {
       window.electron.ipcRenderer.removeAllListeners("chat:stream-error");
       window.electron.ipcRenderer.removeAllListeners(
         "chat:attachments-updated",
+      );
+      // Remove regenerate IPC listeners
+      window.electron.ipcRenderer.removeAllListeners(
+        "chat:regenerate-stream-start",
+      );
+      window.electron.ipcRenderer.removeAllListeners(
+        "chat:regenerate-stream-delta",
+      );
+      window.electron.ipcRenderer.removeAllListeners(
+        "chat:regenerate-stream-end",
+      );
+      window.electron.ipcRenderer.removeAllListeners(
+        "chat:regenerate-stream-error",
       );
       this.initialized = false;
     }
