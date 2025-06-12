@@ -1,4 +1,4 @@
-import type { Thread } from "@shared/triplit/types";
+import type { Message, Thread } from "@shared/triplit/types";
 import mitt from "mitt";
 
 export enum EventNames {
@@ -12,6 +12,9 @@ export enum EventNames {
   TAB_CLOSE = "tab:close",
   TAB_CLOSE_ALL = "tab:close-all",
   TAB_SELECT = "tab:select",
+
+  // * Message events
+  MESSAGE_EDIT = "message:edit",
 }
 
 type Events = {
@@ -36,6 +39,7 @@ type Events = {
     nextActiveTabId: string;
   };
   [EventNames.TAB_CLOSE_ALL]: null;
+  [EventNames.MESSAGE_EDIT]: Message;
 };
 
 const mittInstance = mitt<Events>();

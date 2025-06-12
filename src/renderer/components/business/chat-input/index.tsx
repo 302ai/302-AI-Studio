@@ -1,8 +1,11 @@
+import { Button } from "@renderer/components/ui/button";
 import { Textarea } from "@renderer/components/ui/textarea";
 import { useAttachments } from "@renderer/hooks/use-attachments";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
-import { useState } from "react";
+import { EventNames, emitter } from "@renderer/services/event-service";
+import { Pencil, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentList } from "./attachment-list";
@@ -11,6 +14,41 @@ import { ToolBar } from "./tool-bar";
 interface ChatInputProps {
   className?: string;
 }
+
+const { messageService } = window.service;
+
+// Process attachment data and convert to FileList
+const processAttachmentsFromData = (
+  attachmentData: Array<{
+    name: string;
+    type: string;
+    preview?: string;
+    fileData?: string;
+  }>,
+): FileList => {
+  const dataTransfer = new DataTransfer();
+
+  attachmentData.forEach((attachment) => {
+    // Check if it's an image (has preview) or other file type (has fileData)
+    const base64Data = attachment.preview || attachment.fileData;
+    if (base64Data) {
+      // Convert base64 data to File object
+      const byteString = atob(base64Data.split(",")[1]);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const int8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        int8Array[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([int8Array], { type: attachment.type });
+      const file = new File([blob], attachment.name, {
+        type: attachment.type,
+      });
+      dataTransfer.items.add(file);
+    }
+  });
+
+  return dataTransfer.files;
+};
 
 export function ChatInput({ className }: ChatInputProps) {
   const { t } = useTranslation("translation", {
@@ -21,7 +59,7 @@ export function ChatInput({ className }: ChatInputProps) {
     useAttachments();
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
-
+  const [editMessageId, setEditMessageId] = useState<string | null>(null);
   const {
     selectedModelId,
     handleModelSelect,
@@ -76,6 +114,7 @@ export function ChatInput({ className }: ChatInputProps) {
       event.preventDefault();
       if (!isSending && input.trim()) {
         handleSendMessage();
+        setEditMessageId(null);
       }
     }
   };
@@ -88,6 +127,40 @@ export function ChatInput({ className }: ChatInputProps) {
     }
   };
 
+  useEffect(() => {
+    const unsub = emitter.on(EventNames.MESSAGE_EDIT, (msg) => {
+      if (editMessageId === msg.id) return;
+      setInput(msg.content);
+      if (msg.attachments) {
+        const attachmentData = JSON.parse(msg.attachments);
+        if (Array.isArray(attachmentData) && attachmentData.length > 0) {
+          const fileList = processAttachmentsFromData(attachmentData);
+          addAttachments(fileList);
+        }
+      }
+      setEditMessageId(msg.id);
+    });
+
+    return () => {
+      unsub();
+    };
+  }, [addAttachments, editMessageId]);
+
+  const handleSave = async () => {
+    if (!editMessageId) return;
+    await messageService.updateMessage(editMessageId, {
+      content: input,
+      attachments: JSON.stringify(attachments),
+    });
+    setEditMessageId(null);
+    clearInput();
+  };
+
+  const handleCancelEdit = () => {
+    setEditMessageId(null);
+    clearInput();
+  };
+
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>
       {attachments.length > 0 && (
@@ -98,7 +171,20 @@ export function ChatInput({ className }: ChatInputProps) {
           />
         </div>
       )}
-
+      {editMessageId && (
+        <div className="my-1 mt-2 flex justify-between px-2 text-xs">
+          <div className="flex items-center gap-x-1">
+            <Pencil className="size-4" />
+            {t("edit-message")}
+          </div>
+          <div className="flex items-center gap-x-1 text-xs">
+            <Button intent="outline" onClick={handleSave} size="extra-small">
+              {t("edit-message-only-save")}
+            </Button>
+            <X className="size-4 cursor-pointer" onClick={handleCancelEdit} />
+          </div>
+        </div>
+      )}
       <div
         className={cn(
           "relative",
@@ -128,6 +214,7 @@ export function ChatInput({ className }: ChatInputProps) {
           selectedModelId={selectedModelId}
           onModelSelect={handleModelSelect}
           isDisabled={!canSendMessage}
+          setEditMessageId={setEditMessageId}
         />
       </div>
     </div>
