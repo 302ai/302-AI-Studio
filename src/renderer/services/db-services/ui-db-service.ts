@@ -45,7 +45,7 @@ export async function updateActiveTabId(tabId: string) {
   try {
     const uiRecord = await ensureUIRecord();
     await triplitClient.update("ui", uiRecord.id, (ui) => {
-      ui.activeTabId = tabId ;
+      ui.activeTabId = tabId;
     });
   } catch (error) {
     console.error("Error updating active tab ID:", error);
@@ -138,17 +138,17 @@ export async function updateActiveTabHistory(tabId: string) {
   try {
     const uiRecord = await ensureUIRecord();
     await triplitClient.update("ui", uiRecord.id, async (ui) => {
-        const historyArray = Array.from(ui.activeTabHistory || []);
+      const historyArray = Array.from(ui.activeTabHistory || []);
 
-        if (historyArray[historyArray.length - 1] !== tabId) {
-          historyArray.push(tabId);
-        }
+      if (historyArray[historyArray.length - 1] !== tabId) {
+        historyArray.push(tabId);
+      }
 
-        if (historyArray.length > 30) {
-          historyArray.shift();
-        }
+      if (historyArray.length > 30) {
+        historyArray.shift();
+      }
 
-        ui.activeTabHistory = new Set(historyArray);
+      ui.activeTabHistory = new Set(historyArray);
     });
   } catch (error) {
     console.error("Error updating active tab history:", error);
@@ -165,7 +165,10 @@ export async function getActiveTabHistory(): Promise<string[]> {
   }
 }
 
-export async function findNextActiveTabFromHistory(removedTabId: string, availableTabIds: string[]): Promise<string | null> {
+export async function findNextActiveTabFromHistory(
+  removedTabId: string,
+  availableTabIds: string[],
+): Promise<string | null> {
   try {
     const history = await getActiveTabHistory();
 
@@ -190,7 +193,7 @@ export async function removeTabFromHistory(tabId: string) {
     console.log("🔄 removeTabFromHistory", tabId);
     await triplitClient.update("ui", uiRecord.id, (ui) => {
       const historyArray = Array.from(ui.activeTabHistory || []);
-      const filteredHistory = historyArray.filter(id => id !== tabId);
+      const filteredHistory = historyArray.filter((id) => id !== tabId);
       ui.activeTabHistory = new Set(filteredHistory);
     });
     console.log("🔄 removeTabFromHistory", uiRecord.activeTabHistory);

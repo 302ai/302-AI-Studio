@@ -1,8 +1,9 @@
-import { updateActiveTabHistory, updateActiveTabId } from "@renderer/services/db-services/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
+
+const { uiService } = window.service;
 
 export function useActiveTab() {
   const [selectedTab, setSelectedTab] = useState<Tab | null>(null);
@@ -19,8 +20,8 @@ export function useActiveTab() {
 
   const setActiveTabId = useCallback(async (tabId: string) => {
     console.log("Setting active tab ID with history:", tabId || "none");
-    await updateActiveTabId(tabId);
-    await updateActiveTabHistory(tabId);
+    await uiService.updateActiveTabId(tabId);
+    await uiService.updateActiveTabHistory(tabId);
   }, []);
 
   useEffect(() => {

@@ -1,8 +1,4 @@
 import type { DropResult } from "@hello-pangea/dnd";
-import {
-  insertTab,
-  moveTab,
-} from "@renderer/services/db-services/tabs-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { Tab, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -14,6 +10,8 @@ import { useActiveTab } from "./use-active-tab";
 interface UseTabBarProps {
   tabBarRef: React.RefObject<HTMLDivElement>;
 }
+
+const { tabService } = window.service;
 
 export function useTabBar({ tabBarRef }: UseTabBarProps) {
   const { activeTabId, activeTab, setActiveTabId } = useActiveTab();
@@ -50,7 +48,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     setTabs(newTabs);
 
     try {
-      await moveTab(fromIndex, toIndex, tabs);
+      await tabService.moveTab(fromIndex, toIndex, tabs);
       console.log("Tab order updated successfully");
     } catch (error) {
       console.error("Failed to move tab:", error);
@@ -133,7 +131,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
       if (existingTab) {
         await setActiveTabId(existingTab.id);
       } else {
-        const newTab = await insertTab({
+        const newTab = await tabService.insertTab({
           title,
           threadId: id,
           type: "thread",

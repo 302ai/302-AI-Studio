@@ -2,10 +2,13 @@ import type { ElectronAPI } from "@electron-toolkit/preload";
 import type {
   CreateModelData,
   CreateProviderData,
+  CreateTabData,
   CreateThreadData,
   Provider,
+  Tab,
   Thread,
   UpdateProviderData,
+  UpdateTabData,
   UpdateThreadData,
 } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
@@ -47,6 +50,17 @@ declare global {
         ) => Promise<void>;
         getThreadById: (threadId: string) => Promise<Thread | null>;
       };
+      tabService: {
+        insertTab: (tab: CreateTabData) => Promise<Tab>;
+        deleteTab: (tabId: string) => Promise<string>;
+        updateTab: (tabId: string, updateData: UpdateTabData) => Promise<void>;
+        getTab: (tabId: string) => Promise<Tab | null>;
+        moveTab: (
+          fromIndex: number,
+          toIndex: number,
+          tabs: Tab[],
+        ) => Promise<void>;
+      };
       providerService: {
         checkApiKey: (provider: Provider) => Promise<{
           isOk: boolean;
@@ -81,6 +95,20 @@ declare global {
         stopStreamChat: (params: {
           tabId: string;
         }) => Promise<{ success: boolean }>;
+      };
+      uiService: {
+        updateActiveProviderId: (providerId: string) => Promise<void>;
+        getActiveProviderId: () => Promise<string>;
+        clearActiveProviderId: () => Promise<void>;
+        getActiveProvider: () => Promise<Provider | null>;
+        updateActiveThreadId: (threadId: string) => Promise<void>;
+        getActiveThreadId: () => Promise<string>;
+        clearActiveThreadId: () => Promise<void>;
+        getActiveThread: () => Promise<Thread | null>;
+        getActiveTabId: () => Promise<string>;
+        clearActiveTabId: () => Promise<void>;
+        updateActiveTabHistory: (tabId: string) => Promise<void>;
+        updateActiveTabId: (tabId: string) => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{

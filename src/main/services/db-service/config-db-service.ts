@@ -5,7 +5,7 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import Logger from 'electron-log';
+import Logger from "electron-log";
 
 export class ConfigDbService {
   constructor() {
@@ -92,9 +92,13 @@ export class ConfigDbService {
     const providers = await triplitClient.fetch(query);
 
     const updatePromises = providers.map((provider, index) => {
-      return triplitClient.update("providers", provider.id, async (provider) => {
-        provider.order = index;
-      });
+      return triplitClient.update(
+        "providers",
+        provider.id,
+        async (provider) => {
+          provider.order = index;
+        },
+      );
     });
 
     await Promise.all(updatePromises);

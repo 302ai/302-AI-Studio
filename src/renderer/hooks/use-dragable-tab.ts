@@ -1,7 +1,3 @@
-import {
-  deleteTab,
-  updateTab,
-} from "@renderer/services/db-services/tabs-db-service";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import { useCallback, useEffect, useRef } from "react";
 import { useActiveTab } from "./use-active-tab";
@@ -11,6 +7,8 @@ interface HookParams {
   index: number;
 }
 
+const { tabService } = window.service;
+
 export function useDragableTab({ id }: HookParams) {
   const { setActiveTabId, tabs } = useActiveTab();
 
@@ -18,7 +16,7 @@ export function useDragableTab({ id }: HookParams) {
 
   const handleTabClose = useCallback(async () => {
     try {
-      const nextActiveTabId = await deleteTab(id);
+      const nextActiveTabId = await tabService.deleteTab(id);
       emitter.emit(EventNames.TAB_CLOSE, { tabId: id, nextActiveTabId });
     } catch (error) {
       console.error("Error closing tab:", error);
@@ -28,7 +26,7 @@ export function useDragableTab({ id }: HookParams) {
   const handleTabCloseAll = useCallback(async () => {
     try {
       for (const tab of tabs) {
-        await deleteTab(tab.id);
+        await tabService.deleteTab(tab.id);
       }
       emitter.emit(EventNames.TAB_CLOSE_ALL, null);
     } catch (error) {
@@ -43,14 +41,14 @@ export function useDragableTab({ id }: HookParams) {
     }) => {
       const tabToUpdate = tabs.find((tab) => tab.threadId === event.threadId);
       if (tabToUpdate) {
-        await updateTab(tabToUpdate.id, { title: event.newTitle });
+        await tabService.updateTab(tabToUpdate.id, { title: event.newTitle });
       }
     };
 
     const handleThreadDelete = async (event: { threadId: string }) => {
       const tabToDelete = tabs.find((tab) => tab.threadId === event.threadId);
       if (tabToDelete) {
-        await deleteTab(tabToDelete.id);
+        await tabService.deleteTab(tabToDelete.id);
       }
     };
 

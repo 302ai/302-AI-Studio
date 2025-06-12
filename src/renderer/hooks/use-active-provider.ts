@@ -2,10 +2,12 @@ import { triplitClient } from "@shared/triplit/client";
 import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
-import { updateActiveProviderId } from "../services/db-services/ui-db-service";
+
+const { uiService } = window.service;
 
 export function useActiveProvider() {
-  const [selectedProvider, setSelectedProviderState] = useState<Provider | null>(null);
+  const [selectedProvider, setSelectedProviderState] =
+    useState<Provider | null>(null);
 
   // Subscribe to UI state changes
   const uiQuery = triplitClient.query("ui");
@@ -25,13 +27,13 @@ export function useActiveProvider() {
       return;
     }
 
-    const activeProvider = providers.find(p => p.id === activeProviderId);
+    const activeProvider = providers.find((p) => p.id === activeProviderId);
     setSelectedProviderState(activeProvider || null);
   }, [activeProviderId, providers]);
 
   const setSelectedProvider = useCallback(async (provider: Provider | null) => {
     console.log("Setting selected provider:", provider?.name || "none");
-    await updateActiveProviderId(provider?.id || "");
+    await uiService.updateActiveProviderId(provider?.id || "");
   }, []);
 
   return {

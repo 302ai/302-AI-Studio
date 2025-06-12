@@ -1,11 +1,13 @@
 import { triplitClient } from "@main/triplit/client";
-import type { CreateThreadData, Thread, UpdateThreadData } from "@shared/triplit/types";
+import type {
+  CreateThreadData,
+  Thread,
+  UpdateThreadData,
+} from "@shared/triplit/types";
 
 export class ThreadDbService {
   constructor() {
-    if (!triplitClient.connectionStatus || triplitClient.connectionStatus === 'CLOSED') {
-      triplitClient.connect();
-    }
+    triplitClient.connect();
   }
 
   async insertThread(thread: CreateThreadData): Promise<Thread> {
@@ -16,10 +18,7 @@ export class ThreadDbService {
     await triplitClient.delete("threads", threadId);
   }
 
-  async updateThread(
-    threadId: string,
-    updateData: UpdateThreadData,
-  ) {
+  async updateThread(threadId: string, updateData: UpdateThreadData) {
     const existingThread = await this.getThreadById(threadId);
     if (!existingThread) {
       console.warn(`Thread with id ${threadId} not found, skipping update`);

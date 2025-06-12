@@ -15,7 +15,6 @@ import { isMac } from "@renderer/config/constant";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { cn } from "@renderer/lib/utils";
-import { insertTab } from "@renderer/services/db-services/tabs-db-service";
 import {
   PanelLeftClose,
   PanelLeftOpen,
@@ -30,6 +29,8 @@ import { ThreadSearcher } from "./thread-searcher";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
+const { tabService } = window.service;
+
 export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
@@ -41,7 +42,7 @@ export function BasicTitleBar() {
   const isSidebarCollapsed = state === "collapsed";
 
   const handleAddNewTab = async (type: "thread" | "setting") => {
-    const newTab = await insertTab({
+    const newTab = await tabService.insertTab({
       title: type === "thread" ? t("thread.new-thread-title") : t("settings.tab-title"),
       type,
     });

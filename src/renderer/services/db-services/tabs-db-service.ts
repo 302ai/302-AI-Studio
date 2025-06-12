@@ -1,6 +1,10 @@
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateTabData, Tab, UpdateTabData } from "@shared/triplit/types";
-import { findNextActiveTabFromHistory, removeTabFromHistory, updateActiveTabId } from "./ui-db-service";
+import {
+  findNextActiveTabFromHistory,
+  removeTabFromHistory,
+  updateActiveTabId,
+} from "./ui-db-service";
 
 export async function insertTab(tab: CreateTabData): Promise<Tab> {
   const query = triplitClient.query("tabs");
@@ -33,13 +37,16 @@ export async function deleteTab(tabId: string): Promise<string> {
 
     // If we deleted the active tab, find a replacement
     if (currentActiveTabId === tabId) {
-      const remainingTabs = allTabs.filter(tab => tab.id !== tabId);
+      const remainingTabs = allTabs.filter((tab) => tab.id !== tabId);
 
       if (remainingTabs.length > 0) {
-        const remainingTabIds = remainingTabs.map(tab => tab.id);
+        const remainingTabIds = remainingTabs.map((tab) => tab.id);
 
         // Try to find next active tab from history
-        const nextActiveTabFromHistory = await findNextActiveTabFromHistory(tabId, remainingTabIds);
+        const nextActiveTabFromHistory = await findNextActiveTabFromHistory(
+          tabId,
+          remainingTabIds,
+        );
 
         const nextActiveTabId = nextActiveTabFromHistory || remainingTabs[0].id;
         await updateActiveTabId(nextActiveTabId);
@@ -61,7 +68,10 @@ export async function deleteTab(tabId: string): Promise<string> {
   }
 }
 
-export async function updateTab(tabId: string, updateData: UpdateTabData): Promise<void> {
+export async function updateTab(
+  tabId: string,
+  updateData: UpdateTabData,
+): Promise<void> {
   await triplitClient.update("tabs", tabId, updateData);
   await reorderTabs();
 }

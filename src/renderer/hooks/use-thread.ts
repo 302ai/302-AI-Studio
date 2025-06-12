@@ -1,5 +1,3 @@
-import { getTab } from "@renderer/services/db-services/tabs-db-service";
-import { clearActiveThread } from "@renderer/services/db-services/ui-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -22,7 +20,7 @@ export type GroupedThreads = {
   threads: Thread[];
 };
 
-const { threadService } = window.service;
+const { threadService, uiService, tabService } = window.service;
 
 export function useThread() {
   const { t } = useTranslation();
@@ -154,7 +152,7 @@ export function useThread() {
      * * Handles the tab select event
      */
     const handleTabSelect = async (event: { tabId: string }) => {
-      const tab = await getTab(event.tabId);
+      const tab = await tabService.getTab(event.tabId);
       await setActiveThreadId(tab?.threadId ?? "");
     };
     /**
@@ -164,8 +162,10 @@ export function useThread() {
       tabId: string;
       nextActiveTabId: string;
     }) => {
-      const nextActiveTab = await getTab(event.nextActiveTabId);
-      const thread = await threadService.getThreadById(nextActiveTab?.threadId ?? "");
+      const nextActiveTab = await tabService.getTab(event.nextActiveTabId);
+      const thread = await threadService.getThreadById(
+        nextActiveTab?.threadId ?? "",
+      );
 
       await setActiveThreadId(thread ? thread.id : "");
     };
@@ -173,7 +173,7 @@ export function useThread() {
      * * Handles the tab close all event
      */
     const handleTabCloseAll = async () => {
-      await clearActiveThread();
+      await uiService.clearActiveThreadId();
     };
 
     const unsubs = [

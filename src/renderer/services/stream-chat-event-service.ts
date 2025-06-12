@@ -7,7 +7,6 @@ import {
 } from "@renderer/services/db-services/messages-db-service";
 import Logger from "electron-log";
 import { toast } from "sonner";
-import { getActiveProvider } from "./db-services/ui-db-service";
 import { FileParsingService } from "./file-parsing-service";
 
 export interface StreamChatEvent {
@@ -33,6 +32,8 @@ export interface StreamingMessage {
 }
 
 type StreamEventCallback = (event: StreamChatEvent) => void;
+
+const { uiService } = window.service;
 
 /**
  * Parse file attachments and update user message with parsed content
@@ -77,7 +78,7 @@ async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
     }
 
     // Get active provider for parsing
-    const activeProvider = await getActiveProvider();
+    const activeProvider = await uiService.getActiveProvider();
 
     if (!activeProvider || !activeProvider.apiKey || !activeProvider.baseUrl) {
       Logger.warn("No active provider available for file parsing");

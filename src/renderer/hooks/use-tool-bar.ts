@@ -4,10 +4,6 @@ import {
   getMessagesByThreadId,
   insertMessage,
 } from "@renderer/services/db-services/messages-db-service";
-import {
-  insertTab,
-  updateTab,
-} from "@renderer/services/db-services/tabs-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -18,7 +14,7 @@ import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 import { useStreamChat } from "./use-stream-chat";
 
-const { threadService } = window.service;
+const { threadService, tabService } = window.service;
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -100,12 +96,12 @@ export function useToolBar() {
 
         if (thread) {
           if (activeTab) {
-            await updateTab(activeTab.id, {
+            await tabService.updateTab(activeTab.id, {
               threadId: thread.id,
             });
           } else {
             const { id, title } = thread;
-            const newTab = await insertTab({
+            const newTab = await tabService.insertTab({
               title,
               threadId: id,
               type: "thread",

@@ -29,4 +29,7 @@
   "i18n-ally.namespace": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "turboConsoleLog.includeFilename": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
 }

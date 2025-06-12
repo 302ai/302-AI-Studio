@@ -3,7 +3,7 @@ import type { Schema } from "./schema";
 
 // * Providers
 export type Provider = Entity<Schema, "providers">;
-export type CreateProviderData = Omit<Provider, "id" | "order">
+export type CreateProviderData = Omit<Provider, "id" | "order">;
 export type UpdateProviderData = Partial<Omit<Provider, "id">>;
 
 // * Models
@@ -28,3 +28,6 @@ export type UpdateThreadData = Partial<Omit<Thread, "id">>;
 export type Message = Entity<Schema, "messages">;
 export type CreateMessageData = Omit<Message, "id" | "createdAt">;
 export type UpdateMessageData = Partial<Omit<Message, "id">>;
+
+// * UI
+export type Ui = Entity<Schema, "ui">;
