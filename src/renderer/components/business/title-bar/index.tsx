@@ -34,7 +34,7 @@ const { tabService } = window.service;
 export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
-  const { setActiveTabId } = useActiveTab();
+  const { setActiveTabId, tabs } = useActiveTab();
   const { setActiveThreadId } = useActiveThread();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -42,6 +42,18 @@ export function BasicTitleBar() {
   const isSidebarCollapsed = state === "collapsed";
 
   const handleAddNewTab = async (type: "thread" | "setting") => {
+    if (type === "setting") {
+      // Check if a setting tab already exists
+      const existingSettingTab = tabs.find(tab => tab.type === "setting");
+
+      if (existingSettingTab) {
+        // Activate the existing setting tab
+        const promises = [setActiveTabId(existingSettingTab.id), setActiveThreadId('')];
+        await Promise.all(promises);
+        return;
+      }
+    }
+
     const newTab = await tabService.insertTab({
       title: type === "thread" ? t("thread.new-thread-title") : t("settings.tab-title"),
       type,
