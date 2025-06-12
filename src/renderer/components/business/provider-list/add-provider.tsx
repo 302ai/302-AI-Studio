@@ -99,9 +99,34 @@ export function AddProvider({
   };
 
   const handleProviderSelect = (key: string) => {
+    console.log("handleProviderSelect", key);
+    // When the SelectOption id is "custom" it means the user wants to add a custom provider
+    if (key === "custom") {
+      setProviderId("custom");
+      setProviderName("");
+      setBaseURL(""); // leave empty for custom provider
+      setProviderType("openai"); // reset to default
+
+      if (keyValidationStatus !== "unverified") {
+        handleValidationStatusReset();
+      }
+
+      return;
+    }
+
     const [id, name] = key.toString().split("-");
     setProviderId(id);
     setProviderName(name);
+
+    // Fill baseUrl & apiType automatically
+    const foundProvider = DEFAULT_PROVIDERS.find((p) => p.id === id);
+    if (foundProvider) {
+      // Prefer the explicit baseUrl field, fallback to websites.defaultBaseUrl
+      const defaultBaseUrl =
+        foundProvider.baseUrl || foundProvider.websites?.defaultBaseUrl || "";
+      setBaseURL(defaultBaseUrl);
+      setProviderType(foundProvider.apiType);
+    }
 
     if (keyValidationStatus !== "unverified") {
       handleValidationStatusReset();
