@@ -3,8 +3,9 @@ import { Button } from "@renderer/components/ui/button";
 import { Label } from "@renderer/components/ui/field";
 import { Radio, RadioGroup } from "@renderer/components/ui/radio-group";
 import { TextField } from "@renderer/components/ui/text-field";
+import type { NormalizedUrlResult } from "@renderer/utils/url-normalizer";
 import { TailChase } from "ldrs/react";
-import { Check, KeyRound, X } from "lucide-react";
+import { AlertTriangle, Check, KeyRound, Link, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LoaderRenderer } from "../loader-renderer";
 
@@ -23,6 +24,7 @@ interface ProviderCfgFormProps {
   onApiKeyChange: (value: string) => void;
   onBaseUrlChange: (value: string) => void;
   onProviderTypeChange: (value: string) => void;
+  normalizedUrlResult: NormalizedUrlResult;
 }
 
 export function ProviderCfgForm({
@@ -40,6 +42,7 @@ export function ProviderCfgForm({
   onApiKeyChange,
   onBaseUrlChange,
   onProviderTypeChange,
+  normalizedUrlResult,
 }: ProviderCfgFormProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider.add-provider-form",
@@ -93,7 +96,7 @@ export function ProviderCfgForm({
 
   const handleInputChange = (
     value: string,
-    onChange: (value: string) => void
+    onChange: (value: string) => void,
   ) => {
     onChange(value);
     if (keyValidationStatus !== "unverified") {
@@ -117,9 +120,7 @@ export function ProviderCfgForm({
       <div className="flex flex-row items-center gap-2">
         <div className="flex-1">
           <div className="mb-[calc(var(--spacing)*1.5)] flex items-center gap-x-2">
-            <Label className="font-medium text-fg text-sm">
-              API Key
-            </Label>
+            <Label className="font-medium text-fg text-sm">API Key</Label>
             <Badge intent={getBadgeIntent(keyValidationStatus)} shape="square">
               <LoaderRenderer
                 status={keyValidationStatus}
@@ -154,13 +155,79 @@ export function ProviderCfgForm({
       </div>
 
       {/* Provider Base URL Input */}
-      <TextField
-        aria-label="Base URL"
-        label="Base URL"
-        placeholder={t("placeholder-3")}
-        value={baseUrl}
-        onChange={(value) => handleInputChange(value, onBaseUrlChange)}
-      />
+      <div className="flex flex-col gap-2">
+        <TextField
+          aria-label="Base URL"
+          label="Base URL"
+          placeholder={t("placeholder-3")}
+          value={baseUrl}
+          onChange={(value) => handleInputChange(value, onBaseUrlChange)}
+        />
+
+        {/* URL Preview */}
+        {baseUrl && (
+          <div className="rounded-lg border border-border/50 bg-secondary/30 p-3">
+            <div className="flex items-start gap-2">
+              {normalizedUrlResult.isValid ? (
+                <Link className="mt-0.5 size-4 shrink-0 text-success-fg" />
+              ) : (
+                <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning-fg" />
+              )}
+              <div className="min-w-0 flex-1">
+                {normalizedUrlResult.isValid ? (
+                  <div className="space-y-1">
+                    <div className="text-fg text-sm">
+                      <span className="font-medium">
+                        {t("normalized-base-url")}:
+                      </span>
+                    </div>
+                    <div className="break-all font-mono text-secondary-fg text-sm">
+                      {normalizedUrlResult.normalizedBaseUrl}
+                    </div>
+                    <div className="text-fg text-sm">
+                      <span className="font-medium">
+                        {t("full-api-endpoint")}:
+                      </span>
+                    </div>
+                    <div className="break-all font-mono text-secondary-fg text-sm">
+                      {normalizedUrlResult.fullApiEndpoint}
+                    </div>
+
+                    {/* If the normalized URL is different from the input, show the apply button */}
+                    {normalizedUrlResult.normalizedBaseUrl !== baseUrl && (
+                      <div className="mt-3 border-border/30 border-t pt-2">
+                        <Button
+                          intent="outline"
+                          size="extra-small"
+                          onClick={() =>
+                            onBaseUrlChange(
+                              normalizedUrlResult.normalizedBaseUrl,
+                            )
+                          }
+                          className="h-7 text-xs"
+                        >
+                          {t("apply-normalized-url")}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <div className="font-medium text-sm text-warning-fg">
+                      {t("url-format-error")}
+                    </div>
+                    {normalizedUrlResult.error && (
+                      <div className="text-secondary-fg text-sm">
+                        {normalizedUrlResult.error}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Provider Type Select */}
       <RadioGroup

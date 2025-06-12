@@ -55,7 +55,13 @@
           "checking": "Checking...",
           "unverified": "To Be Verified",
           "verified": "Verified",
-          "verification-failed": "Failed"
+          "verification-failed": "Failed",
+          "normalized-base-url": "Normalized Base URL",
+          "full-api-endpoint": "Full API Endpoint Example",
+          "apply-normalized-url": "Apply Normalized URL",
+          "url-format-error": "Invalid URL Format",
+          "url-empty-error": "URL cannot be empty",
+          "url-invalid-format": "Invalid URL format"
         },
         "delete": "Delete",
         "description": " models",

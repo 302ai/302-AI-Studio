@@ -55,7 +55,13 @@
           "checking": "検証...",
           "unverified": "検証されます",
           "verified": "検証に合格しました",
-          "verification-failed": "認証に失敗しました"
+          "verification-failed": "認証に失敗しました",
+          "normalized-base-url": "正規化されたベースURL",
+          "full-api-endpoint": "完全なAPIエンドポイントの例",
+          "apply-normalized-url": "正規化されたURLを適用",
+          "url-format-error": "URL形式エラー",
+          "url-empty-error": "URLを空にすることはできません",
+          "url-invalid-format": "無効なURL形式"
         },
         "delete": "削除",
         "description": "モデル",

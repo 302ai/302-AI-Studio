@@ -55,7 +55,13 @@
           "checking": "验证中...",
           "unverified": "待验证",
           "verified": "已通过验证",
-          "verification-failed": "未通过验证"
+          "verification-failed": "未通过验证",
+          "normalized-base-url": "规范化 Base URL",
+          "full-api-endpoint": "完整 API 端点示例",
+          "apply-normalized-url": "应用规范化 URL",
+          "url-format-error": "URL 格式错误",
+          "url-empty-error": "URL 不能为空",
+          "url-invalid-format": "URL 格式无效"
         },
         "delete": "删除",
         "description": "个模型",

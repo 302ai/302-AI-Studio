@@ -1,6 +1,7 @@
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
 import type { Provider } from "@shared/triplit/types";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ProviderCfgForm } from "./provider-cfg-form";
@@ -36,6 +37,11 @@ export function EditProvider({
 
   const isCustomProvider = provider.custom ?? false;
   const canCheckKey = !!apiKey && !!baseUrl;
+
+  // Calculate normalized URL and complete API endpoint
+  const normalizedUrlResult = useMemo(() => {
+    return normalizeBaseUrl(baseUrl, apiType, t);
+  }, [baseUrl, apiType, t]);
 
   const isOnlyNameChanged = useCallback(() => {
     return (
@@ -92,11 +98,16 @@ export function EditProvider({
     setIsChecking("loading");
     setKeyValidationStatus("loading");
 
+    // Use normalized Base URL
+    const finalBaseUrl = normalizedUrlResult.isValid
+      ? normalizedUrlResult.normalizedBaseUrl
+      : baseUrl;
+
     const updatedProvider: Provider = {
       ...provider,
       name: customName,
       apiKey,
-      baseUrl,
+      baseUrl: finalBaseUrl,
       apiType,
     };
 
@@ -140,11 +151,16 @@ export function EditProvider({
   });
 
   useEffect(() => {
+    // Use normalized Base URL
+    const finalBaseUrl = normalizedUrlResult.isValid
+      ? normalizedUrlResult.normalizedBaseUrl
+      : baseUrl;
+
     const updatedProvider: Provider = {
       ...provider,
       name: customName,
       apiKey,
-      baseUrl,
+      baseUrl: finalBaseUrl,
       apiType: apiType,
     };
 
@@ -154,7 +170,15 @@ export function EditProvider({
     if (isValid) {
       onProviderCfgSetRef.current(updatedProvider);
     }
-  }, [customName, apiKey, baseUrl, apiType, isCurrentConfigValid, provider]);
+  }, [
+    customName,
+    apiKey,
+    baseUrl,
+    apiType,
+    isCurrentConfigValid,
+    provider,
+    normalizedUrlResult,
+  ]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -175,6 +199,7 @@ export function EditProvider({
         onProviderTypeChange={(value) =>
           handleKeyFieldChange(value, setApiType)
         }
+        normalizedUrlResult={normalizedUrlResult}
       />
     </div>
   );

@@ -6,13 +6,14 @@ import {
   SelectTrigger,
 } from "@renderer/components/ui/select";
 import { nanoid } from "nanoid";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ModelIcon } from "../model-icon";
 import "ldrs/react/TailChase.css";
 import { DEFAULT_PROVIDERS } from "@renderer/config/providers";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
 import type { Provider } from "@shared/triplit/types";
 import { LayoutDashboard } from "lucide-react";
 import { ProviderCfgForm } from "./provider-cfg-form";
@@ -50,6 +51,11 @@ export function AddProvider({
   const canCheckKey = !!apiKey && !!providerId && !!baseUrl;
   const customProviderName = customName === "" ? t("default-name") : customName;
 
+  // 计算规范化的 URL 和完整 API 端点
+  const normalizedUrlResult = useMemo(() => {
+    return normalizeBaseUrl(baseUrl, providerType, t);
+  }, [baseUrl, providerType, t]);
+
   // * Show providers that are NOT already in the modelProvider array
   const canSelectProviders = DEFAULT_PROVIDERS.filter(
     (initialProvider) =>
@@ -62,12 +68,17 @@ export function AddProvider({
     setIsChecking("loading");
     setKeyValidationStatus("loading");
 
+    // 使用规范化的 Base URL
+    const finalBaseUrl = normalizedUrlResult.isValid
+      ? normalizedUrlResult.normalizedBaseUrl
+      : baseUrl;
+
     const providerCfg: Provider = {
       id: isCustomProvider ? `custom-${nanoid()}` : providerId,
       name: isCustomProvider ? customProviderName : providerName,
       apiType: providerType,
       apiKey,
-      baseUrl,
+      baseUrl: finalBaseUrl,
       enabled: false,
       custom: isCustomProvider,
       order: 0,
@@ -124,8 +135,10 @@ export function AddProvider({
       // Prefer the explicit baseUrl field, fallback to websites.defaultBaseUrl
       const defaultBaseUrl =
         foundProvider.baseUrl || foundProvider.websites?.defaultBaseUrl || "";
-      setBaseURL(defaultBaseUrl);
+
+      // Set API type, then set Base URL (so useMemo can correctly calculate normalized result)
       setProviderType(foundProvider.apiType);
+      setBaseURL(defaultBaseUrl);
     }
 
     if (keyValidationStatus !== "unverified") {
@@ -191,6 +204,7 @@ export function AddProvider({
         canCheckKey={canCheckKey}
         isChecking={isChecking}
         onValidationStatusReset={handleValidationStatusReset}
+        normalizedUrlResult={normalizedUrlResult}
       />
     </div>
   );
