@@ -51,15 +51,11 @@ export function ModelList() {
       return [];
     }
 
-    if (!selectedProvider?.id) {
-      return models;
-    }
+    const providerFilteredModels = selectedProvider?.id
+      ? models.filter((model) => model.providerId === selectedProvider.id)
+      : models;
 
-    const providerModels = models.filter(
-      (model) => model.providerId === selectedProvider.id,
-    );
-
-    return providerModels.filter((model) =>
+    return providerFilteredModels.filter((model) =>
       collected ? model.collected : true,
     );
   }, [models, collected, selectedProvider]);

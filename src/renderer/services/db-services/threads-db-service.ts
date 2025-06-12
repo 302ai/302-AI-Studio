@@ -1,3 +1,5 @@
+// ! Deprecation
+
 // import { triplitClient } from "@shared/triplit/client";
 // import type { CreateThreadData, Thread } from "@shared/triplit/types";
 

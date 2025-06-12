@@ -11,11 +11,15 @@ export function ModelFilter({ onTabChange }: ModelFilterProps) {
     keyPrefix: "settings.model-settings.model-list",
   });
 
+  const handleTabChange = (key: React.Key) => {
+    onTabChange(key);
+  };
+
   return (
     <Tabs
       aria-label="Model List Tabs"
       orientation="horizontal"
-      onSelectionChange={onTabChange}
+      onSelectionChange={handleTabChange}
     >
       <TabList
         className="border-none px-3 pt-2 pb-0"

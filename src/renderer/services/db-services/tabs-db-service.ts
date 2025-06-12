@@ -1,3 +1,5 @@
+// ! Deprecation
+
 // import { triplitClient } from "@shared/triplit/client";
 // import type { CreateTabData, Tab, UpdateTabData } from "@shared/triplit/types";
 // import {
