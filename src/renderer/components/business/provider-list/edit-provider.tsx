@@ -200,7 +200,6 @@ export function EditProvider({
           handleKeyFieldChange(value, setApiType)
         }
         normalizedUrlResult={normalizedUrlResult}
-        translationKeyPrefix="settings.model-settings.model-provider.edit-provider-form"
       />
     </div>
   );

@@ -25,7 +25,6 @@ interface ProviderCfgFormProps {
   onBaseUrlChange: (value: string) => void;
   onProviderTypeChange: (value: string) => void;
   normalizedUrlResult: NormalizedUrlResult;
-  translationKeyPrefix?: string;
 }
 
 export function ProviderCfgForm({
@@ -44,10 +43,9 @@ export function ProviderCfgForm({
   onBaseUrlChange,
   onProviderTypeChange,
   normalizedUrlResult,
-  translationKeyPrefix = "settings.model-settings.model-provider.add-provider-form",
 }: ProviderCfgFormProps) {
   const { t } = useTranslation("translation", {
-    keyPrefix: translationKeyPrefix,
+    keyPrefix: "settings.model-settings.model-provider.add-provider-form",
   });
 
   const currentButtonStatus = isChecking === "loading" ? "loading" : "idle";
