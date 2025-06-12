@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { createServer } from "@triplit/server";
+import { createServer, createTriplitStorageProvider } from "@triplit/server";
 import { getTrilitConfig } from "./config";
 
 export type TriplitServer = ReturnType<
@@ -34,8 +34,10 @@ export async function startTrilitServer(): Promise<TriplitServer> {
     console.log("Setting LOCAL_DATABASE_URL to:", dbFile);
   }
 
+  const sqliteKV = await createTriplitStorageProvider("sqlite");
+
   const startServer = await createServer({
-    storage: "sqlite",
+    storage: sqliteKV,
     verboseLogs: config.verboseLogs,
     jwtSecret: config.jwtSecret,
     projectId: config.projectId,
