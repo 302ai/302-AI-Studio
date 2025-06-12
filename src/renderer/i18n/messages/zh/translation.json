@@ -61,7 +61,10 @@
           "apply-normalized-url": "应用规范化 URL",
           "url-format-error": "URL 格式错误",
           "url-empty-error": "URL 不能为空",
-          "url-invalid-format": "URL 格式无效"
+          "url-invalid-format": "URL 格式无效",
+          "verification-required": "请先验证 API Key 才可添加提供商",
+          "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
+          "verification-hint": "请点击验证按钮确认 API Key 可用性"
         },
         "delete": "删除",
         "description": "个模型",
@@ -80,7 +83,10 @@
         "no-provider-description": "尚未添加模型供应商...",
         "edit-provider-form": {
           "check-key-success": "API Key 验证成功！",
-          "check-key-failed": "API Key 验证失败！"
+          "check-key-failed": "API Key 验证失败！",
+          "verification-required": "请先验证 API Key 才可保存提供商配置",
+          "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
+          "verification-hint": "请点击验证按钮确认 API Key 可用性"
         },
         "star": "收藏"
       },

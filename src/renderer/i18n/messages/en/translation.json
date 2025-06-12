@@ -61,7 +61,10 @@
           "apply-normalized-url": "Apply Normalized URL",
           "url-format-error": "Invalid URL Format",
           "url-empty-error": "URL cannot be empty",
-          "url-invalid-format": "Invalid URL format"
+          "url-invalid-format": "Invalid URL format",
+          "verification-required": "Please verify the API Key first before adding the provider",
+          "verification-required-notice": "💡 Notice: API verification is required before adding or saving provider configuration.",
+          "verification-hint": "Please click the verify button to confirm API Key availability"
         },
         "delete": "Delete",
         "description": " models",
@@ -80,7 +83,10 @@
         "no-provider-description": "Model providers have not been added yet...",
         "edit-provider-form": {
           "check-key-success": "API Key Verification Successfully!",
-          "check-key-failed": "API Key Verification failed!"
+          "check-key-failed": "API Key Verification failed!",
+          "verification-required": "Please verify the API Key first before saving the provider configuration",
+          "verification-required-notice": "💡 Notice: API verification is required before adding or saving provider configuration.",
+          "verification-hint": "Please click the verify button to confirm API Key availability"
         },
         "star": "Collect"
       },

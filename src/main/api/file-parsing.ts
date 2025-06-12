@@ -1,4 +1,5 @@
-import { betterFetch } from '@better-fetch/fetch';
+import { betterFetch } from "@better-fetch/fetch";
+import { extractErrorMessage } from "@main/utils/error-utils";
 import { z } from "zod";
 
 // Type definitions for 302.ai API responses
@@ -37,7 +38,7 @@ export interface FileParsingOptions {
  */
 export async function uploadFile(
   attachment: AttachmentForParsing,
-  options: FileParsingOptions
+  options: FileParsingOptions,
 ): Promise<string> {
   const { apiKey, baseUrl, timeout = 30000 } = options;
 
@@ -73,11 +74,12 @@ export async function uploadFile(
       },
       body: formData,
       timeout,
-    }
+    },
   );
 
   if (error) {
-    throw new Error(`Failed to upload file: ${error}`);
+    const errorMessage = extractErrorMessage(error);
+    throw new Error(`Failed to upload file: ${errorMessage}`);
   }
 
   if (!data) {
@@ -95,7 +97,7 @@ export async function uploadFile(
  */
 export async function parseFileContent(
   fileUrl: string,
-  options: FileParsingOptions
+  options: FileParsingOptions,
 ): Promise<string> {
   const { apiKey, timeout = 30000 } = options;
 
@@ -110,11 +112,12 @@ export async function parseFileContent(
         url: fileUrl,
       },
       timeout,
-    }
+    },
   );
 
   if (error) {
-    throw new Error(`Failed to parse file: ${error}`);
+    const errorMessage = extractErrorMessage(error);
+    throw new Error(`Failed to parse file: ${errorMessage}`);
   }
 
   if (!data) {
@@ -132,13 +135,13 @@ export async function parseFileContent(
  */
 export async function uploadAndParseFile(
   attachment: AttachmentForParsing,
-  options: FileParsingOptions
+  options: FileParsingOptions,
 ): Promise<string> {
   // Step 1: Upload file
   const fileUrl = await uploadFile(attachment, options);
-  
+
   // Step 2: Parse file content
   const content = await parseFileContent(fileUrl, options);
-  
+
   return content;
 }

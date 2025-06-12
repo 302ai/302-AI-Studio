@@ -1,5 +1,6 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
+import { extractErrorMessage } from "@main/utils/error-utils";
 import { convertMessagesToModelMessages } from "@main/utils/message-converter";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
@@ -32,12 +33,7 @@ export class OpenAIProviderService extends BaseProviderService {
         errorMsg: null,
       };
     } catch (error: unknown) {
-      let errorMessage = "An unknown error occurred during provider check.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (typeof error === "string") {
-        errorMessage = error;
-      }
+      const errorMessage = extractErrorMessage(error);
 
       return {
         isOk: false,
@@ -77,7 +73,11 @@ export class OpenAIProviderService extends BaseProviderService {
     } catch (error) {
       Logger.error("Failed to fetch OpenAI models:", error);
 
-      throw error;
+      if (error instanceof Error) {
+        throw error;
+      }
+
+      throw new Error(extractErrorMessage(error));
     }
   }
 
@@ -167,12 +167,12 @@ export class OpenAIProviderService extends BaseProviderService {
         tabId,
         threadId,
         userMessageId,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: extractErrorMessage(error),
       });
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: extractErrorMessage(error),
       };
     }
   }
@@ -251,13 +251,13 @@ export class OpenAIProviderService extends BaseProviderService {
         threadId,
         userMessageId,
         regenerateMessageId,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: extractErrorMessage(error),
         providerId: this.provider.id,
       });
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: extractErrorMessage(error),
       };
     }
   }

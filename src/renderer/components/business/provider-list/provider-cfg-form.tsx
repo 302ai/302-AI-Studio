@@ -25,6 +25,7 @@ interface ProviderCfgFormProps {
   onBaseUrlChange: (value: string) => void;
   onProviderTypeChange: (value: string) => void;
   normalizedUrlResult: NormalizedUrlResult;
+  translationKeyPrefix?: string;
 }
 
 export function ProviderCfgForm({
@@ -43,9 +44,10 @@ export function ProviderCfgForm({
   onBaseUrlChange,
   onProviderTypeChange,
   normalizedUrlResult,
+  translationKeyPrefix = "settings.model-settings.model-provider.add-provider-form",
 }: ProviderCfgFormProps) {
   const { t } = useTranslation("translation", {
-    keyPrefix: "settings.model-settings.model-provider.add-provider-form",
+    keyPrefix: translationKeyPrefix,
   });
 
   const currentButtonStatus = isChecking === "loading" ? "loading" : "idle";
@@ -117,41 +119,54 @@ export function ProviderCfgForm({
       />
 
       {/* Provider API Key Input */}
-      <div className="flex flex-row items-center gap-2">
-        <div className="flex-1">
-          <div className="mb-[calc(var(--spacing)*1.5)] flex items-center gap-x-2">
-            <Label className="font-medium text-fg text-sm">API Key</Label>
-            <Badge intent={getBadgeIntent(keyValidationStatus)} shape="square">
-              <LoaderRenderer
-                status={keyValidationStatus}
-                statuses={badgeStatuses}
-                className="gap-1"
-              />
-            </Badge>
-          </div>
-          <TextField
-            className="transition-all duration-300"
-            aria-label="API Key"
-            type="password"
-            placeholder={t("placeholder-2")}
-            isRevealable
-            value={apiKey}
-            onChange={(value) => handleInputChange(value, onApiKeyChange)}
-          />
+      <div className="flex flex-col gap-2">
+        {/* Label and Badge */}
+        <div className="flex items-center gap-x-2">
+          <Label className="font-medium text-fg text-sm">API Key</Label>
+          <Badge intent={getBadgeIntent(keyValidationStatus)} shape="square">
+            <LoaderRenderer
+              status={keyValidationStatus}
+              statuses={badgeStatuses}
+              className="gap-1"
+            />
+          </Badge>
         </div>
 
-        <Button
-          intent="outline"
-          className="self-end transition-all duration-300"
-          onClick={onCheckKey}
-          isDisabled={!canCheckKey}
-          isPending={isChecking === "loading"}
-        >
-          <LoaderRenderer
-            status={currentButtonStatus}
-            statuses={buttonStatuses}
-          />
-        </Button>
+        {/* Input and Button Row */}
+        <div className="flex flex-row items-end gap-2">
+          <div className="flex-1">
+            <TextField
+              className="transition-all duration-300"
+              aria-label="API Key"
+              type="password"
+              placeholder={t("placeholder-2")}
+              isRevealable
+              value={apiKey}
+              onChange={(value) => handleInputChange(value, onApiKeyChange)}
+            />
+          </div>
+
+          <Button
+            intent="outline"
+            className="transition-all duration-300"
+            onClick={onCheckKey}
+            isDisabled={!canCheckKey}
+            isPending={isChecking === "loading"}
+          >
+            <LoaderRenderer
+              status={currentButtonStatus}
+              statuses={buttonStatuses}
+            />
+          </Button>
+        </div>
+
+        {/* Verification Hint */}
+        {keyValidationStatus !== "success" && apiKey && baseUrl && (
+          <div className="flex items-center gap-1.5 text-muted-fg text-xs">
+            <KeyRound className="size-3 text-primary" />
+            <span>{t("verification-hint")}</span>
+          </div>
+        )}
       </div>
 
       {/* Provider Base URL Input */}

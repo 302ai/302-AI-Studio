@@ -1,4 +1,5 @@
-import { betterFetch } from '@better-fetch/fetch';
+import { betterFetch } from "@better-fetch/fetch";
+import { extractErrorMessage } from "@main/utils/error-utils";
 import { z } from "zod";
 
 const openAIModelSchema = z.object({
@@ -6,7 +7,7 @@ const openAIModelSchema = z.object({
   data: z.array(
     z.object({
       id: z.string(),
-    })
+    }),
   ),
 });
 type OpenAIModel = z.infer<typeof openAIModelSchema>;
@@ -32,7 +33,8 @@ export async function fetchOpenAIModels(options: {
   });
 
   if (error) {
-    throw new Error(`Failed to fetch OpenAI models: ${error}`);
+    const errorMessage = extractErrorMessage(error);
+    throw new Error(`Failed to fetch OpenAI models: ${errorMessage}`);
   }
 
   return data;

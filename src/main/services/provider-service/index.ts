@@ -3,6 +3,7 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { extractErrorMessage } from "@main/utils/error-utils";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
 import { ConfigService } from "../config-service";
@@ -157,8 +158,7 @@ export class ProviderService {
 
       return { isOk, errorMsg };
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = extractErrorMessage(error);
       return { isOk: false, errorMsg: errorMessage };
     }
   }
@@ -185,7 +185,7 @@ export class ProviderService {
       Logger.error("Failed to start stream chat:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: extractErrorMessage(error),
       };
     }
   }

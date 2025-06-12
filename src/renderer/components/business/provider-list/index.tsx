@@ -97,7 +97,10 @@ export function ProviderList() {
   const [providers, setProviders] = useState<Provider[]>([]);
 
   const providersQuery = triplitClient.query("providers").Order("order", "ASC");
-  const { results: allProviders, fetching } = useQuery(triplitClient, providersQuery);
+  const { results: allProviders, fetching } = useQuery(
+    triplitClient,
+    providersQuery,
+  );
 
   const modelsQuery = triplitClient.query("models");
   const { results: allModels } = useQuery(triplitClient, modelsQuery);
@@ -133,7 +136,7 @@ export function ProviderList() {
       case "add":
         return {
           title: t("modal-action.add-provider"),
-          descriptions: [],
+          descriptions: [t("add-provider-form.verification-required")],
           body: (
             <AddProvider
               onValidationStatusChange={(isValid) => {
@@ -169,7 +172,7 @@ export function ProviderList() {
         }
         return {
           title: `${t("modal-action.edit")} ${action.provider.name}`,
-          descriptions: [],
+          descriptions: [t("edit-provider-form.verification-required")],
           body: (
             <EditProvider
               provider={action.provider}

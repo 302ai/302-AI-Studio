@@ -61,7 +61,10 @@
           "apply-normalized-url": "正規化されたURLを適用",
           "url-format-error": "URL形式エラー",
           "url-empty-error": "URLを空にすることはできません",
-          "url-invalid-format": "無効なURL形式"
+          "url-invalid-format": "無効なURL形式",
+          "verification-required": "プロバイダーを追加する前に、まずAPIキーを確認してください",
+          "verification-required-notice": "💡 通知：プロバイダー設定を追加または保存する前に、API認証が必要です。",
+          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください"
         },
         "delete": "削除",
         "description": "モデル",
@@ -80,7 +83,10 @@
         "no-provider-description": "モデルベンダーはまだ追加されていません...",
         "edit-provider-form": {
           "check-key-success": "APIキー検証に正常に！",
-          "check-key-failed": "APIキー検証に失敗しました！"
+          "check-key-failed": "APIキー検証に失敗しました！",
+          "verification-required": "プロバイダー設定を保存する前に、まずAPIキーを確認してください",
+          "verification-required-notice": "💡 通知：プロバイダー設定を追加または保存する前に、API認証が必要です。",
+          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください"
         },
         "star": "集める"
       },

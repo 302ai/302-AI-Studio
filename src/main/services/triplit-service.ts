@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: biome-ignore-all */
+
+import { extractErrorMessage } from "@main/utils/error-utils";
 import { getTrilitConfig } from "@shared/triplit/config";
 import {
   startTrilitServer,
@@ -61,7 +63,7 @@ export class TriplitService {
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async restartServer(
-    _event: Electron.IpcMainEvent
+    _event: Electron.IpcMainEvent,
   ): Promise<{ success: boolean; message: string }> {
     try {
       Logger.info("Restarting Triplit server...");
@@ -82,8 +84,7 @@ export class TriplitService {
     } catch (error) {
       Logger.error("Failed to restart Triplit server:", error);
       this.isServerRunning = false;
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = extractErrorMessage(error);
       return {
         success: false,
         message: `Failed to restart server: ${errorMessage}`,
