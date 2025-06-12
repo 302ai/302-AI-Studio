@@ -2,6 +2,21 @@ import type { ModelProvider } from "@shared/types/provider";
 
 export const DEFAULT_PROVIDERS: ModelProvider[] = [
   {
+    id: "302AI",
+    name: "302AI",
+    apiType: "openai",
+    apiKey: "",
+    baseUrl: "https://api.302.ai/v1",
+    enabled: false,
+    websites: {
+      official: "https://302.ai/",
+      apiKey: "https://dash.302.ai/apis/list",
+      docs: "https://302ai.apifox.cn/",
+      models: "https://302ai.apifox.cn/api-147522038",
+      defaultBaseUrl: "https://api.302.ai/v1",
+    },
+  },
+  {
     id: "ollama",
     name: "Ollama",
     apiType: "ollama",

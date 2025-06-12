@@ -51,7 +51,6 @@ export function AddProvider({
   const canCheckKey = !!apiKey && !!providerId && !!baseUrl;
   const customProviderName = customName === "" ? t("default-name") : customName;
 
-  // 计算规范化的 URL 和完整 API 端点
   const normalizedUrlResult = useMemo(() => {
     return normalizeBaseUrl(baseUrl, providerType, t);
   }, [baseUrl, providerType, t]);
@@ -68,7 +67,6 @@ export function AddProvider({
     setIsChecking("loading");
     setKeyValidationStatus("loading");
 
-    // 使用规范化的 Base URL
     const finalBaseUrl = normalizedUrlResult.isValid
       ? normalizedUrlResult.normalizedBaseUrl
       : baseUrl;
