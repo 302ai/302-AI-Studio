@@ -9,7 +9,6 @@ import {
   ModalTitle,
 } from "@renderer/components/ui/modal";
 import { Textarea } from "@renderer/components/ui/textarea";
-import { updateMessage } from "@renderer/services/db-services/messages-db-service";
 import type { Message } from "@shared/triplit/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,6 +19,8 @@ interface EditMessageDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+const { messageService } = window.service;
 
 export function EditMessageDialog({
   message,
@@ -40,8 +41,8 @@ export function EditMessageDialog({
 
     setIsSaving(true);
     try {
-      await updateMessage(message.id, (msg) => {
-        msg.content = editContent.trim();
+      await messageService.updateMessage(message.id, {
+        content: editContent.trim(),
       });
       onOpenChange(false);
       toast.success(
@@ -70,8 +71,8 @@ export function EditMessageDialog({
 
   return (
     <Modal>
-      <ModalContent 
-        isOpen={isOpen} 
+      <ModalContent
+        isOpen={isOpen}
         onOpenChange={handleOpenChange}
         size="lg"
       >

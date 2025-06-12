@@ -1,4 +1,3 @@
-import { cleanMessagesByThreadId } from "@renderer/services/db-services/messages-db-service";
 import type { Thread } from "@shared/triplit/types";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
@@ -6,7 +5,7 @@ import { useActiveThread } from "./use-active-thread";
 
 export type MenuModelActionType = "rename" | "clean-messages" | "delete";
 
-const { threadService } = window.service;
+const { threadService, messageService } = window.service;
 
 export function useThreadMenu(thread: Thread) {
   const [state, setState] = useState<MenuModelActionType | null>(null);
@@ -35,7 +34,7 @@ export function useThreadMenu(thread: Thread) {
   };
 
   const handleCleanMessages = async () => {
-    await cleanMessagesByThreadId(thread.id);
+    await messageService.cleanMessagesByThreadId(thread.id);
 
     closeModal();
   };
@@ -46,7 +45,7 @@ export function useThreadMenu(thread: Thread) {
     }
 
     await threadService.deleteThread(thread.id);
-    await cleanMessagesByThreadId(thread.id);
+    await messageService.cleanMessagesByThreadId(thread.id);
 
     emitter.emit(EventNames.THREAD_DELETE, {
       threadId: thread.id,

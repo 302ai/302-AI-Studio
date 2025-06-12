@@ -1,10 +1,4 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
-import {
-  getMessageById,
-  getMessagesByThreadId,
-  insertMessage,
-  updateMessage,
-} from "@renderer/services/db-services/messages-db-service";
 import Logger from "electron-log";
 import { toast } from "sonner";
 import { FileParsingService } from "./file-parsing-service";
@@ -33,7 +27,7 @@ export interface StreamingMessage {
 
 type StreamEventCallback = (event: StreamChatEvent) => void;
 
-const { uiService } = window.service;
+const { uiService, messageService } = window.service;
 
 /**
  * Parse file attachments and update user message with parsed content
@@ -41,7 +35,7 @@ const { uiService } = window.service;
 async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
   try {
     // Get the user message
-    const userMessage = await getMessageById(userMessageId);
+    const userMessage = await messageService.getMessageById(userMessageId);
 
     if (!userMessage || !userMessage.attachments) {
       return;
@@ -121,8 +115,8 @@ async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
 
     // Update the message with parsed content if there were updates
     if (hasUpdates) {
-      await updateMessage(userMessageId, (message) => {
-        message.attachments = JSON.stringify(attachments);
+      await messageService.updateMessage(userMessageId, {
+        attachments: JSON.stringify(attachments),
       });
 
       Logger.info("Successfully updated user message with parsed file content");
@@ -165,7 +159,9 @@ class StreamChatEventService {
       this.setIsStreaming(true);
 
       // Get current messages to determine correct orderSeq
-      const existingMessages = await getMessagesByThreadId(data.threadId);
+      const existingMessages = await messageService.getMessagesByThreadId(
+        data.threadId,
+      );
       const nextOrderSeq = existingMessages.length + 1;
 
       // Create a temporary streaming message
@@ -216,10 +212,12 @@ class StreamChatEventService {
         // Save the complete message to database
         if (data.fullContent) {
           // Get the current message count for orderSeq
-          const existingMessages = await getMessagesByThreadId(data.threadId);
+          const existingMessages = await messageService.getMessagesByThreadId(
+            data.threadId,
+          );
           const nextOrderSeq = (existingMessages?.length || 0) + 1;
 
-          const savedMessage = await insertMessage({
+          const savedMessage = await messageService.insertMessage({
             threadId: data.threadId,
             parentMessageId: data.userMessageId,
             role: "assistant",
@@ -267,10 +265,12 @@ class StreamChatEventService {
 
       try {
         // Save error message to database
-        const existingMessages = await getMessagesByThreadId(data.threadId);
+        const existingMessages = await messageService.getMessagesByThreadId(
+          data.threadId,
+        );
         const nextOrderSeq = existingMessages.length + 1;
 
-        await insertMessage({
+        await messageService.insertMessage({
           threadId: data.threadId,
           parentMessageId: data.userMessageId,
           role: "assistant",
@@ -309,7 +309,9 @@ class StreamChatEventService {
       this.setIsStreaming(true);
 
       // Get current messages to determine correct orderSeq for the regenerating message
-      const existingMessages = await getMessagesByThreadId(data.threadId);
+      const existingMessages = await messageService.getMessagesByThreadId(
+        data.threadId,
+      );
       const originalMessage = existingMessages.find(
         (msg) => msg.id === data.regenerateMessageId,
       );
@@ -382,12 +384,12 @@ class StreamChatEventService {
       try {
         if (data.fullContent && data.regenerateMessageId) {
           // Update the existing message instead of creating a new one
-          await updateMessage(data.regenerateMessageId, (message) => {
-            message.content = data.fullContent || "";
-            message.status = "success";
-            message.tokenCount =
-              data.usage?.totalTokens || data.fullContent?.length || 0;
-            message.createdAt = new Date(); // Update the timestamp to current time
+          await messageService.updateMessage(data.regenerateMessageId, {
+            content: data.fullContent || "",
+            status: "success",
+            tokenCount:
+              data.usage?.totalTokens || data.fullContent?.length || 0,
+            createdAt: new Date(), // Update the timestamp to current time
           });
 
           Logger.info("Regenerated message updated in DB");
@@ -432,8 +434,8 @@ class StreamChatEventService {
       data: { messageId: string; attachments: string },
     ) => {
       try {
-        await updateMessage(data.messageId, (message) => {
-          message.attachments = data.attachments;
+        await messageService.updateMessage(data.messageId, {
+          attachments: data.attachments,
         });
 
         Logger.info("Updated message attachments in database");

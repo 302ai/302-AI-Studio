@@ -1,9 +1,4 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
-import {
-  deleteMessage,
-  getMessagesByThreadId,
-  insertMessage,
-} from "@renderer/services/db-services/messages-db-service";
 import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -14,7 +9,7 @@ import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 import { useStreamChat } from "./use-stream-chat";
 
-const { threadService, tabService } = window.service;
+const { threadService, tabService, messageService } = window.service;
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -139,7 +134,7 @@ export function useToolBar() {
       }
 
       // Get existing messages for context
-      const existingMessages = await getMessagesByThreadId(
+      const existingMessages = await messageService.getMessagesByThreadId(
         currentActiveThreadId,
       );
       const nextOrderSeq = existingMessages.length + 1;
@@ -151,7 +146,7 @@ export function useToolBar() {
           : null;
 
       // Insert user message
-      const userMessage = await insertMessage({
+      const userMessage = await messageService.insertMessage({
         threadId: currentActiveThreadId,
         parentMessageId: null,
         role: "user",
@@ -225,7 +220,9 @@ export function useToolBar() {
       throw new Error("Provider not found for selected model");
     }
 
-    const existingMessages = await getMessagesByThreadId(activeThreadId ?? "");
+    const existingMessages = await messageService.getMessagesByThreadId(
+      activeThreadId ?? "",
+    );
     const messageToRefresh = existingMessages.find((m) => m.id === messageId);
     if (!messageToRefresh) {
       throw new Error("Message not found");
@@ -240,7 +237,7 @@ export function useToolBar() {
     const messagesToDelete = existingMessages.slice(messageIndex);
     for (const msg of messagesToDelete) {
       try {
-        await deleteMessage(msg.id);
+        await messageService.deleteMessage(msg.id);
       } catch (error) {
         console.error("Failed to delete message:", msg.id, error);
       }

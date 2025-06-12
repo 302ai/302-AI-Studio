@@ -1,12 +1,15 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type {
+  CreateMessageData,
   CreateModelData,
   CreateProviderData,
   CreateTabData,
   CreateThreadData,
+  Message,
   Provider,
   Tab,
   Thread,
+  UpdateMessageData,
   UpdateProviderData,
   UpdateTabData,
   UpdateThreadData,
@@ -109,6 +112,17 @@ declare global {
         clearActiveTabId: () => Promise<void>;
         updateActiveTabHistory: (tabId: string) => Promise<void>;
         updateActiveTabId: (tabId: string) => Promise<void>;
+      };
+      messageService: {
+        insertMessage: (message: CreateMessageData) => Promise<Message>;
+        updateMessage: (
+          messageId: string,
+          updateData: UpdateMessageData,
+        ) => Promise<void>;
+        deleteMessage: (messageId: string) => Promise<void>;
+        getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
+        getMessageById: (messageId: string) => Promise<Message | null>;
+        cleanMessagesByThreadId: (threadId: string) => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{
