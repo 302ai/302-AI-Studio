@@ -55,12 +55,12 @@ export class UiDbService {
       return null;
     }
 
-    const query = triplitClient
-      .query("providers")
-      .Where("id", "=", activeProviderId);
-    const providers = await triplitClient.fetch(query);
+    const provider = await triplitClient.fetchById(
+      "providers",
+      activeProviderId,
+    );
 
-    return providers[0] || null;
+    return provider || null;
   }
 
   // * Active Thread Id
@@ -93,12 +93,9 @@ export class UiDbService {
       return null;
     }
 
-    const query = triplitClient
-      .query("threads")
-      .Where("id", "=", activeThreadId);
-    const threads = await triplitClient.fetch(query);
+    const thread = await triplitClient.fetchById("threads", activeThreadId);
 
-    return threads[0] || null;
+    return thread || null;
   }
 
   // * Active Tab Id

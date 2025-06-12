@@ -105,8 +105,7 @@ export class ConfigDbService {
   }
 
   private async getProviderById(providerId: string): Promise<Provider | null> {
-    const query = triplitClient.query("providers").Where("id", "=", providerId);
-    const providers = await triplitClient.fetch(query);
-    return providers[0] || null;
+    const provider = await triplitClient.fetchById("providers", providerId);
+    return provider || null;
   }
 }

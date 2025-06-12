@@ -32,8 +32,11 @@ export class TabDbService {
 
     // Get current active tab
     const uiQuery = triplitClient.query("ui");
-    const uiResults = await triplitClient.fetch(uiQuery);
-    const uiRecord = uiResults[0];
+    const uiRecord = await triplitClient.fetchOne(uiQuery);
+    if (!uiRecord) {
+      return "";
+    }
+
     const currentActiveTabId = uiRecord?.activeTabId;
 
     // Delete the tab
@@ -77,9 +80,8 @@ export class TabDbService {
   }
 
   async getTab(tabId: string): Promise<Tab | null> {
-    const tabQuery = triplitClient.query("tabs").Where("id", "=", tabId);
-    const tab = await triplitClient.fetch(tabQuery);
-    return tab[0] ?? null;
+    const tab = await triplitClient.fetchById("tabs", tabId);
+    return tab || null;
   }
 
   private async reorderTabs() {
