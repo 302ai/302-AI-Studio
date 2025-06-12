@@ -10,7 +10,9 @@
     "model-search-placeholder": "搜索...",
     "no-models-found": "没有找到匹配的模型...",
     "lack-model": "请先选择一个模型！",
-    "lack-provider": "缺少模型提供商！"
+    "lack-provider": "缺少模型提供商！",
+    "edit-message": "编辑消息",
+    "edit-message-only-save": "仅保存"
   },
   "settings": {
     "assistant-settings": {

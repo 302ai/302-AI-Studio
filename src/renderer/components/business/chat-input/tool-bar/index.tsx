@@ -14,6 +14,7 @@ interface ToolBarProps {
   selectedModelId: string;
   onModelSelect: (modelId: string) => Promise<void>;
   isDisabled: boolean;
+  setEditMessageId: (messageId: string | null) => void;
 }
 
 export function ToolBar({
@@ -23,8 +24,10 @@ export function ToolBar({
   selectedModelId,
   onModelSelect,
   isDisabled,
+  setEditMessageId,
 }: ToolBarProps) {
   const handleSendMessageClick = async () => {
+    setEditMessageId(null);
     await onSendMessage();
   };
 

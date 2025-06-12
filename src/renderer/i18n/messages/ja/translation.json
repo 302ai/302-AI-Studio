@@ -10,7 +10,9 @@
     "model-search-placeholder": "検索...",
     "no-models-found": "一致するモデルは見つかりませんでした...",
     "lack-model": "最初にモデルを選択してください！",
-    "lack-provider": "モデルプロバイダーがありません！"
+    "lack-provider": "モデルプロバイダーがありません！",
+    "edit-message": "メッセージを編集",
+    "edit-message-only-save": "保存のみ"
   },
   "settings": {
     "assistant-settings": {

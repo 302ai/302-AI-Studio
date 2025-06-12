@@ -10,7 +10,9 @@
     "model-search-placeholder": "Search...",
     "no-models-found": "No matching model was found...",
     "lack-model": "Please select a model first!",
-    "lack-provider": "Missing model provider!"
+    "lack-provider": "Missing model provider!",
+    "edit-message": "Edit Message",
+    "edit-message-only-save": "Only Save"
   },
   "settings": {
     "assistant-settings": {
