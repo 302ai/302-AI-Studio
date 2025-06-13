@@ -12,7 +12,7 @@ import { useActiveThread } from "./use-active-thread";
 const { providerService } = window.service;
 
 export function useStreamChat() {
-  const { activeTabId,activeTab } = useActiveTab();
+  const { activeTabId, activeTab } = useActiveTab();
   const { activeThreadId } = useActiveThread();
   const [streamingMessages, setStreamingMessages] = useState<
     StreamingMessage[]

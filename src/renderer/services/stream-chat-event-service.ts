@@ -554,16 +554,6 @@ class StreamChatEventService {
     return this.isStreaming;
   }
 
-  stopStreaming(tabId: string, userMessageId: string) {
-    if (!this.isStreaming) return;
-
-    Logger.info(`Requesting to stop stream for tab: ${tabId}`);
-    window.electron.ipcRenderer.send("chat:stream-stop", {
-      tabId,
-      userMessageId,
-    });
-  }
-
   onStreamingStateChange(callback: (isStreaming: boolean) => void) {
     this.onStreamingStateChangeCallbacks.push(callback);
     return () => {
@@ -630,6 +620,7 @@ class StreamChatEventService {
       window.electron.ipcRenderer.removeAllListeners("chat:stream-delta");
       window.electron.ipcRenderer.removeAllListeners("chat:stream-end");
       window.electron.ipcRenderer.removeAllListeners("chat:stream-error");
+      window.electron.ipcRenderer.removeAllListeners("chat:stream-stop");
       window.electron.ipcRenderer.removeAllListeners(
         "chat:attachments-updated",
       );

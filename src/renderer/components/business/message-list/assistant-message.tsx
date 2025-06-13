@@ -106,7 +106,7 @@ export function AssistantMessage({
           </div>
         )}
 
-        {(message.status !== "pending") && (
+        {(message.status === "success" || message.status === "stop") && (
           <div className="mt-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
             {message.status === "success" && (
               <ButtonWithTooltip
