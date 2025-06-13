@@ -13,7 +13,7 @@ import {
 } from "../shared/reflect";
 import { initTriplitClient } from "../triplit/client";
 
-portfinder.setBasePort(8080);
+portfinder.setBasePort(9000);
 
 // Triplit服务器配置
 export interface TrilitServerConfig {
@@ -27,7 +27,7 @@ export interface TrilitServerConfig {
 }
 
 const defaultTrilitConfig: TrilitServerConfig = {
-  port: 8080,
+  port: 9000,
   verboseLogs: false,
   jwtSecret: "default-jwt-secret-change-in-production",
   projectId: "chat-app-triplit",
@@ -42,7 +42,7 @@ type TriplitServer = ReturnType<Awaited<ReturnType<typeof createServer>>>;
 export class TriplitService {
   private server: TriplitServer | null = null;
   private isServerRunning = false;
-  private port: number = 8080;
+  private port: number = 9000;
 
   constructor() {
     this.initialize();

@@ -82,6 +82,7 @@ export async function convertToModelMessage(
         } else if (attachment.fileData && attachment.type) {
           try {
             // Parse file content on-demand (first time)
+            // TODO: 不能与provider耦合
             const parsedContent = await uploadAndParseFile(
               {
                 id: attachment.id,
