@@ -4,7 +4,7 @@ import { extractErrorMessage } from "@main/utils/error-utils";
 import { convertMessagesToModelMessages } from "@main/utils/message-converter";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
-import { smoothStream, streamText } from "ai";
+import { type LanguageModelUsage, smoothStream, streamText } from "ai";
 import Logger from "electron-log";
 import {
   BaseProviderService,
@@ -148,7 +148,7 @@ export class OpenAIProviderService extends BaseProviderService {
         });
       }
 
-      let usage: any;
+      let usage: LanguageModelUsage | null = null;
       // Send stream end event
       if (fullContent !== "") {
         usage = await result.usage;

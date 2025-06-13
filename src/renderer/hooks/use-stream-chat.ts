@@ -19,11 +19,6 @@ export function useStreamChat() {
   >([]);
   const [isStreaming, setIsStreaming] = useState(false);
 
-  // Set active tab for the global service
-  useEffect(() => {
-    streamChatEventService.setActiveTab(activeTabId || null);
-  }, [activeTabId]);
-
   // Subscribe to streaming messages changes
   useEffect(() => {
     const unsubscribe = streamChatEventService.onStreamingMessagesChange(
