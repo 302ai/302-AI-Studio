@@ -180,7 +180,8 @@
       "cancel": "取消",
       "save-success": "消息更新成功",
       "save-error": "消息更新失败"
-    }
+    },
+    "generate-failed": "生成失败"
   },
   "common": {
     "copied-success": "已复制",
