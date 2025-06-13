@@ -8,6 +8,9 @@ on:
   push:
     tags:
       - v*.*.*
+    branches:
+      - main
+      - test-ci
 
 jobs:
   release:
