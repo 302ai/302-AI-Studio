@@ -102,26 +102,28 @@ export function AssistantMessage({
         {message.status === "error" && (
           <div className="mt-2 flex items-center gap-2 text-destructive text-sm">
             <div className="h-2 w-2 rounded-full bg-current" />
-            生成失败
+            {t("generate-failed")}
           </div>
         )}
 
-        {message.status === "success" && (
+        {(message.status !== "pending") && (
           <div className="mt-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-            <ButtonWithTooltip
-              type="button"
-              onClick={handleCopy}
-              title={t("copy")}
-              size="extra-small"
-              intent="plain"
-              className="flex cursor-pointer items-center gap-1 text-muted-fg transition-colors hover:bg-muted hover:text-fg"
-            >
-              {copied ? (
-                <Check className="h-3 w-3" />
-              ) : (
-                <Copy className="h-3 w-3" />
-              )}
-            </ButtonWithTooltip>
+            {message.status === "success" && (
+              <ButtonWithTooltip
+                type="button"
+                onClick={handleCopy}
+                title={t("copy")}
+                size="extra-small"
+                intent="plain"
+                className="flex cursor-pointer items-center gap-1 text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+              >
+                {copied ? (
+                  <Check className="h-3 w-3" />
+                ) : (
+                  <Copy className="h-3 w-3" />
+                )}
+              </ButtonWithTooltip>
+            )}
 
             <ButtonWithTooltip
               type="button"
@@ -134,16 +136,18 @@ export function AssistantMessage({
               <RefreshCcw className="h-3 w-3" />
             </ButtonWithTooltip>
 
-            <ButtonWithTooltip
-              type="button"
-              onClick={handleEdit}
-              className="flex cursor-pointer items-center gap-1 text-muted-fg transition-colors hover:bg-muted hover:text-fg"
-              title={t("edit")}
-              size="extra-small"
-              intent="plain"
-            >
-              <Pencil className="h-3 w-3" />
-            </ButtonWithTooltip>
+            {message.status === "success" && (
+              <ButtonWithTooltip
+                type="button"
+                onClick={handleEdit}
+                className="flex cursor-pointer items-center gap-1 text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+                title={t("edit")}
+                size="extra-small"
+                intent="plain"
+              >
+                <Pencil className="h-3 w-3" />
+              </ButtonWithTooltip>
+            )}
 
             <div className="ml-2 text-muted-fg text-xs">
               {formatTimeAgo(
