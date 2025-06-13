@@ -1,72 +1,74 @@
-import fs from "node:fs";
-import path from "node:path";
-import { createServer, createTriplitStorageProvider } from "@triplit/server";
-import { getTrilitConfig } from "./config";
+// ! Deprecated
 
-export type TriplitServer = ReturnType<
-  Awaited<ReturnType<typeof createServer>>
->;
+// import fs from "node:fs";
+// import path from "node:path";
+// import { createServer, createTriplitStorageProvider } from "@triplit/server";
+// import { getTrilitConfig } from "./config";
 
-let dbServer: TriplitServer | null = null;
+// export type TriplitServer = ReturnType<
+//   Awaited<ReturnType<typeof createServer>>
+// >;
 
-export async function startTrilitServer(): Promise<TriplitServer> {
-  if (dbServer) {
-    console.log("Triplit server is already running");
-    return dbServer;
-  }
+// let dbServer: TriplitServer | null = null;
 
-  const config = getTrilitConfig();
+// export async function startTrilitServer(): Promise<TriplitServer> {
+//   if (dbServer) {
+//     console.log("Triplit server is already running");
+//     return dbServer;
+//   }
 
-  if (config.localDatabaseUrl) {
-    const dbFile = config.localDatabaseUrl;
-    const dbDir = path.dirname(dbFile);
-    console.log("Database file:", dbFile);
-    console.log("Database directory:", dbDir);
+//   const config = getTrilitConfig();
 
-    if (!fs.existsSync(dbDir)) {
-      fs.mkdirSync(dbDir, { recursive: true });
-      console.log("Database directory created successfully");
-    } else {
-      console.log("Database directory already exists");
-    }
+//   if (config.localDatabaseUrl) {
+//     const dbFile = config.localDatabaseUrl;
+//     const dbDir = path.dirname(dbFile);
+//     console.log("Database file:", dbFile);
+//     console.log("Database directory:", dbDir);
 
-    process.env.LOCAL_DATABASE_URL = dbFile;
-    console.log("Setting LOCAL_DATABASE_URL to:", dbFile);
-  }
+//     if (!fs.existsSync(dbDir)) {
+//       fs.mkdirSync(dbDir, { recursive: true });
+//       console.log("Database directory created successfully");
+//     } else {
+//       console.log("Database directory already exists");
+//     }
 
-  const sqliteKV = await createTriplitStorageProvider("sqlite");
+//     process.env.LOCAL_DATABASE_URL = dbFile;
+//     console.log("Setting LOCAL_DATABASE_URL to:", dbFile);
+//   }
 
-  const startServer = await createServer({
-    storage: sqliteKV,
-    verboseLogs: config.verboseLogs,
-    jwtSecret: config.jwtSecret,
-    projectId: config.projectId,
-    externalJwtSecret: config.externalJwtSecret,
-    maxPayloadMb: config.maxPayloadMb,
-  });
+//   const sqliteKV = await createTriplitStorageProvider("sqlite");
 
-  dbServer = startServer(config.port);
+//   const startServer = await createServer({
+//     storage: sqliteKV,
+//     verboseLogs: config.verboseLogs,
+//     jwtSecret: config.jwtSecret,
+//     projectId: config.projectId,
+//     externalJwtSecret: config.externalJwtSecret,
+//     maxPayloadMb: config.maxPayloadMb,
+//   });
 
-  console.log("Triplit server running on port", config.port);
-  console.log("Database location:", config.localDatabaseUrl);
+//   dbServer = startServer(config.port);
 
-  return dbServer;
-}
+//   console.log("Triplit server running on port", config.port);
+//   console.log("Database location:", config.localDatabaseUrl);
 
-export function stopTrilitServer() {
-  if (dbServer) {
-    dbServer.close(() => {
-      console.log("Triplit server shutting down...");
-      dbServer = null;
-    });
-  }
-}
+//   return dbServer;
+// }
 
-if (require.main === module) {
-  startTrilitServer();
+// export function stopTrilitServer() {
+//   if (dbServer) {
+//     dbServer.close(() => {
+//       console.log("Triplit server shutting down...");
+//       dbServer = null;
+//     });
+//   }
+// }
 
-  process.on("SIGINT", () => {
-    stopTrilitServer();
-    process.exit();
-  });
-}
+// if (require.main === module) {
+//   startTrilitServer();
+
+//   process.on("SIGINT", () => {
+//     stopTrilitServer();
+//     process.exit();
+//   });
+// }
