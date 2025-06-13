@@ -67,9 +67,17 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
           fileDataStart: fileData?.substring(0, 100),
         });
 
-        const result = await window.service.filePreviewService.previewImage(
+        // Try new service first, fallback to old service
+        const fileService =
+          window.service.fileService || window.service.filePreviewService;
+        if (!fileService) {
+          console.error("No file service available");
+          return;
+        }
+
+        const result = await fileService.previewImage(
           attachment.name,
-          fileData
+          fileData,
         );
 
         if (!result.success) {
@@ -107,10 +115,18 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
           fileDataStart: fileData?.substring(0, 100),
         });
 
-        const result = await window.service.filePreviewService.previewFile(
+        // Try new service first, fallback to old service
+        const fileService =
+          window.service.fileService || window.service.filePreviewService;
+        if (!fileService) {
+          console.error("No file service available");
+          return;
+        }
+
+        const result = await fileService.previewFile(
           attachment.name,
           fileData,
-          attachment.type
+          attachment.type,
         );
 
         if (!result.success) {
