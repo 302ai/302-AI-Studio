@@ -2,7 +2,7 @@
   "displayName": "ChatChat App",
   "name": "chat-chat-app",
   "description": "A powerful AI assistant for producer.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./node_modules/.dev/main/index.js",
   "resources": "src/resources",
   "author": "302 <admin@302.ai>",
