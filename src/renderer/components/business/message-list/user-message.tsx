@@ -1,4 +1,3 @@
-import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Message } from "@shared/triplit/types";
@@ -42,7 +41,7 @@ export function UserMessage({ message }: UserMessageProps) {
 
           {message.content && (
             <div className="w-full whitespace-pre-wrap break-words">
-              <MarkdownRenderer>{message.content}</MarkdownRenderer>
+              {message.content}
             </div>
           )}
         </div>
