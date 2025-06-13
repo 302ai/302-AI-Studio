@@ -14,7 +14,7 @@
 // }
 
 // export const defaultTrilitConfig: TrilitServerConfig = {
-//   port: 8080,
+//   port: 9000,
 //   verboseLogs: false,
 //   jwtSecret: "default-jwt-secret-change-in-production",
 //   projectId: "chat-app-triplit",
