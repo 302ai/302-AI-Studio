@@ -192,6 +192,7 @@
       "cancel": "Cancel",
       "save-success": "Message updated successfully",
       "save-error": "Failed to update message"
-    }
+    },
+    "generate-failed": "Generate failed"
   }
 }
