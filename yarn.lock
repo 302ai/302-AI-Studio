@@ -5532,6 +5532,7 @@ __metadata:
     nanoid: "npm:^5.1.5"
     npm-run-all: "npm:^4.1.5"
     open: "npm:^10.1.0"
+    portfinder: "npm:^1.0.37"
     react: "npm:^19.1.0"
     react-aria-components: "npm:^1.8.0"
     react-dom: "npm:^19.1.0"
@@ -11988,7 +11989,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"portfinder@npm:^1.0.28":
+"portfinder@npm:^1.0.28, portfinder@npm:^1.0.37":
   version: 1.0.37
   resolution: "portfinder@npm:1.0.37"
   dependencies:
