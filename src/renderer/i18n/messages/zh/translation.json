@@ -4,7 +4,15 @@
     "input-placeholder": "随便问问...",
     "tool-bar": {
       "attach-file": "上传附件"
-    }
+    },
+    "model-select-label": "选择模型",
+    "model-select-placeholder": "请选择一个模型...",
+    "model-search-placeholder": "搜索...",
+    "no-models-found": "没有找到匹配的模型...",
+    "lack-model": "请先选择一个模型！",
+    "lack-provider": "缺少模型提供商！",
+    "edit-message": "编辑消息",
+    "edit-message-only-save": "仅保存"
   },
   "settings": {
     "assistant-settings": {
@@ -49,7 +57,16 @@
           "checking": "验证中...",
           "unverified": "待验证",
           "verified": "已通过验证",
-          "verification-failed": "未通过验证"
+          "verification-failed": "未通过验证",
+          "normalized-base-url": "规范化 Base URL",
+          "full-api-endpoint": "完整 API 端点示例",
+          "apply-normalized-url": "应用规范化 URL",
+          "url-format-error": "URL 格式错误",
+          "url-empty-error": "URL 不能为空",
+          "url-invalid-format": "URL 格式无效",
+          "verification-required": "请先验证 API Key 才可添加提供商",
+          "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
+          "verification-hint": "请点击验证按钮确认 API Key 可用性"
         },
         "delete": "删除",
         "description": "个模型",
@@ -68,7 +85,10 @@
         "no-provider-description": "尚未添加模型供应商...",
         "edit-provider-form": {
           "check-key-success": "API Key 验证成功！",
-          "check-key-failed": "API Key 验证失败！"
+          "check-key-failed": "API Key 验证失败！",
+          "verification-required": "请先验证 API Key 才可保存提供商配置",
+          "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
+          "verification-hint": "请点击验证按钮确认 API Key 可用性"
         },
         "star": "收藏"
       },
@@ -109,7 +129,8 @@
       "last30Days": "过去30天",
       "last7Days": "过去7天",
       "today": "今天",
-      "yesterday": "昨天"
+      "yesterday": "昨天",
+      "justNow": "刚刚"
     }
   },
   "tab-bar": {
@@ -119,7 +140,10 @@
     }
   },
   "thread": {
-    "new-thread-title": "新会话"
+    "new-thread-title": "新会话",
+    "create-thread-error": "抱歉，新会话创建失败！",
+    "lack-model": "请先选择一个模型！",
+    "lack-provider": "缺少模型提供商！"
   },
   "thread-menu": {
     "actions": {
@@ -143,6 +167,32 @@
         },
         "title": "重命名会话"
       }
+    }
+  },
+  "message": {
+    "copy": "复制",
+    "refresh": "重新生成",
+    "edit": "编辑",
+    "thinking": "AI正在思考",
+    "edit-dialog": {
+      "title": "编辑消息",
+      "save": "保存",
+      "cancel": "取消",
+      "save-success": "消息更新成功",
+      "save-error": "消息更新失败"
+    },
+    "generate-failed": "生成失败"
+  },
+  "common": {
+    "copied-success": "已复制",
+    "copied-failed": "复制失败",
+    "copy-to-clipboard": "复制"
+  },
+  "message-list": {
+    "markdown": {
+      "generating-diagram": "正在生成图表...",
+      "waiting-for-diagram": "等待图表内容...",
+      "diagram-syntax-error": "图表语法错误"
     }
   }
 }

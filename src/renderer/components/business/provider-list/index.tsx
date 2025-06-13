@@ -5,46 +5,122 @@ import {
   type DropResult,
 } from "@hello-pangea/dnd";
 import { Button } from "@renderer/components/ui/button";
+import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import {
-  type ModelActionType,
+  type ModalAction,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
-import type { ModelProvider } from "@renderer/types/providers";
+import { triplitClient } from "@shared/triplit/client";
+import type { CreateProviderData, Provider } from "@shared/triplit/types";
+import { useQuery } from "@triplit/react";
 import _ from "lodash";
 import { PackageOpen, Plus } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
 import { ActionGroup } from "../action-group";
-import { ModalAction } from "../modal-action";
+import { ModalAction as ModalActionComponent } from "../modal-action";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
+
+const ListRow = React.memo(function ListRow({
+  index,
+  style,
+  data,
+  setState,
+  modelCounts,
+}: {
+  index: number;
+  style: React.CSSProperties;
+  data: Provider[];
+  setState: (state: ModalAction) => void;
+  modelCounts: Record<string, number>;
+}) {
+  const provider = data[index];
+  const { selectedProvider, setSelectedProvider } = useActiveProvider();
+
+  const handleProviderSelect = _.debounce(async () => {
+    await setSelectedProvider(
+      selectedProvider?.id === provider.id ? null : provider,
+    );
+  }, 100);
+
+  const handleEdit = () => {
+    console.log("handleEdit", provider);
+    setState({ type: "edit", provider });
+  };
+
+  const handleDelete = () => {
+    setState({ type: "delete", provider });
+  };
+
+  return (
+    <Draggable draggableId={provider.id} index={index} key={provider.id}>
+      {(provided) => (
+        <ProviderCard
+          style={style}
+          provided={provided}
+          provider={provider}
+          isSelected={selectedProvider?.id === provider.id}
+          modelCount={modelCounts[provider.id] || 0}
+          actionGroup={
+            <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
+          }
+          onClick={handleProviderSelect}
+        />
+      )}
+    </Draggable>
+  );
+}, areEqual);
 
 export function ProviderList() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider",
   });
   const {
-    modelProviders,
-    selectedModelProvider,
-    providerModelMap,
     state,
     setState,
     closeModal,
     handleDelete,
     handleUpdateProvider,
-    moveModelProvider,
-    setSelectedModelProvider,
+    moveProvider,
     handleAddProvider,
   } = useProviderList();
+
+  const { selectedProvider, setSelectedProvider } = useActiveProvider();
 
   const listContainerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
   const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
-  const [providerCfg, setProviderCfg] = useState<ModelProvider | null>(null);
+  const [providerCfg, setProviderCfg] = useState<Provider | null>(null);
+  const [providers, setProviders] = useState<Provider[]>([]);
 
-  const actionType = (action: ModelActionType | null) => {
+  const providersQuery = triplitClient.query("providers").Order("order", "ASC");
+  const { results: allProviders, fetching } = useQuery(
+    triplitClient,
+    providersQuery,
+  );
+
+  const modelsQuery = triplitClient.query("models");
+  const { results: allModels } = useQuery(triplitClient, modelsQuery);
+
+  const modelCounts = useMemo(() => {
+    if (!allModels || !providers.length) {
+      return {};
+    }
+
+    const counts: Record<string, number> = {};
+    providers.forEach((provider) => {
+      counts[provider.id] = allModels.filter(
+        (model) => model.providerId === provider.id,
+      ).length;
+    });
+
+    return counts;
+  }, [allModels, providers]);
+
+  const actionType = (action: ModalAction | null) => {
     const initialsState = {
       title: "",
       descriptions: [""],
@@ -52,11 +128,15 @@ export function ProviderList() {
       action: () => {},
     };
 
-    switch (action) {
+    if (!action) {
+      return initialsState;
+    }
+
+    switch (action.type) {
       case "add":
         return {
           title: t("modal-action.add-provider"),
-          descriptions: [],
+          descriptions: [t("add-provider-form.verification-required")],
           body: (
             <AddProvider
               onValidationStatusChange={(isValid) => {
@@ -65,27 +145,37 @@ export function ProviderList() {
               onProviderCfgSet={(providerCfg) => {
                 setProviderCfg(providerCfg);
               }}
+              providers={providers}
             />
           ),
           confirmText: t("modal-action.add-provider-confirm"),
           disabled: !isApiKeyValidated,
-          action: () => {
+          action: async () => {
             if (providerCfg) {
-              handleAddProvider(providerCfg);
+              const { name, baseUrl, apiKey, apiType, custom } = providerCfg;
+              const provider: CreateProviderData = {
+                name,
+                baseUrl,
+                apiKey,
+                apiType,
+                custom: custom ?? false,
+                enabled: true,
+              };
+              await handleAddProvider(provider);
               handleCloseModal();
             }
           },
         };
       case "edit":
-        if (!selectedModelProvider) {
+        if (!action.provider) {
           return initialsState;
         }
         return {
-          title: `${t("modal-action.edit")} ${selectedModelProvider.name}`,
-          descriptions: [],
+          title: `${t("modal-action.edit")} ${action.provider.name}`,
+          descriptions: [t("edit-provider-form.verification-required")],
           body: (
             <EditProvider
-              provider={selectedModelProvider}
+              provider={action.provider}
               onValidationStatusChange={(isValid) => {
                 setIsApiKeyValidated(isValid);
               }}
@@ -95,97 +185,75 @@ export function ProviderList() {
             />
           ),
           disabled: !isApiKeyValidated,
-          action: () => {
+          action: async () => {
             if (providerCfg) {
-              handleUpdateProvider(providerCfg);
+              await handleUpdateProvider(providerCfg);
               handleCloseModal();
             }
           },
         };
       case "delete":
-        if (!selectedModelProvider) {
+        if (!action.provider) {
           return initialsState;
         }
         return {
           title: t("modal-action.delete"),
           descriptions: [
-            `${t("modal-action.delete-description")} ${
-              selectedModelProvider.name
-            } ?`,
+            `${t("modal-action.delete-description")} ${action.provider.name} ?`,
             t("modal-action.delete-description-2"),
             t("modal-action.delete-description-3"),
           ],
           confirmText: t("modal-action.delete-confirm"),
-          action: handleDelete,
+          action: async () => {
+            if (action.provider) {
+              await handleDelete(action.provider);
+            }
+            setSelectedProvider(null);
+            handleCloseModal();
+          },
         };
       default:
         return initialsState;
     }
   };
 
-  const handleDragEnd = (result: DropResult) => {
-    if (result.destination) {
-      moveModelProvider(result.source.index, result.destination.index);
+  const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.source.index === result.destination.index) {
+      return;
+    }
+
+    const fromIndex = result.source.index;
+    const toIndex = result.destination.index;
+
+    const newProviders = [...providers];
+    const [movedProvider] = newProviders.splice(fromIndex, 1);
+    newProviders.splice(toIndex, 0, movedProvider);
+    setProviders(newProviders);
+
+    try {
+      await moveProvider(fromIndex, toIndex, providers);
+      console.log("Provider order updated successfully");
+    } catch (error) {
+      console.error("Failed to move provider:", error);
+      setProviders(providers);
     }
   };
 
   const handleCloseModal = () => {
     setIsApiKeyValidated(false);
     setProviderCfg(null);
-
     closeModal();
   };
 
-  /**
-   * ! This component can not be extracted to a separate file
-   */
-  // biome-ignore lint: ignore noNestedComponentDefinitions
-  const ListRow = React.memo(function ListRow({
-    index,
-    style,
-    data,
-  }: {
+  const renderListRow = (props: {
     index: number;
     style: React.CSSProperties;
-    data: ModelProvider[];
-  }) {
-    const provider = data[index];
-
-    const handleProviderSelect = _.debounce(() => {
-      // * Toggle selection: if already selected, deselect; otherwise select
-      setSelectedModelProvider(
-        selectedModelProvider?.id === provider.id ? null : provider,
-      );
-    }, 100);
-
-    const handleEdit = () => {
-      setSelectedModelProvider(provider);
-      setState("edit");
-    };
-
-    const handleDelete = () => {
-      setSelectedModelProvider(provider);
-      setState("delete");
-    };
-
-    return (
-      <Draggable draggableId={provider.id} index={index} key={provider.id}>
-        {(provided) => (
-          <ProviderCard
-            style={style}
-            provided={provided}
-            provider={provider}
-            isSelected={selectedModelProvider?.id === provider.id}
-            providerModels={providerModelMap[provider.id]}
-            actionGroup={
-              <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
-            }
-            onClick={handleProviderSelect}
-          />
-        )}
-      </Draggable>
-    );
-  }, areEqual);
+    data: Provider[];
+  }) => <ListRow {...props} setState={setState} modelCounts={modelCounts} />;
 
   useEffect(() => {
     const updateHeight = () => {
@@ -195,9 +263,22 @@ export function ProviderList() {
       }
     };
 
+    const getHeightWithDelay = () => {
+      requestAnimationFrame(() => {
+        setTimeout(updateHeight, 0);
+      });
+    };
+
     updateHeight();
 
-    const resizeObserver = new ResizeObserver(updateHeight);
+    if (listHeight === 0 || providers.length > 0) {
+      getHeightWithDelay();
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      getHeightWithDelay();
+    });
+
     if (listContainerRef.current) {
       resizeObserver.observe(listContainerRef.current);
     }
@@ -207,7 +288,13 @@ export function ProviderList() {
         resizeObserver.unobserve(listContainerRef.current);
       }
     };
-  }, []);
+  }, [listHeight, providers]);
+
+  useEffect(() => {
+    if (!fetching) {
+      setProviders(allProviders ?? []);
+    }
+  }, [allProviders, fetching]);
 
   return (
     <>
@@ -216,26 +303,26 @@ export function ProviderList() {
           className="w-fit shrink-0"
           size="small"
           intent="outline"
-          onClick={() => setState("add")}
+          onClick={() => setState({ type: "add" })}
         >
           <Plus className="size-4" />
           {t("add-provider")}
         </Button>
-        {modelProviders.length > 0 ? (
+        {providers.length > 0 ? (
           <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable
                 droppableId="provider-list"
                 mode="virtual"
                 renderClone={(provided, snapshot, rubric) => {
-                  const provider = modelProviders[rubric.source.index];
+                  const provider = providers[rubric.source.index];
                   return (
                     <ProviderCard
                       provided={provided}
                       isDragging={snapshot.isDragging}
-                      isSelected={selectedModelProvider?.id === provider.id}
+                      isSelected={selectedProvider?.id === provider.id}
                       provider={provider}
-                      providerModels={providerModelMap[provider.id]}
+                      modelCount={modelCounts[provider.id] || 0}
                       actionGroup={
                         <ActionGroup onEdit={() => {}} onDelete={() => {}} />
                       }
@@ -246,13 +333,13 @@ export function ProviderList() {
                 {(provided) => (
                   <FixedSizeList
                     height={listHeight}
-                    itemCount={modelProviders.length}
+                    itemCount={providers.length}
                     itemSize={65}
                     width="100%"
                     outerRef={provided.innerRef}
-                    itemData={modelProviders}
+                    itemData={providers}
                   >
-                    {ListRow}
+                    {renderListRow}
                   </FixedSizeList>
                 )}
               </Droppable>
@@ -268,8 +355,8 @@ export function ProviderList() {
         )}
       </div>
 
-      <ModalAction
-        state={state}
+      <ModalActionComponent
+        state={state?.type ?? null}
         onOpenChange={handleCloseModal}
         actionType={actionType(state)}
       />

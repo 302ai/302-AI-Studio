@@ -4,7 +4,15 @@
     "input-placeholder": "何でも聞いてみてください...",
     "tool-bar": {
       "attach-file": "ファイルを添付"
-    }
+    },
+    "model-select-label": "モデルを選択します",
+    "model-select-placeholder": "モデルを選択してください...",
+    "model-search-placeholder": "検索...",
+    "no-models-found": "一致するモデルは見つかりませんでした...",
+    "lack-model": "最初にモデルを選択してください！",
+    "lack-provider": "モデルプロバイダーがありません！",
+    "edit-message": "メッセージを編集",
+    "edit-message-only-save": "保存のみ"
   },
   "settings": {
     "assistant-settings": {
@@ -49,7 +57,16 @@
           "checking": "検証...",
           "unverified": "検証されます",
           "verified": "検証に合格しました",
-          "verification-failed": "認証に失敗しました"
+          "verification-failed": "認証に失敗しました",
+          "normalized-base-url": "正規化されたベースURL",
+          "full-api-endpoint": "完全なAPIエンドポイントの例",
+          "apply-normalized-url": "正規化されたURLを適用",
+          "url-format-error": "URL形式エラー",
+          "url-empty-error": "URLを空にすることはできません",
+          "url-invalid-format": "無効なURL形式",
+          "verification-required": "プロバイダーを追加する前に、まずAPIキーを確認してください",
+          "verification-required-notice": "💡 通知：プロバイダー設定を追加または保存する前に、API認証が必要です。",
+          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください"
         },
         "delete": "削除",
         "description": "モデル",
@@ -68,7 +85,10 @@
         "no-provider-description": "モデルベンダーはまだ追加されていません...",
         "edit-provider-form": {
           "check-key-success": "APIキー検証に正常に！",
-          "check-key-failed": "APIキー検証に失敗しました！"
+          "check-key-failed": "APIキー検証に失敗しました！",
+          "verification-required": "プロバイダー設定を保存する前に、まずAPIキーを確認してください",
+          "verification-required-notice": "💡 通知：プロバイダー設定を追加または保存する前に、API認証が必要です。",
+          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください"
         },
         "star": "集める"
       },
@@ -109,7 +129,8 @@
       "last30Days": "過去30日",
       "last7Days": "過去7日",
       "today": "今日",
-      "yesterday": "昨日"
+      "yesterday": "昨日",
+      "justNow": "ちょうど"
     }
   },
   "tab-bar": {
@@ -119,7 +140,10 @@
     }
   },
   "thread": {
-    "new-thread-title": "新しい会話"
+    "new-thread-title": "新しい会話",
+    "create-thread-error": "申し訳ありませんが、新しいセッションの作成は失敗しました！",
+    "lack-model": "最初にモデルを選択してください！",
+    "lack-provider": "モデルプロバイダーがありません！"
   },
   "thread-menu": {
     "actions": {
@@ -144,5 +168,31 @@
         "title": "会話名を変更"
       }
     }
+  },
+  "common": {
+    "copied-success": "コピー",
+    "copied-failed": "コピーが失敗しました",
+    "copy-to-clipboard": "コピー"
+  },
+  "message-list": {
+    "markdown": {
+      "generating-diagram": "チャートの生成...",
+      "waiting-for-diagram": "チャートの内容を待っています...",
+      "diagram-syntax-error": "グラフ構文エラー"
+    }
+  },
+  "message": {
+    "copy": "コピー",
+    "refresh": "再生成",
+    "edit": "編集",
+    "thinking": "AIは考えています",
+    "edit-dialog": {
+      "title": "メッセージを編集",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "save-success": "メッセージが正常に更新されました",
+      "save-error": "メッセージの更新に失敗しました"
+    },
+    "generate-failed": "生成に失敗しました"
   }
 }

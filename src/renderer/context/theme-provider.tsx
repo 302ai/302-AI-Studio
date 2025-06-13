@@ -1,5 +1,5 @@
 import { useSettingsStore } from "@renderer/store/settings-store";
-import { ThemeMode } from "@renderer/types/settings";
+import { ThemeMode } from "@shared/types/settings";
 import {
   createContext,
   type ReactNode,

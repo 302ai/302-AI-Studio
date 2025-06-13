@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
+/** biome-ignore-all lint/a11y/useSemanticElements: ignore useSemanticElements */
 import type { DraggableProvided } from "@hello-pangea/dnd";
 import {
   CardDescription,
@@ -7,15 +7,14 @@ import {
   CardTitle,
 } from "@renderer/components/ui/card";
 import { cn } from "@renderer/lib/utils";
-import type { Model } from "@renderer/types/models";
-import type { ModelProvider } from "@renderer/types/providers";
+import type { Provider } from "@shared/triplit/types";
 import { useTranslation } from "react-i18next";
 import { ModelIcon } from "../model-icon";
 
 interface ProviderCardProps {
   provided: DraggableProvided;
-  provider: ModelProvider;
-  providerModels: Model[];
+  provider: Provider;
+  modelCount: number;
   actionGroup: React.ReactNode;
   style?: React.CSSProperties;
   isDragging?: boolean;
@@ -26,7 +25,7 @@ interface ProviderCardProps {
 export function ProviderCard({
   provided,
   provider,
-  providerModels,
+  modelCount,
   actionGroup,
   style,
   isDragging,
@@ -55,7 +54,7 @@ export function ProviderCard({
       className={cn(
         "group flex h-[60px] flex-row items-center justify-between rounded-xl border bg-bg py-4 hover:bg-hover-primary",
         isDragging && "bg-hover-primary opacity-50",
-        isSelected && "border-primary"
+        isSelected && "border-primary",
       )}
       ref={provided.innerRef}
       {...provided.draggableProps}
@@ -72,11 +71,11 @@ export function ProviderCard({
       aria-label={provider.name}
     >
       <CardHeader className="flex items-center gap-3 pl-4">
-        <ModelIcon modelId={provider.id} className="size-8" />
+        <ModelIcon modelName={provider.name ?? ""} className="size-8" />
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">
-            {providerModels.length}
+            {modelCount}
             {t("settings.model-settings.model-provider.description")}
           </CardDescription>
         </div>

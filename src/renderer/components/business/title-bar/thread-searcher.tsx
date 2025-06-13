@@ -11,7 +11,6 @@ import {
 } from "@renderer/components/ui/modal";
 import { SearchField } from "@renderer/components/ui/search-field";
 import { useThread } from "@renderer/hooks/use-thread";
-import { EventNames, emitter } from "@renderer/services/event-service";
 import { Autocomplete, useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 
@@ -26,14 +25,10 @@ export function ThreadSearcher({
 }: ThreadSearcherProps) {
   const { t } = useTranslation();
   const { contains } = useFilter({ sensitivity: "base" });
-  const { groupedThreads } = useThread();
+  const { groupedThreads, handleClickThread } = useThread();
 
-  const handleThreadClick = (thread: {
-    id: string;
-    title: string;
-    favicon: string;
-  }) => {
-    emitter.emit(EventNames.THREAD_ACTIVE, thread);
+  const handleThreadClick = (threadId: string) => {
+    handleClickThread(threadId);
     onOpenChange();
   };
 
@@ -62,7 +57,7 @@ export function ThreadSearcher({
         >
           {groupedThreads.map(({ key, label, threads }) => (
             <ListBoxSection key={key} id={key} title={label}>
-              {threads.map(({ id, title, favicon }) => (
+              {threads.map(({ id, title }) => (
                 <ListBoxItem
                   className="flex cursor-pointer p-0"
                   key={id}
@@ -71,16 +66,10 @@ export function ThreadSearcher({
                 >
                   <div
                     className="flex w-full items-center gap-2 rounded-lg px-[9.2px] py-[5.2px] hover:bg-hover-primary"
-                    onPointerDown={() =>
-                      handleThreadClick({
-                        id,
-                        title,
-                        favicon: favicon ?? placeholder,
-                      })
-                    }
+                    onPointerDown={() => handleThreadClick(id)}
                   >
                     <img
-                      src={favicon || placeholder}
+                      src={placeholder}
                       alt={title}
                       className="h-4 w-4"
                     />

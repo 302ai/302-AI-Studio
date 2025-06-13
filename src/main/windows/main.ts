@@ -5,7 +5,7 @@ import { BrowserWindow } from "electron";
 import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
-import { isMac } from "../constant";
+import { isMac, isWin } from "../constant";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -28,14 +28,14 @@ export async function MainWindow() {
     autoHideMenuBar: true,
     transparent: isMac,
     visualEffectState: "active",
-    titleBarStyle: "hiddenInset",
+    titleBarStyle: isWin ? "hidden" : "hiddenInset",
     titleBarOverlay:
       theme === "dark" ? titleBarOverlayDark : titleBarOverlayLight,
     backgroundColor: isMac
       ? undefined
       : theme === "dark"
-        ? "#181818"
-        : "#FFFFFF",
+      ? "#181818"
+      : "#FFFFFF",
     trafficLightPosition: { x: 8, y: 12 },
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),

@@ -3,61 +3,115 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
-import type { ModelProvider } from "@renderer/types/providers";
+import { extractErrorMessage } from "@main/utils/error-utils";
+import type { CreateModelData, Provider } from "@shared/triplit/types";
+import { ipcMain } from "electron";
 import Logger from "electron-log";
 import { ConfigService } from "../config-service";
 import { EventNames, emitter } from "../event-service";
-import type { BaseProviderService } from "./base-provider-service";
+import type {
+  BaseProviderService,
+  StreamChatParams,
+} from "./base-provider-service";
 import { OpenAIProviderService } from "./openAI-provider-service";
-
-export type CheckApiKeyParams =
-  | {
-      condition: "add";
-      providerCfg: ModelProvider;
-    }
-  | {
-      condition: "edit";
-      providerId: string;
-      providerCfg: Pick<
-        ModelProvider,
-        "name" | "baseUrl" | "apiKey" | "apiType"
-      >;
-    };
+import { abortStream } from "./stream-manager";
 
 @ServiceRegister("providerService")
 export class ProviderService {
   private configService: ConfigService;
-  private providerMap: Map<string, ModelProvider> = new Map();
-  private providerInstMap: Map<string, BaseProviderService> = new Map();
+  private providerMap: Map<string, Provider> = new Map(); // * Cache provider to find provider by id
+  private providerInstMap: Map<string, BaseProviderService> = new Map(); // * Cache provider instances to avoid duplicate creation
 
   constructor() {
     this.configService = new ConfigService();
     this.init();
+    this.setupEventListeners();
+    this.setupStreamStopListener();
+  }
 
-    // TODO: The current implementation is not efficient, we should use a more efficient way to update the provider service
-    emitter.on(EventNames.PROVIDERS_UPDATE, () => {
-      Logger.info("PROVIDERS_UPDATE");
-      this.init();
+  private async init() {
+    const providers = await this.configService.getProviders();
+    for (const provider of providers) {
+      this.providerMap.set(provider.id, provider);
+      if (provider.enabled) {
+        try {
+          Logger.info(
+            `init provider: id=${provider.id} name=${provider.name}, type=${provider.apiType}`,
+          );
+          const providerInst = this.createProviderInst(provider);
+          if (providerInst) {
+            this.providerInstMap.set(provider.id, providerInst);
+          }
+        } catch (error) {
+          Logger.error(`Failed to init provider: ${provider.id}`, error);
+        }
+      }
+    }
+  }
+
+  private setupEventListeners() {
+    emitter.on(EventNames.PROVIDER_ADD, ({ provider }) => {
+      this.handleProviderAdded(provider);
+    });
+    emitter.on(EventNames.PROVIDER_DELETE, ({ providerId }) => {
+      this.handleProviderDeleted(providerId);
     });
   }
 
-  private init() {
-    const providers = this.configService.getProviders();
-    providers.forEach((provider) => {
+  private setupStreamStopListener() {
+    ipcMain.on(
+      "chat:stream-stop",
+      (_event, data: { tabId: string; userMessageId: string }) => {
+        abortStream(data.tabId);
+      },
+    );
+  }
+
+  private handleProviderAdded(provider: Provider) {
+    try {
+      Logger.info(
+        `Adding provider to cache: id=${provider.id} name=${provider.name}`,
+      );
+
       this.providerMap.set(provider.id, provider);
 
       if (provider.enabled) {
         const providerInst = this.createProviderInst(provider);
         if (providerInst) {
           this.providerInstMap.set(provider.id, providerInst);
-          Logger.info("Provider initialized successfully:", provider.name);
+          Logger.info(`Provider instance created and cached: ${provider.name}`);
         }
       }
-    });
+
+      Logger.info(`Provider added to cache successfully: ${provider.name}`);
+    } catch (error) {
+      Logger.error(`Failed to add provider to cache: ${provider.id}`, error);
+    }
+  }
+
+  private handleProviderDeleted(providerId: string) {
+    try {
+      const provider = this.providerMap.get(providerId);
+      const providerName = provider?.name || providerId;
+
+      Logger.info(
+        `Removing provider from cache: id=${providerId} name=${providerName}`,
+      );
+
+      this.providerMap.delete(providerId);
+      this.providerInstMap.delete(providerId);
+
+      Logger.info(`Provider removed from cache successfully: ${providerName}`);
+    } catch (error) {
+      Logger.error(
+        `Failed to remove provider from cache: ${providerId}`,
+        error,
+      );
+    }
   }
 
   private createProviderInst(
-    provider: ModelProvider
+    provider: Provider,
   ): BaseProviderService | undefined {
     switch (provider.apiType) {
       case "openai":
@@ -69,122 +123,106 @@ export class ProviderService {
     }
   }
 
-  /**
-   * Check API Key and if the condition is "add", set the models to the config service
-   *
-   * @param _event
-   * @param params CheckApiKeyParams
-   * @returns The status of the API key check, and the error message if the check fails, and the models if the check is successful (only on "add" condition)
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async checkApiKey(
-    _event: Electron.IpcMainEvent,
-    params: CheckApiKeyParams
-  ): Promise<{
-    isOk: boolean;
-    errorMsg: string | null;
-  }> {
-    if (params.condition === "add") {
-      const providerInst = this.createProviderInst(params.providerCfg);
+  private getProviderInst(providerId: string): BaseProviderService {
+    let providerInst = this.providerInstMap.get(providerId);
+    if (!providerInst) {
+      const provider = this.getProviderById(providerId);
+      providerInst = this.createProviderInst(provider);
       if (!providerInst) {
-        return { isOk: false, errorMsg: "Failed to create provider instance" };
+        throw new Error(`Failed to create provider instance: ${providerId}`);
       }
-
-      const { isOk, errorMsg, models } = await providerInst.checkApiKey();
-      if (isOk) {
-        this.configService._setProviderModels(
-          params.providerCfg.id,
-          models || []
-        );
-      }
-
-      Logger.debug("checkApiKey (add): ", params.providerCfg.name, {
-        isOk,
-        errorMsg,
-        models: models?.length,
-      });
-
-      return { isOk, errorMsg };
+      this.providerInstMap.set(providerId, providerInst);
     }
-
-    if (params.condition === "edit") {
-      try {
-        const originalProvider = this.getProviderById(params.providerId);
-        const tempProvider: ModelProvider = {
-          ...originalProvider,
-          ...params.providerCfg,
-        };
-        const tempProviderInst = this.createProviderInst(tempProvider);
-        if (!tempProviderInst) {
-          return {
-            isOk: false,
-            errorMsg: "Failed to create provider instance",
-          };
-        }
-
-        const result = await tempProviderInst.checkApiKey();
-
-        Logger.debug("checkApiKey (edit): ", tempProvider.name, {
-          isOk: result.isOk,
-          errorMsg: result.errorMsg,
-          models: result.models?.length,
-        });
-
-        return result;
-      } catch (error) {
-        return {
-          isOk: false,
-          errorMsg: `Failed to get provider instance: ${error}`,
-        };
-      }
-    }
-
-    return { isOk: false, errorMsg: "Invalid condition" };
+    return providerInst;
   }
 
-  getProviderById(id: string): ModelProvider {
-    const provider = this.providerMap.get(id);
-    if (!provider) {
-      throw new Error(`Provider ${id} not found`);
-    }
-    return provider;
-  }
-
-  // private getProviderInst(providerId: string): BaseProviderService {
-  //   let instance = this.providerInstMap.get(providerId);
-  //   if (!instance) {
-  //     const provider = this.getProviderById(providerId);
-  //     instance = this.createProviderInst(provider);
-  //     if (!instance) {
-  //       throw new Error(`Failed to create provider instance for ${providerId}`);
-  //     }
-  //     this.providerInstMap.set(providerId, instance);
-  //   }
-  //   return instance;
-  // }
-
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  updateProviderConfig(
-    _event: Electron.IpcMainEvent,
-    providerId: string,
-    updates: Partial<ModelProvider>
-  ): void {
+  private getProviderById(providerId: string): Provider {
     const provider = this.providerMap.get(providerId);
     if (!provider) {
       throw new Error(`Provider ${providerId} not found`);
     }
+    return provider;
+  }
 
-    const updatedProvider = { ...provider, ...updates };
-    this.providerMap.set(providerId, updatedProvider);
-
-    this.configService.updateProvider(updatedProvider);
-
-    if (updatedProvider.enabled) {
-      const newInstance = this.createProviderInst(updatedProvider);
-      if (newInstance) {
-        this.providerInstMap.set(providerId, newInstance);
-        Logger.info("Provider instance updated:", updatedProvider.name);
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async checkApiKey(
+    _event: Electron.IpcMainEvent,
+    provider: Provider,
+  ): Promise<{
+    isOk: boolean;
+    errorMsg: string | null;
+  }> {
+    try {
+      const providerInst = this.createProviderInst(provider);
+      if (!providerInst) {
+        return {
+          isOk: false,
+          errorMsg: `Unsupported provider type: ${provider.apiType}`,
+        };
       }
+
+      const { isOk, errorMsg } = await providerInst.checkApiKey();
+
+      Logger.debug("checkApiKey: ", provider.name, {
+        isOk,
+        errorMsg,
+      });
+
+      return { isOk, errorMsg };
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error);
+      return { isOk: false, errorMsg: errorMessage };
     }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async fetchModels(
+    _event: Electron.IpcMainEvent,
+    provider: Provider,
+  ): Promise<CreateModelData[]> {
+    const providerInst = this.getProviderInst(provider.id);
+    return await providerInst.fetchModels();
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async startStreamChat(
+    _event: Electron.IpcMainEvent,
+    params: StreamChatParams,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const providerInst = this.getProviderInst(params.provider.id);
+
+      return await providerInst.startStreamChat(params);
+    } catch (error) {
+      Logger.error("Failed to start stream chat:", error);
+      return {
+        success: false,
+        error: extractErrorMessage(error),
+      };
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async reGenerateStreamChat(
+    _event: Electron.IpcMainEvent,
+    params: StreamChatParams & { regenerateMessageId: string },
+  ): Promise<{ success: boolean; error?: string }> {
+    const { regenerateMessageId } = params;
+    const providerInst = this.getProviderInst(params.provider.id);
+
+    return await providerInst.reGenerateStreamChat(params, regenerateMessageId);
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async stopStreamChat(
+    _event: Electron.IpcMainEvent,
+    params: { tabId: string },
+  ): Promise<{ success: boolean }> {
+    const { tabId } = params;
+    const aborted = abortStream(tabId);
+    Logger.info(
+      `Stream chat stop requested for tab ${tabId}. Active stream aborted: ${aborted}`,
+    );
+    return { success: true };
   }
 }

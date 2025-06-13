@@ -12,33 +12,54 @@ import {
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
 import { isMac } from "@renderer/config/constant";
+import { useActiveTab } from "@renderer/hooks/use-active-tab";
+import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { cn } from "@renderer/lib/utils";
-import { useTabBarStore } from "@renderer/store/tab-bar-store";
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+  Settings,
+  SquarePlus,
+} from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaRegSquarePlus } from "react-icons/fa6";
-import { FiSearch, FiSettings } from "react-icons/fi";
-import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { TabBar } from "../tab-bar";
 import { ThreadSearcher } from "./thread-searcher";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
+const { tabService } = window.service;
+
 export function BasicTitleBar() {
   const { t } = useTranslation();
   const { toggleSidebar, state } = useSidebar();
-  const { addTab, addSettingsTab } = useTabBarStore();
+  const { setActiveTabId, tabs } = useActiveTab();
+  const { setActiveThreadId } = useActiveThread();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const isSidebarCollapsed = state === "collapsed";
 
-  const handleSettingsClick = () => {
-    addSettingsTab({ title: t("settings.tab-title") });
-  };
+  const handleAddNewTab = async (type: "thread" | "setting") => {
+    if (type === "setting") {
+      // Check if a setting tab already exists
+      const existingSettingTab = tabs.find(tab => tab.type === "setting");
 
-  const handleAddNewTab = () => {
-    addTab({ title: t("thread.new-thread-title") });
+      if (existingSettingTab) {
+        // Activate the existing setting tab
+        const promises = [setActiveTabId(existingSettingTab.id), setActiveThreadId('')];
+        await Promise.all(promises);
+        return;
+      }
+    }
+
+    const newTab = await tabService.insertTab({
+      title: type === "thread" ? t("thread.new-thread-title") : t("settings.tab-title"),
+      type,
+    });
+    const promises = [setActiveTabId(newTab.id), setActiveThreadId('')];
+    await Promise.all(promises);
   };
 
   const handleSearchThread = () => {
@@ -71,10 +92,10 @@ export function BasicTitleBar() {
               style={noDragRegion}
               onClick={toggleSidebar}
             >
-              <LuPanelLeftOpen
+              <PanelLeftOpen
                 className={cn("h-4 w-4", { hidden: !isSidebarCollapsed })}
               />
-              <LuPanelLeftClose
+              <PanelLeftClose
                 className={cn("h-4 w-4", { hidden: isSidebarCollapsed })}
               />
             </TooltipTrigger>
@@ -94,7 +115,7 @@ export function BasicTitleBar() {
               style={noDragRegion}
               onClick={handleSearchThread}
             >
-              <FiSearch className="h-4 w-4" />
+              <Search className="h-4 w-4" />
             </TooltipTrigger>
             <TooltipContent>
               {t("sidebar.search-thread.tooltip")}
@@ -108,9 +129,9 @@ export function BasicTitleBar() {
               intent="plain"
               size="square-petite"
               style={noDragRegion}
-              onClick={handleAddNewTab}
+              onClick={() => handleAddNewTab("thread")}
             >
-              <FaRegSquarePlus className="h-4 w-4" />
+              <SquarePlus className="h-4 w-4" />
             </TooltipTrigger>
             <TooltipContent>{t("sidebar.new-thread.tooltip")}</TooltipContent>
           </Tooltip>
@@ -137,9 +158,9 @@ export function BasicTitleBar() {
               intent="plain"
               size="square-petite"
               style={noDragRegion}
-              onClick={handleSettingsClick}
+              onClick={() => handleAddNewTab("setting")}
             >
-              <FiSettings className="h-4 w-4" />
+              <Settings className="h-4 w-4" />
             </TooltipTrigger>
             <TooltipContent>{t("settings.icon-tooltip")}</TooltipContent>
           </Tooltip>

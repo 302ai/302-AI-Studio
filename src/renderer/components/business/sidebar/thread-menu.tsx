@@ -10,13 +10,13 @@ import {
   type MenuModelActionType,
   useThreadMenu,
 } from "@renderer/hooks/use-thread-menu";
-import type { ThreadItem } from "@renderer/types/threads";
+import type { Thread } from "@shared/triplit/types";
 import { Eraser, Package, Pencil, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ModalAction } from "../modal-action";
 
 interface ThreadMenuProps {
-  thread: ThreadItem;
+  thread: Thread;
 }
 
 export function ThreadMenu({ thread }: ThreadMenuProps) {
@@ -59,7 +59,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
               placeholder={t("thread-menu.actions.rename.edit.placeholder")}
             />
           ),
-          action: handleRename,
+          action: async () => await handleRename(),
           disabled: formattedTitle.length === 0,
         };
 
@@ -68,7 +68,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           title: t("thread-menu.actions.clean-messages.title"),
           descriptions: [t("thread-menu.actions.clean-messages.description")],
           confirmText: t("thread-menu.actions.clean-messages.confirmText"),
-          action: handleCleanMessages,
+          action: async () => await handleCleanMessages(),
         };
 
       case "delete":
@@ -76,7 +76,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           title: t("thread-menu.actions.delete.title"),
           descriptions: [t("thread-menu.actions.delete.description")],
           confirmText: t("thread-menu.actions.delete.confirmText"),
-          action: handleDelete,
+          action: async () => await handleDelete(),
         };
       default:
         return initialsState;
@@ -100,7 +100,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           </ContextMenuItem>
           <ContextMenuItem onAction={handleCollectThread}>
             <Package className="mr-2 h-4 w-4" />
-            {thread.isCollected
+            {thread.collected
               ? t("sidebar.menu-item.uncollect-thread")
               : t("sidebar.menu-item.collect-thread")}
           </ContextMenuItem>

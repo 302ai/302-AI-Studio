@@ -4,7 +4,15 @@
     "input-placeholder": "Ask anything...",
     "tool-bar": {
       "attach-file": "Attach file"
-    }
+    },
+    "model-select-label": "Select a model",
+    "model-select-placeholder": "Please select a model...",
+    "model-search-placeholder": "Search...",
+    "no-models-found": "No matching model was found...",
+    "lack-model": "Please select a model first!",
+    "lack-provider": "Missing model provider!",
+    "edit-message": "Edit Message",
+    "edit-message-only-save": "Only Save"
   },
   "settings": {
     "assistant-settings": {
@@ -49,7 +57,16 @@
           "checking": "Checking...",
           "unverified": "To Be Verified",
           "verified": "Verified",
-          "verification-failed": "Failed"
+          "verification-failed": "Failed",
+          "normalized-base-url": "Normalized Base URL",
+          "full-api-endpoint": "Full API Endpoint Example",
+          "apply-normalized-url": "Apply Normalized URL",
+          "url-format-error": "Invalid URL Format",
+          "url-empty-error": "URL cannot be empty",
+          "url-invalid-format": "Invalid URL format",
+          "verification-required": "Please verify the API Key first before adding the provider",
+          "verification-required-notice": "💡 Notice: API verification is required before adding or saving provider configuration.",
+          "verification-hint": "Please click the verify button to confirm API Key availability"
         },
         "delete": "Delete",
         "description": " models",
@@ -68,7 +85,10 @@
         "no-provider-description": "Model providers have not been added yet...",
         "edit-provider-form": {
           "check-key-success": "API Key Verification Successfully!",
-          "check-key-failed": "API Key Verification failed!"
+          "check-key-failed": "API Key Verification failed!",
+          "verification-required": "Please verify the API Key first before saving the provider configuration",
+          "verification-required-notice": "💡 Notice: API verification is required before adding or saving provider configuration.",
+          "verification-hint": "Please click the verify button to confirm API Key availability"
         },
         "star": "Collect"
       },
@@ -109,7 +129,8 @@
       "last30Days": "Last 30 Days",
       "last7Days": "Last 7 Days",
       "today": "Today",
-      "yesterday": "Yesterday"
+      "yesterday": "Yesterday",
+      "justNow": "Just Now"
     }
   },
   "tab-bar": {
@@ -119,7 +140,10 @@
     }
   },
   "thread": {
-    "new-thread-title": "New Chat"
+    "new-thread-title": "New Chat",
+    "create-thread-error": "Sorry, the new conversation creation failed!",
+    "lack-model": "Please select a model first!",
+    "lack-provider": "Missing model provider!"
   },
   "thread-menu": {
     "actions": {
@@ -144,5 +168,31 @@
         "title": "Rename Conversation"
       }
     }
+  },
+  "common": {
+    "copied-success": "Copied",
+    "copied-failed": "Copy failed",
+    "copy-to-clipboard": "Copy"
+  },
+  "message-list": {
+    "markdown": {
+      "generating-diagram": "Generating a chart...",
+      "waiting-for-diagram": "Waiting for the content of the chart...",
+      "diagram-syntax-error": "Graph syntax error"
+    }
+  },
+  "message": {
+    "copy": "Copy",
+    "refresh": "Regenerate",
+    "edit": "Edit",
+    "thinking": "AI is thinking",
+    "edit-dialog": {
+      "title": "Edit Message",
+      "save": "Save",
+      "cancel": "Cancel",
+      "save-success": "Message updated successfully",
+      "save-error": "Failed to update message"
+    },
+    "generate-failed": "Generate failed"
   }
 }

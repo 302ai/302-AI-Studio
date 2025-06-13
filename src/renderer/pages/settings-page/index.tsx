@@ -55,7 +55,7 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="flex h-full flex-row gap-x-6">
+    <div className="flex h-full flex-row gap-x-6 p-6">
       <Tabs
         className="w-auto min-w-[var(--setting-tab-list-width)] justify-end rounded-xl bg-setting-tab-list"
         orientation="vertical"

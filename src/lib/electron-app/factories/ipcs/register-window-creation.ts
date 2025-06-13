@@ -1,4 +1,7 @@
-import type { BrowserWindowOrNull, WindowCreationByIPC } from "@shared/types";
+import type {
+  BrowserWindowOrNull,
+  WindowCreationByIPC,
+} from "@shared/electron-router";
 import { ipcMain } from "electron";
 
 export function registerWindowCreationByIPC({

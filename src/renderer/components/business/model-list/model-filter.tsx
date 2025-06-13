@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/nursery/useUniqueElementIds: biome-ignore-all */
 import { Tab, TabList, Tabs } from "@renderer/components/ui/tab";
 import { useTranslation } from "react-i18next";
 
@@ -10,11 +11,15 @@ export function ModelFilter({ onTabChange }: ModelFilterProps) {
     keyPrefix: "settings.model-settings.model-list",
   });
 
+  const handleTabChange = (key: React.Key) => {
+    onTabChange(key);
+  };
+
   return (
     <Tabs
       aria-label="Model List Tabs"
       orientation="horizontal"
-      onSelectionChange={onTabChange}
+      onSelectionChange={handleTabChange}
     >
       <TabList
         className="border-none px-3 pt-2 pb-0"

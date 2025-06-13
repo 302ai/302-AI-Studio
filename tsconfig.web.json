@@ -11,7 +11,7 @@
     "composite": true,
     "jsx": "react-jsx",
     "resolveJsonModule": true,
-    "skipLibCheck": true,
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [

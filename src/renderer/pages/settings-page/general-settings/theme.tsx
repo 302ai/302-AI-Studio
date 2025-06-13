@@ -1,9 +1,9 @@
 import { cn } from "@renderer/lib/utils";
 import { useSettingsStore } from "@renderer/store/settings-store";
-import { ThemeMode } from "@renderer/types/settings";
+import { ThemeMode } from "@shared/types/settings";
+import { Laptop, Moon, Sun } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BsLaptop, BsMoon, BsSun } from "react-icons/bs";
 
 export function ThemeSwitcher() {
   const { t } = useTranslation("translation", {
@@ -28,17 +28,17 @@ export function ThemeSwitcher() {
     () => [
       {
         key: ThemeMode.Light,
-        icon: <BsSun className="size-4" />,
+        icon: <Sun className="size-4" />,
         label: t("light"),
       },
       {
         key: ThemeMode.Dark,
-        icon: <BsMoon className="size-4" />,
+        icon: <Moon className="size-4" />,
         label: t("dark"),
       },
       {
         key: ThemeMode.System,
-        icon: <BsLaptop className="size-4" />,
+        icon: <Laptop className="size-4" />,
         label: t("system"),
       },
     ],

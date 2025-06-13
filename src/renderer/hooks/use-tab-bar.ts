@@ -1,30 +1,59 @@
 import type { DropResult } from "@hello-pangea/dnd";
+import { triplitClient } from "@shared/triplit/client";
+import type { Tab, Thread } from "@shared/triplit/types";
+import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
-import { TabType, useTabBarStore } from "../store/tab-bar-store";
+import { useActiveTab } from "./use-active-tab";
 
 interface UseTabBarProps {
   tabBarRef: React.RefObject<HTMLDivElement>;
 }
 
+const { tabService } = window.service;
+
 export function useTabBar({ tabBarRef }: UseTabBarProps) {
-  const { tabs, activeTabId, addTab, moveTab, setActiveTabId } =
-    useTabBarStore();
+  const { activeTabId, activeTab, setActiveTabId } = useActiveTab();
+
+  const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
+  const { results: alltabs } = useQuery(triplitClient, tabsQuery);
 
   const navigate = useNavigate();
 
+  const [tabs, setTabs] = useState<Tab[]>([]);
   const [tabWidth, setTabWidth] = useState<number>(200);
 
   const activateTabId = (id: string) => {
     setActiveTabId(id);
-    emitter.emit(EventNames.TAB_ACTIVE, { tabId: id });
+
+    emitter.emit(EventNames.TAB_SELECT, { tabId: id });
   };
 
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
+  const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
 
-    moveTab(result.source.index, result.destination.index);
+    if (result.source.index === result.destination.index) {
+      return;
+    }
+
+    const fromIndex = result.source.index;
+    const toIndex = result.destination.index;
+
+    const newTabs = [...tabs];
+    const [movedTab] = newTabs.splice(fromIndex, 1);
+    newTabs.splice(toIndex, 0, movedTab);
+    setTabs(newTabs);
+
+    try {
+      await tabService.moveTab(fromIndex, toIndex, tabs);
+      console.log("Tab order updated successfully");
+    } catch (error) {
+      console.error("Failed to move tab:", error);
+      setTabs(tabs);
+    }
   };
 
   const calculateTabWidth = useCallback(() => {
@@ -41,66 +70,35 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
 
     const newTabWidth = Math.max(
       minTabWidth,
-      Math.min(maxTabWidth, idealWidth)
+      Math.min(maxTabWidth, idealWidth),
     );
 
     setTabWidth(newTabWidth);
   }, [tabs.length, tabBarRef.current]);
 
+  useEffect(() => {
+    setTabs(alltabs || []);
+  }, [alltabs]);
+
   /**
-   * * This effect is used to set the active tab id to the first tab if it is not set
-   * * and to set the isLoaded to true
-   * * and to navigate to the active tab
+   * * This effect is used to navigate to the home page if the tabs are empty
    */
   useEffect(() => {
-    const state = useTabBarStore.getState();
-
-    if (!state.isLoaded) {
-      if (state.tabs.length > 0 && !state.activeTabId) {
-        state.setActiveTabId(state.tabs[0].id);
-      }
-      state.setIsLoaded(true);
-
-      if (state.activeTabId) {
-        const tab = state.tabs.find((tab) => tab.id === state.activeTabId);
-        if (tab) {
-          navigate(
-            tab.type === TabType.settings ? "/settings/general-settings" : "/"
-          );
-        }
-      }
+    if (tabs.length === 0) {
+      navigate("/");
     }
-  }, [navigate]);
+  }, [tabs, navigate]);
 
+  /**
+   * * This effect is used to navigate to the active tab
+   */
   useEffect(() => {
-    const unsubs = [
-      /**
-       * * This effect is used to navigate to the home page if the tabs are empty
-       */
-      useTabBarStore.subscribe((state, prevState) => {
-        if (state.tabs.length !== prevState.tabs.length) {
-          if (state.tabs.length === 0) {
-            navigate("/");
-          }
-        }
-      }),
-      /**
-       * * This effect is used to navigate to the active tab
-       */
-      useTabBarStore.subscribe((state, prevState) => {
-        if (state.activeTabId !== prevState.activeTabId) {
-          const tab = state.tabs.find((tab) => tab.id === state.activeTabId);
-          if (tab) {
-            navigate(
-              tab.type === TabType.settings ? "/settings/general-settings" : "/"
-            );
-          }
-        }
-      }),
-    ];
-
-    return () => unsubs.forEach((unsub) => unsub());
-  }, [navigate]);
+    if (activeTab) {
+      navigate(
+        activeTab.type === "setting" ? "/settings/general-settings" : "/",
+      );
+    }
+  }, [activeTab, navigate]);
 
   /**
    * * This effect is used to calculate the width of the tab
@@ -125,32 +123,27 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
    * * This effect is used to handle the click event for a thread in the sidebar
    */
   useEffect(() => {
-    /**
-     * Handles the click event for a thread in the sidebar
-     * * If the thread is already open, it will be set as the active tab
-     * * Else if the thread is not open, it will be added to the tabs and set as the active tab
-     * @param threadId The id of the thread to be clicked
-     */
-    const handleClickThread = (event: {
-      id: string;
-      title: string;
-      favicon: string;
-    }) => {
-      const { id, title, favicon } = event;
-      if (tabs.find((tab) => tab.id === id)) {
-        setActiveTabId(id);
+    const handleThreadSelect = async (event: { thread: Thread }) => {
+      const { id, title } = event.thread;
+
+      const existingTab = tabs.find((tab) => tab.threadId === id);
+
+      if (existingTab) {
+        await setActiveTabId(existingTab.id);
       } else {
-        addTab({
+        const newTab = await tabService.insertTab({
           title,
-          id,
-          favicon,
+          threadId: id,
+          type: "thread",
         });
+        await setActiveTabId(newTab.id);
       }
     };
-    const unsub = emitter.on(EventNames.THREAD_ACTIVE, handleClickThread);
+
+    const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadSelect);
 
     return () => unsub();
-  }, [tabs, addTab, setActiveTabId]);
+  }, [setActiveTabId, tabs]);
 
   return {
     tabs,

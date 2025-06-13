@@ -2,7 +2,6 @@ import { DragDropContext, type DragStart, Droppable } from "@hello-pangea/dnd";
 import { Separator } from "@renderer/components/ui/separator";
 import { useTabBar } from "@renderer/hooks/use-tab-bar";
 import { cn } from "@renderer/lib/utils";
-import { TabType } from "@renderer/store/tab-bar-store";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Tab } from "./tab";
@@ -44,7 +43,7 @@ export function TabBar() {
             }}
             {...provided.droppableProps}
           >
-            {tabs.map(({ id, title, favicon, type }, index) => (
+            {tabs.map(({ id, title, type }, index) => (
               <div key={id} className="flex items-center">
                 <Separator
                   orientation="vertical"
@@ -54,20 +53,17 @@ export function TabBar() {
                       tabs[index - 1].id === activeTabId ||
                       id === activeTabId
                       ? "opacity-0"
-                      : "opacity-100"
+                      : "opacity-100",
                   )}
                 />
 
                 <Tab
                   id={id}
                   index={index}
-                  title={
-                    type === TabType.settings ? t("settings.tab-title") : title
-                  }
+                  title={type === "setting" ? t("settings.tab-title") : title}
                   isActive={id === activeTabId}
                   onClick={() => activateTabId(id)}
                   width={tabWidth}
-                  favicon={favicon}
                   type={type}
                 />
               </div>

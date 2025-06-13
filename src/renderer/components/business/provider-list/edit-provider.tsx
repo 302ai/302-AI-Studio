@@ -1,14 +1,15 @@
 import { useProviderList } from "@renderer/hooks/use-provider-list";
-import type { ModelProvider } from "@renderer/types/providers";
-import { useCallback, useEffect, useState } from "react";
+import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
+import type { Provider } from "@shared/triplit/types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface EditProviderProps {
-  provider: ModelProvider;
+  provider: Provider;
   onValidationStatusChange: (isValid: boolean) => void;
-  onProviderCfgSet: (providerCfg: ModelProvider) => void;
+  onProviderCfgSet: (providerCfg: Provider) => void;
 }
 
 export function EditProvider({
@@ -36,6 +37,11 @@ export function EditProvider({
 
   const isCustomProvider = provider.custom ?? false;
   const canCheckKey = !!apiKey && !!baseUrl;
+
+  // Calculate normalized URL and complete API endpoint
+  const normalizedUrlResult = useMemo(() => {
+    return normalizeBaseUrl(baseUrl, apiType, t);
+  }, [baseUrl, apiType, t]);
 
   const isOnlyNameChanged = useCallback(() => {
     return (
@@ -92,15 +98,20 @@ export function EditProvider({
     setIsChecking("loading");
     setKeyValidationStatus("loading");
 
-    const updatedProvider: ModelProvider = {
+    // Use normalized Base URL
+    const finalBaseUrl = normalizedUrlResult.isValid
+      ? normalizedUrlResult.normalizedBaseUrl
+      : baseUrl;
+
+    const updatedProvider: Provider = {
       ...provider,
       name: customName,
       apiKey,
-      baseUrl,
-      apiType: apiType,
+      baseUrl: finalBaseUrl,
+      apiType,
     };
 
-    const { isOk, errorMsg } = await handleCheckKey(updatedProvider, "edit");
+    const { isOk, errorMsg } = await handleCheckKey(updatedProvider);
 
     setIsChecking(isOk ? "success" : "failed");
     setKeyValidationStatus(isOk ? "success" : "failed");
@@ -118,7 +129,7 @@ export function EditProvider({
 
   const handleKeyFieldChange = (
     value: string,
-    onChange: (value: string) => void
+    onChange: (value: string) => void,
   ) => {
     onChange(value);
 
@@ -131,30 +142,42 @@ export function EditProvider({
     }
   };
 
+  const onValidationStatusChangeRef = useRef(onValidationStatusChange);
+  const onProviderCfgSetRef = useRef(onProviderCfgSet);
+
   useEffect(() => {
-    const updatedProvider: ModelProvider = {
+    onValidationStatusChangeRef.current = onValidationStatusChange;
+    onProviderCfgSetRef.current = onProviderCfgSet;
+  });
+
+  useEffect(() => {
+    // Use normalized Base URL
+    const finalBaseUrl = normalizedUrlResult.isValid
+      ? normalizedUrlResult.normalizedBaseUrl
+      : baseUrl;
+
+    const updatedProvider: Provider = {
       ...provider,
       name: customName,
       apiKey,
-      baseUrl,
+      baseUrl: finalBaseUrl,
       apiType: apiType,
     };
 
     const isValid = isCurrentConfigValid();
-    onValidationStatusChange(isValid);
+    onValidationStatusChangeRef.current(isValid);
 
     if (isValid) {
-      onProviderCfgSet(updatedProvider);
+      onProviderCfgSetRef.current(updatedProvider);
     }
   }, [
     customName,
     apiKey,
     baseUrl,
     apiType,
-    onProviderCfgSet,
-    onValidationStatusChange,
-    provider,
     isCurrentConfigValid,
+    provider,
+    normalizedUrlResult,
   ]);
 
   return (
@@ -176,6 +199,7 @@ export function EditProvider({
         onProviderTypeChange={(value) =>
           handleKeyFieldChange(value, setApiType)
         }
+        normalizedUrlResult={normalizedUrlResult}
       />
     </div>
   );

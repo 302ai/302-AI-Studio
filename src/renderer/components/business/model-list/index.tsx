@@ -1,5 +1,7 @@
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import type { ModelProvider } from "@renderer/types/providers";
+import { useActiveProvider } from "@renderer/hooks/use-active-provider";
+import { triplitClient } from "@shared/triplit/client";
+import type { Provider } from "@shared/triplit/types";
+import { useQuery } from "@triplit/react";
 import { PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,12 +14,7 @@ export function ModelList() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-list",
   });
-  const {
-    modelProviders,
-    selectedModelProvider,
-    providerModelMap,
-    getAllModels,
-  } = useModelSettingStore();
+  const { selectedProvider } = useActiveProvider();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,19 +22,43 @@ export function ModelList() {
   const [tabKey, setTabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // 使用 useQuery 获取模型数据
+  const modelsQuery = triplitClient.query("models");
+  const { results: models } = useQuery(triplitClient, modelsQuery);
+
+  // 使用 useQuery 获取所有 providers 数据
+  const providersQuery = triplitClient.query("providers");
+  const { results: providers } = useQuery(triplitClient, providersQuery);
+
+  // 创建 providers 映射表，方便快速查找
+  const providersMap = useMemo(() => {
+    if (!providers) return {};
+
+    return providers.reduce(
+      (map, provider) => {
+        map[provider.id] = provider;
+        return map;
+      },
+      {} as Record<string, Provider>,
+    );
+  }, [providers]);
+
   const collected = tabKey === "collected";
 
   // * Get base models based on selected provider and tab
   const baseModels = useMemo(() => {
-    if (!selectedModelProvider?.id) {
-      return getAllModels({ collected });
+    if (!models) {
+      return [];
     }
 
-    const providerModels = providerModelMap[selectedModelProvider.id] || [];
-    return providerModels.filter((model) =>
-      collected ? model.collected : true
+    const providerFilteredModels = selectedProvider?.id
+      ? models.filter((model) => model.providerId === selectedProvider.id)
+      : models;
+
+    return providerFilteredModels.filter((model) =>
+      collected ? model.collected : true,
     );
-  }, [getAllModels, providerModelMap, selectedModelProvider?.id, collected]);
+  }, [models, collected, selectedProvider]);
 
   // * Apply search filter to base models
   const filteredModels = useMemo(() => {
@@ -46,29 +67,24 @@ export function ModelList() {
     }
 
     const query = searchQuery.toLowerCase().trim();
-    return baseModels.filter((model) => model.id.toLowerCase().includes(query));
+    return baseModels.filter((model) =>
+      model.name.toLowerCase().includes(query),
+    );
   }, [baseModels, searchQuery]);
-
-  const providerMap = useMemo<Record<string, ModelProvider>>(() => {
-    return modelProviders.reduce((acc, provider) => {
-      acc[provider.id] = provider;
-      return acc;
-    }, {});
-  }, [modelProviders]);
 
   const listData = useMemo(
     () => ({
       models: filteredModels,
-      providerMap,
+      providersMap, // 将 providers 映射表传递给子组件
     }),
-    [filteredModels, providerMap]
+    [filteredModels, providersMap],
   );
 
   useEffect(() => {
     const updateHeight = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        const availableHeight = window.innerHeight - rect.top - 20; // * 20px for the padding and 40px for the model filter
+        const availableHeight = window.innerHeight - rect.top - 20;
         setContainerHeight(Math.max(200, Math.min(600, availableHeight)));
       }
     };
@@ -92,7 +108,6 @@ export function ModelList() {
         ref={containerRef}
         className="flex h-full flex-col overflow-hidden rounded-xl border border-border"
       >
-        {/* Virtualized List Body */}
         <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
           {filteredModels.length > 0 ? (
             <List
@@ -100,7 +115,7 @@ export function ModelList() {
               itemCount={filteredModels.length}
               itemSize={40}
               itemData={listData}
-              overscanCount={5}
+              overscanCount={20}
               width="100%"
               style={{
                 scrollbarGutter: "stable",

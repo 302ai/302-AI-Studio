@@ -1,11 +1,6 @@
-import fs from "node:fs";
-import path from "node:path";
-import { defaultLanguage } from "@main/constant";
-import { locales } from "@main/utils/locales";
-import type { Model } from "@renderer/types/models";
-import type { ModelProvider } from "@renderer/types/providers";
-import type { LanguageVarious, ThemeMode } from "@renderer/types/settings";
-import { app } from "electron";
+import type { CreateModelData, CreateProviderData, Model, Provider, UpdateProviderData } from "@shared/triplit/types";
+import type { ModelProvider } from "@shared/types/provider";
+import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 import Logger from "electron-log";
 import ElectronStore from "electron-store";
 import {
@@ -13,17 +8,14 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
+import { ConfigDbService } from "./db-service/config-db-service";
 import { EventNames, emitter } from "./event-service";
 import { WindowService } from "./window-service";
-
-interface IModelStore {
-  models: Model[];
-  custom_models: Model[];
-}
 
 export interface ModelSettingData {
   modelProviders: ModelProvider[];
   providerModelMap: Record<string, Model[]>;
+  providerMap: Record<string, ModelProvider>;
 }
 
 enum ConfigKeys {
@@ -32,31 +24,20 @@ enum ConfigKeys {
   Providers = "providers",
 }
 
-const PROVIDER_MODELS_DIR = "provider_models";
-
 @ServiceRegister("configService")
 export class ConfigService {
   private configStore: ElectronStore = new ElectronStore();
-  private providerModelStoreMap: Map<string, ElectronStore<IModelStore>> =
-    new Map();
   private windowService: WindowService;
-  private userDataPath: string;
+  private configDbService: ConfigDbService;
 
   constructor() {
     this.windowService = new WindowService();
-    this.userDataPath = app.getPath("userData");
-
-    this.initProviderModelsDir();
+    this.configDbService = new ConfigDbService();
   }
 
   @ServiceHandler()
   getLanguage(_event: Electron.IpcMainEvent): string {
-    const currentLocale = app.getLocale();
-    const locale = Object.keys(locales).includes(currentLocale)
-      ? currentLocale
-      : defaultLanguage;
-
-    return this.configStore.get(ConfigKeys.Language, locale) as string;
+    return this.configStore.get(ConfigKeys.Language, "zh-CN") as string;
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
@@ -70,92 +51,74 @@ export class ConfigService {
     this.windowService.setTitleBarOverlay(theme);
   }
 
-  getProviders(): ModelProvider[] {
-    return this.configStore.get(ConfigKeys.Providers, []) as ModelProvider[];
-  }
-
-  updateProvider(updatedProvider: ModelProvider): void {
-    const providers = this.getProviders();
-    const index = providers.findIndex((p) => p.id === updatedProvider.id);
-
-    if (index !== -1) {
-      providers[index] = updatedProvider;
-      this.configStore.set(ConfigKeys.Providers, providers);
-    }
-  }
-
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  setProviders(_event: Electron.IpcMainEvent, providers: ModelProvider[]) {
-    this.configStore.set(ConfigKeys.Providers, providers);
-    emitter.emit(EventNames.PROVIDERS_UPDATE, { providers });
+  async getProviders(): Promise<Provider[]> {
+    const providers = await this.configDbService.getProviders();
+    return providers;
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  getModelSettings(_event: Electron.IpcMainEvent): ModelSettingData {
-    const providers = this.getProviders();
-    const providerModelMap = {};
-
-    for (const provider of providers) {
-      const store = this.getProviderModelStore(provider.id);
-      providerModelMap[provider.id] = store.get("models", []) as Model[];
+  async insertProvider(_event: Electron.IpcMainEvent, provider: CreateProviderData): Promise<Provider> {
+    try {
+      const newProvider = await this.configDbService.insertProvider(provider);
+      emitter.emit(EventNames.PROVIDER_ADD, { provider: newProvider });
+      Logger.info("addProvider success ---->", newProvider);
+      return newProvider;
+    } catch (error) {
+      Logger.error("addProvider error ---->", error);
+      throw error;
     }
-
-    const modelSettings = {
-      modelProviders: providers,
-      providerModelMap,
-    };
-
-    return modelSettings;
-  }
-
-  private initProviderModelsDir(): void {
-    const modelsDir = path.join(this.userDataPath, PROVIDER_MODELS_DIR);
-    if (!fs.existsSync(modelsDir)) {
-      fs.mkdirSync(modelsDir, { recursive: true });
-    }
-  }
-
-  private getProviderModelStore(
-    providerId: string
-  ): ElectronStore<IModelStore> {
-    if (!this.providerModelStoreMap.has(providerId)) {
-      const store = new ElectronStore<IModelStore>({
-        name: `models_${providerId}`,
-        cwd: path.join(this.userDataPath, PROVIDER_MODELS_DIR),
-        defaults: {
-          models: [],
-          custom_models: [],
-        },
-      });
-      this.providerModelStoreMap.set(providerId, store);
-    }
-
-    return this.providerModelStoreMap.get(
-      providerId
-    ) as ElectronStore<IModelStore>;
-  }
-
-  _setProviderModels(providerId: string, models: Model[]) {
-    const store = this.getProviderModelStore(providerId);
-    store.set("models", models);
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  setProviderModels(
+  async deleteProvider(_event: Electron.IpcMainEvent, providerId: string) {
+    try {
+      await this.configDbService.deleteProvider(providerId);
+      emitter.emit(EventNames.PROVIDER_DELETE, { providerId });
+      Logger.info("deleteProvider success ---->", providerId);
+    } catch (error) {
+      Logger.error("deleteProvider error ---->", error);
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateProvider(
     _event: Electron.IpcMainEvent,
     providerId: string,
-    models: Model[]
+    updateData: UpdateProviderData,
   ) {
-    this._setProviderModels(providerId, models);
+    try {
+      await this.configDbService.updateProvider(providerId, updateData);
+      Logger.info("updateProvider success ---->", providerId);
+    } catch (error) {
+      Logger.error("updateProvider error ---->", error);
+      throw error;
+    }
   }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  getProviderModels(
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateProviderOrder(
     _event: Electron.IpcMainEvent,
-    providerId: string
-  ): Model[] {
-    Logger.debug("getProviderModels", providerId);
-    const store = this.getProviderModelStore(providerId);
-    return store.get("models", []) as Model[];
+    providerId: string,
+    order: number,
+  ) {
+    try {
+      await this.configDbService.updateProviderOrder(providerId, order);
+      Logger.info("updateProviderOrder success ---->", providerId, order);
+    } catch (error) {
+      Logger.error("updateProviderOrder error ---->", error);
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async insertModels(_event: Electron.IpcMainEvent, models: CreateModelData[]): Promise<void> {
+    try {
+      await this.configDbService.insertModels(models);
+      Logger.info("addModels success");
+    } catch (error) {
+      Logger.error("addModels error ---->", error);
+      throw error;
+    }
   }
 }

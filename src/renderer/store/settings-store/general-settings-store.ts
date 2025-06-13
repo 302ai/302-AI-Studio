@@ -1,4 +1,4 @@
-import { type LanguageVarious, ThemeMode } from "@renderer/types/settings";
+import { type LanguageVarious, ThemeMode } from "@shared/types/settings";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";

@@ -145,7 +145,7 @@
     --secondary: oklch(0.238 0.007 34.298);
     --secondary-fg: oklch(0.985 0.001 106.423);
 
-    --accent: oklch(0.606 0.25 292.717);
+    --accent: rgba(142, 71, 240, 1);
     --accent-fg: oklch(1 0 0);
 
     --muted: oklch(0.216 0.006 56.043);
@@ -245,4 +245,22 @@
     background: var(--border);
     border-radius: 4px;
   }
+}
+
+.katex {
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  font-feature-settings: "kern" 1 !important;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5em 0;
+  margin: 0.5em 0;
+}
+
+.katex .frac-line {
+  border-bottom-width: 0.04em !important;
 }

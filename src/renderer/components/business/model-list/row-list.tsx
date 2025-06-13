@@ -1,8 +1,7 @@
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
-import { useModelSettingStore } from "@renderer/store/settings-store/model-setting-store";
-import type { Model } from "@renderer/types/models";
-import type { ModelProvider } from "@renderer/types/providers";
+import { triplitClient } from "@shared/triplit/client";
+import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
 import { memo } from "react";
 import { areEqual } from "react-window";
 import { ActionGroup } from "../action-group";
@@ -15,21 +14,20 @@ export const RowList = memo(function RowList({
 }: {
   index: number;
   style: React.CSSProperties;
-  data: { models: Model[]; providerMap: Record<string, ModelProvider> };
+  data: {
+    models: Model[];
+    providersMap: Record<string, Provider>;
+  };
 }) {
-  const { models, providerMap } = data;
+  const { models, providersMap } = data;
   const item = models[index];
-  const provider = providerMap[item.providerId];
   const isLast = index === models.length - 1;
 
-  const { providerModelMap, updateProviderModelMap } = useModelSettingStore();
+  // 直接从传入的 providersMap 中获取 provider
+  const provider = providersMap[item.providerId];
 
-  const handleUpdateModel = (updatedConfig: Partial<Model>) => {
-    const targetModels = providerModelMap[provider.id];
-    const updatedModels = targetModels.map((model) =>
-      model.id === item.id ? { ...model, ...updatedConfig } : model
-    );
-    updateProviderModelMap(provider.id, updatedModels);
+  const handleUpdateModel = async (updateModelData: UpdateModelData) => {
+    await triplitClient.update("models", item.id, updateModelData);
   };
 
   const handleCheckboxChange = () => {
@@ -47,7 +45,7 @@ export const RowList = memo(function RowList({
       style={style}
       className={cn(
         "outline-transparent ring-primary hover:bg-hover-primary",
-        !isLast ? "border-border border-b" : ""
+        !isLast ? "border-border border-b" : "",
       )}
     >
       <div className="flex items-center">
@@ -63,8 +61,8 @@ export const RowList = memo(function RowList({
 
         <div className="mr-4 px-4 py-2.5 align-middle outline-hidden">
           <div className="flex items-center gap-2">
-            <ModelIcon modelId={provider.id} />
-            {provider.name}
+            <ModelIcon modelName={provider?.name ?? ""} />
+            {provider?.name}
           </div>
         </div>
 
@@ -78,5 +76,4 @@ export const RowList = memo(function RowList({
       </div>
     </div>
   );
-},
-areEqual);
+}, areEqual);

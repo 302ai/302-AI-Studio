@@ -1,15 +1,18 @@
+import type { Thread } from "@shared/triplit/types";
 import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
-import { useThreadsStore } from "../store/threads-store";
-import type { ThreadItem } from "../types/threads";
+import { useActiveThread } from "./use-active-thread";
 
 export type MenuModelActionType = "rename" | "clean-messages" | "delete";
 
-export function useThreadMenu(thread: ThreadItem) {
-  const { updateThread, removeThread } = useThreadsStore();
+const { threadService, messageService } = window.service;
 
+export function useThreadMenu(thread: Thread) {
   const [state, setState] = useState<MenuModelActionType | null>(null);
   const [newTitle, setNewTitle] = useState(thread.title);
+  const { activeThreadId, setActiveThreadId } = useActiveThread();
+
+  const isActiveThread = activeThreadId === thread.id;
 
   const formattedTitle = newTitle.trim();
 
@@ -17,8 +20,10 @@ export function useThreadMenu(thread: ThreadItem) {
     setState(null);
   };
 
-  const handleRename = () => {
-    updateThread(thread.id, { title: formattedTitle });
+  const handleRename = async () => {
+    await threadService.updateThread(thread.id, {
+      title: formattedTitle,
+    });
 
     emitter.emit(EventNames.THREAD_RENAME, {
       threadId: thread.id,
@@ -28,12 +33,19 @@ export function useThreadMenu(thread: ThreadItem) {
     closeModal();
   };
 
-  const handleCleanMessages = () => {
+  const handleCleanMessages = async () => {
+    await messageService.cleanMessagesByThreadId(thread.id);
+
     closeModal();
   };
 
-  const handleDelete = () => {
-    removeThread(thread.id);
+  const handleDelete = async () => {
+    if (isActiveThread) {
+      await setActiveThreadId("");
+    }
+
+    await threadService.deleteThread(thread.id);
+    await messageService.cleanMessagesByThreadId(thread.id);
 
     emitter.emit(EventNames.THREAD_DELETE, {
       threadId: thread.id,
@@ -42,8 +54,10 @@ export function useThreadMenu(thread: ThreadItem) {
     closeModal();
   };
 
-  const handleCollectThread = () => {
-    updateThread(thread.id, { isCollected: !thread.isCollected });
+  const handleCollectThread = async () => {
+    await threadService.updateThread(thread.id, {
+      collected: !thread.collected,
+    });
 
     closeModal();
   };
