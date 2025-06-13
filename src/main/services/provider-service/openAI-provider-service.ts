@@ -4,7 +4,7 @@ import { extractErrorMessage } from "@main/utils/error-utils";
 import { convertMessagesToModelMessages } from "@main/utils/message-converter";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 // Import AI SDK types
-import { smoothStream, streamText } from "ai";
+import { type LanguageModelUsage, smoothStream, streamText } from "ai";
 import Logger from "electron-log";
 import {
   BaseProviderService,
@@ -138,9 +138,6 @@ export class OpenAIProviderService extends BaseProviderService {
       // Process stream
       for await (const delta of result.textStream) {
         fullContent += delta;
-
-        Logger.info("Regenerate stream delta:", delta);
-
         // Send delta to renderer
         this.sendToAllWindows("chat:stream-delta", {
           tabId,
@@ -151,8 +148,12 @@ export class OpenAIProviderService extends BaseProviderService {
         });
       }
 
+      let usage: LanguageModelUsage | null = null;
       // Send stream end event
-      const usage = await result.usage;
+      if (fullContent !== "") {
+        usage = await result.usage;
+      }
+      console.log("fullContent", fullContent);
       this.sendToAllWindows("chat:stream-end", {
         tabId,
         threadId,
@@ -164,6 +165,7 @@ export class OpenAIProviderService extends BaseProviderService {
       Logger.info(`Stream chat completed for tab ${tabId}`);
       return { success: true };
     } catch (error) {
+      console.error("error1:", error);
       if (error instanceof Error && error.name === "AbortError") {
         Logger.info(`Stream aborted for tab ${tabId}`);
         // Send a specific event for abortion, or handle silently

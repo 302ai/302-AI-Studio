@@ -139,7 +139,25 @@ declare global {
         }>;
         getServerPort: () => Promise<number>;
       };
-      filePreviewService: {
+      fileService: {
+        previewImage: (
+          fileName: string,
+          base64Data: string,
+        ) => Promise<{
+          success: boolean;
+          error?: string;
+        }>;
+        previewFile: (
+          fileName: string,
+          fileData: string,
+          mimeType: string,
+        ) => Promise<{
+          success: boolean;
+          error?: string;
+        }>;
+        cleanupAllTempFiles: () => void;
+      };
+      filePreviewService?: {
         previewImage: (
           fileName: string,
           base64Data: string,

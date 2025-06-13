@@ -23,14 +23,7 @@ export class FileParsingService {
    */
   async parseFileContent(attachment: AttachmentForParsing): Promise<string> {
     try {
-      Logger.info("Starting file parsing for:", {
-        fileName: attachment.name,
-      });
-
       const fileContent = await uploadAndParseFile(attachment, this.options);
-
-      Logger.info("File parsed successfully");
-
       return fileContent;
     } catch (error) {
       Logger.error("File parsing failed:", error);

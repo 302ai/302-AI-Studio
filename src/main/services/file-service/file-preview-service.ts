@@ -2,13 +2,8 @@ import { existsSync, mkdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { shell } from "electron";
-import {
-  CommunicationWay,
-  ServiceHandler,
-  ServiceRegister,
-} from "../shared/reflect";
+import { CommunicationWay, ServiceHandler } from "../../shared/reflect";
 
-@ServiceRegister("filePreviewService")
 export class FilePreviewService {
   private tempFiles: Set<string> = new Set();
 
@@ -24,9 +19,7 @@ export class FilePreviewService {
     base64Data: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-    
-
-      // 解析 base64 数据 - 更宽松的正则表达式
+      // 解析 base64 数据
       const matches = base64Data.match(
         /^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/,
       );
@@ -137,15 +130,8 @@ export class FilePreviewService {
     _event: Electron.IpcMainInvokeEvent,
     fileName: string,
     fileData: string,
-    mimeType: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      console.log("Main process received previewFile call:");
-      console.log("  fileName:", fileName);
-      console.log("  mimeType:", mimeType);
-      console.log("  fileData type:", typeof fileData);
-      console.log("  fileData length:", fileData?.length);
-
       let buffer: Buffer;
 
       // 处理不同格式的文件数据
@@ -178,8 +164,6 @@ export class FilePreviewService {
         };
       }
 
-      
-
       return await this.saveAndOpenTempFile(fileName, buffer);
     } catch (error) {
       console.error("Error previewing file:", error);
@@ -189,8 +173,6 @@ export class FilePreviewService {
       };
     }
   }
-
-
 
   /**
    * 清理所有临时文件

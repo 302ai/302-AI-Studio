@@ -161,7 +161,7 @@ export function normalizeBaseUrl(
       fullApiEndpoint,
       isValid: true,
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       normalizedBaseUrl: inputUrl,
       fullApiEndpoint: "",

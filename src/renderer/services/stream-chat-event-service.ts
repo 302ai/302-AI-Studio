@@ -130,7 +130,6 @@ class StreamChatEventService {
   private initialized = false;
   private streamingMessages = new Map<string, StreamingMessage>();
   private isStreaming = false;
-  private activeTabId: string | null = null;
 
   // Event callbacks
   private onStreamStartCallbacks: StreamEventCallback[] = [];
@@ -154,7 +153,6 @@ class StreamChatEventService {
       Logger.info("Stream started:", data);
 
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       this.setIsStreaming(true);
 
@@ -184,7 +182,6 @@ class StreamChatEventService {
 
     const handleStreamDelta = (_event: any, data: StreamChatEvent) => {
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       const tempId = `temp-${data.userMessageId}`;
       const existing = this.streamingMessages.get(tempId);
@@ -202,7 +199,6 @@ class StreamChatEventService {
       Logger.info("Stream ended:", data);
 
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       this.setIsStreaming(false);
 
@@ -256,7 +252,6 @@ class StreamChatEventService {
       Logger.error("Stream error:", data);
 
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       this.setIsStreaming(false);
       toast.error(`Chat error: ${data.error}`);
@@ -304,7 +299,6 @@ class StreamChatEventService {
       Logger.info("Regenerate stream started:", data);
 
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       this.setIsStreaming(true);
 
@@ -340,7 +334,6 @@ class StreamChatEventService {
       data: StreamChatEvent,
     ) => {
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       const tempId = `temp-regenerate-${data.regenerateMessageId}`;
       const existing = this.streamingMessages.get(tempId);
@@ -375,7 +368,6 @@ class StreamChatEventService {
       Logger.info("Regenerate stream ended:", data);
 
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       this.setIsStreaming(false);
 
@@ -413,7 +405,6 @@ class StreamChatEventService {
       Logger.error("Regenerate stream error:", data);
 
       // Only handle events for current tab
-      if (this.activeTabId !== data.tabId) return;
 
       this.setIsStreaming(false);
       toast.error(`Regenerate error: ${data.error}`);
@@ -527,10 +518,6 @@ class StreamChatEventService {
     Logger.info("Stream chat event service initialized");
   }
 
-  setActiveTab(tabId: string | null) {
-    this.activeTabId = tabId;
-  }
-
   private setIsStreaming(isStreaming: boolean) {
     this.isStreaming = isStreaming;
     this.onStreamingStateChangeCallbacks.forEach((callback) =>
@@ -552,16 +539,6 @@ class StreamChatEventService {
 
   getIsStreaming(): boolean {
     return this.isStreaming;
-  }
-
-  stopStreaming(tabId: string, userMessageId: string) {
-    if (!this.isStreaming) return;
-
-    Logger.info(`Requesting to stop stream for tab: ${tabId}`);
-    window.electron.ipcRenderer.send("chat:stream-stop", {
-      tabId,
-      userMessageId,
-    });
   }
 
   onStreamingStateChange(callback: (isStreaming: boolean) => void) {
@@ -630,6 +607,7 @@ class StreamChatEventService {
       window.electron.ipcRenderer.removeAllListeners("chat:stream-delta");
       window.electron.ipcRenderer.removeAllListeners("chat:stream-end");
       window.electron.ipcRenderer.removeAllListeners("chat:stream-error");
+      window.electron.ipcRenderer.removeAllListeners("chat:stream-stop");
       window.electron.ipcRenderer.removeAllListeners(
         "chat:attachments-updated",
       );

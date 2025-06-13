@@ -29,6 +29,67 @@ export function MessageAttachments({
     return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
   };
 
+  const handlePreview = async (attachment: AttachmentFile) => {
+    try {
+      if (attachment.type.startsWith("image/")) {
+        // 处理图片文件
+        const fileData = attachment.preview;
+
+        if (!fileData || !fileData.startsWith("data:image/")) {
+          console.error("Invalid image preview data");
+          return;
+        }
+
+        // Try new service first, fallback to old service
+        const fileService =
+          window.service.fileService || window.service.filePreviewService;
+        if (!fileService) {
+          console.error("No file service available");
+          return;
+        }
+
+        const result = await fileService.previewImage(
+          attachment.name,
+          fileData,
+        );
+
+        if (!result.success) {
+          console.error("Failed to preview image:", result.error);
+        }
+      } else {
+        // 处理非图片文件
+        const fileData = attachment.fileData;
+
+        if (!fileData) {
+          console.error("No file data available for preview");
+          return;
+        }
+
+        console.log("Previewing file:", attachment.name);
+
+        // Try new service first, fallback to old service
+        const fileService =
+          window.service.fileService || window.service.filePreviewService;
+        if (!fileService) {
+          console.error("No file service available");
+          return;
+        }
+
+        const result = await fileService.previewFile(
+          attachment.name,
+          fileData,
+          attachment.type,
+        );
+
+        if (!result.success) {
+          console.error("Failed to preview file:", result.error);
+        }
+      }
+    } catch (error) {
+      console.error("Error calling preview service:", error);
+    }
+  };
+
   const getFileIcon = (attachment: AttachmentFile) => {
     const { type, name } = attachment;
     const iconClass = "size-4";
@@ -89,49 +150,56 @@ export function MessageAttachments({
     return <File className={iconClass} />;
   };
 
-    return (
-      <div className={cn("space-y-2", className)}>
-        {attachments.map((attachment) => (
-          <div key={attachment.id} className="group relative">
-            {attachment.type.startsWith("image/") && attachment.preview ? (
-              // 图片预览 - 气泡内样式
-              <div className="relative overflow-hidden rounded-lg">
-                <img
-                  src={attachment.preview}
-                  alt={attachment.name}
-                  className="h-auto max-h-60 w-full rounded-lg object-cover"
-                />
-                {/* 图片信息覆盖层 */}
-                <div className="absolute right-0 bottom-0 left-0 bg-black/60 px-2 py-1 backdrop-blur-sm">
-                  <div className="flex items-center gap-1 text-white text-xs">
-                    <span className="truncate">{attachment.name}</span>
-                    <span>({formatFileSize(attachment.size)})</span>
-                  </div>
+  return (
+    <div className={cn("space-y-2", className)}>
+      {attachments.map((attachment) => (
+        <div key={attachment.id} className="group relative">
+          {attachment.type.startsWith("image/") && attachment.preview ? (
+            // 图片预览 - 气泡内样式
+            <button
+              type="button"
+              className="relative cursor-pointer overflow-hidden rounded-lg border-0 bg-transparent p-0 transition-opacity"
+              onClick={() => handlePreview(attachment)}
+              aria-label={`Preview image ${attachment.name}`}
+            >
+              <img
+                src={attachment.preview}
+                alt={attachment.name}
+                className="h-auto max-h-60 w-full rounded-lg object-cover"
+              />
+              {/* 图片信息覆盖层 */}
+              <div className="absolute right-0 bottom-0 left-0 bg-black/60 px-2 py-1 backdrop-blur-sm">
+                <div className="flex items-center gap-1 text-white text-xs">
+                  <span className="truncate">{attachment.name}</span>
+                  <span>({formatFileSize(attachment.size)})</span>
                 </div>
               </div>
-            ) : (
-              // 非图片文件 - 气泡内样式
-              <div
-                className={cn(
-                  "flex items-center gap-2 rounded-lg p-2",
-                  "border border-border bg-muted/50",
-                )}
-              >
-                {getFileIcon(attachment)}
-                <div className="min-w-0 flex-1">
-                  <div className="truncate font-medium text-sm">
-                    {attachment.name}
-                  </div>
-                  <div className="text-xs opacity-70">
-                    {formatFileSize(attachment.size)}
-                  </div>
+            </button>
+          ) : (
+            // 非图片文件 - 气泡内样式
+            <button
+              type="button"
+              className={cn(
+                "flex w-full items-center gap-2 rounded-lg p-2 text-left",
+                "border border-border bg-muted/50",
+                "cursor-pointer transition-colors",
+              )}
+              onClick={() => handlePreview(attachment)}
+              aria-label={`Preview file ${attachment.name}`}
+            >
+              {getFileIcon(attachment)}
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-medium text-sm">
+                  {attachment.name}
+                </div>
+                <div className="text-xs opacity-70">
+                  {formatFileSize(attachment.size)}
                 </div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
