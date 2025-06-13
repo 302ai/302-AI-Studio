@@ -1,6 +1,6 @@
 // ! Deprecation
 
-// import { triplitClient } from "@shared/triplit/client";
+// import { triplitClient } from "@renderer/client";
 // import type { CreateMessageData, Message } from "@shared/triplit/types";
 
 // export async function insertMessage(message: CreateMessageData): Promise<Message> {

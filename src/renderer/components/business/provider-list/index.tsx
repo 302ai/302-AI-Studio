@@ -4,13 +4,13 @@ import {
   Droppable,
   type DropResult,
 } from "@hello-pangea/dnd";
+import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import {
   type ModalAction,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
-import { triplitClient } from "@shared/triplit/client";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import _ from "lodash";

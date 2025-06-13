@@ -6,7 +6,8 @@
     "src/lib/**/*",
     "src/resources/**/*",
     "src/preload/**/*",
-    "src/shared/**/*"
+    "src/shared/**/*",
+    "src/renderer/client.ts"
   ],
   "compilerOptions": {
     "composite": true,

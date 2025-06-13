@@ -1,8 +1,8 @@
+import { triplitClient } from "@renderer/client";
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
 import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { formatTimeAgo } from "@renderer/lib/utils";
-import { triplitClient } from "@shared/triplit/client";
 import type { Message } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { enUS, ja, zhCN } from "date-fns/locale";
@@ -106,7 +106,7 @@ export function AssistantMessage({
           </div>
         )}
 
-        {(message.status !== "pending") && (
+        {message.status !== "pending" && (
           <div className="mt-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
             {message.status === "success" && (
               <ButtonWithTooltip

@@ -1,9 +1,9 @@
+import { triplitClient } from "@renderer/client";
 import { ChatInput } from "@renderer/components/business/chat-input";
 import { MessageList } from "@renderer/components/business/message-list";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { useStreamChat } from "@renderer/hooks/use-stream-chat";
-import { triplitClient } from "@shared/triplit/client";
 import { useQuery } from "@triplit/react";
 import {
   useCallback,

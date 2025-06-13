@@ -1,4 +1,4 @@
-import { triplitClient } from "@shared/triplit/client";
+import { triplitClient } from "@renderer/client";
 import type React from "react";
 import { useEffect, useState } from "react";
 

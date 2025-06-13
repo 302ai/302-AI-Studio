@@ -1,6 +1,6 @@
 // ! Deprecation
 
-// import { triplitClient } from "@shared/triplit/client";
+// import { triplitClient } from "@renderer/client";
 // import type { CreateThreadData, Thread } from "@shared/triplit/types";
 
 // export async function deleteThread(threadId: string) {

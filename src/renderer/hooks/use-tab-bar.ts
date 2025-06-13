@@ -1,5 +1,5 @@
 import type { DropResult } from "@hello-pangea/dnd";
-import { triplitClient } from "@shared/triplit/client";
+import { triplitClient } from "@renderer/client";
 import type { Tab, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";

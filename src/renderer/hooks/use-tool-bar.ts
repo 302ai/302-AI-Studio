@@ -1,5 +1,5 @@
+import { triplitClient } from "@renderer/client";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
-import { triplitClient } from "@shared/triplit/client";
 import type { CreateThreadData, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";

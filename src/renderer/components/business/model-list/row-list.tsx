@@ -1,6 +1,6 @@
+import { triplitClient } from "@renderer/client";
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
-import { triplitClient } from "@shared/triplit/client";
 import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
 import { memo } from "react";
 import { areEqual } from "react-window";

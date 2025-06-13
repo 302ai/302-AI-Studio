@@ -11,6 +11,9 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
+import { initTriplitClient } from "../triplit/client";
+
+portfinder.setBasePort(8080);
 
 // Triplit服务器配置
 export interface TrilitServerConfig {
@@ -39,9 +42,16 @@ type TriplitServer = ReturnType<Awaited<ReturnType<typeof createServer>>>;
 export class TriplitService {
   private server: TriplitServer | null = null;
   private isServerRunning = false;
+  private port: number = 8080;
 
   constructor() {
     this.initialize();
+
+    const client = initTriplitClient();
+    client.updateServerUrl(`http://localhost:${this.port}`);
+    client.connect();
+
+    console.log("client (main process)", client.serverUrl);
   }
 
   async initialize() {
@@ -76,18 +86,18 @@ export class TriplitService {
     if (config.localDatabaseUrl) {
       const dbFile = config.localDatabaseUrl;
       const dbDir = path.dirname(dbFile);
-      console.log("Database file:", dbFile);
-      console.log("Database directory:", dbDir);
+      Logger.info("Database file:", dbFile);
+      Logger.info("Database directory:", dbDir);
 
       if (!fs.existsSync(dbDir)) {
         fs.mkdirSync(dbDir, { recursive: true });
-        console.log("Database directory created successfully");
+        Logger.info("Database directory created successfully");
       } else {
-        console.log("Database directory already exists");
+        Logger.info("Database directory already exists");
       }
 
       process.env.LOCAL_DATABASE_URL = dbFile;
-      console.log("Setting LOCAL_DATABASE_URL to:", dbFile);
+      Logger.info("Setting LOCAL_DATABASE_URL to:", dbFile);
     }
 
     const sqliteKV = await createTriplitStorageProvider("sqlite");
@@ -103,8 +113,8 @@ export class TriplitService {
 
     this.server = startServer(config.port);
 
-    console.log("Triplit server running on port", config.port);
-    console.log("Database location:", config.localDatabaseUrl);
+    Logger.info("Triplit server running on port", config.port);
+    Logger.info("Database location:", config.localDatabaseUrl);
 
     return this.server;
   }
@@ -114,11 +124,11 @@ export class TriplitService {
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
     const defaultDatabaseFile = path.join(defaultDatabaseDir, "db.sqlite");
 
-    console.log("Default database file:", defaultDatabaseFile);
+    Logger.info("Default database file:", defaultDatabaseFile);
 
-    const port = await portfinder.getPortPromise();
+    this.port = await portfinder.getPortPromise();
     const config = {
-      port: port,
+      port: this.port,
       verboseLogs: !!(
         process.env.VERBOSE_LOGS || defaultTrilitConfig.verboseLogs
       ),
@@ -130,7 +140,7 @@ export class TriplitService {
       localDatabaseUrl: process.env.LOCAL_DATABASE_URL || defaultDatabaseFile,
     };
 
-    console.log("Final Triplit config:", config);
+    Logger.info("Final Triplit config:", config);
     return config;
   }
 
@@ -194,5 +204,10 @@ export class TriplitService {
       Logger.info("Stopping Triplit server...");
       this.stopTriplitServer();
     }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getServerPort(_event: Electron.IpcMainEvent): Promise<number> {
+    return this.port;
   }
 }

@@ -1,4 +1,4 @@
-import { triplitClient } from "@shared/triplit/client";
+import { triplitClient } from "@renderer/client";
 import type { Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";

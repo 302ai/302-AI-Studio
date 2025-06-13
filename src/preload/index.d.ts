@@ -137,6 +137,7 @@ declare global {
           success: boolean;
           message: string;
         }>;
+        getServerPort: () => Promise<number>;
       };
       filePreviewService: {
         previewImage: (

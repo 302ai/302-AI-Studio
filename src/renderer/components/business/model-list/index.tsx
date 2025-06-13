@@ -1,5 +1,5 @@
+import { triplitClient } from "@renderer/client";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
-import { triplitClient } from "@shared/triplit/client";
 import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { PackageOpen } from "lucide-react";

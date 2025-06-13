@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: ignore */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: ignore */
 import { IconChevronLgDown } from "@intentui/icons";
+import { triplitClient } from "@renderer/client";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
 import { SearchField } from "@renderer/components/ui/search-field";
-import { triplitClient } from "@shared/triplit/client";
 import type { Model, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { SearchX } from "lucide-react";
@@ -41,9 +41,7 @@ export const ModelSelect = ({
     .Order("order", "ASC");
   const { results: providers } = useQuery(triplitClient, providersQuery);
 
-  const modelsQuery = triplitClient
-    .query("models")
-    .Where("enabled", "=", true);
+  const modelsQuery = triplitClient.query("models").Where("enabled", "=", true);
   const { results: models } = useQuery(triplitClient, modelsQuery);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,7 +54,7 @@ export const ModelSelect = ({
       setIsOpen(false);
       onSelect(modelId);
     },
-    [onSelect]
+    [onSelect],
   );
 
   // Create provider map and provider model map from triplit data
@@ -111,7 +109,7 @@ export const ModelSelect = ({
 
       if (hasSearch) {
         matchingModels = group.models.filter((model) =>
-          contains(model.name, query)
+          contains(model.name, query),
         );
       }
 
@@ -145,7 +143,7 @@ export const ModelSelect = ({
       onSelect: handleModelSelect,
       selectedModelId,
     }),
-    [filteredItems, handleModelSelect, selectedModelId]
+    [filteredItems, handleModelSelect, selectedModelId],
   );
 
   const selectedModel = useMemo(() => {

@@ -1,4 +1,4 @@
-import { triplitClient } from "@shared/triplit/client";
+import { triplitClient } from "@renderer/client";
 import type { Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useEffect, useMemo } from "react";
