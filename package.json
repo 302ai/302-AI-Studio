@@ -76,9 +76,9 @@
     "react-aria-components": "^1.8.0",
     "react-dom": "^19.1.0",
     "react-i18next": "^15.4.1",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.2.0",
     "react-window": "^1.8.11",
-    "react-markdown": "^10.1.0",
     "reflect-metadata": "^0.2.2",
     "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
@@ -112,7 +112,7 @@
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
     "electron": "^35.1.5",
-    "electron-builder": "^25.1.8",
+    "electron-builder": "26.0.12",
     "electron-extension-installer": "^1.2.0",
     "electron-rebuild": "^3.2.9",
     "electron-vite": "^3.1.0",
@@ -131,7 +131,7 @@
     "vite": "^6.3.3",
     "vite-tsconfig-paths": "^5.1.4"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "packageManager": "yarn@4.9.2",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

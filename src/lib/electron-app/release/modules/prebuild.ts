@@ -13,15 +13,21 @@ async function createPackageJSONDistVersion() {
   };
 
   try {
+    const devFolder = getDevFolder(main);
+
     await writeFile(
-      resolve(getDevFolder(main), "package.json"),
-      JSON.stringify(packageJSONDistVersion, null, 2)
+      resolve(devFolder, "package.json"),
+      JSON.stringify(packageJSONDistVersion, null, 2),
     );
 
     await writeFile(
-      resolve(getDevFolder(main), "trusted-dependencies-scripts.json"),
-      JSON.stringify(trustedDependencies, null, 2)
+      resolve(devFolder, "trusted-dependencies-scripts.json"),
+      JSON.stringify(trustedDependencies, null, 2),
     );
+
+    // * Create empty yarn.lock file to avoid yarn error
+    await writeFile(resolve(devFolder, "yarn.lock"), "");
+
     // biome-ignore lint/suspicious/noExplicitAny: ignore any
   } catch ({ message }: any) {
     console.log(`
