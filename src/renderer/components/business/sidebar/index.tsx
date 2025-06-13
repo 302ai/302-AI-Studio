@@ -9,8 +9,10 @@ import {
   SidebarInset,
   SidebarItem,
   SidebarLabel,
+  useSidebar,
 } from "@renderer/components/ui/sidebar";
 import { useThread } from "@renderer/hooks/use-thread";
+import { cn } from "@renderer/lib/utils";
 import { useTranslation } from "react-i18next";
 import { ThreadMenu } from "./thread-menu";
 
@@ -26,9 +28,10 @@ export function AppSidebar(props: AppSidebarProps) {
     collectedThreads,
     handleClickThread,
   } = useThread();
+  const { state } = useSidebar();
 
   return (
-    <div className="flex h-[calc(100vh-var(--title-bar-height))] flex-1 flex-row">
+    <div className="flex h-[calc(100vh-var(--title-bar-height))] w-full flex-1 flex-row">
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
         <SidebarContent>
           {/* All Threads */}
@@ -78,7 +81,12 @@ export function AppSidebar(props: AppSidebarProps) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset className="min-h-[calc(100vh-var(--title-bar-height))]">
+      <SidebarInset
+        className={cn(
+          "min-h-[calc(100vh-var(--title-bar-height))]",
+          state === "expanded" && "max-w-[calc(100vw-var(--sidebar-width))]",
+        )}
+      >
         {props.children}
       </SidebarInset>
     </div>

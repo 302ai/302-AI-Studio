@@ -46,12 +46,6 @@ export class TriplitService {
 
   constructor() {
     this.initialize();
-
-    const client = initTriplitClient();
-    client.updateServerUrl(`http://localhost:${this.port}`);
-    client.connect();
-
-    console.log("client (main process)", client.serverUrl);
   }
 
   async initialize() {
@@ -60,6 +54,12 @@ export class TriplitService {
       this.server = await this.startTriplitServer();
       this.isServerRunning = true;
       Logger.info("Triplit server started successfully");
+
+      const client = initTriplitClient();
+      client.updateServerUrl(`http://localhost:${this.port}`);
+      client.connect();
+
+      console.log("client (main process)", client.serverUrl);
 
       // 监听应用退出事件，确保服务器正确关闭
       app.on("before-quit", () => {

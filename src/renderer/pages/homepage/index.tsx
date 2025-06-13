@@ -7,9 +7,11 @@ export function HomePage() {
   const { activeThreadId } = useActiveThread();
 
   return (
-    <div className="flex size-full flex-col">
-      {activeThreadId ? <ChatPage /> : (
-        <div className="flex size-full flex-col items-center justify-center gap-9">
+    <div className="flex h-full flex-1 flex-col">
+      {activeThreadId ? (
+        <ChatPage />
+      ) : (
+        <div className="flex flex-1 flex-col items-center justify-center">
           <NewThread />
           {/* <div className="flex gap-4">
             <Link

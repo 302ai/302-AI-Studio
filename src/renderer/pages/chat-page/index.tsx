@@ -120,7 +120,7 @@ export function ChatPage() {
   }, [activeThreadId, messagesList.length, scrollToBottom]);
 
   return (
-    <div className="flex size-full flex-col p-6 pr-0">
+    <div className="flex h-full flex-1 flex-col p-6 pr-0">
       <div
         ref={scrollContainerRef}
         className="flex-1 space-y-4 overflow-y-auto pr-6"

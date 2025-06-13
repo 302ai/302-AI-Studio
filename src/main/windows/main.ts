@@ -9,8 +9,8 @@ import { isMac, isWin } from "../constant";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
-    defaultWidth: 1360,
-    defaultHeight: 800,
+    defaultWidth: 1080,
+    defaultHeight: 720,
     fullScreen: false,
     maximize: false,
   });
@@ -23,8 +23,8 @@ export async function MainWindow() {
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    minWidth: 1360,
-    minHeight: 800,
+    minWidth: 1080,
+    minHeight: 720,
     autoHideMenuBar: true,
     transparent: isMac,
     visualEffectState: "active",
