@@ -1,17 +1,17 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: biome-ignore-all */
 import fs from "node:fs";
 import path from "node:path";
-import { extractErrorMessage } from "@main/utils/error-utils";
-import { createServer, createTriplitStorageProvider } from "@triplit/server";
-import { app } from "electron";
-import Logger from "electron-log";
-import portfinder from "portfinder";
 import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
-} from "../shared/reflect";
-import { initTriplitClient } from "../triplit/client";
+} from "@main/shared/reflect";
+import { initTriplitClient } from "@main/triplit/client";
+import { extractErrorMessage } from "@main/utils/error-utils";
+import { schema } from "@shared/triplit/schema";
+import { createServer, createTriplitStorageProvider } from "@triplit/server";
+import { app } from "electron";
+import Logger from "electron-log";
+import portfinder from "portfinder";
 
 portfinder.setBasePort(9000);
 
@@ -105,6 +105,11 @@ export class TriplitService {
     const startServer = await createServer({
       storage: sqliteKV,
       verboseLogs: config.verboseLogs,
+      dbOptions: {
+        schema: {
+          collections: schema,
+        },
+      },
       jwtSecret: config.jwtSecret,
       projectId: config.projectId,
       externalJwtSecret: config.externalJwtSecret,
@@ -127,6 +132,7 @@ export class TriplitService {
     Logger.info("Default database file:", defaultDatabaseFile);
 
     this.port = await portfinder.getPortPromise();
+
     const config = {
       port: this.port,
       verboseLogs: !!(
@@ -147,7 +153,7 @@ export class TriplitService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getServerStatus(_event: Electron.IpcMainEvent): Promise<{
     isRunning: boolean;
-    config: any;
+    config: Partial<TrilitServerConfig>;
   }> {
     const config = await this.getTrilitConfig();
     return {

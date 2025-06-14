@@ -27,18 +27,19 @@ export class ConfigDbService {
   }
 
   async deleteProvider(providerId: string) {
-    const providerQuery = triplitClient
+    const providerModelsQuery = triplitClient
       .query("providers")
       .Where("id", "=", providerId)
       .Include("models");
-    const providerData = await triplitClient.fetchOne(providerQuery);
+    const providerModelsData =
+      await triplitClient.fetchOne(providerModelsQuery);
 
-    if (!providerData) {
+    if (!providerModelsData) {
       return;
     }
 
-    if (providerData.models && providerData.models.length > 0) {
-      const deleteModels = providerData.models.map((model) => {
+    if (providerModelsData.models && providerModelsData.models.length > 0) {
+      const deleteModels = providerModelsData.models.map((model) => {
         return triplitClient.delete("models", model.id);
       });
       await Promise.all(deleteModels);

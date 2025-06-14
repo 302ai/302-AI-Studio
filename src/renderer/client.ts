@@ -1,5 +1,5 @@
+import { schema } from "@shared/triplit/schema";
 import { TriplitClient } from "@triplit/client";
-import { schema } from "../shared/triplit/schema";
 
 export const triplitClient = new TriplitClient({
   storage: "memory",
