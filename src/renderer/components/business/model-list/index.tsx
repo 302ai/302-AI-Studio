@@ -3,10 +3,19 @@ import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { PackageOpen } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { SearchField } from "../../ui/search-field";
+import { Fetching } from "../fetching";
 import { ModelFilter } from "./model-filter";
 import { RowList } from "./row-list";
 
@@ -16,49 +25,65 @@ export function ModelList() {
   });
   const { selectedProvider } = useActiveProvider();
 
+  const modelsQuery = triplitClient.query("models");
+  const { results: allModels = [], fetching: modelsFetching } = useQuery(
+    triplitClient,
+    modelsQuery,
+  );
+
+  const providersQuery = triplitClient.query("providers").Order("order", "ASC");
+  const { results: allProviders = [], fetching: providersFetching } = useQuery(
+    triplitClient,
+    providersQuery,
+  );
+
+  const [ready, setReady] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [containerHeight, setContainerHeight] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
+
+  const updateHeight = useCallback(() => {
+    console.log("updateHeight --- model-list");
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const availableHeight = window.innerHeight - rect.top - 24;
+    setContainerHeight(availableHeight);
+  }, []);
+
   const [tabKey, setTabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // 使用 useQuery 获取模型数据
-  const modelsQuery = triplitClient.query("models");
-  const { results: models } = useQuery(triplitClient, modelsQuery);
-
-  // 使用 useQuery 获取所有 providers 数据
-  const providersQuery = triplitClient.query("providers");
-  const { results: providers } = useQuery(triplitClient, providersQuery);
-
   // 创建 providers 映射表，方便快速查找
   const providersMap = useMemo(() => {
-    if (!providers) return {};
+    if (!allProviders) return {};
 
-    return providers.reduce(
+    return allProviders.reduce(
       (map, provider) => {
         map[provider.id] = provider;
         return map;
       },
       {} as Record<string, Provider>,
     );
-  }, [providers]);
+  }, [allProviders]);
 
   const collected = tabKey === "collected";
 
   // * Get base models based on selected provider and tab
   const baseModels = useMemo(() => {
-    if (!models) {
+    if (!allModels) {
       return [];
     }
 
     const providerFilteredModels = selectedProvider?.id
-      ? models.filter((model) => model.providerId === selectedProvider.id)
-      : models;
+      ? allModels.filter((model) => model.providerId === selectedProvider.id)
+      : allModels;
 
     return providerFilteredModels.filter((model) =>
       collected ? model.collected : true,
     );
-  }, [models, collected, selectedProvider]);
+  }, [allModels, collected, selectedProvider]);
 
   // * Apply search filter to base models
   const filteredModels = useMemo(() => {
@@ -80,19 +105,29 @@ export function ModelList() {
     [filteredModels, providersMap],
   );
 
-  useEffect(() => {
-    const updateHeight = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const availableHeight = window.innerHeight - rect.top - 20;
-        setContainerHeight(Math.max(200, Math.min(600, availableHeight)));
-      }
-    };
-
+  useLayoutEffect(() => {
     updateHeight();
+  }, [updateHeight]);
+
+  useEffect(() => {
     window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
-  }, []);
+    const ro = new ResizeObserver(updateHeight);
+    if (containerRef.current) ro.observe(containerRef.current);
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+      ro.disconnect();
+    };
+  }, [updateHeight]);
+
+  useEffect(() => {
+    if (!providersFetching && !modelsFetching) {
+      startTransition(() => {
+        setReady(true);
+      });
+    }
+  }, [providersFetching, modelsFetching]);
+
+  const loading = !ready || isPending;
 
   return (
     <>
@@ -108,30 +143,39 @@ export function ModelList() {
         ref={containerRef}
         className="flex h-full flex-col overflow-hidden rounded-xl border border-border"
       >
-        <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
-          {filteredModels.length > 0 ? (
-            <List
-              height={containerHeight}
-              itemCount={filteredModels.length}
-              itemSize={40}
-              itemData={listData}
-              overscanCount={20}
-              width="100%"
-              style={{
-                scrollbarGutter: "stable",
-              }}
-            >
-              {RowList}
-            </List>
-          ) : (
-            <div className="flex h-full items-center justify-center text-muted-fg">
-              <div className="flex flex-col items-center gap-2">
-                <PackageOpen className="size-9" />
-                <p>{t("no-models-description")}</p>
+        {loading ? (
+          <div
+            className="flex items-center justify-center"
+            style={{ height: containerHeight }}
+          >
+            <Fetching />
+          </div>
+        ) : (
+          <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
+            {filteredModels.length > 0 ? (
+              <List
+                height={containerHeight}
+                itemCount={filteredModels.length}
+                itemSize={40}
+                itemData={listData}
+                overscanCount={10}
+                width="100%"
+                style={{
+                  scrollbarGutter: "stable",
+                }}
+              >
+                {RowList}
+              </List>
+            ) : (
+              <div className="flex h-full items-center justify-center text-muted-fg">
+                <div className="flex flex-col items-center gap-2">
+                  <PackageOpen className="size-9" />
+                  <p>{t("no-models-description")}</p>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </>
   );

@@ -5,17 +5,16 @@ import {
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import { nanoid } from "nanoid";
-import { useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
-import { ModelIcon } from "../model-icon";
-import "ldrs/react/TailChase.css";
 import { DEFAULT_PROVIDERS } from "@renderer/config/providers";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
 import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
 import type { Provider } from "@shared/triplit/types";
 import { LayoutDashboard } from "lucide-react";
+import { nanoid } from "nanoid";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { ModelIcon } from "../model-icon";
 import { ProviderCfgForm } from "./provider-cfg-form";
 
 interface AddProviderProps {

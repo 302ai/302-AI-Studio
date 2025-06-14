@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { is } from "@electron-toolkit/utils";
 import { createWindow } from "@lib/electron-app/factories/windows/create";
+import { WINDOW_SIZE } from "@shared/constants";
 import { BrowserWindow } from "electron";
 import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
@@ -9,8 +10,8 @@ import { isMac, isWin } from "../constant";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
-    defaultWidth: 1080,
-    defaultHeight: 720,
+    defaultWidth: WINDOW_SIZE.MIN_WIDTH,
+    defaultHeight: WINDOW_SIZE.MIN_HEIGHT,
     fullScreen: false,
     maximize: false,
   });
@@ -23,8 +24,8 @@ export async function MainWindow() {
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    minWidth: 1080,
-    minHeight: 720,
+    minWidth: WINDOW_SIZE.MIN_WIDTH,
+    minHeight: WINDOW_SIZE.MIN_HEIGHT,
     autoHideMenuBar: true,
     transparent: isMac,
     visualEffectState: "active",
@@ -34,8 +35,8 @@ export async function MainWindow() {
     backgroundColor: isMac
       ? undefined
       : theme === "dark"
-      ? "#181818"
-      : "#FFFFFF",
+        ? "#181818"
+        : "#FFFFFF",
     trafficLightPosition: { x: 8, y: 12 },
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),

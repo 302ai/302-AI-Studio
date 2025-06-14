@@ -100,6 +100,7 @@
     "@tailwindcss/vite": "^4.1.4",
     "@triplit/cli": "^1.0.50",
     "@types/lodash": "^4.17.17",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.13.8",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

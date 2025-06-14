@@ -13,12 +13,21 @@ import {
 } from "@renderer/hooks/use-provider-list";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import _ from "lodash";
+import debounce from "lodash-es/debounce";
 import { PackageOpen, Plus } from "lucide-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
 import { ActionGroup } from "../action-group";
+import { Fetching } from "../fetching";
 import { ModalAction as ModalActionComponent } from "../modal-action";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
@@ -40,7 +49,7 @@ const ListRow = React.memo(function ListRow({
   const provider = data[index];
   const { selectedProvider, setSelectedProvider } = useActiveProvider();
 
-  const handleProviderSelect = _.debounce(async () => {
+  const handleProviderSelect = debounce(async () => {
     await setSelectedProvider(
       selectedProvider?.id === provider.id ? null : provider,
     );
@@ -90,35 +99,41 @@ export function ProviderList() {
 
   const { selectedProvider, setSelectedProvider } = useActiveProvider();
 
-  const listContainerRef = useRef<HTMLDivElement | null>(null);
-  const [listHeight, setListHeight] = useState<number>(0);
-  const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
-  const [providerCfg, setProviderCfg] = useState<Provider | null>(null);
-  const [providers, setProviders] = useState<Provider[]>([]);
-
   const providersQuery = triplitClient.query("providers").Order("order", "ASC");
-  const { results: allProviders, fetching } = useQuery(
+  const { results: allProviders = [], fetching: providersFetching } = useQuery(
     triplitClient,
     providersQuery,
   );
 
   const modelsQuery = triplitClient.query("models");
-  const { results: allModels } = useQuery(triplitClient, modelsQuery);
+  const { results: allModels = [], fetching: modelsFetching } = useQuery(
+    triplitClient,
+    modelsQuery,
+  );
+
+  const [ready, setReady] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const modelCounts = useMemo(() => {
-    if (!allModels || !providers.length) {
+    if (!allModels || !allProviders?.length) {
       return {};
     }
 
     const counts: Record<string, number> = {};
-    providers.forEach((provider) => {
+    allProviders.forEach((provider) => {
       counts[provider.id] = allModels.filter(
         (model) => model.providerId === provider.id,
       ).length;
     });
 
     return counts;
-  }, [allModels, providers]);
+  }, [allModels, allProviders]);
+
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = useState<number>(0);
+  const [isApiKeyValidated, setIsApiKeyValidated] = useState(false);
+  const [providerCfg, setProviderCfg] = useState<Provider | null>(null);
+  const [providers, setProviders] = useState<Provider[]>([]);
 
   const actionType = (action: ModalAction | null) => {
     const initialsState = {
@@ -255,46 +270,70 @@ export function ProviderList() {
     data: Provider[];
   }) => <ListRow {...props} setState={setState} modelCounts={modelCounts} />;
 
-  useEffect(() => {
-    const updateHeight = () => {
-      if (listContainerRef.current) {
-        const height = listContainerRef.current.clientHeight;
-        setListHeight(height);
-      }
-    };
-
-    const getHeightWithDelay = () => {
-      requestAnimationFrame(() => {
-        setTimeout(updateHeight, 0);
-      });
-    };
-
-    updateHeight();
-
-    if (listHeight === 0 || providers.length > 0) {
-      getHeightWithDelay();
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-      getHeightWithDelay();
-    });
-
+  const updateHeight = useCallback(() => {
     if (listContainerRef.current) {
-      resizeObserver.observe(listContainerRef.current);
+      console.log("updateHeight --- provider-list");
+      const height = listContainerRef.current.clientHeight;
+      console.log("height", height);
+      setListHeight(height);
     }
+  }, []);
 
-    return () => {
-      if (listContainerRef.current) {
-        resizeObserver.unobserve(listContainerRef.current);
-      }
-    };
-  }, [listHeight, providers]);
+  // useEffect(() => {
+  //   const getHeightWithDelay = () => {
+  //     requestAnimationFrame(() => {
+  //       setTimeout(updateHeight, 0);
+  //     });
+  //   };
+
+  //   updateHeight();
+
+  //   if (listHeight === 0 || providers.length > 0) {
+  //     getHeightWithDelay();
+  //   }
+
+  //   const resizeObserver = new ResizeObserver(() => {
+  //     getHeightWithDelay();
+  //   });
+
+  //   if (listContainerRef.current) {
+  //     resizeObserver.observe(listContainerRef.current);
+  //   }
+
+  //   return () => {
+  //     if (listContainerRef.current) {
+  //       resizeObserver.unobserve(listContainerRef.current);
+  //     }
+  //   };
+  // }, [listHeight, providers, updateHeight]);
+
+  useLayoutEffect(() => {
+    updateHeight();
+  }, [updateHeight]);
 
   useEffect(() => {
-    if (!fetching) {
-      setProviders(allProviders ?? []);
+    window.addEventListener("resize", updateHeight);
+    const ro = new ResizeObserver(updateHeight);
+    if (listContainerRef.current) ro.observe(listContainerRef.current);
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+      ro.disconnect();
+    };
+  }, [updateHeight]);
+
+  useEffect(() => {
+    setProviders(allProviders ?? []);
+  }, [allProviders]);
+
+  useEffect(() => {
+    if (!providersFetching && !modelsFetching) {
+      startTransition(() => {
+        setReady(true);
+      });
     }
-  }, [allProviders, fetching]);
+  }, [providersFetching, modelsFetching]);
+
+  const loading = !ready || isPending;
 
   return (
     <>
@@ -308,8 +347,16 @@ export function ProviderList() {
           <Plus className="size-4" />
           {t("add-provider")}
         </Button>
-        {providers.length > 0 ? (
-          <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
+
+        <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
+          {loading ? (
+            <div
+              className="flex items-center justify-center"
+              style={{ height: listHeight }}
+            >
+              <Fetching />
+            </div>
+          ) : providers.length > 0 ? (
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable
                 droppableId="provider-list"
@@ -344,15 +391,15 @@ export function ProviderList() {
                 )}
               </Droppable>
             </DragDropContext>
-          </div>
-        ) : (
-          <div className="flex h-full items-center justify-center text-muted-fg">
-            <div className="flex flex-col items-center gap-2 text-sm">
-              <PackageOpen className="size-9" />
-              <p>{t("no-provider-description")}</p>
+          ) : (
+            <div className="flex h-full items-center justify-center text-muted-fg">
+              <div className="flex flex-col items-center gap-2 text-sm">
+                <PackageOpen className="size-9" />
+                <p>{t("no-provider-description")}</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <ModalActionComponent

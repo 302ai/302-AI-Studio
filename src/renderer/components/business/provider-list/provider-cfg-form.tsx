@@ -8,6 +8,7 @@ import { TailChase } from "ldrs/react";
 import { AlertTriangle, Check, KeyRound, Link, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LoaderRenderer } from "../loader-renderer";
+import "ldrs/react/TailChase.css";
 
 interface ProviderCfgFormProps {
   isCustomProvider: boolean;
