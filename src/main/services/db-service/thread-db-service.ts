@@ -4,10 +4,11 @@ import type {
   Thread,
   UpdateThreadData,
 } from "@shared/triplit/types";
+import { BaseDbService } from "./base-db-service";
 
-export class ThreadDbService {
+export class ThreadDbService extends BaseDbService {
   constructor() {
-    triplitClient.connect();
+    super("threads");
   }
 
   async insertThread(thread: CreateThreadData): Promise<Thread> {
@@ -19,12 +20,6 @@ export class ThreadDbService {
   }
 
   async updateThread(threadId: string, updateData: UpdateThreadData) {
-    const existingThread = await this.getThreadById(threadId);
-    if (!existingThread) {
-      console.warn(`Thread with id ${threadId} not found, skipping update`);
-      return;
-    }
-
     await triplitClient.update("threads", threadId, async (thread) => {
       Object.assign(thread, updateData);
       thread.updatedAt = new Date();

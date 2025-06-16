@@ -1,15 +1,16 @@
 import { triplitClient } from "@main/triplit/client";
 import type { Provider, Thread, Ui } from "@shared/triplit/types";
+import { BaseDbService } from "./base-db-service";
 
-export class UiDbService {
+export class UiDbService extends BaseDbService {
   private uiRecord: Ui | null = null;
 
   constructor() {
-    triplitClient.connect();
-    this.init();
+    super("ui");
+    this.initUiDbService();
   }
 
-  private async init() {
+  private async initUiDbService() {
     const query = triplitClient.query("ui");
     const ui = await triplitClient.fetch(query);
 

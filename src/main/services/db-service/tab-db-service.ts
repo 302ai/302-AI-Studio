@@ -5,10 +5,11 @@ import type {
   Ui,
   UpdateTabData,
 } from "@shared/triplit/types";
+import { BaseDbService } from "./base-db-service";
 
-export class TabDbService {
+export class TabDbService extends BaseDbService {
   constructor() {
-    triplitClient.connect();
+    super("tabs");
   }
 
   async insertTab(tab: CreateTabData): Promise<Tab> {

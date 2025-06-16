@@ -6,10 +6,11 @@ import type {
   UpdateProviderData,
 } from "@shared/triplit/types";
 import Logger from "electron-log";
+import { BaseDbService } from "./base-db-service";
 
-export class ConfigDbService {
+export class ConfigDbService extends BaseDbService {
   constructor() {
-    triplitClient.connect();
+    super("providers");
   }
 
   async insertProvider(provider: CreateProviderData) {

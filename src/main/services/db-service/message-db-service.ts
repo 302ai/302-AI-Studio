@@ -4,10 +4,11 @@ import type {
   Message,
   UpdateMessageData,
 } from "@shared/triplit/types";
+import { BaseDbService } from "./base-db-service";
 
-export class MessageDbService {
+export class MessageDbService extends BaseDbService {
   constructor() {
-    triplitClient.connect();
+    super("messages");
   }
 
   async insertMessage(message: CreateMessageData): Promise<Message> {
@@ -18,12 +19,6 @@ export class MessageDbService {
     messageId: string,
     updateData: UpdateMessageData,
   ): Promise<void> {
-    const existingMessage = await this.getMessageById(messageId);
-    if (!existingMessage) {
-      console.warn(`Message with id ${messageId} not found, skipping update`);
-      return;
-    }
-
     await triplitClient.update("messages", messageId, async (message) => {
       Object.assign(message, updateData);
     });
