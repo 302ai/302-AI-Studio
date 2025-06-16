@@ -143,7 +143,9 @@
     "new-thread-title": "新しい会話",
     "create-thread-error": "申し訳ありませんが、新しいセッションの作成は失敗しました！",
     "lack-model": "最初にモデルを選択してください！",
-    "lack-provider": "モデルプロバイダーがありません！"
+    "lack-provider": "モデルプロバイダーがありません！",
+    "create-new-branch": "ここからブランチを作成",
+    "create-new-branch-error": "申し訳ありませんが、ブランチの作成に失敗しました！"
   },
   "thread-menu": {
     "actions": {

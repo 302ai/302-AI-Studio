@@ -143,7 +143,9 @@
     "new-thread-title": "新会话",
     "create-thread-error": "抱歉，新会话创建失败！",
     "lack-model": "请先选择一个模型！",
-    "lack-provider": "缺少模型提供商！"
+    "lack-provider": "缺少模型提供商！",
+    "create-new-branch": "从此处创建分支",
+    "create-new-branch-error": "抱歉，创建分支失败！"
   },
   "thread-menu": {
     "actions": {

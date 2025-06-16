@@ -143,7 +143,9 @@
     "new-thread-title": "New Chat",
     "create-thread-error": "Sorry, the new conversation creation failed!",
     "lack-model": "Please select a model first!",
-    "lack-provider": "Missing model provider!"
+    "lack-provider": "Missing model provider!",
+    "create-new-branch": "Create new branch from here",
+    "create-new-branch-error": "Sorry, the new branch creation failed!"
   },
   "thread-menu": {
     "actions": {
