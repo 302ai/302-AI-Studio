@@ -45,7 +45,7 @@ export const ModelRowList = memo(function ModelRowList({
   return (
     <div
       style={style}
-      className="flex cursor-pointer items-center rounded-md px-2 text-accent-fg text-sm outline-hidden hover:bg-hover-primary"
+      className="flex cursor-pointer items-center rounded-md px-2 text-sm outline-hidden hover:bg-hover-primary"
       onClick={() => onSelect(item.model.id)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -57,7 +57,10 @@ export const ModelRowList = memo(function ModelRowList({
       aria-selected={isSelected}
     >
       <div className="flex w-full flex-row items-center gap-2 overflow-hidden">
-        <ModelIcon modelName={item.model.name} className="size-4 flex-shrink-0" />
+        <ModelIcon
+          modelName={item.model.name}
+          className="size-4 flex-shrink-0"
+        />
         <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap">
           {item.name}
         </span>
