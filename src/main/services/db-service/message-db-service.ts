@@ -18,6 +18,12 @@ export class MessageDbService {
     messageId: string,
     updateData: UpdateMessageData,
   ): Promise<void> {
+    const existingMessage = await this.getMessageById(messageId);
+    if (!existingMessage) {
+      console.warn(`Message with id ${messageId} not found, skipping update`);
+      return;
+    }
+
     await triplitClient.update("messages", messageId, async (message) => {
       Object.assign(message, updateData);
     });
