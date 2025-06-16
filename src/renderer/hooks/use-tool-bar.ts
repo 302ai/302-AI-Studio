@@ -212,12 +212,14 @@ export function useToolBar() {
     // Find the selected model and its provider
     const selectedModel = models?.find((model) => model.id === selectedModelId);
     if (!selectedModel) {
-      throw new Error("Selected model not found");
+      toast.error(`${t("selected-model-not-found")}`);
+      return;
     }
 
     const provider = providers?.find((p) => p.id === selectedModel.providerId);
     if (!provider) {
-      throw new Error("Provider not found for selected model");
+      toast.error(`${t("provider-not-found-for-selected-model")}`);
+      return;
     }
 
     const existingMessages = await messageService.getMessagesByThreadId(
@@ -225,7 +227,8 @@ export function useToolBar() {
     );
     const messageToRefresh = existingMessages.find((m) => m.id === messageId);
     if (!messageToRefresh) {
-      throw new Error("Message not found");
+      toast.error(`${t("message-not-found")}`);
+      return;
     }
 
     const messageIndex = existingMessages.findIndex(

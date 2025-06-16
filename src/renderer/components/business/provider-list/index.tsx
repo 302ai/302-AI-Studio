@@ -279,34 +279,6 @@ export function ProviderList() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const getHeightWithDelay = () => {
-  //     requestAnimationFrame(() => {
-  //       setTimeout(updateHeight, 0);
-  //     });
-  //   };
-
-  //   updateHeight();
-
-  //   if (listHeight === 0 || providers.length > 0) {
-  //     getHeightWithDelay();
-  //   }
-
-  //   const resizeObserver = new ResizeObserver(() => {
-  //     getHeightWithDelay();
-  //   });
-
-  //   if (listContainerRef.current) {
-  //     resizeObserver.observe(listContainerRef.current);
-  //   }
-
-  //   return () => {
-  //     if (listContainerRef.current) {
-  //       resizeObserver.unobserve(listContainerRef.current);
-  //     }
-  //   };
-  // }, [listHeight, providers, updateHeight]);
-
   useLayoutEffect(() => {
     updateHeight();
   }, [updateHeight]);

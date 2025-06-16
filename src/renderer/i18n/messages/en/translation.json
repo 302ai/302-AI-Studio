@@ -144,6 +144,9 @@
     "create-thread-error": "Sorry, the new conversation creation failed!",
     "lack-model": "Please select a model first!",
     "lack-provider": "Missing model provider!",
+    "selected-model-not-found": "Please select a model first!",
+    "provider-not-found-for-selected-model": "Model provider setup error!",
+    "message-not-found": "This message does not exist!",
     "create-new-branch": "Create new branch from here",
     "create-new-branch-error": "Sorry, the new branch creation failed!"
   },

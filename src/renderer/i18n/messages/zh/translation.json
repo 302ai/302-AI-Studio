@@ -145,7 +145,10 @@
     "lack-model": "请先选择一个模型！",
     "lack-provider": "缺少模型提供商！",
     "create-new-branch": "从此处创建分支",
-    "create-new-branch-error": "抱歉，创建分支失败！"
+    "create-new-branch-error": "抱歉，创建分支失败！",
+    "selected-model-not-found": "请先选择一个模型！",
+    "provider-not-found-for-selected-model": "模型供应商设置错误！",
+    "message-not-found": "此消息不存在！"
   },
   "thread-menu": {
     "actions": {
