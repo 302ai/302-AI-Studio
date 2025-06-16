@@ -40,9 +40,8 @@ export function MessageAttachments({
           return;
         }
 
-        // Try new service first, fallback to old service
-        const fileService =
-          window.service.fileService || window.service.filePreviewService;
+        // Use fileService
+        const fileService = window.service.fileService;
         if (!fileService) {
           console.error("No file service available");
           return;
@@ -67,9 +66,8 @@ export function MessageAttachments({
 
         console.log("Previewing file:", attachment.name);
 
-        // Try new service first, fallback to old service
-        const fileService =
-          window.service.fileService || window.service.filePreviewService;
+        // Use fileService
+        const fileService = window.service.fileService;
         if (!fileService) {
           console.error("No file service available");
           return;
