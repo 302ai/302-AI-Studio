@@ -67,9 +67,8 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
           fileDataStart: fileData?.substring(0, 100),
         });
 
-        // Try new service first, fallback to old service
-        const fileService =
-          window.service.fileService || window.service.filePreviewService;
+        // Use fileService
+        const fileService = window.service.fileService;
         if (!fileService) {
           console.error("No file service available");
           return;
@@ -115,9 +114,8 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
           fileDataStart: fileData?.substring(0, 100),
         });
 
-        // Try new service first, fallback to old service
-        const fileService =
-          window.service.fileService || window.service.filePreviewService;
+        // Use fileService
+        const fileService = window.service.fileService;
         if (!fileService) {
           console.error("No file service available");
           return;

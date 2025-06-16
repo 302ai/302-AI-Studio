@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 import Logger from "electron-log";
 import { toast } from "sonner";
-import { FileParsingService } from "./file-parsing-service";
 
 export interface StreamChatEvent {
   tabId: string;
@@ -27,7 +26,7 @@ export interface StreamingMessage {
 
 type StreamEventCallback = (event: StreamChatEvent) => void;
 
-const { uiService, messageService } = window.service;
+const { uiService, messageService, fileService } = window.service;
 
 /**
  * Parse file attachments and update user message with parsed content
@@ -64,7 +63,7 @@ async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
       (att) =>
         !att.fileContent &&
         att.fileData &&
-        FileParsingService.shouldParseFile(att.type),
+        fileService.shouldParseFile(att.type),
     );
 
     if (!needsParsing) {
@@ -79,26 +78,27 @@ async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
       return;
     }
 
-    const parsingService = new FileParsingService({
-      apiKey: activeProvider.apiKey,
-      baseUrl: activeProvider.baseUrl,
-    });
-
     // Parse each attachment that needs parsing
     let hasUpdates = false;
     for (const attachment of attachments) {
       if (
         !attachment.fileContent &&
         attachment.fileData &&
-        FileParsingService.shouldParseFile(attachment.type)
+        fileService.shouldParseFile(attachment.type)
       ) {
         try {
-          const fileContent = await parsingService.parseFileContent({
-            id: attachment.id,
-            name: attachment.name,
-            type: attachment.type,
-            fileData: attachment.fileData,
-          });
+          const fileContent = await fileService.parseFileContent(
+            {
+              id: attachment.id,
+              name: attachment.name,
+              type: attachment.type,
+              fileData: attachment.fileData,
+            },
+            {
+              apiKey: activeProvider.apiKey,
+              baseUrl: activeProvider.baseUrl,
+            },
+          );
 
           attachment.fileContent = fileContent;
           hasUpdates = true;
