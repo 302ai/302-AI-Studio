@@ -143,7 +143,10 @@
     "new-thread-title": "新しい会話",
     "create-thread-error": "申し訳ありませんが、新しいセッションの作成は失敗しました！",
     "lack-model": "最初にモデルを選択してください！",
-    "lack-provider": "モデルプロバイダーがありません！"
+    "lack-provider": "モデルプロバイダーがありません！",
+    "selected-model-not-found": "最初にモデルを選択してください！",
+    "provider-not-found-for-selected-model": "モデルベンダーのセットアップエラー！",
+    "message-not-found": "このメッセージは存在しません！"
   },
   "thread-menu": {
     "actions": {

@@ -143,7 +143,10 @@
     "new-thread-title": "新会话",
     "create-thread-error": "抱歉，新会话创建失败！",
     "lack-model": "请先选择一个模型！",
-    "lack-provider": "缺少模型提供商！"
+    "lack-provider": "缺少模型提供商！",
+    "selected-model-not-found": "请先选择一个模型！",
+    "provider-not-found-for-selected-model": "模型供应商设置错误！",
+    "message-not-found": "此消息不存在！"
   },
   "thread-menu": {
     "actions": {
