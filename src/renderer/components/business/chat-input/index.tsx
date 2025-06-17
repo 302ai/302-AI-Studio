@@ -1,6 +1,7 @@
 import { Button } from "@renderer/components/ui/button";
 import { Textarea } from "@renderer/components/ui/textarea";
 import { useAttachments } from "@renderer/hooks/use-attachments";
+import { useThread } from "@renderer/hooks/use-thread";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
@@ -65,6 +66,8 @@ export function ChatInput({ className }: ChatInputProps) {
     handleModelSelect,
     handleSendMessage: sendMessage,
   } = useToolBar();
+
+  const { activeThreadId } = useThread();
 
   const canSendMessage = input.trim() && !isSending;
 
@@ -145,6 +148,12 @@ export function ChatInput({ className }: ChatInputProps) {
       unsub();
     };
   }, [addAttachments, editMessageId]);
+
+  useEffect(() => {
+    if (activeThreadId) {
+      setEditMessageId(null);
+    }
+  }, [activeThreadId]);
 
   const handleSave = async () => {
     if (!editMessageId) return;
