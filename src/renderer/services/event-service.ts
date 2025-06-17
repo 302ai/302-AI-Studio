@@ -5,6 +5,7 @@ export enum EventNames {
   // * Thread events
   THREAD_RENAME = "thread:rename",
   THREAD_DELETE = "thread:delete",
+  THREAD_DELETE_ALL = "thread:delete-all",
   THREAD_SELECT = "thread:select",
   THREAD_ADD = "thread:add",
 
@@ -25,6 +26,7 @@ type Events = {
   [EventNames.THREAD_DELETE]: {
     threadId: string;
   };
+  [EventNames.THREAD_DELETE_ALL]: null;
   [EventNames.THREAD_SELECT]: {
     thread: Thread;
   };

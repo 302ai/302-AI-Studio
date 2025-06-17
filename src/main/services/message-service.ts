@@ -110,4 +110,15 @@ export class MessageService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async deleteAllMessages(): Promise<void> {
+    try {
+      await this.messageDbService.deleteAllMessages();
+      Logger.info("deleteAllMessages success");
+    } catch (error) {
+      Logger.error("deleteAllMessages error ---->", error);
+      throw error;
+    }
+  }
 }

@@ -52,6 +52,7 @@ declare global {
           updateData: UpdateThreadData,
         ) => Promise<void>;
         getThreadById: (threadId: string) => Promise<Thread | null>;
+        deleteAllThreads: () => Promise<void>;
       };
       tabService: {
         insertTab: (tab: CreateTabData) => Promise<Tab>;
@@ -123,6 +124,7 @@ declare global {
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
         getMessageById: (messageId: string) => Promise<Message | null>;
         cleanMessagesByThreadId: (threadId: string) => Promise<void>;
+        deleteAllMessages: () => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{

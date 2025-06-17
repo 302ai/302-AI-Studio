@@ -77,4 +77,15 @@ export class ThreadService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async deleteAllThreads(): Promise<void> {
+    try {
+      await this.threadDbService.deleteAllThreads();
+      Logger.info("deleteAllThreads success");
+    } catch (error) {
+      Logger.error("deleteAllThreads error ---->", error);
+      throw error;
+    }
+  }
 }

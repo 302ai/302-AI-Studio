@@ -49,4 +49,17 @@ export class MessageDbService extends BaseDbService {
 
     await Promise.all(deletePromises);
   }
+
+  async deleteAllMessages(): Promise<void> {
+    const messagesQuery = triplitClient.query("messages");
+    const messages = await triplitClient.fetch(messagesQuery);
+
+    await triplitClient.transact(async (tx) => {
+      const deletePromises = messages.map((message) =>
+        tx.delete("messages", message.id),
+      );
+
+      await Promise.all(deletePromises);
+    });
+  }
 }

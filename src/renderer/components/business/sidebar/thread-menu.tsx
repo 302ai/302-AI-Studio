@@ -11,7 +11,7 @@ import {
   useThreadMenu,
 } from "@renderer/hooks/use-thread-menu";
 import type { Thread } from "@shared/triplit/types";
-import { Eraser, Package, Pencil, Trash2 } from "lucide-react";
+import { Eraser, FolderX, Package, Pencil, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ModalAction } from "../modal-action";
 
@@ -34,6 +34,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
     handleCleanMessages,
     handleDelete,
     handleCollectThread,
+    handleDeleteAll,
   } = useThreadMenu(thread);
 
   const actionType = (action: MenuModelActionType | null) => {
@@ -78,6 +79,14 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           confirmText: t("thread-menu.actions.delete.confirmText"),
           action: async () => await handleDelete(),
         };
+
+      case "delete-all":
+        return {
+          title: t("thread-menu.actions.delete-all.title"),
+          descriptions: [t("thread-menu.actions.delete-all.description")],
+          confirmText: t("thread-menu.actions.delete-all.confirmText"),
+          action: async () => await handleDeleteAll(),
+        };
       default:
         return initialsState;
     }
@@ -108,6 +117,13 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           <ContextMenuItem isDanger={true} onAction={() => setState("delete")}>
             <Trash2 className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.delete")}
+          </ContextMenuItem>
+          <ContextMenuItem
+            isDanger={true}
+            onAction={() => setState("delete-all")}
+          >
+            <FolderX className="mr-2 h-4 w-4 stroke-2" />
+            {t("sidebar.menu-item.delete-all")}
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>

@@ -3,7 +3,11 @@ import { useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
 import { useActiveThread } from "./use-active-thread";
 
-export type MenuModelActionType = "rename" | "clean-messages" | "delete";
+export type MenuModelActionType =
+  | "rename"
+  | "clean-messages"
+  | "delete"
+  | "delete-all";
 
 const { threadService, messageService } = window.service;
 
@@ -54,6 +58,15 @@ export function useThreadMenu(thread: Thread) {
     closeModal();
   };
 
+  const handleDeleteAll = async () => {
+    await threadService.deleteAllThreads();
+    await messageService.deleteAllMessages();
+
+    emitter.emit(EventNames.THREAD_DELETE_ALL, null);
+
+    closeModal();
+  };
+
   const handleCollectThread = async () => {
     await threadService.updateThread(thread.id, {
       collected: !thread.collected,
@@ -75,5 +88,6 @@ export function useThreadMenu(thread: Thread) {
     handleCleanMessages,
     handleDelete,
     handleCollectThread,
+    handleDeleteAll,
   };
 }

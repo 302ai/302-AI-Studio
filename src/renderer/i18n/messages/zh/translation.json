@@ -109,7 +109,8 @@
       "collect-thread": "收藏",
       "delete": "删除",
       "rename": "重命名",
-      "uncollect-thread": "取消收藏"
+      "uncollect-thread": "取消收藏",
+      "delete-all": "删除所有会话"
     },
     "new-thread": {
       "tooltip": "新聊天"
@@ -169,6 +170,11 @@
           "placeholder": "新的会话名称..."
         },
         "title": "重命名会话"
+      },
+      "delete-all": {
+        "title": "确定要删除所有的会话吗？",
+        "description": "会话删除后无法恢复，请谨慎操作。",
+        "confirmText": "删除所有"
       }
     }
   },

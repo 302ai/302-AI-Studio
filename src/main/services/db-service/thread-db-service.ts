@@ -31,4 +31,17 @@ export class ThreadDbService extends BaseDbService {
     const threads = await triplitClient.fetch(query);
     return threads[0] || null;
   }
+
+  async deleteAllThreads(): Promise<void> {
+    const threadsQuery = triplitClient.query("threads");
+    const threads = await triplitClient.fetch(threadsQuery);
+
+    await triplitClient.transact(async (tx) => {
+      const deletePromises = threads.map((thread) =>
+        tx.delete("threads", thread.id),
+      );
+
+      await Promise.all(deletePromises);
+    });
+  }
 }

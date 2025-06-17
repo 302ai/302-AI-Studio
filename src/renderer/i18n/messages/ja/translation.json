@@ -109,7 +109,8 @@
       "collect-thread": "お気に入り",
       "delete": "削除",
       "rename": "名前を変更",
-      "uncollect-thread": "お気に入りを解除"
+      "uncollect-thread": "お気に入りを解除",
+      "delete-all": "すべてのセッションを削除します"
     },
     "new-thread": {
       "tooltip": "新しいチャット"
@@ -169,6 +170,11 @@
           "placeholder": "新しい会話名..."
         },
         "title": "会話名を変更"
+      },
+      "delete-all": {
+        "title": "すべてのセッションを削除したいですか？",
+        "description": "削除後にセッションを復元することはできません。注意してください。",
+        "confirmText": "すべてを削除します"
       }
     }
   },
