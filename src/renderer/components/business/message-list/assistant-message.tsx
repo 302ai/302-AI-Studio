@@ -266,6 +266,7 @@ export function AssistantMessage({
             (containerRef.current?.getBoundingClientRect().left || 0)
           }
           onClose={() => setContextMenuOpen(false)}
+          aria-label="Assistant message options"
         >
           <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
           <ContextMenuItem

@@ -107,6 +107,7 @@ export function UserMessage({ message }: UserMessageProps) {
             (containerRef.current?.getBoundingClientRect().left || 0)
           }
           onClose={() => setContextMenuOpen(false)}
+          aria-label="User message options"
         >
           <ContextMenuItem onAction={handleCopy}>
             <Copy className="mr-2 h-4 w-4" />

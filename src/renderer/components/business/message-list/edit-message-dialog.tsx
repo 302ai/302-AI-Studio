@@ -1,6 +1,5 @@
 import { Button } from "@renderer/components/ui/button";
 import {
-  Modal,
   ModalBody,
   ModalClose,
   ModalContent,
@@ -70,38 +69,38 @@ export function EditMessageDialog({
   };
 
   return (
-    <Modal>
-      <ModalContent
-        isOpen={isOpen}
-        onOpenChange={handleOpenChange}
-        size="lg"
-      >
-        <ModalHeader>
-          <ModalTitle>{t("edit-dialog.title")}</ModalTitle>
-        </ModalHeader>
-        <ModalBody>
-          <Textarea
-            value={editContent}
-            onChange={setEditContent}
-            placeholder={message.content}
-            className="min-h-32"
-            resize="vertical"
-          />
-        </ModalBody>
-        <ModalFooter>
-          <ModalClose onPress={handleCancelEdit}>
-            {t("edit-dialog.cancel")}
-          </ModalClose>
-          <Button
-            intent="primary"
-            onPress={handleSaveEdit}
-            isDisabled={isSaving || editContent.trim() === message.content.trim()}
-            isPending={isSaving}
-          >
-            {t("edit-dialog.save")}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <ModalContent
+      isOpen={isOpen}
+      onOpenChange={handleOpenChange}
+      size="lg"
+      aria-label="Edit message dialog"
+    >
+      <ModalHeader>
+        <ModalTitle>{t("edit-dialog.title")}</ModalTitle>
+      </ModalHeader>
+      <ModalBody>
+        <Textarea
+          value={editContent}
+          onChange={setEditContent}
+          placeholder={message.content}
+          className="min-h-32"
+          resize="vertical"
+          aria-label="Edit message content"
+        />
+      </ModalBody>
+      <ModalFooter>
+        <ModalClose onPress={handleCancelEdit}>
+          {t("edit-dialog.cancel")}
+        </ModalClose>
+        <Button
+          intent="primary"
+          onPress={handleSaveEdit}
+          isDisabled={isSaving || editContent.trim() === message.content.trim()}
+          isPending={isSaving}
+        >
+          {t("edit-dialog.save")}
+        </Button>
+      </ModalFooter>
+    </ModalContent>
   );
 }
