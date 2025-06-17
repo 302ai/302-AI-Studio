@@ -15,7 +15,7 @@ import {
 
 export function ChatPage() {
   const { activeThreadId } = useActiveThread();
-  const { streamingMessages, isStreaming, stopStreamChat } = useStreamChat();
+  const { isStreaming, mergeMessages, stopStreamChat } = useStreamChat();
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -37,43 +37,10 @@ export function ChatPage() {
       triplitClient.query("messages").Where("id", "=", "non-existent"),
   );
 
+  // Use the hook's mergeMessages method for intelligent message merging
   const messagesList = useMemo(() => {
-    const dbMessages = messages || [];
-    const streamingMessagesForThread = streamingMessages.filter(
-      (msg) => msg.threadId === activeThreadId,
-    );
-
-    // Create a map to track which messages are being regenerated
-    const regeneratingMessageIds = new Set(
-      streamingMessagesForThread
-        .filter((msg) => msg.id.startsWith("temp-regenerate-"))
-        .map((msg) => msg.id.replace("temp-regenerate-", "")),
-    );
-
-    // Filter out database messages that are currently being regenerated
-    const filteredDbMessages = dbMessages.filter(
-      (msg) => !regeneratingMessageIds.has(msg.id),
-    );
-
-    // Combine filtered database messages with streaming messages
-    const result = [
-      ...filteredDbMessages,
-      ...streamingMessagesForThread.map((streamMsg) => ({
-        id: streamMsg.id,
-        threadId: streamMsg.threadId,
-        parentMessageId: streamMsg.parentMessageId,
-        role: streamMsg.role,
-        content: streamMsg.content,
-        attachments: null,
-        createdAt: new Date(),
-        orderSeq: streamMsg.orderSeq,
-        tokenCount: streamMsg.content.length,
-        status: streamMsg.status,
-      })),
-    ].sort((a, b) => a.orderSeq - b.orderSeq);
-
-    return result;
-  }, [messages, streamingMessages, activeThreadId]);
+    return mergeMessages(messages || []);
+  }, [mergeMessages, messages]);
 
   const scrollToBottom = useCallback((instant = false) => {
     if (scrollContainerRef.current) {
@@ -97,6 +64,7 @@ export function ChatPage() {
     return scrollHeight - scrollTop - clientHeight < 100;
   }, []);
 
+  // Simplified scroll logic with single effect
   useLayoutEffect(() => {
     if (messagesList.length > 0) {
       const rafId = requestAnimationFrame(() => {

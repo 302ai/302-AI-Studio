@@ -203,8 +203,21 @@ class StreamChatEventService {
       this.setIsStreaming(false);
 
       const tempId = `temp-${data.userMessageId}`;
+      const tempMessage = this.streamingMessages.get(tempId);
 
       try {
+        // First, convert the temporary message to success status to avoid gap
+        if (tempMessage && data.fullContent) {
+          const updatedTempMessage: StreamingMessage = {
+            ...tempMessage,
+            content: data.fullContent,
+            status: "success",
+          };
+
+          this.streamingMessages.set(tempId, updatedTempMessage);
+          this.notifyStreamingMessagesChange();
+        }
+
         // Save the complete message to database
         if (data.fullContent) {
           // Get the current message count for orderSeq
@@ -240,9 +253,11 @@ class StreamChatEventService {
         toast.error("Failed to save assistant message");
       }
 
-      // Remove temporary message
-      this.streamingMessages.delete(tempId);
-      this.notifyStreamingMessagesChange();
+      // Delay removing temporary message to allow database query to update
+      setTimeout(() => {
+        this.streamingMessages.delete(tempId);
+        this.notifyStreamingMessagesChange();
+      }, 300); // Increased delay to ensure database query updates
 
       // Notify callbacks
       this.onStreamEndCallbacks.forEach((callback) => callback(data));
@@ -424,8 +439,21 @@ class StreamChatEventService {
       this.setIsStreaming(false);
 
       const tempId = `temp-${data.userMessageId}`;
+      const tempMessage = this.streamingMessages.get(tempId);
 
       try {
+        // First, convert the temporary message to stop status to avoid gap
+        if (tempMessage && data.fullContent) {
+          const updatedTempMessage: StreamingMessage = {
+            ...tempMessage,
+            content: data.fullContent,
+            status: "stop",
+          };
+
+          this.streamingMessages.set(tempId, updatedTempMessage);
+          this.notifyStreamingMessagesChange();
+        }
+
         // Save the complete message to database
         if (data.fullContent) {
           // Get the current message count for orderSeq
@@ -461,9 +489,11 @@ class StreamChatEventService {
         toast.error("Failed to save assistant message");
       }
 
-      // Remove temporary message
-      this.streamingMessages.delete(tempId);
-      this.notifyStreamingMessagesChange();
+      // Delay removing temporary message to allow database query to update
+      setTimeout(() => {
+        this.streamingMessages.delete(tempId);
+        this.notifyStreamingMessagesChange();
+      }, 300); // Increased delay to ensure database query updates
 
       // Notify callbacks
       this.onStreamEndCallbacks.forEach((callback) => callback(data));

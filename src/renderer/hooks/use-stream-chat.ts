@@ -3,9 +3,9 @@ import {
   type StreamingMessage,
   streamChatEventService,
 } from "@renderer/services/stream-chat-event-service";
-import type { Provider } from "@shared/triplit/types";
+import type { Message, Provider } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
@@ -46,6 +46,88 @@ export function useStreamChat() {
 
     return unsubscribe;
   }, []);
+
+  // Convert streaming messages to unified format
+  const convertedStreamingMessages = useMemo(() => {
+    return streamingMessages
+      .filter((msg) => msg.threadId === activeThreadId)
+      .map((streamMsg) => ({
+        id: streamMsg.id,
+        threadId: streamMsg.threadId,
+        parentMessageId: streamMsg.parentMessageId,
+        role: streamMsg.role as "user" | "assistant",
+        content: streamMsg.content,
+        attachments: null,
+        createdAt: new Date(),
+        orderSeq: streamMsg.orderSeq,
+        tokenCount: streamMsg.content.length,
+        status: streamMsg.status,
+        providerId: undefined, // streaming messages don't have providerId yet
+      }));
+  }, [streamingMessages, activeThreadId]);
+
+  // Merge database messages with streaming messages intelligently
+  const mergeMessages = useCallback(
+    (dbMessages: Message[]) => {
+      const filteredDbMessages = dbMessages || [];
+
+      // Create a map to track which messages are being regenerated
+      const regeneratingMessageIds = new Set(
+        convertedStreamingMessages
+          .filter((msg) => msg.id.startsWith("temp-regenerate-"))
+          .map((msg) => msg.id.replace("temp-regenerate-", "")),
+      );
+
+      // Filter out database messages that are currently being regenerated
+      const validDbMessages = filteredDbMessages.filter(
+        (msg) => !regeneratingMessageIds.has(msg.id),
+      );
+
+      // Create a comprehensive message map for deduplication
+      const messageMap = new Map<string, Message>();
+      const orderSeqMap = new Map<number, Message>();
+
+      // First pass: Add all database messages
+      validDbMessages.forEach((msg) => {
+        messageMap.set(msg.id, msg);
+        orderSeqMap.set(msg.orderSeq, msg);
+      });
+
+      // Second pass: Handle streaming messages with intelligent deduplication
+      convertedStreamingMessages.forEach((streamMsg) => {
+        const existingByOrderSeq = orderSeqMap.get(streamMsg.orderSeq);
+
+        if (existingByOrderSeq) {
+          messageMap.delete(existingByOrderSeq.id);
+          messageMap.set(streamMsg.id, streamMsg);
+          orderSeqMap.set(streamMsg.orderSeq, streamMsg);
+        } else {
+          messageMap.set(streamMsg.id, streamMsg);
+          orderSeqMap.set(streamMsg.orderSeq, streamMsg);
+        }
+      });
+
+      const result = Array.from(messageMap.values()).sort(
+        (a, b) => a.orderSeq - b.orderSeq,
+      );
+
+      // Debug logging for message count changes
+      const totalInputMessages =
+        validDbMessages.length + convertedStreamingMessages.length;
+      if (result.length !== totalInputMessages) {
+        Logger.info("Message merge resulted in deduplication:", {
+          dbMessages: validDbMessages.length,
+          streamingMessages: convertedStreamingMessages.length,
+          totalInput: totalInputMessages,
+          finalResult: result.length,
+          threadId: activeThreadId,
+        });
+      }
+
+      return result;
+    },
+    [convertedStreamingMessages, activeThreadId],
+  );
 
   const startStreamChat = useCallback(
     async (
@@ -139,7 +221,9 @@ export function useStreamChat() {
 
   return {
     streamingMessages,
+    convertedStreamingMessages,
     isStreaming,
+    mergeMessages,
     startStreamChat,
     reGenerateStreamChat,
     stopStreamChat,
