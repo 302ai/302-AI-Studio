@@ -110,7 +110,7 @@
       "delete": "削除",
       "rename": "名前を変更",
       "uncollect-thread": "お気に入りを解除",
-      "delete-all": "すべてのセッションを削除します"
+      "delete-all": "すべてを削除します"
     },
     "new-thread": {
       "tooltip": "新しいチャット"

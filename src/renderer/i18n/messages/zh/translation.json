@@ -110,7 +110,7 @@
       "delete": "删除",
       "rename": "重命名",
       "uncollect-thread": "取消收藏",
-      "delete-all": "删除所有会话"
+      "delete-all": "删除所有"
     },
     "new-thread": {
       "tooltip": "新聊天"

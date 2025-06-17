@@ -110,7 +110,7 @@
       "delete": "Delete",
       "rename": "Rename",
       "uncollect-thread": "Unfavorite",
-      "delete-all": "Delete all conversations"
+      "delete-all": "Delete All"
     },
     "new-thread": {
       "tooltip": "New Chat"
