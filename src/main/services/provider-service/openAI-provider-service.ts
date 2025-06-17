@@ -123,7 +123,10 @@ export class OpenAIProviderService extends BaseProviderService {
       const result = streamText({
         model,
         messages: modelMessages,
-        experimental_transform: smoothStream(),
+        experimental_transform: smoothStream({
+          chunking: "line",
+          delayInMs: 20,
+        }),
         abortSignal: controller.signal,
       });
 
@@ -220,7 +223,10 @@ export class OpenAIProviderService extends BaseProviderService {
       const result = streamText({
         model,
         messages: modelMessages,
-        experimental_transform: smoothStream(),
+        experimental_transform: smoothStream({
+          chunking: "line",
+          delayInMs: 20,
+        }),
         abortSignal: controller.signal,
       });
 
