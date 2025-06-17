@@ -48,9 +48,7 @@ export function AssistantMessage({
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
-  const { t: threadT } = useTranslation("translation", {
-    keyPrefix: "thread",
-  });
+
   const { createThread, selectedModelId } = useToolBar();
   const { setActiveTabId } = useActiveTab();
 
@@ -100,7 +98,7 @@ export function AssistantMessage({
   const handleCreateNewBranch = async () => {
     try {
       const thread = await createThread({
-        title: threadT("new-thread-title"),
+        title: t("context-menu.new-thread-title"),
         modelId: selectedModelId,
       });
 
@@ -155,7 +153,7 @@ export function AssistantMessage({
       await setActiveTabId(newTab.id);
     } catch (error) {
       console.error("Error creating new branch:", error);
-      toast.error(threadT("create-new-branch-error"));
+      toast.error(t("context-menu.create-new-branch-error"));
     }
   };
 
@@ -293,7 +291,7 @@ export function AssistantMessage({
               setContextMenuOpen(false);
             }}
           >
-            {threadT("create-new-branch")}
+            {t("context-menu.create-new-branch")}
           </ContextMenuItem>
         </MenuContent>
       )}

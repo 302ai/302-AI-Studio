@@ -146,9 +146,7 @@
     "lack-provider": "Missing model provider!",
     "selected-model-not-found": "Please select a model first!",
     "provider-not-found-for-selected-model": "Model provider setup error!",
-    "message-not-found": "This message does not exist!",
-    "create-new-branch": "Create new branch from here",
-    "create-new-branch-error": "Sorry, the new branch creation failed!"
+    "message-not-found": "This message does not exist!"
   },
   "thread-menu": {
     "actions": {
@@ -198,6 +196,11 @@
       "save-success": "Message updated successfully",
       "save-error": "Failed to update message"
     },
-    "generate-failed": "Generate failed"
+    "generate-failed": "Generate failed",
+    "context-menu": {
+      "create-new-branch": "Create new branch from here",
+      "create-new-branch-error": "Sorry, the new branch creation failed!",
+      "new-thread-title": "New Chat"
+    }
   }
 }

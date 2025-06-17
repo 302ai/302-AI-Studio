@@ -144,8 +144,6 @@
     "create-thread-error": "申し訳ありませんが、新しいセッションの作成は失敗しました！",
     "lack-model": "最初にモデルを選択してください！",
     "lack-provider": "モデルプロバイダーがありません！",
-    "create-new-branch": "ここからブランチを作成",
-    "create-new-branch-error": "申し訳ありませんが、ブランチの作成に失敗しました！",
     "selected-model-not-found": "最初にモデルを選択してください！",
     "provider-not-found-for-selected-model": "モデルベンダーのセットアップエラー！",
     "message-not-found": "このメッセージは存在しません！"
@@ -198,6 +196,11 @@
       "save-success": "メッセージが正常に更新されました",
       "save-error": "メッセージの更新に失敗しました"
     },
-    "generate-failed": "生成に失敗しました"
+    "generate-failed": "生成に失敗しました",
+    "context-menu": {
+      "create-new-branch": "新しいブランチを作成",
+      "create-new-branch-error": "申し訳ありませんが、新しいブランチの作成は失敗しました！",
+      "new-thread-title": "新しい会話"
+    }
   }
 }
