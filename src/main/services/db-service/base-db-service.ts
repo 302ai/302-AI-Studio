@@ -16,7 +16,7 @@ export abstract class BaseDbService {
 
     // biome-ignore lint/suspicious/noExplicitAny: unknown type
     triplitClient.fetch<any>(initQuery, {
-      policy: "remote-first",
+      policy: "local-and-remote",
     });
   }
 }
