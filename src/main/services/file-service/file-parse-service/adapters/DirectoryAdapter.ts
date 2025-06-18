@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import path from "path";
-import type { DirectoryMetaData } from ".";
+import type { DirectoryMetaData } from "../type";
 
 export class DirectoryAdapter {
   dirPath: string;

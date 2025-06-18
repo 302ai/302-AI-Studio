@@ -1,5 +1,5 @@
 import { ConfigService } from "./config-service";
-import { FileParseService } from "./file-service/file-parse-service/FileParseService";
+import { FileParseService } from "./file-service/file-parse-service";
 import { FilePreviewService } from "./file-service/file-preview-service/index";
 import { MessageService } from "./message-service";
 import { ProviderService } from "./provider-service";

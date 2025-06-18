@@ -23,6 +23,7 @@ export interface IFilePresenter {
   readFile(relativePath: string): Promise<string>;
   writeFile(operation: FileOperation): Promise<void>;
   deleteFile(relativePath: string): Promise<void>;
+  // biome-ignore lint/suspicious/noExplicitAny: <type is undetermined>
   createFileAdapter(filePath: string, typeInfo?: string): Promise<any>; // Return type might need refinement
   prepareFile(absPath: string, typeInfo?: string): Promise<MessageFile>;
   prepareDirectory(absPath: string): Promise<MessageFile>;

@@ -1,7 +1,7 @@
 import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
 import { BrowserWindow } from "electron";
 import Logger from "electron-log";
-import { FilePresenter } from "../services/file-service/file-parse-service/FilePresenter";
+import { FilePresenter } from "../services/file-service/file-parse-service";
 
 // Type definitions for AI SDK content parts - using the actual AI SDK types
 type ContentPart = TextPart | ImagePart | FilePart;

@@ -1,17 +1,38 @@
 import { app } from "electron";
+import Logger from "electron-log";
 import fs from "fs/promises";
 import { nanoid } from "nanoid";
 import path from "path";
 import { approximateTokenSize } from "tokenx";
-import type { BaseFileAdapter } from "./BaseFileAdapter";
-import { DirectoryAdapter } from "./DirectoryAdapter";
-import type { FileAdapterConstructor } from "./FileAdapterConstructor";
-import type { ImageFileAdapter } from "./ImageFileAdapter";
-import type { FileOperation, IFilePresenter, MessageFile } from "./index";
+import {
+  CommunicationWay,
+  ServiceHandler,
+  ServiceRegister,
+} from "../../../shared/reflect";
+import type {
+  BaseFileAdapter,
+  FileAdapterConstructor,
+  ImageFileAdapter,
+} from "./adapters";
+import { DirectoryAdapter, UnsupportFileAdapter } from "./adapters";
 import { detectMimeType, getMimeTypeAdapterMap } from "./mime";
-import { UnsupportFileAdapter } from "./UnsupportFileAdapter";
+import type { FileOperation, IFilePresenter, MessageFile } from "./type";
 
-export class FilePresenter implements IFilePresenter {
+// Local type definition for attachment parsing
+interface AttachmentForParsing {
+  id: string;
+  name: string;
+  type: string;
+  fileData: string;
+}
+
+/**
+ * 统一的文件解析服务
+ * 合并了 FilePresenter 和 FileParseService 的功能
+ * 既提供业务逻辑实现，也提供 IPC 服务接口
+ */
+@ServiceRegister("fileParseService")
+export class FileParseService implements IFilePresenter {
   private userDataPath: string;
   private maxFileSize: number = 1024 * 1024 * 30; // 30 MB
   private tempDir: string;
@@ -22,6 +43,167 @@ export class FilePresenter implements IFilePresenter {
     // Ensure temp directory exists
     fs.mkdir(this.tempDir, { recursive: true }).catch(console.error);
   }
+
+  // ========== IPC Service Methods ==========
+
+  /**
+   * Get MIME type of a file
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getMimeTypeIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    filePath: string,
+  ): Promise<string> {
+    return this.getMimeType(filePath);
+  }
+
+  /**
+   * Prepare a file for processing
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async prepareFileIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    absPath: string,
+    typeInfo?: string,
+  ): Promise<MessageFile> {
+    return this.prepareFile(absPath, typeInfo);
+  }
+
+  /**
+   * Prepare a directory for processing
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async prepareDirectoryIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    absPath: string,
+  ): Promise<MessageFile> {
+    return this.prepareDirectory(absPath);
+  }
+
+  /**
+   * Write temporary file
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async writeTempIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    file: {
+      name: string;
+      content: string | Buffer | ArrayBuffer;
+    },
+  ): Promise<string> {
+    return this.writeTemp(file);
+  }
+
+  /**
+   * Write base64 image to temporary file
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async writeImageBase64IPC(
+    _event: Electron.IpcMainInvokeEvent,
+    file: { name: string; content: string },
+  ): Promise<string> {
+    return this.writeImageBase64(file);
+  }
+
+  /**
+   * Check if path is a directory
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async isDirectoryIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    absPath: string,
+  ): Promise<boolean> {
+    return this.isDirectory(absPath);
+  }
+
+  /**
+   * Read file content
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async readFileIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    relativePath: string,
+  ): Promise<string> {
+    return this.readFile(relativePath);
+  }
+
+  /**
+   * Write file content
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async writeFileIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    operation: { path: string; content?: string },
+  ): Promise<void> {
+    return this.writeFile(operation);
+  }
+
+  /**
+   * Delete file
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async deleteFileIPC(
+    _event: Electron.IpcMainInvokeEvent,
+    relativePath: string,
+  ): Promise<void> {
+    return this.deleteFile(relativePath);
+  }
+
+  /**
+   * Parse file content using local file adapters
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async parseFileContent(
+    _event: Electron.IpcMainInvokeEvent,
+    attachment: AttachmentForParsing,
+  ): Promise<string> {
+    try {
+      Logger.info("Starting file parsing for:", {
+        fileName: attachment.name,
+      });
+
+      // Write attachment data to temporary file
+      const tempFilePath = await this.writeTemp({
+        name: attachment.name,
+        content: attachment.fileData,
+      });
+
+      // Use FilePresenter to prepare and parse the file
+      const messageFile = await this.prepareFile(tempFilePath, attachment.type);
+
+      Logger.info("File parsed successfully using local adapters");
+
+      return messageFile.content;
+    } catch (error) {
+      Logger.error("File parsing failed:", error);
+      throw new Error(
+        `Failed to parse file ${attachment.name}: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
+  /**
+   * Check if a file type should be parsed
+   */
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async shouldParseFile(
+    _event: Electron.IpcMainInvokeEvent,
+    type: string,
+  ): Promise<boolean> {
+    // Don't parse images as they are handled differently
+    if (type.startsWith("image/")) {
+      return false;
+    }
+
+    // Parse text files and documents
+    return (
+      type.startsWith("text/") ||
+      type.startsWith("application/") ||
+      type.startsWith("audio/")
+    );
+  }
+
+  // ========== Business Logic Methods ==========
 
   async getMimeType(filePath: string): Promise<string> {
     return detectMimeType(filePath);
@@ -105,12 +287,11 @@ export class FilePresenter implements IFilePresenter {
         const content = (await adapter.getLLMContent()) ?? "";
         const result = {
           name: adapter.fileMetaData?.fileName ?? "",
-          token:
-            adapter.mimeType && adapter.mimeType.startsWith("image")
-              ? calculateImageTokens(adapter as ImageFileAdapter)
-              : adapter.mimeType && adapter.mimeType.startsWith("audio")
-                ? approximateTokenSize(`音频文件路径: ${adapter.filePath}`)
-                : approximateTokenSize(content || ""),
+          token: adapter.mimeType?.startsWith("image")
+            ? calculateImageTokens(adapter as ImageFileAdapter)
+            : adapter.mimeType?.startsWith("audio")
+              ? approximateTokenSize(`音频文件路径: ${adapter.filePath}`)
+              : approximateTokenSize(content || ""),
           path: adapter.filePath,
           mimeType: adapter.mimeType ?? "",
           metadata: adapter.fileMetaData ?? {
@@ -237,6 +418,7 @@ export class FilePresenter implements IFilePresenter {
       const stats = await fs.stat(fullPath);
       return stats.isDirectory();
     } catch (error) {
+      Logger.error("isDirectory error ---->", error);
       // If the path doesn't exist or there's any other error, return false
       return false;
     }
@@ -254,3 +436,6 @@ function calculateImageTokens(adapter: ImageFileAdapter): number {
   );
   return pixelBasedTokens;
 }
+
+// Export for backward compatibility
+export { FileParseService as FilePresenter };
