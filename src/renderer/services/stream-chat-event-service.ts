@@ -1,4 +1,3 @@
-// ! deprecated
 // /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 // import Logger from "electron-log";
 // import { toast } from "sonner";
@@ -27,7 +26,7 @@
 
 // type StreamEventCallback = (event: StreamChatEvent) => void;
 
-// const { uiService, messageService, fileService } = window.service;
+// const { messageService, fileParseService } = window.service;
 
 // /**
 //  * Parse file attachments and update user message with parsed content
@@ -60,22 +59,16 @@
 //     }
 
 //     // Check if any attachments need parsing
-//     const needsParsing = attachments.some(
-//       (att) =>
-//         !att.fileContent &&
-//         att.fileData &&
-//         fileService.shouldParseFile(att.type),
-//     );
+//     const needsParsing = await Promise.all(
+//       attachments.map(
+//         async (att) =>
+//           !att.fileContent &&
+//           att.fileData &&
+//           (await fileParseService.shouldParseFile(att.type)),
+//       ),
+//     ).then((results) => results.some(Boolean));
 
 //     if (!needsParsing) {
-//       return;
-//     }
-
-//     // Get active provider for parsing
-//     const activeProvider = await uiService.getActiveProvider();
-
-//     if (!activeProvider || !activeProvider.apiKey || !activeProvider.baseUrl) {
-//       Logger.warn("No active provider available for file parsing");
 //       return;
 //     }
 
@@ -85,21 +78,15 @@
 //       if (
 //         !attachment.fileContent &&
 //         attachment.fileData &&
-//         fileService.shouldParseFile(attachment.type)
+//         (await fileParseService.shouldParseFile(attachment.type))
 //       ) {
 //         try {
-//           const fileContent = await fileService.parseFileContent(
-//             {
-//               id: attachment.id,
-//               name: attachment.name,
-//               type: attachment.type,
-//               fileData: attachment.fileData,
-//             },
-//             {
-//               apiKey: activeProvider.apiKey,
-//               baseUrl: activeProvider.baseUrl,
-//             },
-//           );
+//           const fileContent = await fileParseService.parseFileContent({
+//             id: attachment.id,
+//             name: attachment.name,
+//             type: attachment.type,
+//             fileData: attachment.fileData,
+//           });
 
 //           attachment.fileContent = fileContent;
 //           hasUpdates = true;
@@ -204,21 +191,8 @@
 //       this.setIsStreaming(false);
 
 //       const tempId = `temp-${data.userMessageId}`;
-//       const tempMessage = this.streamingMessages.get(tempId);
 
 //       try {
-//         // First, convert the temporary message to success status to avoid gap
-//         if (tempMessage && data.fullContent) {
-//           const updatedTempMessage: StreamingMessage = {
-//             ...tempMessage,
-//             content: data.fullContent,
-//             status: "success",
-//           };
-
-//           this.streamingMessages.set(tempId, updatedTempMessage);
-//           this.notifyStreamingMessagesChange();
-//         }
-
 //         // Save the complete message to database
 //         if (data.fullContent) {
 //           // Get the current message count for orderSeq
@@ -254,11 +228,9 @@
 //         toast.error("Failed to save assistant message");
 //       }
 
-//       // Delay removing temporary message to allow database query to update
-//       setTimeout(() => {
-//         this.streamingMessages.delete(tempId);
-//         this.notifyStreamingMessagesChange();
-//       }, 300); // Increased delay to ensure database query updates
+//       // Remove temporary message
+//       this.streamingMessages.delete(tempId);
+//       this.notifyStreamingMessagesChange();
 
 //       // Notify callbacks
 //       this.onStreamEndCallbacks.forEach((callback) => callback(data));
@@ -440,21 +412,8 @@
 //       this.setIsStreaming(false);
 
 //       const tempId = `temp-${data.userMessageId}`;
-//       const tempMessage = this.streamingMessages.get(tempId);
 
 //       try {
-//         // First, convert the temporary message to stop status to avoid gap
-//         if (tempMessage && data.fullContent) {
-//           const updatedTempMessage: StreamingMessage = {
-//             ...tempMessage,
-//             content: data.fullContent,
-//             status: "stop",
-//           };
-
-//           this.streamingMessages.set(tempId, updatedTempMessage);
-//           this.notifyStreamingMessagesChange();
-//         }
-
 //         // Save the complete message to database
 //         if (data.fullContent) {
 //           // Get the current message count for orderSeq
@@ -490,11 +449,9 @@
 //         toast.error("Failed to save assistant message");
 //       }
 
-//       // Delay removing temporary message to allow database query to update
-//       setTimeout(() => {
-//         this.streamingMessages.delete(tempId);
-//         this.notifyStreamingMessagesChange();
-//       }, 300); // Increased delay to ensure database query updates
+//       // Remove temporary message
+//       this.streamingMessages.delete(tempId);
+//       this.notifyStreamingMessagesChange();
 
 //       // Notify callbacks
 //       this.onStreamEndCallbacks.forEach((callback) => callback(data));

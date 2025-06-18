@@ -249,6 +249,7 @@ export class ProviderService {
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,
         status: "success",
+        userMessageId: userMessageId,
       });
 
       Logger.info(`Stream chat completed for tab ${tabId}`);
@@ -273,6 +274,7 @@ export class ProviderService {
         sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
           threadId,
           status: "stop",
+          userMessageId: userMessageId,
         });
         return { success: true };
       }
@@ -285,6 +287,7 @@ export class ProviderService {
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,
         status: "error",
+        userMessageId: userMessageId,
       });
 
       return {

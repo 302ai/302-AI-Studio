@@ -32,6 +32,7 @@ type Events = {
     threadId: string;
     status: "pending" | "success" | "error" | "stop";
     delta?: string;
+    userMessageId?: string;
   };
   [EventNames.MESSAGE_ACTIONS]: {
     threadId: string;

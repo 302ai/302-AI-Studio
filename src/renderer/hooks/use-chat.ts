@@ -1,3 +1,4 @@
+import { parseAndUpdateAttachments } from "@renderer/utils/parse-file";
 import type { Message } from "@shared/triplit/types";
 import { useCallback, useEffect, useState } from "react";
 import { useActiveTab } from "./use-active-tab";
@@ -33,6 +34,7 @@ export function useChat() {
         threadId: string;
         status: "pending" | "success" | "error" | "stop";
         delta?: string;
+        userMessageId?: string;
       },
     ) => {
       try {
@@ -66,6 +68,9 @@ export function useChat() {
           case "success":
           case "error":
           case "stop": {
+            if (data.userMessageId) {
+              parseAndUpdateAttachments(data.userMessageId);
+            }
             await fetchMessages(data.threadId);
             setStreaming(false);
             break;

@@ -1,7 +1,7 @@
-import { uploadAndParseFile } from "@main/api/file-parsing";
 import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
 import { BrowserWindow } from "electron";
 import Logger from "electron-log";
+import { FilePresenter } from "../services/file-service/file-parse-service";
 
 // Type definitions for AI SDK content parts - using the actual AI SDK types
 type ContentPart = TextPart | ImagePart | FilePart;
@@ -24,24 +24,19 @@ interface AttachmentData {
   fileContent?: string;
 }
 
-// Type definition for provider options
-export interface ProviderOptions {
-  apiKey: string;
-  baseUrl: string;
-}
-
 /**
  * Convert chat message to AI SDK ModelMessage format with attachment support
  * @param message - The chat message to convert
- * @param providerOptions - Provider API configuration
  * @param messageId - Optional message ID for attachment updates
  * @returns Promise<ModelMessage> - The converted message
  */
 export async function convertToModelMessage(
   message: ChatMessage,
-  providerOptions: ProviderOptions,
   messageId?: string,
 ): Promise<ModelMessage> {
+  // Create FilePresenter instance for local file parsing
+  const filePresenter = new FilePresenter();
+
   if (message.role === "user" && message.attachments) {
     let attachments: AttachmentData[] = [];
     try {
@@ -66,7 +61,6 @@ export async function convertToModelMessage(
 
       // Process attachments
       for (const attachment of attachments) {
-
         if (attachment.type?.startsWith("image/") && attachment.preview) {
           contentParts.push({
             type: "image",
@@ -78,24 +72,21 @@ export async function convertToModelMessage(
             type: "text",
             text: `${attachment.name}\n${attachment.fileContent}`,
           });
-
         } else if (attachment.fileData && attachment.type) {
           try {
-            // Parse file content on-demand (first time)
-            // TODO: 不能与provider耦合
-            const parsedContent = await uploadAndParseFile(
-              {
-                id: attachment.id,
-                name: attachment.name,
-                type: attachment.type,
-                fileData: attachment.fileData,
-              },
-              {
-                apiKey: providerOptions.apiKey,
-                baseUrl: providerOptions.baseUrl,
-                timeout: 30000,
-              },
+            // Parse file content using local file adapters
+            // Write attachment data to temporary file
+            const tempFilePath = await filePresenter.writeTemp({
+              name: attachment.name,
+              content: attachment.fileData,
+            });
+
+            // Use FilePresenter to prepare and parse the file
+            const messageFile = await filePresenter.prepareFile(
+              tempFilePath,
+              attachment.type,
             );
+            const parsedContent = messageFile.content;
 
             // Cache the parsed content back to the attachment for future use
             attachment.fileContent = parsedContent;
@@ -106,7 +97,6 @@ export async function convertToModelMessage(
               type: "text",
               text: `${attachment.name}\n${parsedContent}`,
             });
-
           } catch (error) {
             Logger.error("Failed to parse file:", error);
 
@@ -173,13 +163,11 @@ function sendToAllWindows(channel: string, data: AttachmentsUpdatedEventData) {
 /**
  * Convert multiple chat messages to AI SDK ModelMessage format
  * @param messages - Array of chat messages to convert
- * @param providerOptions - Provider API configuration
  * @param userMessageId - Optional user message ID for attachment updates
  * @returns Promise<ModelMessage[]> - Array of converted messages
  */
 export async function convertMessagesToModelMessages(
   messages: ChatMessage[],
-  providerOptions: ProviderOptions,
   userMessageId?: string,
 ): Promise<ModelMessage[]> {
   return await Promise.all(
@@ -191,7 +179,7 @@ export async function convertMessagesToModelMessages(
           msg.role === "user" && index === messages.length - 1
             ? userMessageId
             : undefined;
-        return convertToModelMessage(msg, providerOptions, messageId);
+        return convertToModelMessage(msg, messageId);
       }),
   );
 }
