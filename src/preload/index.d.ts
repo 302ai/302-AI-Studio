@@ -125,6 +125,7 @@ declare global {
         getMessageById: (messageId: string) => Promise<Message | null>;
         cleanMessagesByThreadId: (threadId: string) => Promise<void>;
         deleteAllMessages: () => Promise<void>;
+        insertMessages: (messages: CreateMessageData[]) => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{

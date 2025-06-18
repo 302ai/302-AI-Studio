@@ -139,22 +139,15 @@ export function AssistantMessage({
         return;
       }
 
-      const messagesToInsert = messages.slice(0, currentMessageIndex + 1);
+      let messagesToInsert = messages.slice(0, currentMessageIndex + 1);
 
-      const insertPromises = messagesToInsert.map((msg) =>
-        messageService.insertMessage({
-          threadId,
-          content: msg.content,
-          role: msg.role,
-          providerId: msg.providerId,
-          orderSeq: msg.orderSeq,
-          tokenCount: msg.tokenCount,
-          status: msg.status,
-          attachments: msg.attachments,
-        }),
-      );
+      messagesToInsert = messagesToInsert.map((msg) => ({
+        ...msg,
+        threadId,
+      }));
 
-      await Promise.all(insertPromises);
+      await messageService.insertMessages(messagesToInsert);
+
       await setActiveTabId(newTab.id);
     } catch (error) {
       console.error("Error creating new branch:", error);

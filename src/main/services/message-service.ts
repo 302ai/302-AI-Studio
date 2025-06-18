@@ -121,4 +121,18 @@ export class MessageService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async insertMessages(
+    _event: Electron.IpcMainEvent,
+    messages: CreateMessageData[],
+  ): Promise<void> {
+    try {
+      await this.messageDbService.insertMessages(messages);
+      Logger.info("insertMessages success ---->", { messages });
+    } catch (error) {
+      Logger.error("insertMessages error ---->", error);
+      throw error;
+    }
+  }
 }
