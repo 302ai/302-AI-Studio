@@ -6,7 +6,6 @@ import {
 import { extractErrorMessage } from "@main/utils/error-utils";
 import type { CreateModelData, Message, Provider } from "@shared/triplit/types";
 import type { LanguageModelUsage } from "ai";
-import { ipcMain } from "electron";
 import Logger from "electron-log";
 import { ChatService } from "../chat-service";
 import { ConfigService } from "../config-service";
@@ -35,7 +34,6 @@ export class ProviderService {
 
     this.init();
     this.setupEventListeners();
-    this.setupStreamStopListener();
   }
 
   private async init() {
@@ -65,15 +63,6 @@ export class ProviderService {
     emitter.on(EventNames.PROVIDER_DELETE, ({ providerId }) => {
       this.handleProviderDeleted(providerId);
     });
-  }
-
-  private setupStreamStopListener() {
-    ipcMain.on(
-      "chat:stream-stop",
-      (_event, data: { tabId: string; userMessageId: string }) => {
-        abortStream(data.tabId);
-      },
-    );
   }
 
   private handleProviderAdded(provider: Provider) {
@@ -198,14 +187,14 @@ export class ProviderService {
     _event: Electron.IpcMainEvent,
     params: StreamChatParams,
   ): Promise<{ success: boolean; error?: string }> {
-    const { tabId, threadId, userMessageId, provider } = params;
+    const { threadId, userMessageId, provider } = params;
 
     let fullContent = "";
     let assistantMessage: Message | null = null;
 
     try {
       const providerInst = this.getProviderInst(provider.id);
-      const abortController = createAbortController(tabId);
+      const abortController = createAbortController(threadId);
 
       const result = await providerInst.startStreamChat(
         params,
@@ -252,7 +241,7 @@ export class ProviderService {
         userMessageId: userMessageId,
       });
 
-      Logger.info(`Stream chat completed for tab ${tabId}`);
+      Logger.info(`Stream chat completed for thread ${threadId}`);
 
       return {
         success: true,
@@ -266,7 +255,7 @@ export class ProviderService {
       }
 
       if (error instanceof Error && error.name === "AbortError") {
-        Logger.info(`Stream aborted for tab ${tabId}`);
+        Logger.info(`Stream aborted for thread ${threadId}`);
 
         await this.chatService.updateMessage(assistantMessage.id, {
           status: "stop",
@@ -279,7 +268,7 @@ export class ProviderService {
         return { success: true };
       }
 
-      Logger.error(`Stream chat error for tab ${tabId}:`, error);
+      Logger.error(`Stream chat error for thread ${threadId}:`, error);
 
       await this.chatService.updateMessage(assistantMessage.id, {
         status: "error",
@@ -295,19 +284,19 @@ export class ProviderService {
         error: extractErrorMessage(error),
       };
     } finally {
-      cleanupAbortController(tabId);
+      cleanupAbortController(threadId);
     }
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async stopStreamChat(
     _event: Electron.IpcMainEvent,
-    params: { tabId: string },
+    params: { threadId: string },
   ): Promise<{ success: boolean }> {
-    const { tabId } = params;
-    const aborted = abortStream(tabId);
+    const { threadId } = params;
+    const aborted = abortStream(threadId);
     Logger.info(
-      `Stream chat stop requested for tab ${tabId}. Active stream aborted: ${aborted}`,
+      `Stream chat stop requested for thread ${threadId}. Active stream aborted: ${aborted}`,
     );
     return { success: true };
   }

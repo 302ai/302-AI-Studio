@@ -76,7 +76,7 @@ declare global {
           params: StreamChatParams,
         ) => Promise<{ success: boolean; error?: string }>;
         stopStreamChat: (params: {
-          tabId: string;
+          threadId: string;
         }) => Promise<{ success: boolean }>;
       };
       uiService: {

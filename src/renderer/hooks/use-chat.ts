@@ -1,7 +1,6 @@
 import { parseAndUpdateAttachments } from "@renderer/utils/parse-file";
 import type { Message } from "@shared/triplit/types";
 import { useCallback, useEffect, useState } from "react";
-import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
 const { chatService, providerService } = window.service;
@@ -14,7 +13,6 @@ enum IpcRendererEvent {
 
 export function useChat() {
   const { activeThreadId } = useActiveThread();
-  const { activeTabId } = useActiveTab();
   const [messages, setMessages] = useState<Message[]>([]);
   const [streaming, setStreaming] = useState(false);
 
@@ -128,17 +126,17 @@ export function useChat() {
   );
 
   const stopStreamChat = useCallback(async () => {
-    if (!activeTabId) {
+    if (!activeThreadId) {
       return;
     }
     try {
       await providerService.stopStreamChat({
-        tabId: activeTabId,
+        threadId: activeThreadId,
       });
     } catch (err) {
       console.error("Failed to stop stream chat: ", err);
     }
-  }, [activeTabId]);
+  }, [activeThreadId]);
 
   useEffect(() => {
     ipcRenderer.on(
