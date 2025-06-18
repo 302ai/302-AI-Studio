@@ -1,5 +1,6 @@
 import { ConfigService } from "./config-service";
-import { FileService } from "./file-service/index";
+import { FileParseService } from "./file-service/file-parse-service/FileParseService";
+import { FilePreviewService } from "./file-service/file-preview-service/index";
 import { MessageService } from "./message-service";
 import { ProviderService } from "./provider-service";
 import { TabService } from "./tab-service";
@@ -17,5 +18,6 @@ export const services = [
   UiService,
   TabService,
   ProviderService,
-  FileService,
+  FileParseService,
+  FilePreviewService,
 ];

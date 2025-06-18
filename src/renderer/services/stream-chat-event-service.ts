@@ -26,7 +26,7 @@ export interface StreamingMessage {
 
 type StreamEventCallback = (event: StreamChatEvent) => void;
 
-const { uiService, messageService, fileService } = window.service;
+const { messageService, fileParseService } = window.service;
 
 /**
  * Parse file attachments and update user message with parsed content
@@ -59,22 +59,16 @@ async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
     }
 
     // Check if any attachments need parsing
-    const needsParsing = attachments.some(
-      (att) =>
-        !att.fileContent &&
-        att.fileData &&
-        fileService.shouldParseFile(att.type),
-    );
+    const needsParsing = await Promise.all(
+      attachments.map(
+        async (att) =>
+          !att.fileContent &&
+          att.fileData &&
+          (await fileParseService.shouldParseFile(att.type)),
+      ),
+    ).then((results) => results.some(Boolean));
 
     if (!needsParsing) {
-      return;
-    }
-
-    // Get active provider for parsing
-    const activeProvider = await uiService.getActiveProvider();
-
-    if (!activeProvider || !activeProvider.apiKey || !activeProvider.baseUrl) {
-      Logger.warn("No active provider available for file parsing");
       return;
     }
 
@@ -84,21 +78,15 @@ async function parseAndUpdateAttachments(userMessageId: string): Promise<void> {
       if (
         !attachment.fileContent &&
         attachment.fileData &&
-        fileService.shouldParseFile(attachment.type)
+        (await fileParseService.shouldParseFile(attachment.type))
       ) {
         try {
-          const fileContent = await fileService.parseFileContent(
-            {
-              id: attachment.id,
-              name: attachment.name,
-              type: attachment.type,
-              fileData: attachment.fileData,
-            },
-            {
-              apiKey: activeProvider.apiKey,
-              baseUrl: activeProvider.baseUrl,
-            },
-          );
+          const fileContent = await fileParseService.parseFileContent({
+            id: attachment.id,
+            name: attachment.name,
+            type: attachment.type,
+            fileData: attachment.fileData,
+          });
 
           attachment.fileContent = fileContent;
           hasUpdates = true;

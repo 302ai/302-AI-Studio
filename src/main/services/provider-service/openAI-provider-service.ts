@@ -97,10 +97,6 @@ export class OpenAIProviderService extends BaseProviderService {
       // Convert messages to ModelMessage format with attachment support
       const modelMessages = await convertMessagesToModelMessages(
         messages,
-        {
-          apiKey: this.provider.apiKey,
-          baseUrl: this.provider.baseUrl,
-        },
         userMessageId,
       );
 
@@ -212,10 +208,7 @@ export class OpenAIProviderService extends BaseProviderService {
       );
 
       // Convert messages to ModelMessage format with attachment support
-      const modelMessages = await convertMessagesToModelMessages(messages, {
-        apiKey: this.provider.apiKey,
-        baseUrl: this.provider.baseUrl,
-      });
+      const modelMessages = await convertMessagesToModelMessages(messages);
 
       const result = streamText({
         model,

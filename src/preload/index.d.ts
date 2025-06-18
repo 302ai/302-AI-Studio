@@ -156,19 +156,64 @@ declare global {
           error?: string;
         }>;
         cleanupAllTempFiles: () => void;
-        parseFileContent: (
-          attachment: {
-            id: string;
-            name: string;
-            type: string;
-            fileData: string;
-          },
-          options: {
-            apiKey: string;
-            baseUrl: string;
-          },
-        ) => Promise<string>;
-        shouldParseFile: (type: string) => boolean;
+      };
+      fileParseService: {
+        getMimeType: (filePath: string) => Promise<string>;
+        prepareFile: (
+          absPath: string,
+          typeInfo?: string,
+        ) => Promise<{
+          name: string;
+          content: string;
+          mimeType: string;
+          metadata: {
+            fileName: string;
+            fileSize: number;
+            fileDescription?: string;
+            fileCreated: Date;
+            fileModified: Date;
+          };
+          token: number;
+          path: string;
+          thumbnail?: string;
+        }>;
+        prepareDirectory: (absPath: string) => Promise<{
+          name: string;
+          content: string;
+          mimeType: string;
+          metadata: {
+            fileName: string;
+            fileSize: number;
+            fileDescription?: string;
+            fileCreated: Date;
+            fileModified: Date;
+          };
+          token: number;
+          path: string;
+          thumbnail?: string;
+        }>;
+        writeTemp: (file: {
+          name: string;
+          content: string | Buffer | ArrayBuffer;
+        }) => Promise<string>;
+        writeImageBase64: (file: {
+          name: string;
+          content: string;
+        }) => Promise<string>;
+        isDirectory: (absPath: string) => Promise<boolean>;
+        readFile: (relativePath: string) => Promise<string>;
+        writeFile: (operation: {
+          path: string;
+          content?: string;
+        }) => Promise<void>;
+        deleteFile: (relativePath: string) => Promise<void>;
+        parseFileContent: (attachment: {
+          id: string;
+          name: string;
+          type: string;
+          fileData: string;
+        }) => Promise<string>;
+        shouldParseFile: (type: string) => Promise<boolean>;
       };
     };
   }
