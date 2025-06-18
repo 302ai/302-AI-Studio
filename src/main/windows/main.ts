@@ -1,9 +1,10 @@
 import { join } from "node:path";
 import { createWindow } from "@lib/electron-app/factories/windows/create";
 import { WINDOW_SIZE } from "@shared/constants";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, nativeImage } from "electron";
 import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
+import icon from "../../resources/build/icons/302ai.png?asset";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
 import { isDev, isMac, isWin } from "../constant";
 
@@ -16,6 +17,7 @@ export async function MainWindow() {
   });
 
   const theme = new ElectronStore().get("theme", "dark");
+  const iconFile = nativeImage.createFromPath(icon);
 
   const window = createWindow({
     id: "main",
@@ -27,7 +29,7 @@ export async function MainWindow() {
     minHeight: WINDOW_SIZE.MIN_HEIGHT,
     autoHideMenuBar: true,
     transparent: isMac,
-    icon: join(__dirname, "../../../src/resources/public/302ai.png"),
+    icon: iconFile,
     visualEffectState: "active",
     titleBarStyle: isWin ? "hidden" : "hiddenInset",
     titleBarOverlay:
@@ -41,12 +43,9 @@ export async function MainWindow() {
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
-      contextIsolation: true,
       devTools: isDev,
-      webSecurity: false,
-      webviewTag: true,
-      allowRunningInsecureContent: true,
     },
+    roundedCorners: true,
   });
 
   mainWindowState.manage(window);

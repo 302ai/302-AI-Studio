@@ -1,5 +1,6 @@
 import fs from "node:fs";
-import path from "node:path";
+import path, { join } from "node:path";
+import { isDev } from "@main/constant";
 import {
   CommunicationWay,
   ServiceHandler,
@@ -125,7 +126,9 @@ export class TriplitService {
   }
 
   private async getTrilitConfig(): Promise<TrilitServerConfig> {
-    const userDataPath = app.getPath("userData");
+    const userDataPath = isDev
+      ? join(__dirname, "../../../db")
+      : app.getPath("userData");
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
     const defaultDatabaseFile = path.join(defaultDatabaseDir, "db.sqlite");
 

@@ -3,6 +3,9 @@
 /.pnp
 .pnp.js
 
+# db in dev env
+/db
+
 # testing
 /coverage
 

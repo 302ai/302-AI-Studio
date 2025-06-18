@@ -34,7 +34,7 @@ export default {
 
   mac: {
     artifactName,
-    icon: `${resources}/build/icons/icon.icns`,
+    icon: `${resources}/build/icons/302ai.png`,
     category: "public.app-category.utilities",
     target: ["zip", "dmg", "dir"],
   },
@@ -49,7 +49,7 @@ export default {
   win: {
     executableName: displayName,
     artifactName: artifactNameSetup,
-    icon: `${resources}/build/icons/icon.ico`,
+    icon: `${resources}/build/icons/302ai.png`,
     target: [
       {
         target: "nsis",
