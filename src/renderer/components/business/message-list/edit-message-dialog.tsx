@@ -9,7 +9,7 @@ import {
 } from "@renderer/components/ui/modal";
 import { Textarea } from "@renderer/components/ui/textarea";
 import type { Message } from "@shared/triplit/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -31,6 +31,13 @@ export function EditMessageDialog({
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
+
+  // Sync editContent when message changes or dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setEditContent(message.content || "");
+    }
+  }, [message.content, isOpen]);
 
   const handleSaveEdit = async () => {
     if (editContent.trim() === message.content.trim()) {
@@ -57,22 +64,14 @@ export function EditMessageDialog({
   };
 
   const handleCancelEdit = () => {
-    setEditContent(message.content);
+    setEditContent(message.content || "");
     onOpenChange(false);
-  };
-
-  // Reset content when dialog opens
-  const handleOpenChange = (open: boolean) => {
-    if (open) {
-      setEditContent(message.content);
-    }
-    onOpenChange(open);
   };
 
   return (
     <ModalContent
       isOpen={isOpen}
-      onOpenChange={handleOpenChange}
+      onOpenChange={onOpenChange}
       size="lg"
       aria-label="Edit message dialog"
     >
