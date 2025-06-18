@@ -211,5 +211,8 @@
     "think": "思考過程",
     "outputing": "出力中..."
   },
-  "stop-generating": "停止"
+  "stop-generating": "停止",
+  "new-thread": {
+    "hello-world": "何を考えているのか教えて😊"
+  }
 }

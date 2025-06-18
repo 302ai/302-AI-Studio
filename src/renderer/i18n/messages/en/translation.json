@@ -211,5 +211,8 @@
     "think": "Thinking",
     "outputing": "Outputing..."
   },
-  "stop-generating": "Stop"
+  "stop-generating": "Stop",
+  "new-thread": {
+    "hello-world": "Tell me what you're thinking😊"
+  }
 }

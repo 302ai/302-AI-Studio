@@ -13,51 +13,45 @@ const katexOptions = {
   trust: true,
   throwOnError: false,
   macros: {
-    '\\f': 'f(#1)',
-    '\\RR': '\\mathbb{R}',
-    '\\NN': '\\mathbb{N}',
-    '\\ZZ': '\\mathbb{Z}',
-    '\\CC': '\\mathbb{C}',
-    '\\QQ': '\\mathbb{Q}',
+    "\\f": "f(#1)",
+    "\\RR": "\\mathbb{R}",
+    "\\NN": "\\mathbb{N}",
+    "\\ZZ": "\\mathbb{Z}",
+    "\\CC": "\\mathbb{C}",
+    "\\QQ": "\\mathbb{Q}",
   },
   fleqn: false,
   leqno: false,
-  output: 'html',
+  output: "html",
   displayMode: true,
-  errorColor: '#cc0000',
+  errorColor: "#cc0000",
   minRuleThickness: 0.05,
   maxSize: Infinity,
   maxExpand: 1000,
   globalGroup: true,
   allowedEnvironments: [
-    'matrix',
-    'pmatrix',
-    'bmatrix',
-    'Bmatrix',
-    'vmatrix',
-    'Vmatrix',
-    'equation',
-    'equation*',
-    'align',
-    'align*',
-    'gather',
-    'gather*',
-    'cases',
-    'array',
-    'split',
+    "matrix",
+    "pmatrix",
+    "bmatrix",
+    "Bmatrix",
+    "vmatrix",
+    "Vmatrix",
+    "equation",
+    "equation*",
+    "align",
+    "align*",
+    "gather",
+    "gather*",
+    "cases",
+    "array",
+    "split",
   ],
-}
+};
 
 export function MarkdownRenderer({ children }: { children: string }) {
   const components: Components = {
     ...COMPONENTS,
-    span: ({
-      className,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      node,
-      ...props
-    }) => {
-      // 只处理 katex 类，不管是块级还是行内
+    span: ({ className, node, ...props }) => {
       if (className === "katex") {
         return (
           <MarkdownMathWrapper>
@@ -82,7 +76,7 @@ export function MarkdownRenderer({ children }: { children: string }) {
           rehypeKatex,
           {
             ...katexOptions,
-            output: 'htmlAndMathml',
+            output: "htmlAndMathml",
             trust: true,
             strict: false,
             throwOnError: true,
@@ -93,7 +87,7 @@ export function MarkdownRenderer({ children }: { children: string }) {
     >
       {processLaTeX(children)}
     </Markdown>
-  )
+  );
 }
 
 function remarkHighlight() {

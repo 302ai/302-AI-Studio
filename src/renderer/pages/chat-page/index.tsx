@@ -62,6 +62,9 @@ export function ChatPage() {
       <div
         ref={scrollContainerRef}
         className="flex-1 space-y-4 overflow-y-auto pr-6"
+        style={{
+          scrollbarGutter: "stable",
+        }}
       >
         <MessageList messages={messages} />
       </div>
