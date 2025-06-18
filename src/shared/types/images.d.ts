@@ -57,3 +57,23 @@ declare module "*.webp?url" {
   const src: string;
   export default src;
 }
+
+declare module "*.ico" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.icns" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.ico?url" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.icns?url" {
+  const src: string;
+  export default src;
+}

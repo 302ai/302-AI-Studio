@@ -1,12 +1,11 @@
 import { join } from "node:path";
-import { is } from "@electron-toolkit/utils";
 import { createWindow } from "@lib/electron-app/factories/windows/create";
 import { WINDOW_SIZE } from "@shared/constants";
 import { BrowserWindow } from "electron";
 import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
-import { isMac, isWin } from "../constant";
+import { isDev, isMac, isWin } from "../constant";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -16,7 +15,7 @@ export async function MainWindow() {
     maximize: false,
   });
 
-  const theme = new ElectronStore().get("theme", "light");
+  const theme = new ElectronStore().get("theme", "system");
 
   const window = createWindow({
     id: "main",
@@ -37,12 +36,12 @@ export async function MainWindow() {
       : theme === "dark"
         ? "#181818"
         : "#FFFFFF",
-    trafficLightPosition: { x: 8, y: 12 },
+    trafficLightPosition: isMac ? { x: 12, y: 12 } : undefined,
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
       contextIsolation: true,
-      devTools: is.dev,
+      devTools: isDev,
       webSecurity: false,
       webviewTag: true,
       allowRunningInsecureContent: true,
