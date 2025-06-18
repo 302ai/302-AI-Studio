@@ -38,7 +38,7 @@ export function useThreadMenu(thread: Thread) {
   };
 
   const handleCleanMessages = async () => {
-    await messageService.cleanMessagesByThreadId(thread.id);
+    await messageService.deleteMessagesByThreadId(thread.id);
 
     closeModal();
   };
@@ -49,7 +49,7 @@ export function useThreadMenu(thread: Thread) {
     }
 
     await threadService.deleteThread(thread.id);
-    await messageService.cleanMessagesByThreadId(thread.id);
+    await messageService.deleteMessagesByThreadId(thread.id);
 
     emitter.emit(EventNames.THREAD_DELETE, {
       threadId: thread.id,

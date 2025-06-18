@@ -10,6 +10,7 @@ import type {
 } from "@shared/triplit/types";
 import Logger from "electron-log";
 import { MessageDbService } from "./db-service/message-db-service";
+import { EventNames, sendToThread } from "./event-service";
 
 @ServiceRegister("messageService")
 export class MessageService {
@@ -19,6 +20,23 @@ export class MessageService {
     this.messageDbService = new MessageDbService();
   }
 
+  async _getMessagesByThreadId(threadId: string): Promise<Message[]> {
+    const messages =
+      await this.messageDbService.getMessagesByThreadId(threadId);
+    return messages;
+  }
+
+  async _insertMessage(message: CreateMessageData): Promise<Message> {
+    return await this.messageDbService.insertMessage(message);
+  }
+
+  async _updateMessage(
+    messageId: string,
+    updateData: UpdateMessageData,
+  ): Promise<void> {
+    await this.messageDbService.updateMessage(messageId, updateData);
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async insertMessage(
     _event: Electron.IpcMainEvent,
@@ -26,10 +44,9 @@ export class MessageService {
   ): Promise<Message> {
     try {
       const newMessage = await this.messageDbService.insertMessage(message);
-      Logger.info("insertMessage success ---->", newMessage);
       return newMessage;
     } catch (error) {
-      Logger.error("insertMessage error ---->", error);
+      Logger.error("MessageService: insertMessage error ---->", error);
       throw error;
     }
   }
@@ -42,9 +59,34 @@ export class MessageService {
   ): Promise<void> {
     try {
       await this.messageDbService.updateMessage(messageId, updateData);
-      Logger.info("updateMessage success ---->", messageId);
     } catch (error) {
-      Logger.error("updateMessage error ---->", error);
+      Logger.error("MessageService: updateMessage error ---->", error);
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async editMessage(
+    _event: Electron.IpcMainEvent,
+    messageId: string,
+    editData: {
+      threadId: string;
+    } & Pick<Message, "content" | "attachments">,
+  ): Promise<void> {
+    try {
+      const updatedMessage = await this.messageDbService.updateMessage(
+        messageId,
+        editData,
+      );
+      sendToThread(editData.threadId, EventNames.MESSAGE_ACTIONS, {
+        threadId: editData.threadId,
+        actions: {
+          type: "edit",
+          message: updatedMessage,
+        },
+      });
+    } catch (error) {
+      Logger.error("MessageService: editMessage error ---->", error);
       throw error;
     }
   }
@@ -56,9 +98,8 @@ export class MessageService {
   ): Promise<void> {
     try {
       await this.messageDbService.deleteMessage(messageId);
-      Logger.info("deleteMessage success ---->", { messageId });
     } catch (error) {
-      Logger.error("deleteMessage error ---->", error);
+      Logger.error("MessageService: deleteMessage error ---->", error);
       throw error;
     }
   }
@@ -71,13 +112,9 @@ export class MessageService {
     try {
       const messages =
         await this.messageDbService.getMessagesByThreadId(threadId);
-      Logger.info("getMessagesByThreadId success ---->", {
-        threadId,
-        messages,
-      });
       return messages;
     } catch (error) {
-      Logger.error("getMessagesByThreadId error ---->", error);
+      Logger.error("MessageService: getMessagesByThreadId error ---->", error);
       throw error;
     }
   }
@@ -89,24 +126,31 @@ export class MessageService {
   ): Promise<Message | null> {
     try {
       const message = await this.messageDbService.getMessageById(messageId);
-      Logger.info("getMessageById success ---->", { messageId, message });
       return message;
     } catch (error) {
-      Logger.error("getMessageById error ---->", error);
+      Logger.error("MessageService: getMessageById error ---->", error);
       throw error;
     }
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async cleanMessagesByThreadId(
+  async deleteMessagesByThreadId(
     _event: Electron.IpcMainEvent,
     threadId: string,
   ): Promise<void> {
     try {
-      await this.messageDbService.cleanMessagesByThreadId(threadId);
-      Logger.info("cleanMessagesByThreadId success ---->", { threadId });
+      await this.messageDbService.deleteMessagesByThreadId(threadId);
+      sendToThread(threadId, EventNames.MESSAGE_ACTIONS, {
+        threadId,
+        actions: {
+          type: "delete",
+        },
+      });
     } catch (error) {
-      Logger.error("cleanMessagesByThreadId error ---->", error);
+      Logger.error(
+        "MessageService: deleteMessagesByThreadId error ---->",
+        error,
+      );
       throw error;
     }
   }
@@ -115,9 +159,8 @@ export class MessageService {
   async deleteAllMessages(): Promise<void> {
     try {
       await this.messageDbService.deleteAllMessages();
-      Logger.info("deleteAllMessages success");
     } catch (error) {
-      Logger.error("deleteAllMessages error ---->", error);
+      Logger.error("MessageService: deleteAllMessages error ---->", error);
       throw error;
     }
   }

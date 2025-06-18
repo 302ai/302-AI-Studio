@@ -1,0 +1,77 @@
+import {
+  CommunicationWay,
+  ServiceHandler,
+  ServiceRegister,
+} from "@main/shared/reflect";
+import type {
+  CreateMessageData,
+  Message,
+  UpdateMessageData,
+} from "@shared/triplit/types";
+import Logger from "electron-log";
+import { MessageService } from "./message-service";
+
+@ServiceRegister("chatService")
+export class ChatService {
+  private messageService: MessageService;
+
+  constructor() {
+    this.messageService = new MessageService();
+  }
+
+  async createAssistantMessage(
+    message: Omit<
+      CreateMessageData,
+      "orderSeq" | "role" | "status" | "tokenCount"
+    >,
+  ): Promise<Message> {
+    try {
+      const existingMessages = await this.messageService._getMessagesByThreadId(
+        message.threadId,
+      );
+      const nextOrderSeq = existingMessages.length + 1;
+
+      const newMessage = await this.messageService._insertMessage({
+        ...message,
+        orderSeq: nextOrderSeq,
+        role: "assistant",
+        status: "pending",
+        tokenCount: 0,
+      });
+      Logger.info("ChatService:createMessage success ---->", newMessage);
+      return newMessage;
+    } catch (error) {
+      Logger.error("ChatService:createMessage error ---->", error);
+      throw error;
+    }
+  }
+
+  async updateMessage(
+    messageId: string,
+    updateData: UpdateMessageData,
+  ): Promise<void> {
+    try {
+      await this.messageService._updateMessage(messageId, updateData);
+      Logger.info("ChatService:updateMessage success ---->", messageId);
+    } catch (error) {
+      Logger.error("ChatService:updateMessage error ---->", error);
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getMessagesByThreadId(
+    _event: Electron.IpcMainEvent,
+    threadId: string,
+  ): Promise<Message[]> {
+    try {
+      const messages =
+        await this.messageService._getMessagesByThreadId(threadId);
+      Logger.info("ChatService:getMessagesByThreadId success ---->", messages);
+      return messages;
+    } catch (error) {
+      Logger.error("ChatService:getMessagesByThreadId error ---->", error);
+      throw error;
+    }
+  }
+}

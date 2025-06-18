@@ -4,26 +4,35 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { extractErrorMessage } from "@main/utils/error-utils";
-import type { CreateModelData, Provider } from "@shared/triplit/types";
+import type { CreateModelData, Message, Provider } from "@shared/triplit/types";
+import type { LanguageModelUsage } from "ai";
 import { ipcMain } from "electron";
 import Logger from "electron-log";
+import { ChatService } from "../chat-service";
 import { ConfigService } from "../config-service";
-import { EventNames, emitter } from "../event-service";
+import { EventNames, emitter, sendToThread } from "../event-service";
 import type {
   BaseProviderService,
   StreamChatParams,
 } from "./base-provider-service";
 import { OpenAIProviderService } from "./openAI-provider-service";
-import { abortStream } from "./stream-manager";
+import {
+  abortStream,
+  cleanupAbortController,
+  createAbortController,
+} from "./stream-manager";
 
 @ServiceRegister("providerService")
 export class ProviderService {
   private configService: ConfigService;
+  private chatService: ChatService;
   private providerMap: Map<string, Provider> = new Map(); // * Cache provider to find provider by id
   private providerInstMap: Map<string, BaseProviderService> = new Map(); // * Cache provider instances to avoid duplicate creation
 
   constructor() {
     this.configService = new ConfigService();
+    this.chatService = new ChatService();
+
     this.init();
     this.setupEventListeners();
     this.setupStreamStopListener();
@@ -189,28 +198,102 @@ export class ProviderService {
     _event: Electron.IpcMainEvent,
     params: StreamChatParams,
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const providerInst = this.getProviderInst(params.provider.id);
+    const { tabId, threadId, userMessageId, provider } = params;
 
-      return await providerInst.startStreamChat(params);
+    let fullContent = "";
+    let assistantMessage: Message | null = null;
+
+    try {
+      const providerInst = this.getProviderInst(provider.id);
+      const abortController = createAbortController(tabId);
+
+      const result = await providerInst.startStreamChat(
+        params,
+        abortController,
+      );
+
+      assistantMessage = await this.chatService.createAssistantMessage({
+        threadId,
+        content: "",
+        providerId: provider.id,
+        parentMessageId: userMessageId,
+      });
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "pending",
+      });
+
+      for await (const delta of result.textStream) {
+        fullContent += delta;
+
+        await this.chatService.updateMessage(assistantMessage.id, {
+          content: fullContent,
+        });
+        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+          threadId,
+          status: "pending",
+          delta: delta,
+        });
+      }
+
+      let usage: LanguageModelUsage | null = null;
+
+      if (fullContent !== "") {
+        usage = await result.usage;
+      }
+
+      await this.chatService.updateMessage(assistantMessage.id, {
+        tokenCount: usage?.outputTokens ?? 0,
+        status: "success",
+      });
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "success",
+      });
+
+      Logger.info(`Stream chat completed for tab ${tabId}`);
+
+      return {
+        success: true,
+      };
     } catch (error) {
-      Logger.error("Failed to start stream chat:", error);
+      if (!assistantMessage) {
+        return {
+          success: false,
+          error: extractErrorMessage(error),
+        };
+      }
+
+      if (error instanceof Error && error.name === "AbortError") {
+        Logger.info(`Stream aborted for tab ${tabId}`);
+
+        await this.chatService.updateMessage(assistantMessage.id, {
+          status: "stop",
+        });
+        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+          threadId,
+          status: "stop",
+        });
+        return { success: true };
+      }
+
+      Logger.error(`Stream chat error for tab ${tabId}:`, error);
+
+      await this.chatService.updateMessage(assistantMessage.id, {
+        status: "error",
+      });
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "error",
+      });
+
       return {
         success: false,
         error: extractErrorMessage(error),
       };
+    } finally {
+      cleanupAbortController(tabId);
     }
-  }
-
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async reGenerateStreamChat(
-    _event: Electron.IpcMainEvent,
-    params: StreamChatParams & { regenerateMessageId: string },
-  ): Promise<{ success: boolean; error?: string }> {
-    const { regenerateMessageId } = params;
-    const providerInst = this.getProviderInst(params.provider.id);
-
-    return await providerInst.reGenerateStreamChat(params, regenerateMessageId);
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)

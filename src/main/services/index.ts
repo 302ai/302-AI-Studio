@@ -1,3 +1,4 @@
+import { ChatService } from "./chat-service";
 import { ConfigService } from "./config-service";
 import { FileService } from "./file-service/index";
 import { MessageService } from "./message-service";
@@ -16,6 +17,7 @@ export const services = [
   MessageService,
   UiService,
   TabService,
+  ChatService,
   ProviderService,
   FileService,
 ];

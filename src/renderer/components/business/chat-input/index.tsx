@@ -149,17 +149,12 @@ export function ChatInput({ className }: ChatInputProps) {
     };
   }, [addAttachments, editMessageId]);
 
-  useEffect(() => {
-    if (activeThreadId) {
-      setEditMessageId(null);
-    }
-  }, [activeThreadId]);
-
   const handleSave = async () => {
     if (!editMessageId) return;
-    await messageService.updateMessage(editMessageId, {
+    await messageService.editMessage(editMessageId, {
       content: input,
       attachments: JSON.stringify(attachments),
+      threadId: activeThreadId ?? "",
     });
     setEditMessageId(null);
     clearInput();
@@ -169,6 +164,12 @@ export function ChatInput({ className }: ChatInputProps) {
     setEditMessageId(null);
     clearInput();
   };
+
+  useEffect(() => {
+    if (activeThreadId) {
+      setEditMessageId(null);
+    }
+  }, [activeThreadId]);
 
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>

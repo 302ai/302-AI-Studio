@@ -19,6 +19,15 @@ export class ThreadService {
     this.threadDbService = new ThreadDbService();
   }
 
+  async getThreads(): Promise<Thread[]> {
+    const threads = await this.threadDbService.getThreads();
+    return threads;
+  }
+
+  async _getThreadById(threadId: string): Promise<Thread | null> {
+    return await this.threadDbService.getThreadById(threadId);
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async insertThread(
     _event: Electron.IpcMainEvent,

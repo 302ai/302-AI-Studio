@@ -208,5 +208,6 @@
       "create-new-branch-error": "申し訳ありませんが、新しいブランチの作成は失敗しました！",
       "new-thread-title": "新しい会話"
     }
-  }
+  },
+  "stop-generating": "停止"
 }

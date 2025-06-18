@@ -1,3 +1,5 @@
+// ! This service is only used within the renderer process
+
 import type { Message, Thread } from "@shared/triplit/types";
 import mitt from "mitt";
 

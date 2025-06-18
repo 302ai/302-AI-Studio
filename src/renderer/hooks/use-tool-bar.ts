@@ -1,15 +1,15 @@
 import { triplitClient } from "@renderer/client";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
-import type { CreateThreadData, Thread } from "@shared/triplit/types";
+import type { CreateThreadData, Provider, Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
-import { useStreamChat } from "./use-stream-chat";
 
-const { threadService, tabService, messageService } = window.service;
+const { threadService, tabService, messageService, providerService } =
+  window.service;
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -17,7 +17,6 @@ export function useToolBar() {
   });
   const { activeThreadId, setActiveThreadId } = useActiveThread();
   const { activeTab, activeTabId, setActiveTabId } = useActiveTab();
-  const { startStreamChat } = useStreamChat();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
   const { results: tabs } = useQuery(triplitClient, tabsQuery);
@@ -70,6 +69,39 @@ export function useToolBar() {
       console.error("create thread error", error);
       toast.error(t("create-thread-error"));
       return null;
+    }
+  };
+
+  const startStreamChat = async (
+    tabId: string,
+    threadId: string,
+    userMessageId: string,
+    messages: Array<{
+      role: "user" | "assistant" | "system" | "function";
+      content: string;
+      attachments?: string | null;
+    }>,
+    provider: Provider,
+    modelId: string,
+  ) => {
+    try {
+      const result = await providerService.startStreamChat({
+        tabId,
+        threadId,
+        userMessageId,
+        messages,
+        provider,
+        modelName: modelId,
+      });
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Failed to start stream chat:", error);
+      throw error;
     }
   };
 

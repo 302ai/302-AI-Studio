@@ -1,4 +1,5 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
+import type { StreamChatParams } from "@main/services/provider-service/base-provider-service";
 import type {
   CreateMessageData,
   CreateModelData,
@@ -71,31 +72,9 @@ declare global {
           errorMsg: string | null;
         }>;
         fetchModels: (provider: Provider) => Promise<CreateModelData[]>;
-        startStreamChat: (params: {
-          tabId: string;
-          threadId: string;
-          userMessageId: string;
-          messages: Array<{
-            role: "user" | "assistant" | "system" | "function";
-            content: string;
-            attachments?: string | null;
-          }>;
-          provider: Provider;
-          modelName: string;
-        }) => Promise<{ success: boolean; error?: string }>;
-        reGenerateStreamChat: (params: {
-          tabId: string;
-          threadId: string;
-          userMessageId: string;
-          messages: Array<{
-            role: "user" | "assistant" | "system" | "function";
-            content: string;
-            attachments?: string | null;
-          }>;
-          provider: Provider;
-          modelName: string;
-          regenerateMessageId: string;
-        }) => Promise<{ success: boolean; error?: string }>;
+        startStreamChat: (
+          params: StreamChatParams,
+        ) => Promise<{ success: boolean; error?: string }>;
         stopStreamChat: (params: {
           tabId: string;
         }) => Promise<{ success: boolean }>;
@@ -123,8 +102,14 @@ declare global {
         deleteMessage: (messageId: string) => Promise<void>;
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
         getMessageById: (messageId: string) => Promise<Message | null>;
-        cleanMessagesByThreadId: (threadId: string) => Promise<void>;
+        deleteMessagesByThreadId: (threadId: string) => Promise<void>;
         deleteAllMessages: () => Promise<void>;
+        editMessage: (
+          messageId: string,
+          editData: {
+            threadId: string;
+          } & Pick<Message, "content" | "attachments">,
+        ) => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{
@@ -171,6 +156,9 @@ declare global {
           },
         ) => Promise<string>;
         shouldParseFile: (type: string) => boolean;
+      };
+      chatService: {
+        getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
       };
     };
   }

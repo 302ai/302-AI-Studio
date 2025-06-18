@@ -208,5 +208,6 @@
       "waiting-for-diagram": "等待图表内容...",
       "diagram-syntax-error": "图表语法错误"
     }
-  }
+  },
+  "stop-generating": "停止"
 }

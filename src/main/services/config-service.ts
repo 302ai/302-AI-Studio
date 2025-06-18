@@ -1,4 +1,10 @@
-import type { CreateModelData, CreateProviderData, Model, Provider, UpdateProviderData } from "@shared/triplit/types";
+import type {
+  CreateModelData,
+  CreateProviderData,
+  Model,
+  Provider,
+  UpdateProviderData,
+} from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 import Logger from "electron-log";
@@ -9,7 +15,7 @@ import {
   ServiceRegister,
 } from "../shared/reflect";
 import { ConfigDbService } from "./db-service/config-db-service";
-import { EventNames, emitter } from "./event-service";
+import { EventNames, sendToMain } from "./event-service";
 import { WindowService } from "./window-service";
 
 export interface ModelSettingData {
@@ -57,10 +63,13 @@ export class ConfigService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async insertProvider(_event: Electron.IpcMainEvent, provider: CreateProviderData): Promise<Provider> {
+  async insertProvider(
+    _event: Electron.IpcMainEvent,
+    provider: CreateProviderData,
+  ): Promise<Provider> {
     try {
       const newProvider = await this.configDbService.insertProvider(provider);
-      emitter.emit(EventNames.PROVIDER_ADD, { provider: newProvider });
+      sendToMain(EventNames.PROVIDER_ADD, { provider: newProvider });
       Logger.info("addProvider success ---->", newProvider);
       return newProvider;
     } catch (error) {
@@ -73,7 +82,7 @@ export class ConfigService {
   async deleteProvider(_event: Electron.IpcMainEvent, providerId: string) {
     try {
       await this.configDbService.deleteProvider(providerId);
-      emitter.emit(EventNames.PROVIDER_DELETE, { providerId });
+      sendToMain(EventNames.PROVIDER_DELETE, { providerId });
       Logger.info("deleteProvider success ---->", providerId);
     } catch (error) {
       Logger.error("deleteProvider error ---->", error);
@@ -112,7 +121,10 @@ export class ConfigService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async insertModels(_event: Electron.IpcMainEvent, models: CreateModelData[]): Promise<void> {
+  async insertModels(
+    _event: Electron.IpcMainEvent,
+    models: CreateModelData[],
+  ): Promise<void> {
     try {
       await this.configDbService.insertModels(models);
       Logger.info("addModels success");

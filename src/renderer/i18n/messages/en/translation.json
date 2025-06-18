@@ -208,5 +208,6 @@
       "create-new-branch-error": "Sorry, the new branch creation failed!",
       "new-thread-title": "New Chat"
     }
-  }
+  },
+  "stop-generating": "Stop"
 }

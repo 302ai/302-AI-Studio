@@ -18,10 +18,15 @@ export class MessageDbService extends BaseDbService {
   async updateMessage(
     messageId: string,
     updateData: UpdateMessageData,
-  ): Promise<void> {
+  ): Promise<Message> {
     await triplitClient.update("messages", messageId, async (message) => {
       Object.assign(message, updateData);
     });
+    const updatedMessage = await this.getMessageById(messageId);
+    if (!updatedMessage) {
+      throw new Error("Message not found");
+    }
+    return updatedMessage;
   }
 
   async deleteMessage(messageId: string): Promise<void> {
@@ -41,7 +46,7 @@ export class MessageDbService extends BaseDbService {
     return await triplitClient.fetchById("messages", messageId);
   }
 
-  async cleanMessagesByThreadId(threadId: string): Promise<void> {
+  async deleteMessagesByThreadId(threadId: string): Promise<void> {
     const messages = await this.getMessagesByThreadId(threadId);
     const deletePromises = messages.map((message) =>
       triplitClient.delete("messages", message.id),

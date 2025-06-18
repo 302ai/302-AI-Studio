@@ -40,8 +40,9 @@ export function EditMessageDialog({
 
     setIsSaving(true);
     try {
-      await messageService.updateMessage(message.id, {
+      await messageService.editMessage(message.id, {
         content: editContent.trim(),
+        threadId: message.threadId,
       });
       onOpenChange(false);
       toast.success(
