@@ -195,7 +195,9 @@
       "create-new-branch": "从此处创建分支",
       "create-new-branch-error": "抱歉，创建分支失败！",
       "new-thread-title": "新会话"
-    }
+    },
+    "think": "思考过程",
+    "outputing": "输出中..."
   },
   "common": {
     "copied-success": "已复制",
