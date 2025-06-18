@@ -15,7 +15,7 @@ export async function MainWindow() {
     maximize: false,
   });
 
-  const theme = new ElectronStore().get("theme", "system");
+  const theme = new ElectronStore().get("theme", "dark");
 
   const window = createWindow({
     id: "main",
@@ -27,6 +27,7 @@ export async function MainWindow() {
     minHeight: WINDOW_SIZE.MIN_HEIGHT,
     autoHideMenuBar: true,
     transparent: isMac,
+    icon: join(__dirname, "../../../src/resources/public/302ai.png"),
     visualEffectState: "active",
     titleBarStyle: isWin ? "hidden" : "hiddenInset",
     titleBarOverlay:

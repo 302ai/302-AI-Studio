@@ -2,10 +2,8 @@ import { Tab, TabList, Tabs } from "@renderer/components/business/setting-tabs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { AssistantSettings } from "./assistant-settings";
 import { GeneralSettings } from "./general-settings";
 import { ModelSettings } from "./model-settings";
-import { ToolSettings } from "./tool-settings";
 
 export function SettingsPage() {
   const { t } = useTranslation("translation", {
@@ -26,23 +24,23 @@ export function SettingsPage() {
         path: "/settings/model-settings",
         label: t("model-settings.name"),
       },
-      {
-        name: "tool-settings",
-        path: "/settings/tool-settings",
-        label: t("tool-settings.name"),
-      },
-      {
-        name: "assistant-settings",
-        path: "/settings/assistant-settings",
-        label: t("assistant-settings.name"),
-      },
+      // {
+      //   name: "tool-settings",
+      //   path: "/settings/tool-settings",
+      //   label: t("tool-settings.name"),
+      // },
+      // {
+      //   name: "assistant-settings",
+      //   path: "/settings/assistant-settings",
+      //   label: t("assistant-settings.name"),
+      // },
     ],
-    [t]
+    [t],
   );
 
   const selectedTabKey = () => {
     const currentTab = settingTabs.find((tab) =>
-      location.pathname.includes(tab.name)
+      location.pathname.includes(tab.name),
     );
     return currentTab?.name || settingTabs[0].name;
   };
@@ -82,8 +80,8 @@ export function SettingsPage() {
         <Routes>
           <Route path="/general-settings" element={<GeneralSettings />} />
           <Route path="/model-settings" element={<ModelSettings />} />
-          <Route path="/tool-settings" element={<ToolSettings />} />
-          <Route path="/assistant-settings" element={<AssistantSettings />} />
+          {/* <Route path="/tool-settings" element={<ToolSettings />} />
+          <Route path="/assistant-settings" element={<AssistantSettings />} /> */}
         </Routes>
       </div>
     </div>
