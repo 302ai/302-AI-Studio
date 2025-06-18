@@ -1,7 +1,7 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import { fileTypeFromFile } from "file-type";
-import fs from "fs/promises";
 import * as mime from "mime-types";
-import path from "path";
 import {
   AudioFileAdapter,
   CodeFileAdapter,

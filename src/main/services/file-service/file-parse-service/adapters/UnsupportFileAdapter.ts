@@ -1,29 +1,29 @@
-import { BaseFileAdapter } from './BaseFileAdapter'
-import fs from 'fs/promises'
+import fs from "node:fs/promises";
+import { BaseFileAdapter } from "./BaseFileAdapter";
 export class UnsupportFileAdapter extends BaseFileAdapter {
-  private maxFileSize: number
+  private maxFileSize: number;
   constructor(filePath: string, maxFileSize: number) {
-    super(filePath)
-    this.maxFileSize = maxFileSize
+    super(filePath);
+    this.maxFileSize = maxFileSize;
   }
 
   protected getFileDescription(): string | undefined {
-    return ''
+    return "";
   }
 
   public async getLLMContent(): Promise<string | undefined> {
-    const stats = await fs.stat(this.filePath)
+    const stats = await fs.stat(this.filePath);
     if (stats.size > this.maxFileSize) {
-      return undefined
+      return undefined;
     }
-    return ``
+    return ``;
   }
 
   async getContent(): Promise<string | undefined> {
-    return ''
+    return "";
   }
 
   async getThumbnail(): Promise<string | undefined> {
-    return ''
+    return "";
   }
 }

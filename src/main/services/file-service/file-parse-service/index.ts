@@ -1,8 +1,8 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import { app } from "electron";
 import Logger from "electron-log";
-import fs from "fs/promises";
 import { nanoid } from "nanoid";
-import path from "path";
 import { approximateTokenSize } from "tokenx";
 import {
   CommunicationWay,

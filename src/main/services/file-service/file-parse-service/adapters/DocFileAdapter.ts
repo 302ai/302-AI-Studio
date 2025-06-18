@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 import mammoth from "mammoth";
 import TurndownService from "turndown";
 import { BaseFileAdapter } from "./BaseFileAdapter";

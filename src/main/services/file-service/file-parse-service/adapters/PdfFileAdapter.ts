@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 import pdfParse from "pdf-parse-new";
 import { BaseFileAdapter } from "./BaseFileAdapter";
 
@@ -117,7 +117,7 @@ export class PdfFileAdapter extends BaseFileAdapter {
             currentParagraph = trimmedLine;
           } else {
             // Continuation of current paragraph
-            currentParagraph += " " + trimmedLine;
+            currentParagraph += ` ${trimmedLine}`;
           }
         } else {
           currentParagraph = trimmedLine;
@@ -172,7 +172,7 @@ export class PdfFileAdapter extends BaseFileAdapter {
       // Check for table-like content (contains multiple tabs or spaces in sequence)
       if (paragraph.includes("\t") || /\s{3,}/.test(paragraph)) {
         // Convert to code block for better preservation of formatting
-        return "```\n" + paragraph + "\n```";
+        return `\`\`\`\n${paragraph}\n\`\`\``;
       }
 
       // Regular paragraph
