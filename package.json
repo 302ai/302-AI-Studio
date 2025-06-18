@@ -145,5 +145,10 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependenciesMeta": {
+    "sharp": {
+      "built": false
+    }
   }
 }
