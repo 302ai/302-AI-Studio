@@ -1,10 +1,12 @@
 import { triplitClient } from "@renderer/client";
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
+import { ThinkBlocks } from "@renderer/components/business/markdown/markdown-think-blocks";
 import { ContextMenuItem } from "@renderer/components/ui/context-menu";
 import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import { useThinkBlocks } from "@renderer/hooks/use-think-blocks";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { formatTimeAgo } from "@renderer/lib/utils";
 import type { Message } from "@shared/triplit/types";
@@ -70,6 +72,9 @@ export function AssistantMessage({
     }
   }, [message.attachments]);
 
+  // Extract clean content with streaming support
+  const { cleanContent } = useThinkBlocks(message.content || "");
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(message.content);
@@ -134,22 +139,15 @@ export function AssistantMessage({
         return;
       }
 
-      const messagesToInsert = messages.slice(0, currentMessageIndex + 1);
+      let messagesToInsert = messages.slice(0, currentMessageIndex + 1);
 
-      const insertPromises = messagesToInsert.map((msg) =>
-        messageService.insertMessage({
-          threadId,
-          content: msg.content,
-          role: msg.role,
-          providerId: msg.providerId,
-          orderSeq: msg.orderSeq,
-          tokenCount: msg.tokenCount,
-          status: msg.status,
-          attachments: msg.attachments,
-        }),
-      );
+      messagesToInsert = messagesToInsert.map((msg) => ({
+        ...msg,
+        threadId,
+      }));
 
-      await Promise.all(insertPromises);
+      await messageService.insertMessages(messagesToInsert);
+
       await setActiveTabId(newTab.id);
     } catch (error) {
       console.error("Error creating new branch:", error);
@@ -174,9 +172,13 @@ export function AssistantMessage({
             </div>
           )}
 
-          {message.content && (
+          {/* Think content display */}
+          <ThinkBlocks content={message.content || ""} messageId={message.id} />
+
+          {/* Main content display */}
+          {cleanContent && (
             <div className="w-full">
-              <MarkdownRenderer>{message.content}</MarkdownRenderer>
+              <MarkdownRenderer>{cleanContent}</MarkdownRenderer>
             </div>
           )}
 

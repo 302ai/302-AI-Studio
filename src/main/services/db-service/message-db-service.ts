@@ -15,6 +15,16 @@ export class MessageDbService extends BaseDbService {
     return await triplitClient.insert("messages", message);
   }
 
+  async insertMessages(messages: CreateMessageData[]): Promise<void> {
+    await triplitClient.transact(async (tx) => {
+      const insertPromises = messages.map((message) =>
+        tx.insert("messages", message),
+      );
+
+      await Promise.all(insertPromises);
+    });
+  }
+
   async updateMessage(
     messageId: string,
     updateData: UpdateMessageData,

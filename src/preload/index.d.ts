@@ -110,6 +110,7 @@ declare global {
             threadId: string;
           } & Pick<Message, "content" | "attachments">,
         ) => Promise<void>;
+        insertMessages: (messages: CreateMessageData[]) => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{

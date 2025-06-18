@@ -32,7 +32,7 @@ export function ChatPage() {
 
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current;
-    return scrollHeight - scrollTop - clientHeight < 100;
+    return scrollHeight - scrollTop - clientHeight < 200;
   }, []);
 
   useEffect(() => {
