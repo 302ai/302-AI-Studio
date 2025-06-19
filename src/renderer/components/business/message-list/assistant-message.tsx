@@ -9,7 +9,7 @@ import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { useThinkBlocks } from "@renderer/hooks/use-think-blocks";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { formatTimeAgo } from "@renderer/lib/utils";
-import type { Message } from "@shared/triplit/types";
+import type { CreateMessageData, Message } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { enUS, ja, zhCN } from "date-fns/locale";
 import i18next from "i18next";
@@ -139,14 +139,20 @@ export function AssistantMessage({
         return;
       }
 
-      let messagesToInsert = messages.slice(0, currentMessageIndex + 1);
+      const messagesToInsert = messages.slice(0, currentMessageIndex + 1);
 
-      messagesToInsert = messagesToInsert.map((msg) => ({
-        ...msg,
-        threadId,
-      }));
+      // 为复制的消息生成新的ID，避免与原始消息冲突
+      const messagesToInsertData: CreateMessageData[] = messagesToInsert.map(
+        (msg) => {
+          const { id: _id, ...msgWithoutIdAndDate } = msg;
+          return {
+            ...msgWithoutIdAndDate,
+            threadId,
+          };
+        },
+      );
 
-      await messageService.insertMessages(messagesToInsert);
+      await messageService.insertMessages(messagesToInsertData);
 
       await setActiveTabId(newTab.id);
     } catch (error) {
