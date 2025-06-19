@@ -1,4 +1,4 @@
-import {
+  import {
   main,
   name,
   version,
@@ -7,7 +7,7 @@ import {
   displayName,
   author as _author,
 } from "./package.json";
-
+import type { Configuration } from 'electron-builder'
 import { getDevFolder } from "./src/lib/electron-app/release/utils/path";
 
 const author = _author ?? _author;
@@ -67,4 +67,4 @@ export default {
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
   },
-};
+} satisfies Configuration;
