@@ -2,11 +2,12 @@
   "displayName": "302AIStudio",
   "name": "302AIStudio",
   "description": "302 AI Studio",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "./node_modules/.dev/main/index.js",
   "homepage": "https://302.ai",
   "resources": "src/resources",
   "author": "302.AI",
+  "email": "support@302.ai",
   "license": "MIT",
   "scripts": {
     "start": "electron-vite preview",

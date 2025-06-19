@@ -58,3 +58,6 @@ jobs:
           # release the app after building
           release: true
           build_script_name: "prebuild"
+          max_attempts: 3
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
