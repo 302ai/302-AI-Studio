@@ -37,11 +37,13 @@ export function useTabInput() {
   // 清空输入
   const clearInput = useCallback(async () => {
     setInput("");
+    // 取消所有待执行的防抖操作，避免清空后被重新赋值
+    debouncedUpdateTabInput.cancel();
     // 清空input时也清空tab的inputValue
     if (activeTabId) {
       await tabService.updateTab(activeTabId, { inputValue: "" });
     }
-  }, [activeTabId]);
+  }, [activeTabId, debouncedUpdateTabInput]);
 
   // 当tab切换时，从数据库加载inputValue
   useEffect(() => {
