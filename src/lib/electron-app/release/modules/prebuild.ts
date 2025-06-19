@@ -15,18 +15,18 @@ async function createPackageJSONDistVersion() {
   try {
     const devFolder = getDevFolder(main);
 
-    await writeFile(
-      resolve(devFolder, "package.json"),
-      JSON.stringify(packageJSONDistVersion, null, 2),
-    );
-
-    await writeFile(
-      resolve(devFolder, "trusted-dependencies-scripts.json"),
-      JSON.stringify(trustedDependencies, null, 2),
-    );
-
-    // * Create empty yarn.lock file to avoid yarn error
-    await writeFile(resolve(devFolder, "yarn.lock"), "");
+    await Promise.all([
+      writeFile(
+        resolve(devFolder, "package.json"),
+        JSON.stringify(packageJSONDistVersion, null, 2),
+      ),
+      writeFile(
+        resolve(devFolder, "trusted-dependencies-scripts.json"),
+        JSON.stringify(trustedDependencies, null, 2),
+      ),
+      // * Create empty yarn.lock file to avoid yarn error
+      writeFile(resolve(devFolder, "yarn.lock"), ""),
+    ]);
 
     // biome-ignore lint/suspicious/noExplicitAny: ignore any
   } catch ({ message }: any) {
