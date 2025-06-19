@@ -156,7 +156,7 @@ export const ModelSelect = ({
   }, [selectedModelId, groupedModels]);
 
   return (
-    <div className="relative w-fit min-w-[130px]">
+    <div className="relative flex w-fit min-w-[130px] justify-end">
       <Button
         ref={triggerRef}
         className="group flex items-center gap-2 px-1 [--btn-overlay:theme(--color-hover-transparent)]"
