@@ -1,12 +1,14 @@
 import { Button } from "@renderer/components/ui/button";
 import { Textarea } from "@renderer/components/ui/textarea";
+import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { useAttachments } from "@renderer/hooks/use-attachments";
 import { useThread } from "@renderer/hooks/use-thread";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
+import debounce from "lodash-es/debounce";
 import { Pencil, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentList } from "./attachment-list";
@@ -16,7 +18,7 @@ interface ChatInputProps {
   className?: string;
 }
 
-const { messageService } = window.service;
+const { messageService, tabService } = window.service;
 
 // Process attachment data and convert to FileList
 const processAttachmentsFromData = (
@@ -68,16 +70,39 @@ export function ChatInput({ className }: ChatInputProps) {
   } = useToolBar();
 
   const { activeThreadId } = useThread();
+  const { activeTabId } = useActiveTab();
 
   const canSendMessage = input.trim() && !isSending;
 
+  // 防抖更新tab的inputValue，避免频繁写入数据库
+  const debouncedUpdateTabInput = useCallback(
+    debounce(async (tabId: string, inputValue: string) => {
+      if (tabId) {
+        try {
+          await tabService.updateTab(tabId, { inputValue });
+        } catch (error) {
+          console.error("Failed to update tab input value:", error);
+        }
+      }
+    }, 500), // 500ms防抖延迟
+    [],
+  );
+
   const handleInputChange = (value: string) => {
     setInput(value);
+    // 使用防抖更新tab的inputValue
+    if (activeTabId) {
+      debouncedUpdateTabInput(activeTabId, value);
+    }
   };
 
-  const clearInput = () => {
+  const clearInput = async () => {
     setInput("");
     clearAttachments();
+    // 清空input时也清空tab的inputValue
+    if (activeTabId) {
+      await tabService.updateTab(activeTabId, { inputValue: "" });
+    }
   };
 
   const handleSendMessage = async () => {
@@ -97,10 +122,14 @@ export function ChatInput({ className }: ChatInputProps) {
         return;
       }
 
-      clearInput();
+      await clearInput();
 
       // Send message with stored values
       await sendMessage(currentInput, currentAttachments);
+      // 发送消息后，清空inputValue
+      if (activeTabId) {
+        await tabService.updateTab(activeTabId, { inputValue: "" });
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error("Failed to send message");
@@ -157,19 +186,40 @@ export function ChatInput({ className }: ChatInputProps) {
       threadId: activeThreadId ?? "",
     });
     setEditMessageId(null);
-    clearInput();
+    await clearInput();
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = async () => {
     setEditMessageId(null);
-    clearInput();
+    await clearInput();
   };
+
+  // 当tab切换时，从数据库加载inputValue
+  useEffect(() => {
+    const loadTabInputValue = async () => {
+      if (activeTabId) {
+        try {
+          const tab = await tabService.getTab(activeTabId);
+          if (tab?.inputValue) {
+            setInput(tab.inputValue);
+          } else {
+            setInput("");
+          }
+        } catch (error) {
+          console.error("Failed to load tab input value:", error);
+        }
+      }
+    };
+
+    loadTabInputValue();
+  }, [activeTabId]);
 
   useEffect(() => {
     if (activeThreadId) {
+      console.log("Thread changed, current input value:", input);
       setEditMessageId(null);
     }
-  }, [activeThreadId]);
+  }, [activeThreadId, input]);
 
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>

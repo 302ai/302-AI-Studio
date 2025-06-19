@@ -7,6 +7,10 @@ export const tabsSchema = {
     type: S.String({
       enum: ["thread", "setting"],
     }),
+    inputValue: S.String({
+      nullable: true,
+    }),
+    files: S.String({ nullable: true }),
     threadId: S.String({
       nullable: true,
     }),
