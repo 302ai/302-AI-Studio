@@ -1,5 +1,8 @@
 import { nanoid } from "nanoid";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useActiveTab } from "./use-active-tab";
+
+const { tabService } = window.service;
 
 export interface AttachmentFile {
   id: string;
@@ -11,7 +14,7 @@ export interface AttachmentFile {
   fileData?: string; // base64 file data for non-image files (for preview)
 }
 
-export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 10MB
+export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 export const ALLOWED_TYPES = [
   // JSON and JavaScript
   "application/json",
@@ -78,112 +81,240 @@ export const ALLOWED_TYPES = [
   "audio/x-m4a",
 ];
 
+// Process attachment data and convert to FileList
+const processAttachmentsFromData = (
+  attachmentData: Array<{
+    name: string;
+    type: string;
+    preview?: string;
+    fileData?: string;
+  }>,
+): FileList => {
+  const dataTransfer = new DataTransfer();
+
+  attachmentData.forEach((attachment) => {
+    // Check if it's an image (has preview) or other file type (has fileData)
+    const base64Data = attachment.preview || attachment.fileData;
+    if (base64Data) {
+      // Convert base64 data to File object
+      const byteString = atob(base64Data.split(",")[1]);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const int8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        int8Array[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([int8Array], { type: attachment.type });
+      const file = new File([blob], attachment.name, {
+        type: attachment.type,
+      });
+      dataTransfer.items.add(file);
+    }
+  });
+
+  return dataTransfer.files;
+};
+
 export function useAttachments() {
   const [attachments, setAttachments] = useState<AttachmentFile[]>([]);
+  const { activeTabId } = useActiveTab();
 
-  const addAttachments = useCallback(async (files: FileList) => {
-    const newAttachments: AttachmentFile[] = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-
-      // File size validation
-      if (file.size > MAX_FILE_SIZE) {
-        console.warn(`File ${file.name} is too large (${file.size} bytes)`);
-        continue;
-      }
-
-      // File type validation - check against allowed types or common patterns
-      const isAllowed =
-        ALLOWED_TYPES.includes(file.type) ||
-        file.type.startsWith("text/") ||
-        file.type.startsWith("image/") ||
-        file.type.startsWith("audio/");
-
-      if (!isAllowed) {
-        console.warn(`File type ${file.type} is not allowed`);
-        continue;
-      }
-
-      const attachmentId = nanoid();
-      console.log("Generated attachment ID:", attachmentId, "for file:", file.name);
-
-      const attachment: AttachmentFile = {
-        id: attachmentId,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        file,
-      };
-
-      console.log("Created attachment object:", {
-        id: attachment.id,
-        name: attachment.name,
-        type: attachment.type,
-        preview: attachment.preview,
-      });
-
-      // Generate preview for images
-      if (file.type.startsWith("image/")) {
+  // 保存文件到tab
+  const saveFilesToTab = useCallback(
+    async (files: AttachmentFile[]) => {
+      if (activeTabId) {
         try {
-          console.log("Starting to generate preview for", file.name);
-          const preview = await readFileAsDataURL(file);
-          console.log("Generated preview for", file.name, ":", {
-            length: preview.length,
-            start: preview.substring(0, 100),
-            isValidDataURL: preview.startsWith("data:"),
-          });
-          attachment.preview = preview;
-          console.log("Attachment after setting preview:", {
-            name: attachment.name,
-            previewLength: attachment.preview?.length,
-            previewStart: attachment.preview?.substring(0, 100),
+          const filesData = files.map((file) => ({
+            id: file.id,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            preview: file.preview,
+            fileData: file.fileData,
+          }));
+          await tabService.updateTab(activeTabId, {
+            files: JSON.stringify(filesData),
           });
         } catch (error) {
-          console.error("Failed to generate preview:", error);
-        }
-      } else {
-        // For non-image files (including audio), generate file data for preview if file is small enough
-        const maxPreviewSize = MAX_FILE_SIZE; // 5MB limit for preview data
-        if (file.size <= maxPreviewSize) {
-          try {
-            console.log("Generating file data for", file.name);
-            const fileData = await readFileAsDataURL(file);
-            attachment.fileData = fileData;
-            console.log("Generated file data for", file.name, ":", {
-              length: fileData.length,
-              start: fileData.substring(0, 100),
-            });
-          } catch (error) {
-            console.error("Failed to generate file data:", error);
-          }
-        } else {
-          console.log("File too large for preview data generation:", file.name);
+          console.error("Failed to save files to tab:", error);
         }
       }
+    },
+    [activeTabId],
+  );
 
-      newAttachments.push(attachment);
+  // 从tab加载文件
+  const loadFilesFromTab = useCallback(async () => {
+    if (activeTabId) {
+      try {
+        const tab = await tabService.getTab(activeTabId);
+        if (tab?.files) {
+          const filesData = JSON.parse(tab.files);
+          if (Array.isArray(filesData) && filesData.length > 0) {
+            const fileList = processAttachmentsFromData(filesData);
+            const loadedAttachments: AttachmentFile[] = [];
+
+            for (let i = 0; i < fileList.length; i++) {
+              const file = fileList[i];
+              const originalData = filesData[i];
+
+              const attachment: AttachmentFile = {
+                id: originalData.id,
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                file,
+                preview: originalData.preview,
+                fileData: originalData.fileData,
+              };
+
+              loadedAttachments.push(attachment);
+            }
+
+            setAttachments(loadedAttachments);
+          } else {
+            setAttachments([]);
+          }
+        } else {
+          setAttachments([]);
+        }
+      } catch (error) {
+        console.error("Failed to load files from tab:", error);
+        setAttachments([]);
+      }
+    } else {
+      setAttachments([]);
     }
+  }, [activeTabId]);
 
-    setAttachments((prev) => [...prev, ...newAttachments]);
-  }, []);
+  // 当tab切换时，加载对应的文件
+  useEffect(() => {
+    loadFilesFromTab();
+  }, [loadFilesFromTab]);
 
-  const removeAttachment = useCallback((id: string) => {
-    setAttachments((prev) => prev.filter((attachment) => attachment.id !== id));
-  }, []);
+  const addAttachments = useCallback(
+    async (files: FileList) => {
+      const newAttachments: AttachmentFile[] = [];
 
-  const clearAttachments = useCallback(() => {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // File size validation
+        if (file.size > MAX_FILE_SIZE) {
+          console.warn(`File ${file.name} is too large (${file.size} bytes)`);
+          continue;
+        }
+
+        // File type validation - check against allowed types or common patterns
+        const isAllowed =
+          ALLOWED_TYPES.includes(file.type) ||
+          file.type.startsWith("text/") ||
+          file.type.startsWith("image/") ||
+          file.type.startsWith("audio/");
+
+        if (!isAllowed) {
+          console.warn(`File type ${file.type} is not allowed`);
+          continue;
+        }
+
+        const attachmentId = nanoid();
+
+        const attachment: AttachmentFile = {
+          id: attachmentId,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          file,
+        };
+
+        console.log("Created attachment object:", {
+          id: attachment.id,
+          name: attachment.name,
+          type: attachment.type,
+          preview: attachment.preview,
+        });
+
+        // Generate preview for images
+        if (file.type.startsWith("image/")) {
+          try {
+            console.log("Starting to generate preview for", file.name);
+            const preview = await readFileAsDataURL(file);
+            console.log("Generated preview for", file.name, ":", {
+              length: preview.length,
+              start: preview.substring(0, 100),
+              isValidDataURL: preview.startsWith("data:"),
+            });
+            attachment.preview = preview;
+            console.log("Attachment after setting preview:", {
+              name: attachment.name,
+              previewLength: attachment.preview?.length,
+              previewStart: attachment.preview?.substring(0, 100),
+            });
+          } catch (error) {
+            console.error("Failed to generate preview:", error);
+          }
+        } else {
+          // For non-image files (including audio), generate file data for preview if file is small enough
+          const maxPreviewSize = MAX_FILE_SIZE;
+          if (file.size <= maxPreviewSize) {
+            try {
+              console.log("Generating file data for", file.name);
+              const fileData = await readFileAsDataURL(file);
+              attachment.fileData = fileData;
+              console.log("Generated file data for", file.name, ":", {
+                length: fileData.length,
+                start: fileData.substring(0, 100),
+              });
+            } catch (error) {
+              console.error("Failed to generate file data:", error);
+            }
+          } else {
+            console.log(
+              "File too large for preview data generation:",
+              file.name,
+            );
+          }
+        }
+
+        newAttachments.push(attachment);
+      }
+
+      const updatedAttachments = [...attachments, ...newAttachments];
+      setAttachments(updatedAttachments);
+
+      // 保存到tab
+      await saveFilesToTab(updatedAttachments);
+    },
+    [attachments, saveFilesToTab],
+  );
+
+  const removeAttachment = useCallback(
+    async (id: string) => {
+      const updatedAttachments = attachments.filter(
+        (attachment) => attachment.id !== id,
+      );
+      setAttachments(updatedAttachments);
+
+      // 保存到tab
+      await saveFilesToTab(updatedAttachments);
+    },
+    [attachments, saveFilesToTab],
+  );
+
+  const clearAttachments = useCallback(async () => {
     setAttachments([]);
-  }, []);
+
+    // 清空tab中的文件
+    await saveFilesToTab([]);
+  }, [saveFilesToTab]);
 
   return {
     attachments,
     addAttachments,
     removeAttachment,
     clearAttachments,
+    loadFilesFromTab,
   };
 }
-
 
 function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
