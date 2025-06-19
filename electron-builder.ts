@@ -10,7 +10,7 @@
 import type { Configuration } from 'electron-builder'
 import { getDevFolder } from "./src/lib/electron-app/release/utils/path";
 
-const author = _author ?? _author;
+const author = _author?.name ?? _author
 const currentYear = new Date().getFullYear();
 const authorInKebabCase = author.replace(/\s+/g, "-");
 const appId = `com.${authorInKebabCase}.${name}`.toLowerCase();
