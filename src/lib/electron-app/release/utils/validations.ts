@@ -17,15 +17,22 @@ export function checkValidations({
 
   if (!semver.valid(newVersion)) {
     console.log(
-      `${COLORS.RED}Version must have a semver format (${COLORS.SOFT_GRAY}x.x.x${COLORS.RESET} example: ${COLORS.GREEN}1.0.1${COLORS.RESET}${COLORS.RED})${COLORS.RESET}`
+      `${COLORS.RED}Version must have a semver format (${COLORS.SOFT_GRAY}x.x.x${COLORS.RESET} example: ${COLORS.GREEN}1.0.1${COLORS.RESET}${COLORS.RED})${COLORS.RESET}`,
     );
 
     return true;
   }
 
+  if (newVersion.endsWith("test")) {
+    console.log(
+      `${COLORS.GREEN}Test version detected, skipping version comparison${COLORS.RESET}`,
+    );
+    return false;
+  }
+
   if (semver.ltr(newVersion, version)) {
     console.log(
-      `${COLORS.RED}New version is lower than current version${COLORS.RESET}`
+      `${COLORS.RED}New version is lower than current version${COLORS.RESET}`,
     );
 
     return true;
@@ -33,7 +40,7 @@ export function checkValidations({
 
   if (semver.eq(newVersion, version)) {
     console.log(
-      `${COLORS.RED}New version is equal to current version${COLORS.RESET}`
+      `${COLORS.RED}New version is equal to current version${COLORS.RESET}`,
     );
 
     return true;

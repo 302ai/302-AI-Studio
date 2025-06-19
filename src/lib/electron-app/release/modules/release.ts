@@ -15,7 +15,7 @@ async function makeRelease() {
   const { version } = packageJSON;
 
   const newVersion = await question(
-    `Enter a new version: ${COLORS.SOFT_GRAY}(current is ${version})${COLORS.RESET} `
+    `Enter a new version: ${COLORS.SOFT_GRAY}(current is ${version})${COLORS.RESET} `,
   );
 
   if (checkValidations({ version, newVersion })) {
@@ -26,12 +26,12 @@ async function makeRelease() {
 
   try {
     console.log(
-      `${COLORS.CYAN}> Updating package.json version...${COLORS.RESET}`
+      `${COLORS.CYAN}> Updating package.json version...${COLORS.RESET}`,
     );
 
     await writeFile(
       resolve("package.json"),
-      JSON.stringify(packageJSON, null, 2)
+      JSON.stringify(packageJSON, null, 2),
     );
 
     console.log(`\n${COLORS.GREEN}Done!${COLORS.RESET}\n`);
@@ -46,20 +46,20 @@ async function makeRelease() {
       ],
       {
         inherit: true,
-      }
+      },
     );
 
     const [repository] = exec(["git remote get-url --push origin"]);
     const ownerAndRepo = extractOwnerAndRepoFromGitRemoteURL(repository);
 
     console.log(
-      `${COLORS.CYAN}> Opening the repository releases page...${COLORS.RESET}`
+      `${COLORS.CYAN}> Opening the repository releases page...${COLORS.RESET}`,
     );
 
     await open(`https://github.com/${ownerAndRepo}/releases`);
 
     console.log(
-      `${COLORS.CYAN}> Opening the repository actions page...${COLORS.RESET}`
+      `${COLORS.CYAN}> Opening the repository actions page...${COLORS.RESET}`,
     );
 
     await open(`https://github.com/${ownerAndRepo}/actions`);
