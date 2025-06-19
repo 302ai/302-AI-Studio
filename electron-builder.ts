@@ -36,7 +36,16 @@ export default {
     artifactName,
     icon: `${resources}/build/icons/302ai.png`,
     category: "public.app-category.utilities",
-    target: ["zip", "dmg", "dir"],
+    target: [
+      {
+        target: "dmg",
+        arch: ["x64", "arm64"],
+      },
+      {
+        target: "zip",
+        arch: ["x64", "arm64"],
+      }
+    ],
   },
 
   linux: {
