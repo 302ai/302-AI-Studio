@@ -16,14 +16,21 @@ export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [streaming, setStreaming] = useState(false);
 
-  const fetchMessages = useCallback(async (threadId: string) => {
-    try {
-      const messages = await chatService.getMessagesByThreadId(threadId);
-      setMessages(messages);
-    } catch (err) {
-      console.error("Failed to get messages: ", err);
-    }
-  }, []);
+  const fetchMessages = useCallback(
+    async (threadId: string): Promise<Message[]> => {
+      try {
+        const messages = await chatService.getMessagesByThreadId(threadId);
+        setMessages(messages);
+
+        return messages;
+      } catch (err) {
+        console.error("Failed to get messages: ", err);
+      }
+
+      return [];
+    },
+    [],
+  );
 
   const handleStreamStatusUpdate = useCallback(
     async (
@@ -40,6 +47,7 @@ export function useChat() {
 
         switch (data.status) {
           case "pending": {
+            setStreaming(true);
             if (data.delta) {
               setMessages((prevMessages) =>
                 prevMessages.reduce((acc, message, index) => {
@@ -58,7 +66,6 @@ export function useChat() {
               );
             } else {
               await fetchMessages(data.threadId);
-              setStreaming(true);
             }
 
             break;
@@ -66,20 +73,22 @@ export function useChat() {
           case "success":
           case "error":
           case "stop": {
+            setStreaming(false);
             if (data.userMessageId) {
               parseAndUpdateAttachments(data.userMessageId);
             }
             await fetchMessages(data.threadId);
-            setStreaming(false);
+
             break;
           }
           default: {
-            await fetchMessages(data.threadId);
             setStreaming(false);
+            await fetchMessages(data.threadId);
             break;
           }
         }
       } catch (err) {
+        setStreaming(false);
         console.error("Failed to get messages: ", err);
       }
     },
@@ -160,7 +169,11 @@ export function useChat() {
 
   useEffect(() => {
     if (activeThreadId) {
-      fetchMessages(activeThreadId);
+      fetchMessages(activeThreadId).then((messages) => {
+        const newMessages = messages;
+        setMessages(newMessages);
+        setStreaming(newMessages.at(-1)?.status === "pending");
+      });
     }
   }, [activeThreadId, fetchMessages]);
 
