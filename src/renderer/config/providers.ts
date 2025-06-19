@@ -16,67 +16,69 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
       defaultBaseUrl: "https://api.302.ai/v1",
     },
   },
-  {
-    id: "ollama",
-    name: "Ollama",
-    apiType: "ollama",
-    apiKey: "",
-    baseUrl: "http://localhost:11434",
-    enabled: false,
-    websites: {
-      official: "https://ollama.com/",
-      apiKey: "",
-      docs: "https://github.com/ollama/ollama/tree/main/docs",
-      models: "https://ollama.com/library",
-      defaultBaseUrl: "http://localhost:11434",
-    },
-  },
-  {
-    id: "deepseek",
-    name: "Deepseek",
-    apiType: "deepseek",
-    apiKey: "",
-    baseUrl: "https://api.deepseek.com/v1",
-    enabled: false,
-    websites: {
-      official: "https://deepseek.com/",
-      apiKey: "https://platform.deepseek.com/api_keys",
-      docs: "https://platform.deepseek.com/api-docs/",
-      models: "https://platform.deepseek.com/api-docs/",
-      defaultBaseUrl: "https://api.deepseek.com/v1",
-    },
-  },
-  {
-    id: "qiniu",
-    name: "Qiniu",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://api.qnaigc.com/v1",
-    enabled: false,
-    websites: {
-      official: "https://www.qiniu.com",
-      apiKey: "https://developer.qiniu.com/aitokenapi/12884/how-to-get-api-key",
-      docs: "https://developer.qiniu.com/aitokenapi",
-      models: "https://developer.qiniu.com/aitokenapi/12883/model-list",
-      defaultBaseUrl: "https://api.qnaigc.com/v1",
-    },
-  },
-  {
-    id: "silicon",
-    name: "Silicon",
-    apiType: "silicon",
-    apiKey: "",
-    baseUrl: "https://api.siliconflow.cn/v1",
-    enabled: false,
-    websites: {
-      official: "https://www.siliconflow.cn/",
-      apiKey:
-        "https://cloud.siliconflow.cn/account/ak?referrer=clxty1xuy0014lvqwh5z50i88",
-      docs: "https://docs.siliconflow.cn/",
-      models: "https://docs.siliconflow.cn/docs/model-names",
-      defaultBaseUrl: "https://api.siliconflow.cn/v1",
-    },
-  },
+  // TODO: add providers
+
+  // {
+  //   id: "ollama",
+  //   name: "Ollama",
+  //   apiType: "ollama",
+  //   apiKey: "",
+  //   baseUrl: "http://localhost:11434",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://ollama.com/",
+  //     apiKey: "",
+  //     docs: "https://github.com/ollama/ollama/tree/main/docs",
+  //     models: "https://ollama.com/library",
+  //     defaultBaseUrl: "http://localhost:11434",
+  //   },
+  // },
+  // {
+  //   id: "deepseek",
+  //   name: "Deepseek",
+  //   apiType: "deepseek",
+  //   apiKey: "",
+  //   baseUrl: "https://api.deepseek.com/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://deepseek.com/",
+  //     apiKey: "https://platform.deepseek.com/api_keys",
+  //     docs: "https://platform.deepseek.com/api-docs/",
+  //     models: "https://platform.deepseek.com/api-docs/",
+  //     defaultBaseUrl: "https://api.deepseek.com/v1",
+  //   },
+  // },
+  // {
+  //   id: "qiniu",
+  //   name: "Qiniu",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://api.qnaigc.com/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://www.qiniu.com",
+  //     apiKey: "https://developer.qiniu.com/aitokenapi/12884/how-to-get-api-key",
+  //     docs: "https://developer.qiniu.com/aitokenapi",
+  //     models: "https://developer.qiniu.com/aitokenapi/12883/model-list",
+  //     defaultBaseUrl: "https://api.qnaigc.com/v1",
+  //   },
+  // },
+  // {
+  //   id: "silicon",
+  //   name: "Silicon",
+  //   apiType: "silicon",
+  //   apiKey: "",
+  //   baseUrl: "https://api.siliconflow.cn/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://www.siliconflow.cn/",
+  //     apiKey:
+  //       "https://cloud.siliconflow.cn/account/ak?referrer=clxty1xuy0014lvqwh5z50i88",
+  //     docs: "https://docs.siliconflow.cn/",
+  //     models: "https://docs.siliconflow.cn/docs/model-names",
+  //     defaultBaseUrl: "https://api.siliconflow.cn/v1",
+  //   },
+  // },
   // {
   //   id: 'qwenlm',
   //   name: 'QwenLM',
@@ -92,83 +94,83 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //     defaultBaseUrl: 'https://chat.qwenlm.ai/api'
   //   }
   // },
-  {
-    id: "doubao",
-    name: "Doubao",
-    apiType: "doubao",
-    apiKey: "",
-    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
-    enabled: false,
-    websites: {
-      official: "https://console.volcengine.com/ark/",
-      apiKey: "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey",
-      docs: "https://www.volcengine.com/docs/82379/1182403",
-      models:
-        "https://console.volcengine.com/ark/region:ark+cn-beijing/endpoint",
-      defaultBaseUrl: "https://ark.cn-beijing.volces.com/api/v3",
-    },
-  },
-  {
-    id: "minimax",
-    name: "MiniMax",
-    apiType: "minimax",
-    apiKey: "",
-    baseUrl: "https://api.minimax.chat/v1",
-    enabled: false,
-    websites: {
-      official: "https://platform.minimaxi.com/",
-      apiKey:
-        "https://platform.minimaxi.com/user-center/basic-information/interface-key",
-      docs: "https://platform.minimaxi.com/document/Announcement",
-      models: "https://platform.minimaxi.com/document/Models",
-      defaultBaseUrl: "https://api.minimax.chat/v1",
-    },
-  },
-  {
-    id: "fireworks",
-    name: "Fireworks",
-    apiType: "fireworks",
-    apiKey: "",
-    baseUrl: "https://api.fireworks.ai/inference",
-    enabled: false,
-    websites: {
-      official: "https://fireworks.ai/",
-      apiKey: "https://fireworks.ai/account/api-keys",
-      docs: "https://docs.fireworks.ai/getting-started/introduction",
-      models: "https://fireworks.ai/dashboard/models",
-      defaultBaseUrl: "https://api.fireworks.ai/inference",
-    },
-  },
-  {
-    id: "ppio",
-    name: "PPIO",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://api.ppinfra.com/v3/openai",
-    enabled: false,
-    websites: {
-      official: "https://ppinfra.com/",
-      apiKey: "https://ppinfra.com/settings/key-management",
-      docs: "https://ppinfra.com/docs/get-started/quickstart.html",
-      models: "https://ppinfra.com/model-api/console",
-      defaultBaseUrl: "https://api.ppinfra.com/v3/openai",
-    },
-  },
-  {
-    id: "openai-responses",
-    name: "OpenAI Responses",
-    apiType: "openai-responses",
-    apiKey: "",
-    baseUrl: "https://api.openai.com/v1",
-    enabled: false,
-    websites: {
-      official: "https://openai.com/",
-      apiKey: "https://platform.openai.com/api-keys",
-      docs: "https://platform.openai.com/docs/api-reference/responses",
-      models: "https://platform.openai.com/docs/models",
-      defaultBaseUrl: "https://api.openai.com/v1",
-    },
-  },
+  // {
+  //   id: "doubao",
+  //   name: "Doubao",
+  //   apiType: "doubao",
+  //   apiKey: "",
+  //   baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://console.volcengine.com/ark/",
+  //     apiKey: "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey",
+  //     docs: "https://www.volcengine.com/docs/82379/1182403",
+  //     models:
+  //       "https://console.volcengine.com/ark/region:ark+cn-beijing/endpoint",
+  //     defaultBaseUrl: "https://ark.cn-beijing.volces.com/api/v3",
+  //   },
+  // },
+  // {
+  //   id: "minimax",
+  //   name: "MiniMax",
+  //   apiType: "minimax",
+  //   apiKey: "",
+  //   baseUrl: "https://api.minimax.chat/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://platform.minimaxi.com/",
+  //     apiKey:
+  //       "https://platform.minimaxi.com/user-center/basic-information/interface-key",
+  //     docs: "https://platform.minimaxi.com/document/Announcement",
+  //     models: "https://platform.minimaxi.com/document/Models",
+  //     defaultBaseUrl: "https://api.minimax.chat/v1",
+  //   },
+  // },
+  // {
+  //   id: "fireworks",
+  //   name: "Fireworks",
+  //   apiType: "fireworks",
+  //   apiKey: "",
+  //   baseUrl: "https://api.fireworks.ai/inference",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://fireworks.ai/",
+  //     apiKey: "https://fireworks.ai/account/api-keys",
+  //     docs: "https://docs.fireworks.ai/getting-started/introduction",
+  //     models: "https://fireworks.ai/dashboard/models",
+  //     defaultBaseUrl: "https://api.fireworks.ai/inference",
+  //   },
+  // },
+  // {
+  //   id: "ppio",
+  //   name: "PPIO",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://api.ppinfra.com/v3/openai",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://ppinfra.com/",
+  //     apiKey: "https://ppinfra.com/settings/key-management",
+  //     docs: "https://ppinfra.com/docs/get-started/quickstart.html",
+  //     models: "https://ppinfra.com/model-api/console",
+  //     defaultBaseUrl: "https://api.ppinfra.com/v3/openai",
+  //   },
+  // },
+  // {
+  //   id: "openai-responses",
+  //   name: "OpenAI Responses",
+  //   apiType: "openai-responses",
+  //   apiKey: "",
+  //   baseUrl: "https://api.openai.com/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://openai.com/",
+  //     apiKey: "https://platform.openai.com/api-keys",
+  //     docs: "https://platform.openai.com/docs/api-reference/responses",
+  //     models: "https://platform.openai.com/docs/models",
+  //     defaultBaseUrl: "https://api.openai.com/v1",
+  //   },
+  // },
   {
     id: "openai",
     name: "OpenAI",
@@ -184,21 +186,21 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
       defaultBaseUrl: "https://api.openai.com/v1",
     },
   },
-  {
-    id: "gemini",
-    name: "Gemini",
-    apiType: "gemini",
-    apiKey: "",
-    baseUrl: "https://generativelanguage.googleapis.com",
-    enabled: false,
-    websites: {
-      official: "https://gemini.google.com/",
-      apiKey: "https://aistudio.google.com/app/apikey",
-      docs: "https://ai.google.dev/gemini-api/docs",
-      models: "https://ai.google.dev/gemini-api/docs/models/gemini",
-      defaultBaseUrl: "https://generativelanguage.googleapis.com",
-    },
-  },
+  // {
+  //   id: "gemini",
+  //   name: "Gemini",
+  //   apiType: "gemini",
+  //   apiKey: "",
+  //   baseUrl: "https://generativelanguage.googleapis.com",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://gemini.google.com/",
+  //     apiKey: "https://aistudio.google.com/app/apikey",
+  //     docs: "https://ai.google.dev/gemini-api/docs",
+  //     models: "https://ai.google.dev/gemini-api/docs/models/gemini",
+  //     defaultBaseUrl: "https://generativelanguage.googleapis.com",
+  //   },
+  // },
 
   // {
   //   id: 'ocoolai',
@@ -230,21 +232,21 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //     defaultBaseUrl: 'https://api.tohgether.xyz'
   //   }
   // },
-  {
-    id: "github",
-    name: "GitHub Models",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://models.inference.ai.azure.com",
-    enabled: false,
-    websites: {
-      official: "https://github.com/marketplace/models",
-      apiKey: "https://github.com/settings/tokens",
-      docs: "https://docs.github.com/en/github-models",
-      models: "https://github.com/marketplace/models",
-      defaultBaseUrl: "https://models.inference.ai.azure.com",
-    },
-  },
+  // {
+  //   id: "github",
+  //   name: "GitHub Models",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://models.inference.ai.azure.com",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://github.com/marketplace/models",
+  //     apiKey: "https://github.com/settings/tokens",
+  //     docs: "https://docs.github.com/en/github-models",
+  //     models: "https://github.com/marketplace/models",
+  //     defaultBaseUrl: "https://models.inference.ai.azure.com",
+  //   },
+  // },
   // {
   //   id: 'yi',
   //   name: 'Yi',
@@ -260,37 +262,37 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //     defaultBaseUrl: 'https://api.lingyiwanwu.com'
   //   }
   // },
-  {
-    id: "zhipu",
-    name: "Zhipu",
-    apiType: "zhipu",
-    apiKey: "",
-    baseUrl: "https://open.bigmodel.cn/api/paas/v4/",
-    enabled: false,
-    websites: {
-      official: "https://open.bigmodel.cn/",
-      apiKey: "https://open.bigmodel.cn/usercenter/apikeys",
-      docs: "https://open.bigmodel.cn/dev/howuse/introduction",
-      models: "https://open.bigmodel.cn/modelcenter/square",
-      defaultBaseUrl: "https://open.bigmodel.cn/api/paas/v4/",
-    },
-  },
-  {
-    id: "moonshot",
-    name: "Moonshot",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://api.moonshot.cn/v1",
-    enabled: false,
-    websites: {
-      official: "https://moonshot.ai/",
-      apiKey: "https://platform.moonshot.cn/console/api-keys",
-      docs: "https://platform.moonshot.cn/docs/",
-      models:
-        "https://platform.moonshot.cn/docs/intro#%E6%A8%A1%E5%9E%8B%E5%88%97%E8%A1%A8",
-      defaultBaseUrl: "https://api.moonshot.cn/v1",
-    },
-  },
+  // {
+  //   id: "zhipu",
+  //   name: "Zhipu",
+  //   apiType: "zhipu",
+  //   apiKey: "",
+  //   baseUrl: "https://open.bigmodel.cn/api/paas/v4/",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://open.bigmodel.cn/",
+  //     apiKey: "https://open.bigmodel.cn/usercenter/apikeys",
+  //     docs: "https://open.bigmodel.cn/dev/howuse/introduction",
+  //     models: "https://open.bigmodel.cn/modelcenter/square",
+  //     defaultBaseUrl: "https://open.bigmodel.cn/api/paas/v4/",
+  //   },
+  // },
+  // {
+  //   id: "moonshot",
+  //   name: "Moonshot",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://api.moonshot.cn/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://moonshot.ai/",
+  //     apiKey: "https://platform.moonshot.cn/console/api-keys",
+  //     docs: "https://platform.moonshot.cn/docs/",
+  //     models:
+  //       "https://platform.moonshot.cn/docs/intro#%E6%A8%A1%E5%9E%8B%E5%88%97%E8%A1%A8",
+  //     defaultBaseUrl: "https://api.moonshot.cn/v1",
+  //   },
+  // },
   // {
   //   id: 'baichuan',
   //   name: 'Baichuan',
@@ -306,36 +308,36 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //     defaultBaseUrl: 'https://api.baichuan-ai.com'
   //   }
   // },
-  {
-    id: "dashscope",
-    name: "DashScope",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1/",
-    enabled: false,
-    websites: {
-      official: "https://www.aliyun.com/product/bailian",
-      apiKey: "https://bailian.console.aliyun.com/?apiKey=1#/api-key",
-      docs: "https://help.aliyun.com/zh/model-studio/getting-started/",
-      models: "https://bailian.console.aliyun.com/model-market#/model-market",
-      defaultBaseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1/",
-    },
-  },
-  {
-    id: "lmstudio",
-    name: "LM Studio",
-    apiType: "lmstudio",
-    apiKey: "",
-    baseUrl: "http://127.0.0.1:1234/v1",
-    enabled: false,
-    websites: {
-      official: "https://lmstudio.ai/docs/app",
-      apiKey: "https://lmstudio.ai/docs/app",
-      docs: "https://lmstudio.ai/docs/app",
-      models: "https://lmstudio.ai/models",
-      defaultBaseUrl: "http://127.0.0.1:1234/v1",
-    },
-  },
+  // {
+  //   id: "dashscope",
+  //   name: "DashScope",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1/",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://www.aliyun.com/product/bailian",
+  //     apiKey: "https://bailian.console.aliyun.com/?apiKey=1#/api-key",
+  //     docs: "https://help.aliyun.com/zh/model-studio/getting-started/",
+  //     models: "https://bailian.console.aliyun.com/model-market#/model-market",
+  //     defaultBaseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1/",
+  //   },
+  // },
+  // {
+  //   id: "lmstudio",
+  //   name: "LM Studio",
+  //   apiType: "lmstudio",
+  //   apiKey: "",
+  //   baseUrl: "http://127.0.0.1:1234/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://lmstudio.ai/docs/app",
+  //     apiKey: "https://lmstudio.ai/docs/app",
+  //     docs: "https://lmstudio.ai/docs/app",
+  //     models: "https://lmstudio.ai/models",
+  //     defaultBaseUrl: "http://127.0.0.1:1234/v1",
+  //   },
+  // },
   // {
   //   id: 'stepfun',
   //   name: 'StepFun',
@@ -352,21 +354,21 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   }
   // }
 
-  {
-    id: "openrouter",
-    name: "OpenRouter",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://openrouter.ai/api/v1/",
-    enabled: false,
-    websites: {
-      official: "https://openrouter.ai/",
-      apiKey: "https://openrouter.ai/settings/keys",
-      docs: "https://openrouter.ai/docs/quick-start",
-      models: "https://openrouter.ai/docs/models",
-      defaultBaseUrl: "https://openrouter.ai/api/v1/",
-    },
-  },
+  // {
+  //   id: "openrouter",
+  //   name: "OpenRouter",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://openrouter.ai/api/v1/",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://openrouter.ai/",
+  //     apiKey: "https://openrouter.ai/settings/keys",
+  //     docs: "https://openrouter.ai/docs/quick-start",
+  //     models: "https://openrouter.ai/docs/models",
+  //     defaultBaseUrl: "https://openrouter.ai/api/v1/",
+  //   },
+  // },
   // {
   //   id: 'groq',
   //   name: 'Groq',
@@ -383,36 +385,36 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //   }
   // },
 
-  {
-    id: "anthropic",
-    name: "Anthropic",
-    apiType: "anthropic",
-    apiKey: "",
-    baseUrl: "https://api.anthropic.com",
-    enabled: false,
-    websites: {
-      official: "https://www.anthropic.com/",
-      apiKey: "https://console.anthropic.com/settings/keys",
-      docs: "https://docs.anthropic.com/",
-      models: "https://docs.anthropic.com/claude/docs/models-overview",
-      defaultBaseUrl: "https://api.anthropic.com",
-    },
-  },
-  {
-    id: "grok",
-    name: "Grok",
-    apiType: "grok",
-    apiKey: "",
-    baseUrl: "https://api.x.ai/v1",
-    enabled: false,
-    websites: {
-      official: "https://x.ai/",
-      apiKey: "https://console.x.ai",
-      docs: "https://docs.x.ai/",
-      models: "https://docs.x.ai/docs#getting-started",
-      defaultBaseUrl: "https://api.x.ai/v1",
-    },
-  },
+  // {
+  //   id: "anthropic",
+  //   name: "Anthropic",
+  //   apiType: "anthropic",
+  //   apiKey: "",
+  //   baseUrl: "https://api.anthropic.com",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://www.anthropic.com/",
+  //     apiKey: "https://console.anthropic.com/settings/keys",
+  //     docs: "https://docs.anthropic.com/",
+  //     models: "https://docs.anthropic.com/claude/docs/models-overview",
+  //     defaultBaseUrl: "https://api.anthropic.com",
+  //   },
+  // },
+  // {
+  //   id: "grok",
+  //   name: "Grok",
+  //   apiType: "grok",
+  //   apiKey: "",
+  //   baseUrl: "https://api.x.ai/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://x.ai/",
+  //     apiKey: "https://console.x.ai",
+  //     docs: "https://docs.x.ai/",
+  //     models: "https://docs.x.ai/docs#getting-started",
+  //     defaultBaseUrl: "https://api.x.ai/v1",
+  //   },
+  // },
   // {
   //   id: 'hyperbolic',
   //   name: 'Hyperbolic',
@@ -458,21 +460,21 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //     defaultBaseUrl: 'https://api.jina.ai'
   //   }
   // },
-  {
-    id: "aihubmix",
-    name: "AIHubMix",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://aihubmix.com/v1",
-    enabled: false,
-    websites: {
-      official: "https://aihubmix.com",
-      apiKey: "https://aihubmix.com/token",
-      docs: "https://doc.aihubmix.com/",
-      models: "https://docs.aihubmix.com/cn/api/Model-Information",
-      defaultBaseUrl: "https://aihubmix.com/v1",
-    },
-  },
+  // {
+  //   id: "aihubmix",
+  //   name: "AIHubMix",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://aihubmix.com/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://aihubmix.com",
+  //     apiKey: "https://aihubmix.com/token",
+  //     docs: "https://doc.aihubmix.com/",
+  //     models: "https://docs.aihubmix.com/cn/api/Model-Information",
+  //     defaultBaseUrl: "https://aihubmix.com/v1",
+  //   },
+  // },
   // {
   //   id: 'fireworks',
   //   name: 'Fireworks',
@@ -503,21 +505,21 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //     defaultBaseUrl: 'https://api.360.cn'
   //   }
   // },
-  {
-    id: "hunyuan",
-    name: "Hunyuan",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "https://api.hunyuan.cloud.tencent.com/v1",
-    enabled: false,
-    websites: {
-      official: "https://cloud.tencent.com/product/hunyuan",
-      apiKey: "https://console.cloud.tencent.com/hunyuan/api-key",
-      docs: "https://cloud.tencent.com/document/product/1729/111007",
-      models: "https://cloud.tencent.com/document/product/1729/104753",
-      defaultBaseUrl: "https://api.hunyuan.cloud.tencent.com/v1",
-    },
-  },
+  // {
+  //   id: "hunyuan",
+  //   name: "Hunyuan",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "https://api.hunyuan.cloud.tencent.com/v1",
+  //   enabled: false,
+  //   websites: {
+  //     official: "https://cloud.tencent.com/product/hunyuan",
+  //     apiKey: "https://console.cloud.tencent.com/hunyuan/api-key",
+  //     docs: "https://cloud.tencent.com/document/product/1729/111007",
+  //     models: "https://cloud.tencent.com/document/product/1729/104753",
+  //     defaultBaseUrl: "https://api.hunyuan.cloud.tencent.com/v1",
+  //   },
+  // },
   // {
   //   id: 'nvidia',
   //   name: 'NVIDIA',
@@ -533,23 +535,23 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   //     defaultBaseUrl: 'https://integrate.api.nvidia.com'
   //   }
   // },
-  {
-    id: "azure-openai",
-    name: "Azure OpenAI",
-    apiType: "openai",
-    apiKey: "",
-    baseUrl: "",
-    enabled: false,
-    websites: {
-      official:
-        "https://azure.microsoft.com/en-us/products/ai-services/openai-service",
-      apiKey:
-        "https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/OpenAI",
-      docs: "https://learn.microsoft.com/en-us/azure/ai-services/openai/",
-      models:
-        "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models",
-      defaultBaseUrl:
-        "https://your-resource-name.openai.azure.com/openai/deployments/your-deployment-name",
-    },
-  },
+  // {
+  //   id: "azure-openai",
+  //   name: "Azure OpenAI",
+  //   apiType: "openai",
+  //   apiKey: "",
+  //   baseUrl: "",
+  //   enabled: false,
+  //   websites: {
+  //     official:
+  //       "https://azure.microsoft.com/en-us/products/ai-services/openai-service",
+  //     apiKey:
+  //       "https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/OpenAI",
+  //     docs: "https://learn.microsoft.com/en-us/azure/ai-services/openai/",
+  //     models:
+  //       "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models",
+  //     defaultBaseUrl:
+  //       "https://your-resource-name.openai.azure.com/openai/deployments/your-deployment-name",
+  //   },
+  // },
 ];

@@ -24,13 +24,16 @@ export async function fetchOpenAIModels(options: {
 }): Promise<OpenAIModel> {
   const { apiKey, baseUrl, timeout } = options;
 
-  const { data, error } = await betterFetch<OpenAIModel>(`${baseUrl}/models`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
+  const { data, error } = await betterFetch<OpenAIModel>(
+    `${baseUrl}/models?llm=1`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+      timeout,
     },
-    timeout,
-  });
+  );
 
   if (error) {
     const errorMessage = extractErrorMessage(error);
