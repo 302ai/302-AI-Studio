@@ -253,9 +253,10 @@ export function ProviderCfgForm({
       >
         {[
           { label: "OpenAI", value: "openai" },
-          { label: "OpenAI-Response", value: "openai-responses" },
-          { label: "Gemini", value: "gemini" },
-          { label: "Anthropic", value: "anthropic" },
+          // TODO: add providers
+          // { label: "OpenAI-Response", value: "openai-responses" },
+          // { label: "Gemini", value: "gemini" },
+          // { label: "Anthropic", value: "anthropic" },
         ].map(({ value, label }) => (
           <Radio key={value} value={value}>
             {label}

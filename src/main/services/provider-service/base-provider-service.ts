@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
+
+import { isSupportedModel } from "@main/utils/models";
 import type { CreateModelData, Provider } from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
 import Logger from "electron-log";
@@ -48,15 +50,16 @@ export abstract class BaseProviderService {
   async fetchModels(): Promise<CreateModelData[]> {
     try {
       const models = await this.fetchProviderModels();
-      this.models = models;
+      const supportedModels = models.filter((model) => isSupportedModel(model));
+      this.models = supportedModels;
       Logger.debug(
         "Fetch models successfully:",
         this.provider.name,
-        "model count:",
-        models.length,
+        "supportedModels count:",
+        supportedModels.length,
       );
 
-      return models;
+      return supportedModels;
     } catch (error) {
       Logger.error("Failed to fetch models:", error);
       if (!this.models) {
