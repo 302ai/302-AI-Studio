@@ -1,13 +1,6 @@
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Release tag (e.g. v1.0.0)'
-        required: true
-        default: 'v1.0.0'
   push:
-    tags:
-      - v*.*.*
+    tags: ["*"]
     branches:
       - main
       - test-ci
@@ -15,6 +8,7 @@ on:
 
 jobs:
   release:
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -27,7 +21,7 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Install Node.js, NPM and PNPM
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -61,3 +55,5 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: true
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
