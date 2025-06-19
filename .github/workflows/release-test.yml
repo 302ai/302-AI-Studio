@@ -31,6 +31,8 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
 
       - name: apt-update
         if: startsWith(matrix.os, 'ubuntu-latest')
@@ -45,7 +47,7 @@ jobs:
         run: sudo apt-get install libarchive-tools rpm
 
       - name: Release Electron app
-        uses: daltonmenezes/action-electron-builder@v1.0.1
+        uses: DarkGuy10/action-electron-builder@v1.0.0
         with:
           package_manager: "yarn"
           # GitHub token, automatically provided to the action
@@ -55,5 +57,3 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: true
-        env:
-          NODE_OPTIONS: --max-old-space-size=8192

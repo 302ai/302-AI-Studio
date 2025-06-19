@@ -2,7 +2,7 @@
   "displayName": "302AIStudio",
   "name": "302AIStudio",
   "description": "302 AI Studio",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "./node_modules/.dev/main/index.js",
   "homepage": "https://302.ai",
   "resources": "src/resources",
