@@ -1,14 +1,13 @@
 import { Button } from "@renderer/components/ui/button";
 import { Textarea } from "@renderer/components/ui/textarea";
-import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { useAttachments } from "@renderer/hooks/use-attachments";
+import { useTabInput } from "@renderer/hooks/use-tab-input";
 import { useThread } from "@renderer/hooks/use-thread";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
-import debounce from "lodash-es/debounce";
 import { Pencil, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentList } from "./attachment-list";
@@ -18,7 +17,7 @@ interface ChatInputProps {
   className?: string;
 }
 
-const { messageService, tabService } = window.service;
+const { messageService } = window.service;
 
 export function ChatInput({ className }: ChatInputProps) {
   const { t } = useTranslation("translation", {
@@ -27,7 +26,7 @@ export function ChatInput({ className }: ChatInputProps) {
 
   const { attachments, addAttachments, removeAttachment, clearAttachments } =
     useAttachments();
-  const [input, setInput] = useState("");
+  const { input, setInput, handleInputChange, clearInput } = useTabInput();
   const [isSending, setIsSending] = useState(false);
   const [editMessageId, setEditMessageId] = useState<string | null>(null);
   const {
@@ -37,39 +36,13 @@ export function ChatInput({ className }: ChatInputProps) {
   } = useToolBar();
 
   const { activeThreadId } = useThread();
-  const { activeTabId } = useActiveTab();
 
   const canSendMessage = input.trim() && !isSending;
 
-  // 防抖更新tab的inputValue，避免频繁写入数据库
-  const debouncedUpdateTabInput = useCallback(
-    debounce(async (tabId: string, inputValue: string) => {
-      if (tabId) {
-        try {
-          await tabService.updateTab(tabId, { inputValue });
-        } catch (error) {
-          console.error("Failed to update tab input value:", error);
-        }
-      }
-    }, 500), // 500ms防抖延迟
-    [],
-  );
-
-  const handleInputChange = (value: string) => {
-    setInput(value);
-    // 使用防抖更新tab的inputValue
-    if (activeTabId) {
-      debouncedUpdateTabInput(activeTabId, value);
-    }
-  };
-
-  const clearInput = async () => {
-    setInput("");
+  // 扩展clearInput函数以包含清空attachments
+  const clearInputAndAttachments = async () => {
+    await clearInput();
     await clearAttachments();
-    // 清空input时也清空tab的inputValue
-    if (activeTabId) {
-      await tabService.updateTab(activeTabId, { inputValue: "" });
-    }
   };
 
   const handleSendMessage = async () => {
@@ -89,14 +62,10 @@ export function ChatInput({ className }: ChatInputProps) {
         return;
       }
 
-      await clearInput();
+      await clearInputAndAttachments();
 
       // Send message with stored values
       await sendMessage(currentInput, currentAttachments);
-      // 发送消息后，清空inputValue
-      if (activeTabId) {
-        await tabService.updateTab(activeTabId, { inputValue: "" });
-      }
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error("Failed to send message");
@@ -136,7 +105,7 @@ export function ChatInput({ className }: ChatInputProps) {
     return () => {
       unsub();
     };
-  }, [editMessageId]);
+  }, [editMessageId, setInput]);
 
   const handleSave = async () => {
     if (!editMessageId) return;
@@ -146,33 +115,13 @@ export function ChatInput({ className }: ChatInputProps) {
       threadId: activeThreadId ?? "",
     });
     setEditMessageId(null);
-    await clearInput();
+    await clearInputAndAttachments();
   };
 
   const handleCancelEdit = async () => {
     setEditMessageId(null);
-    await clearInput();
+    await clearInputAndAttachments();
   };
-
-  // 当tab切换时，从数据库加载inputValue
-  useEffect(() => {
-    const loadTabInputValue = async () => {
-      if (activeTabId) {
-        try {
-          const tab = await tabService.getTab(activeTabId);
-          if (tab?.inputValue) {
-            setInput(tab.inputValue);
-          } else {
-            setInput("");
-          }
-        } catch (error) {
-          console.error("Failed to load tab input value:", error);
-        }
-      }
-    };
-
-    loadTabInputValue();
-  }, [activeTabId]);
 
   useEffect(() => {
     if (activeThreadId) {
