@@ -29,7 +29,7 @@ export function MarkdownCodeBlock({
   }
 
   const preClass = cn(
-    "overflow-x-scroll rounded-xl bg-muted p-3 font-mono text-sm [scrollbar-width:none]",
+    "overflow-x-scroll rounded-xl bg-muted p-3 font-mono text-sm",
     className,
   );
 
@@ -145,8 +145,10 @@ const MermaidWrapper = ({ children }: { children: string }) => {
   return (
     <div className="group/mermaid relative my-4">
       <div ref={elementRef} className="flex justify-center overflow-x-auto" />
-      <div className="invisible absolute top-2 right-2 flex space-x-1 p-1 opacity-0 transition-all duration-200 group-hover/mermaid:visible group-hover/mermaid:opacity-100">
-        <CopyButton content={children} />
+      <div className="invisible absolute top-2 right-2 opacity-0 transition-all duration-200 group-hover/mermaid:visible group-hover/mermaid:opacity-100">
+        <div className="rounded-lg border border-border/50 bg-background/90 shadow-lg backdrop-blur-sm">
+          <CopyButton content={children} />
+        </div>
       </div>
     </div>
   );
