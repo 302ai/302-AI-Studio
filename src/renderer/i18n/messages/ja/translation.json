@@ -3,7 +3,7 @@
     "input-label": "メッセージを入力",
     "input-placeholder": "何でも聞いてみてください...",
     "tool-bar": {
-      "attach-file": "ファイルを添付"
+      "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)"
     },
     "model-select-label": "モデルを選択します",
     "model-select-placeholder": "モデルを選択してください...",
@@ -213,6 +213,9 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "何を考えているのか教えて😊"
+    "hello-world": "何を考えているのか教えてください?"
+  },
+  "attachment": {
+    "file-too-large": "ファイルサイズは10MBを超えることはできません"
   }
 }

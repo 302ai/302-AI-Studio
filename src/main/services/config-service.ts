@@ -70,10 +70,9 @@ export class ConfigService {
     try {
       const newProvider = await this.configDbService.insertProvider(provider);
       sendToMain(EventNames.PROVIDER_ADD, { provider: newProvider });
-      Logger.info("addProvider success ---->", newProvider);
       return newProvider;
     } catch (error) {
-      Logger.error("addProvider error ---->", error);
+      Logger.error("ConfigService:insertProvider error ---->", error);
       throw error;
     }
   }
@@ -83,9 +82,8 @@ export class ConfigService {
     try {
       await this.configDbService.deleteProvider(providerId);
       sendToMain(EventNames.PROVIDER_DELETE, { providerId });
-      Logger.info("deleteProvider success ---->", providerId);
     } catch (error) {
-      Logger.error("deleteProvider error ---->", error);
+      Logger.error("ConfigService:deleteProvider error ---->", error);
       throw error;
     }
   }
@@ -98,9 +96,12 @@ export class ConfigService {
   ) {
     try {
       await this.configDbService.updateProvider(providerId, updateData);
-      Logger.info("updateProvider success ---->", providerId);
+      sendToMain(EventNames.PROVIDER_UPDATE, {
+        providerId,
+        updateData,
+      });
     } catch (error) {
-      Logger.error("updateProvider error ---->", error);
+      Logger.error("ConfigService:updateProvider error ---->", error);
       throw error;
     }
   }
@@ -113,9 +114,8 @@ export class ConfigService {
   ) {
     try {
       await this.configDbService.updateProviderOrder(providerId, order);
-      Logger.info("updateProviderOrder success ---->", providerId, order);
     } catch (error) {
-      Logger.error("updateProviderOrder error ---->", error);
+      Logger.error("ConfigService:updateProviderOrder error ---->", error);
       throw error;
     }
   }
@@ -127,9 +127,8 @@ export class ConfigService {
   ): Promise<void> {
     try {
       await this.configDbService.insertModels(models);
-      Logger.info("addModels success");
     } catch (error) {
-      Logger.error("addModels error ---->", error);
+      Logger.error("ConfigService:insertModels error ---->", error);
       throw error;
     }
   }

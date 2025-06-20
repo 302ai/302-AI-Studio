@@ -35,10 +35,9 @@ export class ThreadService {
   ): Promise<Thread> {
     try {
       const newThread = await this.threadDbService.insertThread(thread);
-      Logger.info("insertThread success ---->", newThread);
       return newThread;
     } catch (error) {
-      Logger.error("insertThread error ---->", error);
+      Logger.error("ThreadService:insertThread error ---->", error);
       throw error;
     }
   }
@@ -50,9 +49,8 @@ export class ThreadService {
   ): Promise<void> {
     try {
       await this.threadDbService.deleteThread(threadId);
-      Logger.info("deleteThread success ---->", threadId);
     } catch (error) {
-      Logger.error("deleteThread error ---->", error);
+      Logger.error("ThreadService:deleteThread error ---->", error);
       throw error;
     }
   }
@@ -65,9 +63,8 @@ export class ThreadService {
   ): Promise<void> {
     try {
       await this.threadDbService.updateThread(threadId, updateData);
-      Logger.info("updateThread success ---->", threadId);
     } catch (error) {
-      Logger.error("updateThread error ---->", error);
+      Logger.error("ThreadService:updateThread error ---->", error);
       throw error;
     }
   }
@@ -79,10 +76,9 @@ export class ThreadService {
   ): Promise<Thread | null> {
     try {
       const thread = await this.threadDbService.getThreadById(threadId);
-      Logger.info("getThreadById success ---->", thread);
       return thread;
     } catch (error) {
-      Logger.error("getThreadById error ---->", error);
+      Logger.error("ThreadService:getThreadById error ---->", error);
       throw error;
     }
   }
@@ -91,9 +87,8 @@ export class ThreadService {
   async deleteAllThreads(): Promise<void> {
     try {
       await this.threadDbService.deleteAllThreads();
-      Logger.info("deleteAllThreads success");
     } catch (error) {
-      Logger.error("deleteAllThreads error ---->", error);
+      Logger.error("ThreadService:deleteAllThreads error ---->", error);
       throw error;
     }
   }

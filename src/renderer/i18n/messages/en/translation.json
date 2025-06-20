@@ -3,7 +3,7 @@
     "input-label": "Enter a message",
     "input-placeholder": "Ask anything...",
     "tool-bar": {
-      "attach-file": "Attach file"
+      "attach-file": "Attach file(file size cannot exceed 10MB)"
     },
     "model-select-label": "Select a model",
     "model-select-placeholder": "Please select a model...",
@@ -213,6 +213,9 @@
   },
   "stop-generating": "Stop",
   "new-thread": {
-    "hello-world": "Tell me what you're thinking😊"
+    "hello-world": "Tell me what you are thinking?"
+  },
+  "attachment": {
+    "file-too-large": "File size cannot exceed 10MB"
   }
 }

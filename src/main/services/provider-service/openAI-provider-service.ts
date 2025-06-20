@@ -2,7 +2,14 @@ import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import { convertMessagesToModelMessages } from "@main/utils/message-converter";
-import type { CreateModelData, Provider } from "@shared/triplit/types";
+
+import { createReasoningFetch } from "@main/utils/reasoning";
+import type {
+  CreateModelData,
+  Provider,
+  UpdateProviderData,
+} from "@shared/triplit/types";
+
 // Import AI SDK types
 import {
   type StreamTextResult,
@@ -21,9 +28,11 @@ export class OpenAIProviderService extends BaseProviderService {
 
   constructor(provider: Provider) {
     super(provider);
+
     this.openai = createOpenAI({
       apiKey: provider.apiKey,
       baseURL: provider.baseUrl,
+      fetch: createReasoningFetch(),
     });
   }
 
@@ -47,6 +56,18 @@ export class OpenAIProviderService extends BaseProviderService {
     }
   }
 
+  updateProvider(updateData: UpdateProviderData): void {
+    this.provider = {
+      ...this.provider,
+      ...updateData,
+    };
+
+    this.openai = createOpenAI({
+      apiKey: this.provider.apiKey,
+      baseURL: this.provider.baseUrl,
+      fetch: createReasoningFetch(),
+    });
+  }
   protected async fetchProviderModels(options?: {
     timeout: number;
   }): Promise<CreateModelData[]> {
@@ -104,8 +125,9 @@ export class OpenAIProviderService extends BaseProviderService {
       );
 
       const result = streamText({
-        model,
+        model: model,
         messages: modelMessages,
+
         experimental_transform: smoothStream({
           chunking: "line",
           delayInMs: 20,

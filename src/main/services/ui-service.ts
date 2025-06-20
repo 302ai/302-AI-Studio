@@ -23,9 +23,8 @@ export class UiService {
   ): Promise<void> {
     try {
       await this.uiDbService.updateActiveProviderId(providerId);
-      Logger.info("updateActiveProviderId success ---->", providerId);
     } catch (error) {
-      Logger.error("updateActiveProviderId error ---->", error);
+      Logger.error("UiService:updateActiveProviderId error ---->", error);
       throw error;
     }
   }
@@ -34,10 +33,9 @@ export class UiService {
   async getActiveProviderId(): Promise<string> {
     try {
       const activeProviderId = await this.uiDbService.getActiveProviderId();
-      Logger.info("getActiveProviderId success ---->", activeProviderId);
       return activeProviderId;
     } catch (error) {
-      Logger.error("getActiveProviderId error ---->", error);
+      Logger.error("UiService:getActiveProviderId error ---->", error);
       throw error;
     }
   }
@@ -46,9 +44,8 @@ export class UiService {
   async clearActiveProviderId(_event: Electron.IpcMainEvent): Promise<void> {
     try {
       await this.uiDbService.clearActiveProviderId();
-      Logger.info("clearActiveProviderId success");
     } catch (error) {
-      Logger.error("clearActiveProviderId error ---->", error);
+      Logger.error("UiService:clearActiveProviderId error ---->", error);
       throw error;
     }
   }
@@ -58,10 +55,9 @@ export class UiService {
   async getActiveProvider(): Promise<Provider | null> {
     try {
       const activeProvider = await this.uiDbService.getActiveProvider();
-      Logger.info("getActiveProvider success ---->", activeProvider);
       return activeProvider;
     } catch (error) {
-      Logger.error("getActiveProvider error ---->", error);
+      Logger.error("UiService:getActiveProvider error ---->", error);
       throw error;
     }
   }
@@ -74,9 +70,8 @@ export class UiService {
   ): Promise<void> {
     try {
       await this.uiDbService.updateActiveThreadId(threadId);
-      Logger.info("updateActiveThreadId success ---->", threadId);
     } catch (error) {
-      Logger.error("updateActiveThreadId error ---->", error);
+      Logger.error("UiService:updateActiveThreadId error ---->", error);
       throw error;
     }
   }
@@ -85,10 +80,9 @@ export class UiService {
   async getActiveThreadId(): Promise<string> {
     try {
       const activeThreadId = await this.uiDbService.getActiveThreadId();
-      Logger.info("getActiveThreadId success ---->", activeThreadId);
       return activeThreadId;
     } catch (error) {
-      Logger.error("getActiveThreadId error ---->", error);
+      Logger.error("UiService:getActiveThreadId error ---->", error);
       throw error;
     }
   }
@@ -97,9 +91,8 @@ export class UiService {
   async clearActiveThreadId(_event: Electron.IpcMainEvent): Promise<void> {
     try {
       await this.uiDbService.clearActiveThreadId();
-      Logger.info("clearActiveThreadId success");
     } catch (error) {
-      Logger.error("clearActiveThreadId error ---->", error);
+      Logger.error("UiService:clearActiveThreadId error ---->", error);
       throw error;
     }
   }
@@ -109,10 +102,9 @@ export class UiService {
   async getActiveThread(): Promise<Thread | null> {
     try {
       const activeThread = await this.uiDbService.getActiveThread();
-      Logger.info("getActiveThread success ---->", activeThread);
       return activeThread;
     } catch (error) {
-      Logger.error("getActiveThread error ---->", error);
+      Logger.error("UiService:getActiveThread error ---->", error);
       throw error;
     }
   }
@@ -122,10 +114,9 @@ export class UiService {
   async getActiveTabId(): Promise<string> {
     try {
       const activeTabId = await this.uiDbService.getActiveTabId();
-      Logger.info("getActiveTabId success ---->", activeTabId);
       return activeTabId;
     } catch (error) {
-      Logger.error("getActiveTabId error ---->", error);
+      Logger.error("UiService:getActiveTabId error ---->", error);
       throw error;
     }
   }
@@ -134,9 +125,8 @@ export class UiService {
   async clearActiveTabId(_event: Electron.IpcMainEvent): Promise<void> {
     try {
       await this.uiDbService.clearActiveTabId();
-      Logger.info("clearActiveTabId success");
     } catch (error) {
-      Logger.error("clearActiveTabId error ---->", error);
+      Logger.error("UiService:clearActiveTabId error ---->", error);
       throw error;
     }
   }
@@ -149,9 +139,8 @@ export class UiService {
   ): Promise<void> {
     try {
       await this.uiDbService.updateActiveTabHistory(tabId);
-      Logger.info("updateActiveTabHistory success ---->", tabId);
     } catch (error) {
-      Logger.error("updateActiveTabHistory error ---->", error);
+      Logger.error("UiService:updateActiveTabHistory error ---->", error);
       throw error;
     }
   }
@@ -163,9 +152,8 @@ export class UiService {
   ): Promise<void> {
     try {
       await this.uiDbService.updateActiveTabId(tabId);
-      Logger.info("updateActiveTabId success ---->", tabId);
     } catch (error) {
-      Logger.error("updateActiveTabId error ---->", error);
+      Logger.error("UiService:updateActiveTabId error ---->", error);
       throw error;
     }
   }

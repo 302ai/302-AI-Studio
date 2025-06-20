@@ -172,9 +172,8 @@ export class MessageService {
   ): Promise<void> {
     try {
       await this.messageDbService.insertMessages(messages);
-      Logger.info("insertMessages success ---->", { messages });
     } catch (error) {
-      Logger.error("insertMessages error ---->", error);
+      Logger.error("MessageService: insertMessages error ---->", error);
       throw error;
     }
   }

@@ -15,6 +15,7 @@ export function useChat() {
   const { activeThreadId } = useActiveThread();
   const [messages, setMessages] = useState<Message[]>([]);
   const [streaming, setStreaming] = useState(false);
+  const [isEditingMessage, setIsEditingMessage] = useState(false);
 
   const fetchMessages = useCallback(
     async (threadId: string): Promise<Message[]> => {
@@ -111,6 +112,8 @@ export function useChat() {
       switch (data.actions.type) {
         case "edit":
           if (data.actions.message) {
+            console.log('设置编辑状态为 true');
+            setIsEditingMessage(true);
             setMessages((prevMessages) =>
               prevMessages.map((message) =>
                 message.id === data.actions.message?.id
@@ -118,6 +121,10 @@ export function useChat() {
                   : message,
               ),
             );
+            // 延迟后重置编辑状态
+            setTimeout(() => {
+              setIsEditingMessage(false);
+            }, 500);
           }
           break;
 
@@ -180,6 +187,7 @@ export function useChat() {
   return {
     messages,
     streaming,
+    isEditingMessage,
 
     stopStreamChat,
   };
