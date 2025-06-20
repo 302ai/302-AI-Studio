@@ -64,7 +64,7 @@ export default {
       "-setup",
       "-${arch}.${ext}",
     ].join(""),
-    icon: `${resources}/build/icons/302ai.png`,
+    icon: `${resources}/build/icons/win-logo.ico`,
     target: [
       {
         target: "nsis",
