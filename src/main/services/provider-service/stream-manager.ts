@@ -50,3 +50,29 @@ export function abortStream(threadId: string): boolean {
   Logger.warn(`No active stream found for tab: ${threadId}`);
   return false;
 }
+
+/**
+ * Abort all ongoing streaming operations.
+ * Returns the number of streams that were aborted.
+ */
+export function abortAllStreams(): number {
+  const activeStreams = streamAbortControllers.size;
+
+  if (activeStreams > 0) {
+    Logger.info(`Aborting ${activeStreams} active streams...`);
+
+    for (const [threadId, controller] of streamAbortControllers.entries()) {
+      try {
+        controller.abort();
+        Logger.info(`Stream generation stopped for thread: ${threadId}`);
+      } catch (error) {
+        Logger.error(`Failed to abort stream for thread ${threadId}:`, error);
+      }
+    }
+
+    streamAbortControllers.clear();
+    Logger.info(`All ${activeStreams} streams have been aborted`);
+  }
+
+  return activeStreams;
+}
