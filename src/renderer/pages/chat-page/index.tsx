@@ -9,9 +9,15 @@ import { useTranslation } from "react-i18next";
 export function ChatPage() {
   const { t } = useTranslation();
   const { activeThreadId } = useActiveThread();
-  const { messages, streaming, stopStreamChat } = useChat();
+  const { messages, streaming, isEditingMessage, stopStreamChat } = useChat();
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isEditingMessageRef = useRef(isEditingMessage);
+
+  // 保持 ref 与最新值同步
+  useEffect(() => {
+    isEditingMessageRef.current = isEditingMessage;
+  }, [isEditingMessage]);
 
   const scrollToBottom = useCallback((instant = false) => {
     if (scrollContainerRef.current) {
@@ -38,9 +44,9 @@ export function ChatPage() {
   useEffect(() => {
     if (messages.length > 0) {
       const rafId = requestAnimationFrame(() => {
-        if (shouldAutoScroll()) {
+        if (!isEditingMessageRef.current && shouldAutoScroll()) {
           scrollToBottom(streaming);
-        }
+        } 
       });
 
       return () => cancelAnimationFrame(rafId);
@@ -52,7 +58,9 @@ export function ChatPage() {
   useEffect(() => {
     if (activeThreadId && messages.length > 0) {
       setTimeout(() => {
-        scrollToBottom(false);
+        if (!isEditingMessageRef.current) {
+          scrollToBottom(false);
+        }
       }, 100);
     }
   }, [activeThreadId, messages, scrollToBottom]);
