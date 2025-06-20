@@ -198,101 +198,76 @@ export function useAttachments() {
 
   const addAttachments = useCallback(
     async (files: FileList) => {
-      const newAttachments: AttachmentFile[] = [];
+      const fileArray = Array.from(files);
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-
-        // File size validation
-        if (file.size > MAX_FILE_SIZE) {
-          toast.error(t("file-too-large"));
-          console.warn(`File ${file.name} is too large (${file.size} bytes)`);
-          continue;
-        }
-
-        // File type validation - check against allowed types or common patterns
-        const isAllowed =
-          ALLOWED_TYPES.includes(file.type) ||
-          file.type.startsWith("text/") ||
-          file.type.startsWith("image/") ||
-          file.type.startsWith("audio/");
-
-        if (!isAllowed) {
-          console.warn(`File type ${file.type} is not allowed`);
-          continue;
-        }
-
-        const attachmentId = nanoid();
-
-        const attachment: AttachmentFile = {
-          id: attachmentId,
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          file,
-        };
-
-        console.log("Created attachment object:", {
-          id: attachment.id,
-          name: attachment.name,
-          type: attachment.type,
-          preview: attachment.preview,
-        });
-
-        // Generate preview for images
-        if (file.type.startsWith("image/")) {
-          try {
-            console.log("Starting to generate preview for", file.name);
-            const preview = await readFileAsDataURL(file);
-            console.log("Generated preview for", file.name, ":", {
-              length: preview.length,
-              start: preview.substring(0, 100),
-              isValidDataURL: preview.startsWith("data:"),
-            });
-            attachment.preview = preview;
-            console.log("Attachment after setting preview:", {
-              name: attachment.name,
-              previewLength: attachment.preview?.length,
-              previewStart: attachment.preview?.substring(0, 100),
-            });
-          } catch (error) {
-            console.error("Failed to generate preview:", error);
+      const processedAttachments = await Promise.all(
+        fileArray.map(async (file) => {
+          // 文件大小验证
+          if (file.size > MAX_FILE_SIZE) {
+            toast.error(t("file-too-large"));
+            console.warn(`File ${file.name} is too large (${file.size} bytes)`);
+            return null;
           }
-        } else {
-          // For non-image files (including audio), generate file data for preview if file is small enough
-          const maxPreviewSize = MAX_FILE_SIZE;
-          if (file.size <= maxPreviewSize) {
-            try {
-              console.log("Generating file data for", file.name);
+
+          // 文件类型验证
+          const isAllowed =
+            ALLOWED_TYPES.includes(file.type) ||
+            file.type.startsWith("text/") ||
+            file.type.startsWith("image/") ||
+            file.type.startsWith("audio/");
+
+          if (!isAllowed) {
+            console.warn(`File type ${file.type} is not allowed`);
+            return null;
+          }
+
+          // 创建基础附件对象
+          const attachment: AttachmentFile = {
+            id: nanoid(),
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            file,
+          };
+
+          // 生成预览数据
+          try {
+            if (file.type.startsWith("image/")) {
+              const preview = await readFileAsDataURL(file);
+              attachment.preview = preview;
+            } else if (file.size <= MAX_FILE_SIZE) {
               const fileData = await readFileAsDataURL(file);
               attachment.fileData = fileData;
-              console.log("Generated file data for", file.name, ":", {
-                length: fileData.length,
-                start: fileData.substring(0, 100),
-              });
-            } catch (error) {
-              console.error("Failed to generate file data:", error);
             }
-          } else {
-            console.log(
-              "File too large for preview data generation:",
-              file.name,
+          } catch (error) {
+            console.error(
+              `Failed to generate preview/data for ${file.name}:`,
+              error,
             );
           }
-        }
 
-        newAttachments.push(attachment);
-      }
+          return attachment;
+        }),
+      );
 
-      const updatedAttachments = [...attachments, ...newAttachments];
+      // 过滤掉无效的文件
+      const validAttachments = processedAttachments.filter(
+        (attachment): attachment is AttachmentFile => attachment !== null,
+      );
+
+      const updatedAttachments = [...attachments, ...validAttachments];
       setAttachments(updatedAttachments);
 
-      // 保存到tab
-      await saveFilesToTab(updatedAttachments);
+      // 保存到 tab
+      try {
+        await saveFilesToTab(updatedAttachments);
+        console.log("✅ Saved to tab successfully");
+      } catch (error) {
+        console.error("❌ Failed to save to tab:", error);
+      }
     },
     [attachments, saveFilesToTab, t],
   );
-
   const removeAttachment = useCallback(
     async (id: string) => {
       const updatedAttachments = attachments.filter(
