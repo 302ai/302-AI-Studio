@@ -96,6 +96,10 @@ export class ConfigService {
   ) {
     try {
       await this.configDbService.updateProvider(providerId, updateData);
+      sendToMain(EventNames.PROVIDER_UPDATE, {
+        providerId,
+        updateData,
+      });
     } catch (error) {
       Logger.error("ConfigService:updateProvider error ---->", error);
       throw error;

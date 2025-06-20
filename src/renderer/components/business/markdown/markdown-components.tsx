@@ -11,14 +11,24 @@ export const COMPONENTS = {
   h4: withClass("h4", "font-semibold text-base"),
   h5: withClass("h5", "font-medium"),
   strong: withClass("strong", "font-semibold"),
-  a: ({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+  a: ({
+    href,
+    children,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
     <a
       href={href}
-      className="text-primary underline underline-offset-2"
-      target="_blank"
-      rel="noopener noreferrer"
+      className="cursor-pointer text-primary underline underline-offset-2"
+      onClick={(e) => {
+        e.preventDefault();
+        if (href) {
+          window.service?.shellService.openExternal(href);
+        }
+      }}
       {...props}
-    />
+    >
+      {children}
+    </a>
   ),
   blockquote: withClass("blockquote", "border-l-2 border-primary pl-4"),
   code: ({ children, className, ...rest }: any) => {

@@ -6,7 +6,7 @@ import { initMainBridge } from "./bridge";
 import { MainWindow } from "./windows/main";
 
 Logger.initialize();
-Logger.transports.ipc.level = false;
+Logger.transports.ipc.level = "debug";
 
 makeAppWithSingleInstanceLock(async () => {
   await app.whenReady();

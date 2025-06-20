@@ -1,7 +1,11 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 
 import { isSupportedModel } from "@main/utils/models";
-import type { CreateModelData, Provider } from "@shared/triplit/types";
+import type {
+  CreateModelData,
+  Provider,
+  UpdateProviderData,
+} from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
 import Logger from "electron-log";
 import {
@@ -46,6 +50,8 @@ export abstract class BaseProviderService {
     isOk: boolean;
     errorMsg: string | null;
   }>;
+
+  abstract updateProvider(updateData: UpdateProviderData): void;
 
   async fetchModels(): Promise<CreateModelData[]> {
     try {

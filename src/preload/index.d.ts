@@ -206,6 +206,9 @@ declare global {
       chatService: {
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
       };
+      shellService: {
+        openExternal: (url: string) => void;
+      };
     };
   }
 }

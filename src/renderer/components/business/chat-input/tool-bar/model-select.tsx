@@ -165,7 +165,10 @@ export const ModelSelect = ({
       >
         {selectedModel ? (
           <>
-            <ModelIcon modelName={selectedModel.name} />
+            <ModelIcon
+              modelName={selectedModel.name}
+              className="dark:bg-white"
+            />
             <span className="truncate text-muted-fg group-hover:text-fg">
               {selectedModel.name}
             </span>
