@@ -22,10 +22,9 @@ export class TabService {
   ): Promise<Tab> {
     try {
       const newTab = await this.tabDbService.insertTab(tab);
-      Logger.info("insertTab success ---->", newTab);
       return newTab;
     } catch (error) {
-      Logger.error("insertTab error ---->", error);
+      Logger.error("TabService:insertTab error ---->", error);
       throw error;
     }
   }
@@ -37,13 +36,9 @@ export class TabService {
   ): Promise<string> {
     try {
       const currentActiveTabId = await this.tabDbService.deleteTab(tabId);
-      Logger.info("deleteTab success ---->", {
-        tabId,
-        currentActiveTabId,
-      });
       return currentActiveTabId;
     } catch (error) {
-      Logger.error("deleteTab error ---->", error);
+      Logger.error("TabService:deleteTab error ---->", error);
       throw error;
     }
   }
@@ -56,12 +51,8 @@ export class TabService {
   ): Promise<void> {
     try {
       await this.tabDbService.updateTab(tabId, updateData);
-      Logger.info("updateTab success ---->", {
-        tabId,
-        updateData,
-      });
     } catch (error) {
-      Logger.error("updateTab error ---->", error);
+      Logger.error("TabService:updateTab error ---->", error);
       throw error;
     }
   }
@@ -73,13 +64,9 @@ export class TabService {
   ): Promise<Tab | null> {
     try {
       const tab = await this.tabDbService.getTab(tabId);
-      Logger.info("getTab success ---->", {
-        tabId,
-        tab,
-      });
       return tab;
     } catch (error) {
-      Logger.error("getTab error ---->", error);
+      Logger.error("TabService:getTab error ---->", error);
       throw error;
     }
   }
@@ -93,12 +80,8 @@ export class TabService {
   ): Promise<void> {
     try {
       await this.tabDbService.moveTab(fromIndex, toIndex, tabs);
-      Logger.info("moveTab success ---->", {
-        fromIndex,
-        toIndex,
-      });
     } catch (error) {
-      Logger.error("moveTab error ---->", error);
+      Logger.error("TabService:moveTab error ---->", error);
       throw error;
     }
   }
