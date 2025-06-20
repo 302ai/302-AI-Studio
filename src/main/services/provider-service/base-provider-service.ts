@@ -3,6 +3,7 @@
 import { isSupportedModel } from "@main/utils/models";
 import type {
   CreateModelData,
+  Model,
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
@@ -24,7 +25,7 @@ export interface StreamChatParams {
   threadId: string;
   userMessageId: string;
   messages: ChatMessage[];
-  modelName: string;
+  model: Model;
   provider: Provider;
 }
 

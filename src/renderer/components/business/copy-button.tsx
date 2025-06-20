@@ -19,7 +19,7 @@ export function CopyButton({ content }: CopyButtonProps) {
   return (
     <ButtonWithTooltip
       type="button"
-      intent="plain"
+      intent="secondary"
       shape="square"
       className="relative size-8"
       onClick={handleCopy}

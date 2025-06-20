@@ -1,6 +1,11 @@
 import { triplitClient } from "@renderer/client";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
-import type { CreateThreadData, Provider, Thread } from "@shared/triplit/types";
+import type {
+  CreateThreadData,
+  Model,
+  Provider,
+  Thread,
+} from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -82,7 +87,7 @@ export function useToolBar() {
       attachments?: string | null;
     }>,
     provider: Provider,
-    modelId: string,
+    model: Model,
   ) => {
     try {
       const result = await providerService.startStreamChat({
@@ -91,7 +96,7 @@ export function useToolBar() {
         userMessageId,
         messages,
         provider,
-        modelName: modelId,
+        model,
       });
 
       if (!result.success) {
@@ -214,7 +219,7 @@ export function useToolBar() {
           userMessage.id,
           conversationMessages,
           provider,
-          selectedModel.name, // Use model name for the API call
+          selectedModel, // Use model name for the API call
         );
       } catch (streamError) {
         console.error("Failed to start streaming chat:", streamError);
@@ -302,7 +307,7 @@ export function useToolBar() {
         userMessageId, // userMessageId - the last user message that triggered this response
         conversationMessages,
         provider,
-        selectedModel.name, // Use model name for the API call
+        selectedModel, // Use model name for the API call
       );
       console.log("Regenerate data", data);
     } catch (streamError) {
