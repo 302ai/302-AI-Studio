@@ -34,23 +34,30 @@ export default {
   },
 
   mac: {
-    artifactName,
+    artifactName: [
+      `${name}-v${version}`,
+      "-mac",
+      "-${arch}.${ext}",
+    ].join(""),
     icon: `${resources}/build/icons/302ai.png`,
     category: "public.app-category.utilities",
     target: [
       {
         target: "dmg",
-        arch: ["x64", "arm64"],
+        arch: ["x64", "arm64", "universal"],
       },
       {
         target: "zip",
-        arch: ["x64", "arm64"],
+        arch: ["x64", "arm64", "universal"],
       }
     ],
   },
 
   linux: {
-    artifactName,
+    artifactName: [
+      `${name}-v${version}`,
+      "-${os}.${ext}",
+    ].join(""),
     category: "Utilities",
     synopsis: description,
     target: ["AppImage", "deb", "pacman", "freebsd", "rpm"],
@@ -58,7 +65,11 @@ export default {
 
   win: {
     executableName: productName,
-    artifactName: artifactNameSetup,
+    artifactName: [
+      `${name}-v${version}`,
+      "-setup",
+      "-${arch}.${ext}",
+    ].join(""),
     icon: `${resources}/build/icons/302ai.png`,
     target: [
       {
@@ -69,7 +80,11 @@ export default {
   },
 
   nsis: {
-    artifactName: artifactNameSetup,
+    artifactName: [
+      `${name}-v${version}`,
+      "-setup",
+      "-${arch}.${ext}",
+    ].join(""),
     shortcutName: productName,
     oneClick: false,
     allowToChangeInstallationDirectory: true,
