@@ -1,7 +1,10 @@
 import { join } from "node:path";
 import { createWindow } from "@lib/electron-app/factories/windows/create";
+import { MessageService } from "@main/services/message-service";
+import { abortAllStreams } from "@main/services/provider-service/stream-manager";
 import { WINDOW_SIZE } from "@shared/constants";
 import { BrowserWindow, nativeImage } from "electron";
+import Logger from "electron-log";
 import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
 import icon from "../../resources/build/icons/302ai.png?asset";
@@ -54,9 +57,17 @@ export async function MainWindow() {
     window.show();
   });
 
-  window.on("close", () => {
-    for (const window of BrowserWindow.getAllWindows()) {
-      window.destroy();
+  window.on("close", async (event) => {
+    event.preventDefault();
+    try {
+      const messageService = new MessageService();
+      abortAllStreams();
+      await messageService.updatePendingMessagesToStop();
+    } catch (error) {
+      Logger.error("Error during cleanup:", error);
+    } finally {
+      // 确保异步操作完成后才销毁
+      BrowserWindow.getAllWindows().forEach((win) => win.destroy());
     }
   });
 
