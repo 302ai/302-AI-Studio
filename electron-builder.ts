@@ -4,8 +4,8 @@
   version,
   resources,
   description,
-  displayName,
   author as _author,
+  productName,
 } from "./package.json";
 import type { Configuration } from 'electron-builder'
 import { getDevFolder } from "./src/lib/electron-app/release/utils/path";
@@ -15,16 +15,9 @@ const currentYear = new Date().getFullYear();
 const authorInKebabCase = author.replace(/\s+/g, "-");
 const appId = `com.${authorInKebabCase}.${name}`.toLowerCase();
 
-const artifactName = [`${name}-v${version}`, "-${os}.${ext}"].join("");
-const artifactNameSetup = [
-  `${name}-v${version}`,
-  "-Setup",
-  "-${os}.${ext}",
-].join("");
-
 export default {
   appId,
-  productName: displayName,
+  productName: productName,
   copyright: `Copyright © ${currentYear} — ${author}`,
 
   directories: {
@@ -33,31 +26,42 @@ export default {
   },
 
   mac: {
-    artifactName,
+    artifactName: [
+      `${name}-v${version}`,
+      "-mac",
+      "-${arch}.${ext}",
+    ].join(""),
     icon: `${resources}/build/icons/302ai.png`,
     category: "public.app-category.utilities",
     target: [
       {
         target: "dmg",
-        arch: ["x64", "arm64"],
+        arch: ["x64", "arm64", "universal"],
       },
       {
         target: "zip",
-        arch: ["x64", "arm64"],
+        arch: ["x64", "arm64", "universal"],
       }
     ],
   },
 
   linux: {
-    artifactName,
+    artifactName: [
+      `${name}-v${version}`,
+      "-${os}.${ext}",
+    ].join(""),
     category: "Utilities",
     synopsis: description,
     target: ["AppImage", "deb", "pacman", "freebsd", "rpm"],
   },
 
   win: {
-    executableName: displayName,
-    artifactName: artifactNameSetup,
+    executableName: productName,
+    artifactName: [
+      `${name}-v${version}`,
+      "-setup",
+      "-${arch}.${ext}",
+    ].join(""),
     icon: `${resources}/build/icons/302ai.png`,
     target: [
       {
@@ -68,9 +72,12 @@ export default {
   },
 
   nsis: {
-    artifactName: artifactNameSetup,
-    shortcutName: displayName,
-    uninstallDisplayName: displayName,
+    artifactName: [
+      `${name}-v${version}`,
+      "-setup",
+      "-${arch}.${ext}",
+    ].join(""),
+    shortcutName: productName,
     oneClick: false,
     allowToChangeInstallationDirectory: true,
     createDesktopShortcut: true,

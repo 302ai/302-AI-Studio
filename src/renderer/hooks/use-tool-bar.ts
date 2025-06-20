@@ -117,17 +117,18 @@ export function useToolBar() {
       const needCreateThread = needCreateTab || !activeTab?.threadId;
       if (needCreateThread) {
         const thread = await createThread({
-          title: t("new-thread-title"),
+          title: content,
           modelId: selectedModelId,
         });
 
         if (thread) {
+          const { id, title } = thread;
           if (activeTab) {
             await tabService.updateTab(activeTab.id, {
-              threadId: thread.id,
+              title,
+              threadId: id,
             });
           } else {
-            const { id, title } = thread;
             const newTab = await tabService.insertTab({
               title,
               threadId: id,
