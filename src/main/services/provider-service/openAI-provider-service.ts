@@ -63,8 +63,8 @@ export class OpenAIProviderService extends BaseProviderService {
     };
 
     this.openai = createOpenAI({
-      apiKey: this.provider.apiKey,
-      baseURL: this.provider.baseUrl,
+      apiKey: updateData.apiKey,
+      baseURL: updateData.baseUrl,
       fetch: createReasoningFetch(),
     });
   }

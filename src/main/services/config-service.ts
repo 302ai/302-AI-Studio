@@ -132,4 +132,18 @@ export class ConfigService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateProviderModels(
+    _event: Electron.IpcMainEvent,
+    providerId: string,
+    models: CreateModelData[],
+  ): Promise<void> {
+    try {
+      await this.configDbService.updateProviderModels(providerId, models);
+    } catch (error) {
+      Logger.error("ConfigService:updateModels error ---->", error);
+      throw error;
+    }
+  }
 }

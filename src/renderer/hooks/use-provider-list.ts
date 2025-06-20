@@ -34,6 +34,8 @@ export function useProviderList() {
       apiKey,
       apiType,
     });
+    const models = await providerService.fetchModels(updatedProvider);
+    await configService.updateProviderModels(id, models);
   };
 
   const handleAddProvider = async (provider: CreateProviderData) => {

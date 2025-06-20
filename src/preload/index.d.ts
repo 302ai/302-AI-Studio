@@ -44,6 +44,10 @@ declare global {
         ) => Promise<void>;
         insertModels: (models: CreateModelData[]) => Promise<void>;
         getProviderModels: (providerId: string) => Promise<Model[]>;
+        updateProviderModels: (
+          providerId: string,
+          models: CreateModelData[],
+        ) => Promise<void>;
       };
       threadService: {
         insertThread: (thread: CreateThreadData) => Promise<Thread>;
