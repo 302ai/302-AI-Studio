@@ -3,7 +3,7 @@
   "name": "302AIStudio",
   "productName": "302 AI Studio",
   "description": "302 AI Studio",
-  "version": "0.0.1-test-3",
+  "version": "0.0.1-test-4",
   "main": "./node_modules/.dev/main/index.js",
   "homepage": "https://302.ai",
   "resources": "src/resources",
@@ -23,7 +23,7 @@
     "build:win:arm64": "npm run build && electron-builder --win --arm64",
     "build:mac": "npm run build && electron-builder --mac",
     "build:mac:arm64": "npm run build && electron-builder --mac --arm64",
-    "build:mac:x64": "npm run build && electron-builder -c electron-builder-macx64.yml --mac --x64 ",
+    "build:mac:x64": "npm run build && electron-builder --mac --x64 ",
     "build:linux": "npm run build && electron-builder --linux",
     "build:linux:x64": "npm run build && electron-builder --linux --x64",
     "build:linux:arm64": "npm run build && electron-builder --linux --arm64",
@@ -87,9 +87,7 @@
     "xlsx": "^0.18.5",
     "xml2js": "^0.6.2",
     "zod": "^3.25.49",
-    "zustand": "^5.0.4"
-  },
-  "devDependencies": {
+    "zustand": "^5.0.4",
     "nanoid": "^5.1.5",
     "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
@@ -100,7 +98,9 @@
     "react-i18next": "^15.4.1",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.2.0",
-    "react-window": "^1.8.11",
+    "react-window": "^1.8.11"
+  },
+  "devDependencies": {
     "@biomejs/biome": "2.0.0-beta.6",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",

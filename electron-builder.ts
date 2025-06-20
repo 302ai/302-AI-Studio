@@ -4,7 +4,6 @@
   version,
   resources,
   description,
-  displayName,
   author as _author,
   productName,
 } from "./package.json";
@@ -15,13 +14,6 @@ const author = _author?.name ?? _author
 const currentYear = new Date().getFullYear();
 const authorInKebabCase = author.replace(/\s+/g, "-");
 const appId = `com.${authorInKebabCase}.${name}`.toLowerCase();
-
-const artifactName = [`${name}-v${version}`, "-${os}.${ext}"].join("");
-const artifactNameSetup = [
-  `${name}-v${version}`,
-  "-Setup",
-  "-${os}.${ext}",
-].join("");
 
 export default {
   appId,
