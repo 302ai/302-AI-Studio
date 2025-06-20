@@ -215,7 +215,7 @@ export class ProviderService {
     _event: Electron.IpcMainEvent,
     params: StreamChatParams,
   ): Promise<{ success: boolean; error?: string }> {
-    const { threadId, userMessageId, provider } = params;
+    const { threadId, userMessageId, provider, model } = params;
 
     let fullContent = "";
     let assistantMessage: Message | null = null;
@@ -234,6 +234,7 @@ export class ProviderService {
         content: "",
         providerId: provider.id,
         parentMessageId: userMessageId,
+        modelId: model.id,
       });
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,

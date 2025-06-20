@@ -111,10 +111,16 @@ export class OpenAIProviderService extends BaseProviderService {
     params: StreamChatParams,
     abortController: AbortController,
   ): Promise<StreamTextResult<ToolSet, never>> {
-    const { tabId, threadId, userMessageId, messages, modelName } = params;
+    const {
+      tabId,
+      threadId,
+      userMessageId,
+      messages,
+      model: originModel,
+    } = params;
 
     try {
-      const model = this.openai(modelName);
+      const model = this.openai(originModel.name);
 
       Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
 
