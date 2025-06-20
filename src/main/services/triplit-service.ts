@@ -17,7 +17,7 @@ import portfinder from "portfinder";
 portfinder.setBasePort(9000);
 
 // Triplit服务器配置
-export interface TrilitServerConfig {
+export interface TriplitServerConfig {
   port: number;
   verboseLogs: boolean;
   jwtSecret: string;
@@ -27,7 +27,7 @@ export interface TrilitServerConfig {
   localDatabaseUrl?: string;
 }
 
-const defaultTrilitConfig: TrilitServerConfig = {
+const defaultTriplitConfig: TriplitServerConfig = {
   port: 9000,
   verboseLogs: false,
   jwtSecret: "default-jwt-secret-change-in-production",
@@ -82,7 +82,7 @@ export class TriplitService {
       return this.server;
     }
 
-    const config = await this.getTrilitConfig();
+    const config = await this.getTriplitConfig();
 
     if (config.localDatabaseUrl) {
       const dbFile = config.localDatabaseUrl;
@@ -125,7 +125,7 @@ export class TriplitService {
     return this.server;
   }
 
-  private async getTrilitConfig(): Promise<TrilitServerConfig> {
+  private async getTriplitConfig(): Promise<TriplitServerConfig> {
     const userDataPath = isDev
       ? join(__dirname, "../../../db")
       : app.getPath("userData");
@@ -139,13 +139,13 @@ export class TriplitService {
     const config = {
       port: this.port,
       verboseLogs: !!(
-        process.env.VERBOSE_LOGS || defaultTrilitConfig.verboseLogs
+        process.env.VERBOSE_LOGS || defaultTriplitConfig.verboseLogs
       ),
-      jwtSecret: process.env.JWT_SECRET || defaultTrilitConfig.jwtSecret,
-      projectId: process.env.PROJECT_ID || defaultTrilitConfig.projectId,
+      jwtSecret: process.env.JWT_SECRET || defaultTriplitConfig.jwtSecret,
+      projectId: process.env.PROJECT_ID || defaultTriplitConfig.projectId,
       externalJwtSecret: process.env.EXTERNAL_JWT_SECRET,
       maxPayloadMb:
-        process.env.MAX_BODY_SIZE || defaultTrilitConfig.maxPayloadMb,
+        process.env.MAX_BODY_SIZE || defaultTriplitConfig.maxPayloadMb,
       localDatabaseUrl: process.env.LOCAL_DATABASE_URL || defaultDatabaseFile,
     };
 
@@ -156,9 +156,9 @@ export class TriplitService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getServerStatus(_event: Electron.IpcMainEvent): Promise<{
     isRunning: boolean;
-    config: Partial<TrilitServerConfig>;
+    config: Partial<TriplitServerConfig>;
   }> {
-    const config = await this.getTrilitConfig();
+    const config = await this.getTriplitConfig();
     return {
       isRunning: this.isServerRunning,
       config: {
