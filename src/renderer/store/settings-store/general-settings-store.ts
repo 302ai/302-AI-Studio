@@ -24,19 +24,27 @@ export const useSettingsStore = create<SettingsStore>()(
       setTheme: (newTheme: ThemeMode) => {
         set({ theme: newTheme });
 
-        const actualTheme =
-          newTheme === ThemeMode.System
-            ? window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? ThemeMode.Dark
-              : ThemeMode.Light
-            : newTheme;
+        if (newTheme !== ThemeMode.System) {
+          configService.setTheme(newTheme);
 
-        configService.setTheme(actualTheme);
-
-        if (actualTheme === ThemeMode.Dark) {
-          document.documentElement.classList.add("dark");
+          if (newTheme === ThemeMode.Dark) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
         } else {
-          document.documentElement.classList.remove("dark");
+          const actualTheme = window.matchMedia("(prefers-color-scheme: dark)")
+            .matches
+            ? ThemeMode.Dark
+            : ThemeMode.Light;
+
+          configService.setTheme(actualTheme);
+
+          if (actualTheme === ThemeMode.Dark) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
         }
       },
 
@@ -47,6 +55,6 @@ export const useSettingsStore = create<SettingsStore>()(
     })),
     {
       name: SETTINGS_STORAGE_KEY,
-    }
-  )
+    },
+  ),
 );

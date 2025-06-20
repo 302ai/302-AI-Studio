@@ -28,6 +28,7 @@ declare global {
       configService: {
         // * General settings
         getLanguage: () => Promise<LanguageVarious>;
+        getTheme: () => Promise<ThemeMode>;
         setLanguage: (language: LanguageVarious) => void;
         setTheme: (theme: ThemeMode) => void;
 

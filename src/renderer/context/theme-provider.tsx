@@ -20,11 +20,34 @@ const { configService } = window.service;
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useSettingsStore();
+  const [isInitialized, setIsInitialized] = useState(false);
   const [isSystemDark, setIsSystemDark] = useState(
-    window.matchMedia("(prefers-color-scheme: dark)").matches
+    window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
 
   useEffect(() => {
+    const initializeTheme = async () => {
+      try {
+        const storedTheme = await configService.getTheme();
+
+        // 如果存储的主题与当前状态不同，更新状态
+        if (storedTheme !== theme) {
+          setTheme(storedTheme);
+        }
+
+        setIsInitialized(true);
+      } catch (error) {
+        console.error("Failed to initialize theme:", error);
+        setIsInitialized(true);
+      }
+    };
+
+    initializeTheme();
+  }, [setTheme, theme]);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const actualTheme =
@@ -57,7 +80,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme]);
+  }, [theme, isInitialized]);
+
+  // 在初始化完成前不渲染子组件，避免闪烁
+  if (!isInitialized) {
+    return null;
+  }
 
   return (
     <ThemeContext value={{ theme, setTheme, isSystemDark }}>
