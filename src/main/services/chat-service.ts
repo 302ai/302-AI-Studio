@@ -38,10 +38,9 @@ export class ChatService {
         status: "pending",
         tokenCount: 0,
       });
-      Logger.info("ChatService:createMessage success ---->", newMessage);
       return newMessage;
     } catch (error) {
-      Logger.error("ChatService:createMessage error ---->", error);
+      Logger.error("ChatService:createAssistantMessage error ---->", error);
       throw error;
     }
   }
@@ -52,7 +51,6 @@ export class ChatService {
   ): Promise<void> {
     try {
       await this.messageService._updateMessage(messageId, updateData);
-      Logger.info("ChatService:updateMessage success ---->", messageId);
     } catch (error) {
       Logger.error("ChatService:updateMessage error ---->", error);
       throw error;
@@ -67,7 +65,6 @@ export class ChatService {
     try {
       const messages =
         await this.messageService._getMessagesByThreadId(threadId);
-      Logger.info("ChatService:getMessagesByThreadId success ---->", messages);
       return messages;
     } catch (error) {
       Logger.error("ChatService:getMessagesByThreadId error ---->", error);
