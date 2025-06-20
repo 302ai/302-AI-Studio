@@ -9,6 +9,7 @@ import Logger from "electron-log";
 import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
 import icon from "../../resources/build/icons/302ai.png?asset";
+import iconWin from "../../resources/build/icons/win-logo.ico?asset";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
 import { isDev, isMac, isWin } from "../constant";
 
@@ -31,7 +32,7 @@ export async function MainWindow() {
       : storedTheme;
 
   const iconFile = nativeImage.createFromPath(icon);
-
+  const iconFileWin = nativeImage.createFromPath(iconWin);
   const window = createWindow({
     id: "main",
     x: mainWindowState.x,
@@ -42,7 +43,7 @@ export async function MainWindow() {
     minHeight: WINDOW_SIZE.MIN_HEIGHT,
     autoHideMenuBar: true,
     transparent: isMac,
-    icon: iconFile,
+    icon: isWin ? iconFileWin : iconFile,
     visualEffectState: "active",
     titleBarStyle: isWin ? "hidden" : "hiddenInset",
     titleBarOverlay:
