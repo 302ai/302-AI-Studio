@@ -6,7 +6,7 @@ import type {
   UpdateProviderData,
 } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
-import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
+import { type LanguageVarious, ThemeMode } from "@shared/types/settings";
 import Logger from "electron-log";
 import ElectronStore from "electron-store";
 import {
@@ -55,6 +55,15 @@ export class ConfigService {
   setTheme(_event: Electron.IpcMainEvent, theme: ThemeMode) {
     this.configStore.set(ConfigKeys.Theme, theme);
     this.windowService.setTitleBarOverlay(theme);
+  }
+
+  @ServiceHandler()
+  getTheme(_event: Electron.IpcMainEvent): ThemeMode {
+    const theme = this.configStore.get(
+      ConfigKeys.Theme,
+      ThemeMode.System,
+    ) as ThemeMode;
+    return theme;
   }
 
   async getProviders(): Promise<Provider[]> {

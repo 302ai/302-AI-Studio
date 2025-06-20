@@ -3,7 +3,8 @@ import { createWindow } from "@lib/electron-app/factories/windows/create";
 import { MessageService } from "@main/services/message-service";
 import { abortAllStreams } from "@main/services/provider-service/stream-manager";
 import { WINDOW_SIZE } from "@shared/constants";
-import { BrowserWindow, nativeImage } from "electron";
+import { ThemeMode } from "@shared/types/settings";
+import { BrowserWindow, nativeImage, nativeTheme } from "electron";
 import Logger from "electron-log";
 import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
@@ -19,7 +20,16 @@ export async function MainWindow() {
     maximize: false,
   });
 
-  const theme = new ElectronStore().get("theme", "dark");
+  const configStore = new ElectronStore();
+  const storedTheme = configStore.get("theme", ThemeMode.System);
+
+  const actualTheme =
+    storedTheme === ThemeMode.System
+      ? nativeTheme.shouldUseDarkColors
+        ? ThemeMode.Dark
+        : ThemeMode.Light
+      : storedTheme;
+
   const iconFile = nativeImage.createFromPath(icon);
 
   const window = createWindow({
@@ -36,10 +46,12 @@ export async function MainWindow() {
     visualEffectState: "active",
     titleBarStyle: isWin ? "hidden" : "hiddenInset",
     titleBarOverlay:
-      theme === "dark" ? titleBarOverlayDark : titleBarOverlayLight,
+      actualTheme === ThemeMode.Dark
+        ? titleBarOverlayDark
+        : titleBarOverlayLight,
     backgroundColor: isMac
       ? undefined
-      : theme === "dark"
+      : actualTheme === ThemeMode.Dark
         ? "#181818"
         : "#FFFFFF",
     trafficLightPosition: isMac ? { x: 12, y: 12 } : undefined,
