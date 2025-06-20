@@ -48,31 +48,39 @@ export const RowList = memo(function RowList({
         !isLast ? "border-border border-b" : "",
       )}
     >
-      <div className="flex items-center">
-        <Checkbox
-          className="ml-4 cursor-pointer"
-          isSelected={item.enabled}
-          onChange={handleCheckboxChange}
-        />
-
-        <div className="flex-1 px-4 py-2.5 align-middle outline-hidden">
-          {item.name}
+      <div className="grid grid-cols-[48px_minmax(0,1fr)_160px_64px] items-center">
+        <div className="flex justify-center">
+          <Checkbox
+            className="cursor-pointer"
+            isSelected={item.enabled}
+            onChange={handleCheckboxChange}
+          />
         </div>
 
-        <div className="mr-4 px-4 py-2.5 align-middle outline-hidden">
-          <div className="flex items-center gap-2">
-            <ModelIcon modelName={provider?.name ?? ""} />
-            {provider?.name}
+        <div className="px-4 py-2.5 align-middle outline-hidden">
+          <div className="truncate" title={item.name}>
+            {item.name}
           </div>
         </div>
 
-        <ActionGroup
-          className="my-auto mr-4"
-          // onEdit={handleEdit}
-          // onDelete={handleDelete}
-          onStar={handleStar}
-          stared={item.collected}
-        />
+        <div className="px-4 py-2.5 align-middle outline-hidden">
+          <div className="flex items-center gap-2">
+            <ModelIcon modelName={provider?.name ?? ""} />
+            <span className="truncate" title={provider?.name}>
+              {provider?.name}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          <ActionGroup
+            className="my-auto"
+            // onEdit={handleEdit}
+            // onDelete={handleDelete}
+            onStar={handleStar}
+            stared={item.collected}
+          />
+        </div>
       </div>
     </div>
   );
