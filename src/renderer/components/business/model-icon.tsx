@@ -145,7 +145,7 @@ export function ModelIcon({ modelName, className }: ModelIconProps) {
   return (
     <img
       src={icons[iconKey]}
-      className={cn("h-4 w-4 rounded-full dark:bg-white", className)}
+      className={cn("h-4 w-4 rounded-full", className)}
       alt={modelName || "Model Icon"}
     />
   );
