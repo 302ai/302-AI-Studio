@@ -1,4 +1,4 @@
-  import {
+import {
   main,
   name,
   version,
@@ -24,6 +24,8 @@ export default {
     app: getDevFolder(main),
     output: `dist/v${version}`,
   },
+  
+  asarUnpack: ["**/node_modules/sharp/**/*", "**/node_modules/@img/**/*"],
 
   mac: {
     artifactName: [
