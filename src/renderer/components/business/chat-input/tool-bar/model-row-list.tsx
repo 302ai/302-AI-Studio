@@ -59,7 +59,7 @@ export const ModelRowList = memo(function ModelRowList({
       <div className="flex w-full flex-row items-center gap-2 overflow-hidden">
         <ModelIcon
           modelName={item.model.name}
-          className="size-4 flex-shrink-0"
+          className="size-4 flex-shrink-0 dark:bg-white"
         />
         <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap">
           {item.name}
