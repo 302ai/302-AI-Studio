@@ -1,5 +1,7 @@
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
 
 const { tabService } = window.service;
@@ -14,7 +16,7 @@ export interface AttachmentFile {
   fileData?: string; // base64 file data for non-image files (for preview)
 }
 
-export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const ALLOWED_TYPES = [
   // JSON and JavaScript
   "application/json",
@@ -117,6 +119,9 @@ const processAttachmentsFromData = (
 export function useAttachments() {
   const [attachments, setAttachments] = useState<AttachmentFile[]>([]);
   const { activeTabId } = useActiveTab();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "attachment",
+  });
 
   // 保存文件到tab
   const saveFilesToTab = useCallback(
@@ -200,6 +205,7 @@ export function useAttachments() {
 
         // File size validation
         if (file.size > MAX_FILE_SIZE) {
+          toast.error(t("file-too-large"));
           console.warn(`File ${file.name} is too large (${file.size} bytes)`);
           continue;
         }
@@ -284,7 +290,7 @@ export function useAttachments() {
       // 保存到tab
       await saveFilesToTab(updatedAttachments);
     },
-    [attachments, saveFilesToTab],
+    [attachments, saveFilesToTab, t],
   );
 
   const removeAttachment = useCallback(

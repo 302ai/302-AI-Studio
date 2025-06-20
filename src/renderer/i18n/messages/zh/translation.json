@@ -3,7 +3,7 @@
     "input-label": "输入消息",
     "input-placeholder": "随便问问...",
     "tool-bar": {
-      "attach-file": "上传附件"
+      "attach-file": "上传附件(文件不能超过10MB)"
     },
     "model-select-label": "选择模型",
     "model-select-placeholder": "请选择一个模型...",
@@ -214,5 +214,8 @@
   "stop-generating": "停止",
   "new-thread": {
     "hello-world": "告诉我你在思考些什么？"
+  },
+  "attachment": {
+    "file-too-large": "文件大小不能超过10MB"
   }
 }
