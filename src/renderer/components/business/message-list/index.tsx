@@ -13,7 +13,7 @@ export function MessageList({ messages }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="mx-auto w-full max-w-7xl">
+    <div className="mx-auto w-full max-w-[800px]">
       {messages.map((message: Message) => (
         <div key={message.id}>
           {message.role === "user" ? (
