@@ -1,7 +1,11 @@
 // ! This service can be used within the main process
 // ! Support main process to main process communication of main process to renderer process communication
 
-import type { Message, Provider } from "@shared/triplit/types";
+import type {
+  Message,
+  Provider,
+  UpdateProviderData,
+} from "@shared/triplit/types";
 import { BrowserWindow } from "electron";
 import mitt from "mitt";
 
@@ -13,6 +17,7 @@ export enum EventNames {
   // * Provider Events
   PROVIDER_ADD = "provider:add",
   PROVIDER_DELETE = "provider:delete",
+  PROVIDER_UPDATE = "provider:update",
 
   // * Chat Events
   CHAT_STREAM_STATUS_UPDATE = "chat:stream-status-update",
@@ -27,6 +32,10 @@ type Events = {
   };
   [EventNames.PROVIDER_DELETE]: {
     providerId: string;
+  };
+  [EventNames.PROVIDER_UPDATE]: {
+    providerId: string;
+    updateData: UpdateProviderData;
   };
   [EventNames.CHAT_STREAM_STATUS_UPDATE]: {
     threadId: string;

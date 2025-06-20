@@ -4,7 +4,12 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { extractErrorMessage } from "@main/utils/error-utils";
-import type { CreateModelData, Message, Provider } from "@shared/triplit/types";
+import type {
+  CreateModelData,
+  Message,
+  Provider,
+  UpdateProviderData,
+} from "@shared/triplit/types";
 import type { LanguageModelUsage } from "ai";
 import Logger from "electron-log";
 import { ChatService } from "../chat-service";
@@ -63,6 +68,9 @@ export class ProviderService {
     emitter.on(EventNames.PROVIDER_DELETE, ({ providerId }) => {
       this.handleProviderDeleted(providerId);
     });
+    emitter.on(EventNames.PROVIDER_UPDATE, ({ providerId, updateData }) => {
+      this.handleProviderUpdated(providerId, updateData);
+    });
   }
 
   private handleProviderAdded(provider: Provider) {
@@ -108,6 +116,25 @@ export class ProviderService {
     }
   }
 
+  private handleProviderUpdated(
+    providerId: string,
+    updateData: UpdateProviderData,
+  ) {
+    const provider = this.providerMap.get(providerId);
+    if (!provider) {
+      return;
+    }
+
+    this.providerMap.set(providerId, {
+      ...provider,
+      ...updateData,
+    });
+
+    const providerInst = this.getProviderInst(providerId);
+    if (providerInst) {
+      providerInst.updateProvider(updateData);
+    }
+  }
   private createProviderInst(
     provider: Provider,
   ): BaseProviderService | undefined {
