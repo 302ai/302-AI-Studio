@@ -1,8 +1,9 @@
 {
   "displayName": "302AIStudio",
   "name": "302AIStudio",
+  "productName": "302 AI Studio",
   "description": "302 AI Studio",
-  "version": "0.0.1",
+  "version": "0.0.1-test",
   "main": "./node_modules/.dev/main/index.js",
   "homepage": "https://302.ai",
   "resources": "src/resources",

@@ -6,6 +6,7 @@
   description,
   displayName,
   author as _author,
+  productName,
 } from "./package.json";
 import type { Configuration } from 'electron-builder'
 import { getDevFolder } from "./src/lib/electron-app/release/utils/path";
@@ -24,7 +25,7 @@ const artifactNameSetup = [
 
 export default {
   appId,
-  productName: displayName,
+  productName: productName,
   copyright: `Copyright © ${currentYear} — ${author}`,
 
   directories: {
@@ -56,7 +57,7 @@ export default {
   },
 
   win: {
-    executableName: displayName,
+    executableName: productName,
     artifactName: artifactNameSetup,
     icon: `${resources}/build/icons/302ai.png`,
     target: [
@@ -69,8 +70,7 @@ export default {
 
   nsis: {
     artifactName: artifactNameSetup,
-    shortcutName: displayName,
-    uninstallDisplayName: displayName,
+    shortcutName: productName,
     oneClick: false,
     allowToChangeInstallationDirectory: true,
     createDesktopShortcut: true,
