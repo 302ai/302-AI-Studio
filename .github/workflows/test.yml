@@ -54,8 +54,9 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: true
-          overwrite: true
           build_script_name: "prebuild"
           max_attempts: 3
         env:
           NODE_OPTIONS: --max-old-space-size=8192
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_RELEASES_OVERWRITE: true
