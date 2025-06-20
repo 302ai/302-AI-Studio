@@ -129,7 +129,7 @@ interface ModelIconProps {
 
 export function ModelIcon({ modelName, className }: ModelIconProps) {
   const iconKey = useMemo(() => {
-    if (!modelName || typeof modelName !== 'string') {
+    if (!modelName || typeof modelName !== "string") {
       return "default";
     }
 
