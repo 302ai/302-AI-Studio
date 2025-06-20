@@ -62,7 +62,7 @@ export function UserMessage({ message }: UserMessageProps) {
         onContextMenu={handleContextMenu}
       >
         <div className="w-full min-w-0 max-w-[80%]">
-          <div className="ml-auto w-fit rounded-2xl bg-accent px-4 py-2">
+          <div className="ml-auto w-fit max-w-full rounded-2xl bg-accent px-4 py-2">
             {attachments.length > 0 && (
               <div className="mb-2">
                 <MessageAttachments attachments={attachments} />
@@ -70,7 +70,7 @@ export function UserMessage({ message }: UserMessageProps) {
             )}
 
             {message.content && (
-              <div className="w-full whitespace-pre-wrap break-words">
+              <div className="overflow-wrap-anywhere w-full whitespace-pre-wrap break-words break-all">
                 {message.content}
               </div>
             )}

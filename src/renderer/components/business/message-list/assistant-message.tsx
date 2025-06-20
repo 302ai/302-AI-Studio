@@ -183,7 +183,7 @@ export function AssistantMessage({
 
           {/* Main content display */}
           {cleanContent && (
-            <div className="w-full">
+            <div className="overflow-wrap-anywhere w-full whitespace-pre-wrap break-words break-all">
               <MarkdownRenderer>{cleanContent}</MarkdownRenderer>
             </div>
           )}
