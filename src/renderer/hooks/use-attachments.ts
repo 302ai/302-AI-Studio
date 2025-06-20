@@ -313,12 +313,21 @@ export function useAttachments() {
     await saveFilesToTab([]);
   }, [saveFilesToTab]);
 
+  // 直接设置附件（用于编辑模式）
+  const setAttachmentsDirectly = useCallback(
+    (newAttachments: AttachmentFile[]) => {
+      setAttachments(newAttachments);
+    },
+    [],
+  );
+
   return {
     attachments,
     addAttachments,
     removeAttachment,
     clearAttachments,
     loadFilesFromTab,
+    setAttachmentsDirectly,
   };
 }
 

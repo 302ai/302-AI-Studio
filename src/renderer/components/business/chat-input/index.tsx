@@ -6,8 +6,9 @@ import { useThread } from "@renderer/hooks/use-thread";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
+import type { Message } from "@shared/triplit/types";
 import { Pencil, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentList } from "./attachment-list";
@@ -24,8 +25,13 @@ export function ChatInput({ className }: ChatInputProps) {
     keyPrefix: "chat",
   });
 
-  const { attachments, addAttachments, removeAttachment, clearAttachments } =
-    useAttachments();
+  const {
+    attachments,
+    addAttachments,
+    removeAttachment,
+    clearAttachments,
+    setAttachmentsDirectly,
+  } = useAttachments();
   const { input, setInput, handleInputChange, clearInput } = useTabInput();
   const [isSending, setIsSending] = useState(false);
   const [editMessageId, setEditMessageId] = useState<string | null>(null);
@@ -95,17 +101,73 @@ export function ChatInput({ className }: ChatInputProps) {
     }
   };
 
+  // 从消息附件数据加载附件
+  const loadAttachmentsFromMessage = useCallback(
+    async (message: Message) => {
+      if (!message.attachments) {
+        await clearAttachments();
+        return;
+      }
+
+      try {
+        const messageAttachments = JSON.parse(message.attachments);
+        if (
+          !Array.isArray(messageAttachments) ||
+          messageAttachments.length === 0
+        ) {
+          await clearAttachments();
+          return;
+        }
+
+        // 将消息附件转换为AttachmentFile格式
+        const loadedAttachments = messageAttachments.map(
+          (attachment: {
+            id: string;
+            name: string;
+            size: number;
+            type: string;
+            preview?: string;
+            fileData?: string;
+          }) => {
+            // 创建一个虚拟的File对象用于显示
+            const blob = new Blob([], { type: attachment.type });
+            const file = new File([blob], attachment.name, {
+              type: attachment.type,
+            });
+
+            return {
+              id: attachment.id,
+              name: attachment.name,
+              size: attachment.size,
+              type: attachment.type,
+              file,
+              preview: attachment.preview,
+              fileData: attachment.fileData,
+            };
+          },
+        );
+
+        // 直接设置附件状态，不保存到tab（因为这是编辑模式）
+        setAttachmentsDirectly(loadedAttachments);
+      } catch (error) {
+        console.error("Failed to load attachments from message:", error);
+        await clearAttachments();
+      }
+    },
+    [clearAttachments, setAttachmentsDirectly],
+  );
+
   useEffect(() => {
-    const unsub = emitter.on(EventNames.MESSAGE_EDIT, (msg) => {
-      if (editMessageId === msg.id) return;
+    const unsub = emitter.on(EventNames.MESSAGE_EDIT, async (msg) => {
       setInput(msg.content);
       setEditMessageId(msg.id);
+      await loadAttachmentsFromMessage(msg);
     });
 
     return () => {
       unsub();
     };
-  }, [editMessageId, setInput]);
+  }, [setInput, loadAttachmentsFromMessage]);
 
   const handleSave = async () => {
     if (!editMessageId) return;
@@ -125,10 +187,9 @@ export function ChatInput({ className }: ChatInputProps) {
 
   useEffect(() => {
     if (activeThreadId) {
-      console.log("Thread changed, current input value:", input);
       setEditMessageId(null);
     }
-  }, [activeThreadId, input]);
+  }, [activeThreadId]);
 
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>
