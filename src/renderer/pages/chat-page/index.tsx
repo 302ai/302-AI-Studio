@@ -3,7 +3,7 @@ import { MessageList } from "@renderer/components/business/message-list";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { useChat } from "@renderer/hooks/use-chat";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 export function ChatPage() {
@@ -13,6 +13,7 @@ export function ChatPage() {
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isEditingMessageRef = useRef(isEditingMessage);
+  const isInitialLoadRef = useRef(true);
 
   // 保持 ref 与最新值同步
   useEffect(() => {
@@ -41,11 +42,29 @@ export function ChatPage() {
     return scrollHeight - scrollTop - clientHeight < 200;
   }, []);
 
+  // 首次加载时直接设置滚动位置，避免闪动
+  useLayoutEffect(() => {
+    if (isInitialLoadRef.current && messages.length > 0 && scrollContainerRef.current) {
+      // 使用 setTimeout 确保在下一个事件循环中执行
+      const timeoutId = setTimeout(() => {
+        const container = scrollContainerRef.current;
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+          isInitialLoadRef.current = false;
+        }
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
+    }
+    return undefined;
+  });
+
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages.length > 0 && !isInitialLoadRef.current) {
       const rafId = requestAnimationFrame(() => {
         if (!isEditingMessageRef.current && shouldAutoScroll()) {
-          scrollToBottom(streaming);
+          // 非首次加载，根据是否在流输出决定是否使用动画
+          scrollToBottom(!streaming);
         } 
       });
 
@@ -59,7 +78,8 @@ export function ChatPage() {
     if (activeThreadId && messages.length > 0) {
       setTimeout(() => {
         if (!isEditingMessageRef.current) {
-          scrollToBottom(false);
+          // 切换线程时直接跳转到底部
+          scrollToBottom(true);
         }
       }, 100);
     }
@@ -72,6 +92,7 @@ export function ChatPage() {
         className="flex-1 space-y-4 overflow-y-auto pr-6"
         style={{
           scrollbarGutter: "stable",
+          display: messages.length === 0 ? "none" : "block",
         }}
       >
         <MessageList messages={messages} />

@@ -69,7 +69,7 @@ export function AssistantMessage({
 
   const modelName = useMemo(() => {
     const model = modelResults?.[0];
-    return model?.name ?? "";
+    return model?.name ?? "AI";
   }, [modelResults]);
 
   const attachments = useMemo(() => {
@@ -189,9 +189,7 @@ export function AssistantMessage({
 
           {/* Model name display */}
           {modelName && (
-            <div className="mb-2 text-muted-fg text-xs">
-              {modelName}
-            </div>
+            <div className="mb-2 text-muted-fg text-xs">{modelName}</div>
           )}
 
           {/* Think content display */}
