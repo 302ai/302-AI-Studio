@@ -77,4 +77,26 @@ export class MessageDbService extends BaseDbService {
       await Promise.all(deletePromises);
     });
   }
+
+  async updatePendingMessagesToStop(): Promise<number> {
+    const pendingMessagesQuery = triplitClient
+      .query("messages")
+      .Where("status", "=", "pending");
+
+    const pendingMessages = await triplitClient.fetch(pendingMessagesQuery);
+
+    if (pendingMessages.length > 0) {
+      await triplitClient.transact(async (tx) => {
+        const updatePromises = pendingMessages.map((message) => {
+          return tx.update("messages", message.id, async (msg) => {
+            msg.status = "stop";
+          });
+        });
+
+        await Promise.all(updatePromises);
+      });
+    }
+
+    return pendingMessages.length;
+  }
 }

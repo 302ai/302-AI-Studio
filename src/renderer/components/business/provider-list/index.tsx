@@ -272,9 +272,7 @@ export function ProviderList() {
 
   const updateHeight = useCallback(() => {
     if (listContainerRef.current) {
-      console.log("updateHeight --- provider-list");
       const height = listContainerRef.current.clientHeight;
-      console.log("height", height);
       setListHeight(height);
     }
   }, []);

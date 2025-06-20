@@ -135,6 +135,7 @@ export class ProviderService {
       providerInst.updateProvider(updateData);
     }
   }
+
   private createProviderInst(
     provider: Provider,
   ): BaseProviderService | undefined {

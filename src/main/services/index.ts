@@ -4,6 +4,7 @@ import { FileParseService } from "./file-service/file-parse-service";
 import { FilePreviewService } from "./file-service/file-preview-service/index";
 import { MessageService } from "./message-service";
 import { ProviderService } from "./provider-service";
+import { ShellService } from "./shell-service";
 import { TabService } from "./tab-service";
 import { ThreadService } from "./thread-service";
 import { TriplitService } from "./triplit-service";
@@ -22,4 +23,5 @@ export const services = [
   ProviderService,
   FileParseService,
   FilePreviewService,
+  ShellService,
 ];

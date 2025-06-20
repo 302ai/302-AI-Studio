@@ -89,6 +89,25 @@ export class ConfigDbService extends BaseDbService {
     await Promise.all(addModels);
   }
 
+  async updateProviderModels(providerId: string, models: CreateModelData[]) {
+    const modelsQuery = triplitClient
+      .query("models")
+      .Where("providerId", "=", providerId);
+    const modelsData = await triplitClient.fetch(modelsQuery);
+
+    await triplitClient.transact(async (tx) => {
+      const deleteModels = modelsData.map((model) => {
+        return tx.delete("models", model.id);
+      });
+      await Promise.all(deleteModels);
+
+      const addModels = models.map((model) => {
+        return tx.insert("models", model);
+      });
+      await Promise.all(addModels);
+    });
+  }
+
   private async reorderProviders() {
     const query = triplitClient.query("providers").Order("order", "ASC");
     const providers = await triplitClient.fetch(query);

@@ -164,7 +164,7 @@ export function AddProvider({
                 textValue={name}
               >
                 <span className="flex items-center gap-2">
-                  <ModelIcon modelName={name} />
+                  <ModelIcon modelName={name} className="dark:bg-white" />
                   <span className="text-base">{name}</span>
                 </span>
               </SelectOption>
