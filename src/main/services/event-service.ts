@@ -24,6 +24,9 @@ export enum EventNames {
 
   // * Message Events
   MESSAGE_ACTIONS = "message:actions",
+
+  // * Window Events
+  WINDOW_TITLE_BAR_OVERLAY_UPDATE = "window:title-bar-overlay-update",
 }
 
 type Events = {
@@ -50,6 +53,7 @@ type Events = {
       message?: Message;
     };
   };
+  [EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE]: null;
 };
 
 const oriMittInstance = mitt<Events>();

@@ -1,23 +1,29 @@
+import { triplitClient } from "@renderer/client";
 import { cn } from "@renderer/lib/utils";
-import { useSettingsStore } from "@renderer/store/settings-store";
-import { ThemeMode } from "@shared/types/settings";
+import type { Theme } from "@shared/triplit/types";
+import { useQueryOne } from "@triplit/react";
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+const { configService } = window.service;
 
 export function ThemeSwitcher() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.general-settings.theme",
   });
-  const { theme, setTheme } = useSettingsStore();
+
+  const uiQuery = triplitClient.query("ui");
+  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
+  const theme = uiResult?.theme ?? "system";
 
   const [thumbStyle, setThumbStyle] = useState({});
 
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleThemeChange = (newTheme: ThemeMode) => {
-    setTheme(newTheme);
+  const handleThemeChange = async (newTheme: Theme) => {
+    await configService.setAppTheme(newTheme);
   };
 
   const setItemRef = (index: number) => (el: HTMLDivElement | null) => {
@@ -27,27 +33,27 @@ export function ThemeSwitcher() {
   const themeOptions = useMemo(
     () => [
       {
-        key: ThemeMode.Light,
+        key: "light",
         icon: <Sun className="size-4" />,
         label: t("light"),
       },
       {
-        key: ThemeMode.Dark,
+        key: "dark",
         icon: <Moon className="size-4" />,
         label: t("dark"),
       },
       {
-        key: ThemeMode.System,
+        key: "system",
         icon: <Laptop className="size-4" />,
         label: t("system"),
       },
     ],
-    [t]
+    [t],
   );
 
   useEffect(() => {
     const currentIndex = themeOptions.findIndex(
-      (option) => option.key === theme
+      (option) => option.key === theme,
     );
     if (
       currentIndex === -1 ||
@@ -88,12 +94,12 @@ export function ThemeSwitcher() {
               "relative z-2 flex w-1/3 cursor-pointer items-center justify-center gap-1 rounded-xl text-sm",
               theme === option.key
                 ? "text-accent-fg"
-                : "z-1 text-secondary-fg hover:bg-hover-primary"
+                : "z-1 text-secondary-fg hover:bg-hover-primary",
             )}
-            onMouseDown={() => handleThemeChange(option.key as ThemeMode)}
+            onMouseDown={() => handleThemeChange(option.key as Theme)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleThemeChange(option.key as ThemeMode);
+                handleThemeChange(option.key as Theme);
               }
             }}
             aria-checked={theme === option.key}

@@ -31,3 +31,5 @@ export type UpdateMessageData = Partial<Omit<Message, "id">>;
 
 // * UI
 export type Ui = Entity<Schema, "ui">;
+export type Theme = "light" | "dark" | "system";
+export type Language = "zh" | "en" | "ja";

@@ -1,16 +1,18 @@
-import { useSettingsStore } from "@renderer/store/settings-store";
-import { ThemeMode } from "@shared/types/settings";
+import { triplitClient } from "@renderer/client";
+import type { Theme } from "@shared/triplit/types";
+import { useQueryOne } from "@triplit/react";
 import {
   createContext,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
 
 type ThemeContextType = {
-  theme: ThemeMode;
-  setTheme: (theme: ThemeMode) => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
   isSystemDark: boolean;
 };
 
@@ -19,57 +21,36 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const { configService } = window.service;
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const { theme, setTheme } = useSettingsStore();
-  const [isInitialized, setIsInitialized] = useState(false);
+  const uiQuery = triplitClient.query("ui");
+  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
+  const theme = uiResult?.theme ?? "system";
+
   const [isSystemDark, setIsSystemDark] = useState(
     window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
 
-  useEffect(() => {
-    const initializeTheme = async () => {
-      try {
-        const storedTheme = await configService.getTheme();
-
-        // 如果存储的主题与当前状态不同，更新状态
-        if (storedTheme !== theme) {
-          setTheme(storedTheme);
-        }
-
-        setIsInitialized(true);
-      } catch (error) {
-        console.error("Failed to initialize theme:", error);
-        setIsInitialized(true);
-      }
-    };
-
-    initializeTheme();
-  }, [setTheme, theme]);
+  const setTheme = useCallback(async (theme: Theme) => {
+    await configService.setAppTheme(theme);
+  }, []);
 
   useEffect(() => {
-    if (!isInitialized) return;
+    configService.updateAppTheme(theme as Theme);
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const actualTheme =
-      theme === ThemeMode.System
-        ? mediaQuery.matches
-          ? ThemeMode.Dark
-          : ThemeMode.Light
-        : theme;
+      theme === "system" ? (mediaQuery.matches ? "dark" : "light") : theme;
 
-    if (actualTheme === ThemeMode.Dark) {
+    if (actualTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
 
-    const handleChange = (e: MediaQueryListEvent) => {
+    const handleChange = async (e: MediaQueryListEvent) => {
       setIsSystemDark(e.matches);
-      if (theme === ThemeMode.System) {
-        const actualTheme = e.matches ? ThemeMode.Dark : ThemeMode.Light;
 
-        configService.setTheme(actualTheme);
-
+      if (theme === "system") {
         if (e.matches) {
           document.documentElement.classList.add("dark");
         } else {
@@ -80,15 +61,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme, isInitialized]);
-
-  // 在初始化完成前不渲染子组件，避免闪烁
-  if (!isInitialized) {
-    return null;
-  }
+  }, [theme]);
 
   return (
-    <ThemeContext value={{ theme, setTheme, isSystemDark }}>
+    <ThemeContext value={{ theme: theme as Theme, setTheme, isSystemDark }}>
       {children}
     </ThemeContext>
   );

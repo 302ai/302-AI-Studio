@@ -12,13 +12,13 @@ export function initMainBridge(): void {
       return;
     }
 
+    const serviceInstance = new service();
+
     const { service: name, handlers } = metadata;
     if (!handlers) {
       console.warn(`No handlers found for service: ${name}`);
       return;
     }
-
-    const serviceInstance = new service();
 
     Object.entries(handlers).forEach(([methodName, handlerInfo]) => {
       const { handle, way } = handlerInfo as {

@@ -3,10 +3,8 @@ import { createWindow } from "@lib/electron-app/factories/windows/create";
 import { MessageService } from "@main/services/message-service";
 import { abortAllStreams } from "@main/services/provider-service/stream-manager";
 import { WINDOW_SIZE } from "@shared/constants";
-import { ThemeMode } from "@shared/types/settings";
 import { BrowserWindow, nativeImage, nativeTheme } from "electron";
 import Logger from "electron-log";
-import ElectronStore from "electron-store";
 import windowStateKeeper from "electron-window-state";
 import icon from "../../resources/build/icons/302ai.png?asset";
 import iconWin from "../../resources/build/icons/win-logo.ico?asset";
@@ -21,18 +19,10 @@ export async function MainWindow() {
     maximize: false,
   });
 
-  const configStore = new ElectronStore();
-  const storedTheme = configStore.get("theme", ThemeMode.System);
-
-  const actualTheme =
-    storedTheme === ThemeMode.System
-      ? nativeTheme.shouldUseDarkColors
-        ? ThemeMode.Dark
-        : ThemeMode.Light
-      : storedTheme;
-
   const iconFile = nativeImage.createFromPath(icon);
   const iconFileWin = nativeImage.createFromPath(iconWin);
+  const { shouldUseDarkColors } = nativeTheme;
+
   const window = createWindow({
     id: "main",
     x: mainWindowState.x,
@@ -46,13 +36,12 @@ export async function MainWindow() {
     icon: isWin ? iconFileWin : iconFile,
     visualEffectState: "active",
     titleBarStyle: isWin ? "hidden" : "hiddenInset",
-    titleBarOverlay:
-      actualTheme === ThemeMode.Dark
-        ? titleBarOverlayDark
-        : titleBarOverlayLight,
+    titleBarOverlay: shouldUseDarkColors
+      ? titleBarOverlayDark
+      : titleBarOverlayLight,
     backgroundColor: isMac
       ? undefined
-      : actualTheme === ThemeMode.Dark
+      : shouldUseDarkColors
         ? "#181818"
         : "#FFFFFF",
     trafficLightPosition: isMac ? { x: 12, y: 12 } : undefined,

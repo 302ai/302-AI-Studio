@@ -6,9 +6,11 @@ import type {
   CreateProviderData,
   CreateTabData,
   CreateThreadData,
+  Language,
   Message,
   Provider,
   Tab,
+  Theme,
   Thread,
   UpdateMessageData,
   UpdateProviderData,
@@ -16,7 +18,6 @@ import type {
   UpdateThreadData,
 } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
-import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 
 declare global {
   interface Window {
@@ -27,10 +28,10 @@ declare global {
     service: {
       configService: {
         // * General settings
-        getLanguage: () => Promise<LanguageVarious>;
-        getTheme: () => Promise<ThemeMode>;
-        setLanguage: (language: LanguageVarious) => void;
-        setTheme: (theme: ThemeMode) => void;
+        getAppLanguage: () => Promise<Language>;
+        setAppLanguage: (language: Language) => Promise<void>;
+        setAppTheme: (theme: Theme) => Promise<void>;
+        updateAppTheme: (theme: Theme) => Promise<void>;
 
         // * Provider and models settings
         insertProvider: (provider: CreateProviderData) => Promise<Provider>;

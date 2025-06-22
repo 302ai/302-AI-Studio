@@ -65,7 +65,6 @@
     "electron-router-dom": "^2.1.0",
     "file-type": "^21.0.0",
     "i18next": "^25.0.0",
-    "immer": "^10.1.1",
     "katex": "^0.16.11",
     "ldrs": "^1.1.7",
     "lodash": "^4.17.21",
@@ -97,8 +96,7 @@
     "unist-util-visit": "^5.0.0",
     "xlsx": "^0.18.5",
     "xml2js": "^0.6.2",
-    "zod": "^3.25.49",
-    "zustand": "^5.0.4"
+    "zod": "^3.25.49"
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.0-beta.6",

@@ -9,7 +9,7 @@ const { configService } = window.service;
 // Initialize i18next
 i18n.use(initReactI18next).init({
   fallbackLng: "zh",
-  lng: ((await configService.getLanguage()) || "zh-CN").split("-")[0],
+  lng: await configService.getAppLanguage(),
   resources: {
     zh: {
       translation: zhTranslation,

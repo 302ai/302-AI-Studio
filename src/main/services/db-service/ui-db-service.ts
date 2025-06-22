@@ -1,5 +1,11 @@
 import { triplitClient } from "@main/triplit/client";
-import type { Provider, Thread, Ui } from "@shared/triplit/types";
+import type {
+  Language,
+  Provider,
+  Theme,
+  Thread,
+  Ui,
+} from "@shared/triplit/types";
 import { BaseDbService } from "./base-db-service";
 
 export class UiDbService extends BaseDbService {
@@ -15,15 +21,71 @@ export class UiDbService extends BaseDbService {
     const ui = await triplitClient.fetch(query);
 
     if (ui.length === 0) {
-      this.uiRecord = await triplitClient.insert("ui", {
-        activeProviderId: "",
-        activeThreadId: "",
-        activeTabId: "",
-        activeTabHistory: new Set(),
-      });
+      await this.initDB();
     } else {
       this.uiRecord = ui[0];
+      await this.migrateDB();
     }
+  }
+
+  private async initDB() {
+    this.uiRecord = await triplitClient.insert("ui", {
+      activeProviderId: "",
+      activeThreadId: "",
+      activeTabId: "",
+      activeTabHistory: new Set(),
+      theme: "system",
+      language: "zh",
+    });
+  }
+
+  private async migrateDB() {
+    const query = triplitClient.query("ui");
+    const ui = await triplitClient.fetchOne(query);
+
+    if (ui) {
+      await triplitClient.update("ui", ui.id, async (ui) => {
+        if (!ui.theme) {
+          ui.theme = "system";
+        }
+
+        if (!ui.language) {
+          ui.language = "zh";
+        }
+      });
+    }
+  }
+
+  async getTheme(): Promise<Theme> {
+    const query = triplitClient.query("ui");
+    const ui = await triplitClient.fetchOne(query);
+    return (ui?.theme as Theme) ?? "system";
+  }
+
+  async setTheme(theme: Theme) {
+    if (!this.uiRecord) {
+      return;
+    }
+
+    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
+      ui.theme = theme;
+    });
+  }
+
+  async getLanguage(): Promise<Language> {
+    const query = triplitClient.query("ui");
+    const ui = await triplitClient.fetchOne(query);
+    return (ui?.language as Language) ?? "zh";
+  }
+
+  async setLanguage(language: Language) {
+    if (!this.uiRecord) {
+      return;
+    }
+
+    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
+      ui.language = language;
+    });
   }
 
   // * Active Provider Id
