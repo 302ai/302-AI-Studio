@@ -9,7 +9,6 @@ export const messagesSchema = {
       enum: ["user", "assistant", "system", "function"],
     }),
     content: S.String(),
-    attachments: S.String({ nullable: true }),
     createdAt: S.Date({ default: S.Default.now() }),
     orderSeq: S.Number({ default: 0 }),
     tokenCount: S.Number({ default: 0 }),
@@ -24,5 +23,8 @@ export const messagesSchema = {
   relationships: {
     thread: S.RelationById("threads", "$threadId"),
     parentMessage: S.RelationById("messages", "$parentMessageId"),
+    attachments: S.RelationMany("attachments", {
+      where: [["messageId", "=", "$id"]],
+    }),
   },
 };

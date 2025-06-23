@@ -1,3 +1,4 @@
+import { attachmentsSchema } from "./attachments-schema";
 import { messagesSchema } from "./messages-schema";
 import { modelsSchema } from "./models-schema";
 import { providersSchema } from "./providers-schema";
@@ -6,6 +7,7 @@ import { threadsSchema } from "./threads-schema";
 import { uiSchema } from "./ui-schema";
 
 export {
+  attachmentsSchema,
   tabsSchema,
   threadsSchema,
   providersSchema,

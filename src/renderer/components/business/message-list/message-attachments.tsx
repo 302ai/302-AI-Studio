@@ -1,5 +1,7 @@
-import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import { triplitClient } from "@renderer/client";
 import { cn } from "@renderer/lib/utils";
+import type { Attachment } from "@shared/triplit/types";
+import { useQuery } from "@triplit/react";
 import {
   File,
   FileAudio,
@@ -11,14 +13,19 @@ import {
 } from "lucide-react";
 
 interface MessageAttachmentsProps {
-  attachments: AttachmentFile[];
+  messageId: string;
   className?: string;
 }
 
 export function MessageAttachments({
-  attachments,
+  messageId,
   className,
 }: MessageAttachmentsProps) {
+  const attachmentsQuery = triplitClient
+    .query("attachments")
+    .Where("messageId", "=", messageId);
+  const { results: attachments } = useQuery(triplitClient, attachmentsQuery);
+
   if (!attachments || attachments.length === 0) {
     return null;
   }
@@ -29,7 +36,7 @@ export function MessageAttachments({
     return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
   };
 
-  const handlePreview = async (attachment: AttachmentFile) => {
+  const handlePreview = async (attachment: Attachment) => {
     try {
       if (attachment.type.startsWith("image/")) {
         // 处理图片文件
@@ -88,7 +95,7 @@ export function MessageAttachments({
     }
   };
 
-  const getFileIcon = (attachment: AttachmentFile) => {
+  const getFileIcon = (attachment: Attachment) => {
     const { type, name } = attachment;
     const iconClass = "size-4";
 

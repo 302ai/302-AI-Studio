@@ -90,7 +90,7 @@ export function useToolBar() {
     messages: Array<{
       role: "user" | "assistant" | "system" | "function";
       content: string;
-      attachments?: string | null;
+      id?: string; // Include message ID for attachment lookup
     }>,
     provider: Provider,
     model: Model,
@@ -183,37 +183,45 @@ export function useToolBar() {
       );
       const nextOrderSeq = existingMessages.length + 1;
 
-      // Prepare attachments data
-      const attachmentsData =
-        attachments && attachments.length > 0
-          ? JSON.stringify(attachments)
-          : null;
-
       // Insert user message
       const userMessage = await messageService.insertMessage({
         threadId: currentActiveThreadId,
         parentMessageId: null,
         role: "user",
         content,
-        attachments: attachmentsData,
         orderSeq: nextOrderSeq,
         tokenCount: content.length,
         status: "success",
       });
 
+      if (attachments && attachments.length > 0) {
+        const attachmentData = attachments.map((attachment) => ({
+          messageId: userMessage.id,
+          name: attachment.name,
+          size: attachment.size,
+          type: attachment.type,
+          preview: attachment.preview || null,
+          fileData: attachment.fileData || null,
+          fileContent: null,
+        }));
+
+        await window.service.attachmentService.insertAttachments(
+          attachmentData,
+        );
+      }
+
       console.log("User message sent successfully:", userMessage);
 
-      // Prepare conversation context for AI
       const conversationMessages = [
         ...existingMessages.map((msg) => ({
           role: msg.role as "user" | "assistant" | "system" | "function",
           content: msg.content,
-          attachments: msg.attachments,
+          id: msg.id,
         })),
         {
           role: "user" as const,
           content,
-          attachments: attachmentsData,
+          id: userMessage.id,
         },
       ];
 
@@ -297,7 +305,7 @@ export function useToolBar() {
       ...context.map((msg) => ({
         role: msg.role as "user" | "assistant" | "system" | "function",
         content: msg.content,
-        attachments: msg.attachments,
+        id: msg.id, // Include message ID for attachment lookup
       })),
     ];
 

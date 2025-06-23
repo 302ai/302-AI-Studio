@@ -1,31 +1,14 @@
-const { messageService, fileParseService } = window.service;
+const { fileParseService, attachmentService } = window.service;
 
 export async function parseAndUpdateAttachments(
   userMessageId: string,
 ): Promise<void> {
   try {
-    // Get the user message
-    const userMessage = await messageService.getMessageById(userMessageId);
+    // Get attachments from database
+    const attachments =
+      await attachmentService.getAttachmentsByMessageId(userMessageId);
 
-    if (!userMessage || !userMessage.attachments) {
-      return;
-    }
-
-    // Parse attachments JSON
-    let attachments: Array<{
-      id: string;
-      name: string;
-      size: number;
-      type: string;
-      preview?: string;
-      fileData?: string;
-      fileContent?: string;
-    }> = [];
-
-    try {
-      attachments = JSON.parse(userMessage.attachments);
-    } catch (error) {
-      console.error("Failed to parse attachments JSON:", error);
+    if (!attachments || attachments.length === 0) {
       return;
     }
 
@@ -44,7 +27,6 @@ export async function parseAndUpdateAttachments(
     }
 
     // Parse each attachment that needs parsing
-    let hasUpdates = false;
     for (const attachment of attachments) {
       if (
         !attachment.fileContent &&
@@ -59,20 +41,15 @@ export async function parseAndUpdateAttachments(
             fileData: attachment.fileData,
           });
 
-          attachment.fileContent = fileContent;
-          hasUpdates = true;
+          // Update the attachment with parsed content
+          await attachmentService.updateAttachment(attachment.id, {
+            fileContent: fileContent,
+          });
         } catch (error) {
           // Continue with other attachments
           console.error("Failed to parse file content:", error);
         }
       }
-    }
-
-    // Update the message with parsed content if there were updates
-    if (hasUpdates) {
-      await messageService.updateMessage(userMessageId, {
-        attachments: JSON.stringify(attachments),
-      });
     }
   } catch (error) {
     console.error("Failed to parse and update attachments:", error);

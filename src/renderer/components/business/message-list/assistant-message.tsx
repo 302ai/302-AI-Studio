@@ -5,7 +5,6 @@ import { ContextMenuItem } from "@renderer/components/ui/context-menu";
 import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
-import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { useThinkBlocks } from "@renderer/hooks/use-think-blocks";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { formatTimeAgo } from "@renderer/lib/utils";
@@ -71,15 +70,6 @@ export function AssistantMessage({
   //   const model = modelResults?.[0];
   //   return model?.name ?? "AI";
   // }, [modelResults]);
-
-  const attachments = useMemo(() => {
-    if (!message.attachments) return [];
-    try {
-      return JSON.parse(message.attachments) as AttachmentFile[];
-    } catch {
-      return [];
-    }
-  }, [message.attachments]);
 
   // Extract clean content with streaming support
   const { cleanContent } = useThinkBlocks(message.content || "");
@@ -192,11 +182,7 @@ export function AssistantMessage({
         <ModelIcon className="size-6" modelName={providerName} />
 
         <div className="w-full min-w-0">
-          {attachments.length > 0 && (
-            <div className="mb-2">
-              <MessageAttachments attachments={attachments} />
-            </div>
-          )}
+          <MessageAttachments messageId={message.id} className="mb-2" />
 
           {/* Model name display */}
           {message.modelName && (

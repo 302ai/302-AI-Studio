@@ -17,7 +17,7 @@ import {
 export interface ChatMessage {
   role: "user" | "assistant" | "system" | "function";
   content: string;
-  attachments?: string | null;
+  id?: string; // Add message ID to support attachment lookup
 }
 
 export interface StreamChatParams {

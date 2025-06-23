@@ -1,6 +1,8 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type { StreamChatParams } from "@main/services/provider-service/base-provider-service";
 import type {
+  Attachment,
+  CreateAttachmentData,
   CreateMessageData,
   CreateModelData,
   CreateProviderData,
@@ -12,6 +14,7 @@ import type {
   Tab,
   Theme,
   Thread,
+  UpdateAttachmentData,
   UpdateMessageData,
   UpdateProviderData,
   UpdateTabData,
@@ -115,9 +118,26 @@ declare global {
           messageId: string,
           editData: {
             threadId: string;
-          } & Pick<Message, "content" | "attachments">,
+          } & Pick<Message, "content">,
         ) => Promise<void>;
         insertMessages: (messages: CreateMessageData[]) => Promise<void>;
+      };
+      attachmentService: {
+        insertAttachment: (
+          attachment: CreateAttachmentData,
+        ) => Promise<Attachment>;
+        insertAttachments: (
+          attachments: CreateAttachmentData[],
+        ) => Promise<void>;
+        updateAttachment: (
+          attachmentId: string,
+          updateData: UpdateAttachmentData,
+        ) => Promise<void>;
+        deleteAttachment: (attachmentId: string) => Promise<void>;
+        getAttachmentsByMessageId: (messageId: string) => Promise<Attachment[]>;
+        getAttachmentById: (attachmentId: string) => Promise<Attachment | null>;
+        deleteAttachmentsByMessageId: (messageId: string) => Promise<void>;
+        deleteAllAttachments: () => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{

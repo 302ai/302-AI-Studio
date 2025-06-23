@@ -1,5 +1,4 @@
 import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
-import { BrowserWindow } from "electron";
 import Logger from "electron-log";
 import { FilePresenter } from "../services/file-service/file-parse-service";
 
@@ -10,7 +9,7 @@ type ContentPart = TextPart | ImagePart | FilePart;
 export interface ChatMessage {
   role: "user" | "assistant" | "system" | "function";
   content: string;
-  attachments?: string | null;
+  id?: string; // Add message ID to support attachment lookup
 }
 
 // Type definition for attachment objects
@@ -37,13 +36,31 @@ export async function convertToModelMessage(
   // Create FilePresenter instance for local file parsing
   const filePresenter = new FilePresenter();
 
-  if (message.role === "user" && message.attachments) {
+  if (message.role === "user" && (message.id || messageId)) {
+    // Get attachments from database using the new attachment service
+    const attachmentService = new (
+      await import("../services/attachment-service")
+    ).AttachmentService();
+    const attachmentId = message.id || messageId;
     let attachments: AttachmentData[] = [];
-    try {
-      attachments = JSON.parse(message.attachments);
-    } catch (error) {
-      Logger.warn("Failed to parse attachments:", error);
-      attachments = [];
+
+    if (attachmentId) {
+      try {
+        const dbAttachments =
+          await attachmentService._getAttachmentsByMessageId(attachmentId);
+        attachments = dbAttachments.map((att) => ({
+          id: att.id,
+          name: att.name,
+          size: att.size,
+          type: att.type,
+          preview: att.preview || undefined,
+          fileData: att.fileData || undefined,
+          fileContent: att.fileContent || undefined,
+        }));
+      } catch (error) {
+        Logger.warn("Failed to get attachments from database:", error);
+        attachments = [];
+      }
     }
 
     let attachmentsUpdated = false;
@@ -116,12 +133,19 @@ export async function convertToModelMessage(
         content: contentParts,
       } as ModelMessage;
 
-      // If attachments were updated with parsed content, notify renderer to update database
-      if (attachmentsUpdated && messageId) {
-        sendToAllWindows("chat:attachments-updated", {
-          messageId,
-          attachments: JSON.stringify(attachments),
-        });
+      // If attachments were updated with parsed content, update them in database
+      if (attachmentsUpdated && attachmentId) {
+        try {
+          for (const attachment of attachments) {
+            if (attachment.fileContent) {
+              await attachmentService._updateAttachment(attachment.id, {
+                fileContent: attachment.fileContent,
+              });
+            }
+          }
+        } catch (error) {
+          Logger.error("Failed to update attachments in database:", error);
+        }
       }
 
       return result;
@@ -141,23 +165,6 @@ export async function convertToModelMessage(
   });
 
   return result;
-}
-
-// Type definition for IPC event data
-interface AttachmentsUpdatedEventData {
-  messageId: string;
-  attachments: string;
-}
-
-/**
- * Helper function to send IPC events to all windows
- * @param channel - The IPC channel name
- * @param data - The data to send
- */
-function sendToAllWindows(channel: string, data: AttachmentsUpdatedEventData) {
-  BrowserWindow.getAllWindows().forEach((window) => {
-    window.webContents.send(channel, data);
-  });
 }
 
 /**
