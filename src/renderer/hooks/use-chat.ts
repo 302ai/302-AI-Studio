@@ -112,7 +112,6 @@ export function useChat() {
       switch (data.actions.type) {
         case "edit":
           if (data.actions.message) {
-            console.log('设置编辑状态为 true');
             setIsEditingMessage(true);
             setMessages((prevMessages) =>
               prevMessages.map((message) =>
