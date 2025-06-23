@@ -49,7 +49,7 @@ type Events = {
   [EventNames.MESSAGE_ACTIONS]: {
     threadId: string;
     actions: {
-      type: "edit" | "delete";
+      type: "edit" | "delete" | "delete-single";
       message?: Message;
     };
   };

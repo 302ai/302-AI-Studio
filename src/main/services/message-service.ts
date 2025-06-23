@@ -95,9 +95,23 @@ export class MessageService {
   async deleteMessage(
     _event: Electron.IpcMainEvent,
     messageId: string,
+    threadId: string,
   ): Promise<void> {
     try {
+      // Get message before deleting for event notification
+      const messageToDelete =
+        await this.messageDbService.getMessageById(messageId);
       await this.messageDbService.deleteMessage(messageId);
+
+      if (messageToDelete) {
+        sendToThread(threadId, EventNames.MESSAGE_ACTIONS, {
+          threadId,
+          actions: {
+            type: "delete-single",
+            message: messageToDelete,
+          },
+        });
+      }
     } catch (error) {
       Logger.error("MessageService: deleteMessage error ---->", error);
       throw error;

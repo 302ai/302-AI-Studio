@@ -22,7 +22,6 @@ export function useChat() {
       try {
         const messages = await chatService.getMessagesByThreadId(threadId);
         setMessages(messages);
-
         return messages;
       } catch (err) {
         console.error("Failed to get messages: ", err);
@@ -102,7 +101,7 @@ export function useChat() {
       data: {
         threadId: string;
         actions: {
-          type: "edit" | "delete";
+          type: "edit" | "delete" | "delete-single";
           message?: Message;
         };
       },
@@ -129,6 +128,17 @@ export function useChat() {
 
         case "delete":
           setMessages([]);
+          break;
+
+        case "delete-single":
+          if (data.actions.message) {
+            // Delete specific message
+            setMessages((prevMessages) =>
+              prevMessages.filter(
+                (message) => message.id !== data.actions.message?.id,
+              ),
+            );
+          }
           break;
 
         default: {

@@ -106,7 +106,7 @@ declare global {
           messageId: string,
           updateData: UpdateMessageData,
         ) => Promise<void>;
-        deleteMessage: (messageId: string) => Promise<void>;
+        deleteMessage: (messageId: string, threadId: string) => Promise<void>;
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
         getMessageById: (messageId: string) => Promise<Message | null>;
         deleteMessagesByThreadId: (threadId: string) => Promise<void>;

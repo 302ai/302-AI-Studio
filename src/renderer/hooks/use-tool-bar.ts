@@ -286,7 +286,7 @@ export function useToolBar() {
     const messagesToDelete = existingMessages.slice(messageIndex);
     for (const msg of messagesToDelete) {
       try {
-        await messageService.deleteMessage(msg.id);
+        await messageService.deleteMessage(msg.id, msg.threadId);
       } catch (error) {
         console.error("Failed to delete message:", msg.id, error);
       }

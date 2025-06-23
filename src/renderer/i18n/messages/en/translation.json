@@ -195,6 +195,7 @@
     "copy": "Copy",
     "refresh": "Regenerate",
     "edit": "Edit",
+    "delete": "Delete",
     "thinking": "AI is thinking",
     "edit-dialog": {
       "title": "Edit Message",
@@ -204,6 +205,8 @@
       "save-error": "Failed to update message"
     },
     "generate-failed": "Generate failed",
+    "delete-success": "Message deleted successfully",
+    "delete-error": "Failed to delete message",
     "context-menu": {
       "create-new-branch": "Create new branch from here",
       "create-new-branch-error": "Sorry, the new branch creation failed!",

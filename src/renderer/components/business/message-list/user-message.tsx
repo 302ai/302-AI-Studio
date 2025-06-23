@@ -3,15 +3,17 @@ import { MenuContent } from "@renderer/components/ui/menu";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Message } from "@shared/triplit/types";
-import { Copy, Pencil } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { ButtonWithTooltip } from "../button-with-tooltip";
 import { MessageAttachments } from "./message-attachments";
 
 interface UserMessageProps {
   message: Message;
 }
+
+const { messageService } = window.service;
 
 export function UserMessage({ message }: UserMessageProps) {
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
@@ -53,6 +55,17 @@ export function UserMessage({ message }: UserMessageProps) {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await messageService.deleteMessage(message.id, message.threadId);
+      setContextMenuOpen(false);
+      toast.success(t("delete-success"));
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error(t("delete-error"));
+    }
+  };
+
   return (
     <>
       {/** biome-ignore lint/a11y/noStaticElementInteractions: needed for context menu handling */}
@@ -84,9 +97,7 @@ export function UserMessage({ message }: UserMessageProps) {
               title={t("edit")}
               size="extra-small"
               intent="plain"
-            >
-              <Pencil className="h-3 w-3" />
-            </ButtonWithTooltip>
+            ></ButtonWithTooltip>
           </div>
         </div>
       </div>
@@ -109,18 +120,23 @@ export function UserMessage({ message }: UserMessageProps) {
           onClose={() => setContextMenuOpen(false)}
           aria-label="User message options"
         >
-          <ContextMenuItem onAction={handleCopy}>
-            <Copy className="mr-2 h-4 w-4" />
-            {t("copy")}
-          </ContextMenuItem>
+          <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
           <ContextMenuItem
             onAction={() => {
               onEdit();
               setContextMenuOpen(false);
             }}
           >
-            <Pencil className="mr-2 h-4 w-4" />
             {t("edit")}
+          </ContextMenuItem>
+          <ContextMenuItem
+            isDanger={true}
+            onAction={() => {
+              handleDelete();
+              setContextMenuOpen(false);
+            }}
+          >
+            {t("delete")}
           </ContextMenuItem>
         </MenuContent>
       )}

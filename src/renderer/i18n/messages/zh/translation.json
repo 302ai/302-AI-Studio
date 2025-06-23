@@ -183,6 +183,7 @@
     "copy": "复制",
     "refresh": "重新生成",
     "edit": "编辑",
+    "delete": "删除",
     "thinking": "AI正在思考",
     "edit-dialog": {
       "title": "编辑消息",
@@ -192,6 +193,8 @@
       "save-error": "消息更新失败"
     },
     "generate-failed": "生成失败",
+    "delete-success": "消息删除成功",
+    "delete-error": "消息删除失败",
     "context-menu": {
       "create-new-branch": "从此处创建分支",
       "create-new-branch-error": "抱歉，创建分支失败！",

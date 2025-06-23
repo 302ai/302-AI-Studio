@@ -170,6 +170,17 @@ export function AssistantMessage({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await messageService.deleteMessage(message.id, message.threadId);
+      setContextMenuOpen(false);
+      toast.success(t("delete-success"));
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error(t("delete-error"));
+    }
+  };
+
   return (
     <>
       {/** biome-ignore lint/a11y/noStaticElementInteractions: needed for context menu handling */}
@@ -317,6 +328,16 @@ export function AssistantMessage({
             }}
           >
             {t("context-menu.create-new-branch")}
+          </ContextMenuItem>
+
+          <ContextMenuItem
+            isDanger={true}
+            onAction={() => {
+              handleDelete();
+              setContextMenuOpen(false);
+            }}
+          >
+            {t("delete")}
           </ContextMenuItem>
         </MenuContent>
       )}
