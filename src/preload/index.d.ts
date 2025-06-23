@@ -213,7 +213,7 @@ declare global {
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
       };
       shellService: {
-        openExternal: (url: string) => void;
+        openExternal: (url: string) => Promise<void>;
       };
     };
   }

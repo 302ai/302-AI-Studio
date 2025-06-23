@@ -66,7 +66,8 @@
           "url-invalid-format": "無効なURL形式",
           "verification-required": "プロバイダーを追加する前に、まずAPIキーを確認してください",
           "verification-required-notice": "💡 通知：プロバイダー設定を追加または保存する前に、API認証が必要です。",
-          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください"
+          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください",
+          "get-api-key": "APIキーを取得するには、ここをクリックしてください"
         },
         "delete": "削除",
         "description": "モデル",

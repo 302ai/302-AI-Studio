@@ -1,6 +1,7 @@
 import { Badge } from "@renderer/components/ui/badge";
 import { Button } from "@renderer/components/ui/button";
 import { Label } from "@renderer/components/ui/field";
+import { Link as Hyperlink } from "@renderer/components/ui/link";
 import { Radio, RadioGroup } from "@renderer/components/ui/radio-group";
 import { TextField } from "@renderer/components/ui/text-field";
 import type { NormalizedUrlResult } from "@renderer/utils/url-normalizer";
@@ -9,6 +10,7 @@ import { AlertTriangle, Check, KeyRound, Link, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LoaderRenderer } from "../loader-renderer";
 import "ldrs/react/TailChase.css";
+import { cn } from "@renderer/lib/utils";
 
 interface ProviderCfgFormProps {
   isCustomProvider: boolean;
@@ -17,6 +19,7 @@ interface ProviderCfgFormProps {
   baseUrl: string;
   providerType: string;
   keyValidationStatus: "unverified" | "loading" | "success" | "failed";
+  canGetApiKey: boolean;
   canCheckKey: boolean;
   isChecking: "idle" | "loading" | "success" | "failed";
   onValidationStatusReset: () => void;
@@ -25,6 +28,7 @@ interface ProviderCfgFormProps {
   onApiKeyChange: (value: string) => void;
   onBaseUrlChange: (value: string) => void;
   onProviderTypeChange: (value: string) => void;
+  onGetApiKey: () => void;
   normalizedUrlResult: NormalizedUrlResult;
 }
 
@@ -35,6 +39,7 @@ export function ProviderCfgForm({
   baseUrl,
   providerType,
   keyValidationStatus,
+  canGetApiKey,
   canCheckKey,
   isChecking,
   onValidationStatusReset,
@@ -43,6 +48,7 @@ export function ProviderCfgForm({
   onApiKeyChange,
   onBaseUrlChange,
   onProviderTypeChange,
+  onGetApiKey,
   normalizedUrlResult,
 }: ProviderCfgFormProps) {
   const { t } = useTranslation("translation", {
@@ -130,6 +136,15 @@ export function ProviderCfgForm({
             />
           </Badge>
         </div>
+
+        <Hyperlink
+          className={cn("cursor-pointer text-sm", isCustomProvider && "hidden")}
+          intent="primary"
+          isDisabled={!canGetApiKey}
+          onPress={onGetApiKey}
+        >
+          {t("get-api-key")}
+        </Hyperlink>
 
         {/* Input and Button Row */}
         <div className="flex flex-row items-end gap-2">

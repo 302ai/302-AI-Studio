@@ -1,3 +1,4 @@
+import { DEFAULT_PROVIDERS } from "@renderer/config/providers";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
 import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
 import type { Provider } from "@shared/triplit/types";
@@ -11,6 +12,8 @@ interface EditProviderProps {
   onValidationStatusChange: (isValid: boolean) => void;
   onProviderCfgSet: (providerCfg: Provider) => void;
 }
+
+const { shellService } = window.service;
 
 export function EditProvider({
   provider,
@@ -180,6 +183,13 @@ export function EditProvider({
     normalizedUrlResult,
   ]);
 
+  const handleGetApiKey = async () => {
+    const selectedProvider = DEFAULT_PROVIDERS.find(
+      (p) => p.name === provider.name,
+    );
+    await shellService.openExternal(selectedProvider?.websites?.apiKey || "");
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <ProviderCfgForm
@@ -200,6 +210,8 @@ export function EditProvider({
           handleKeyFieldChange(value, setApiType)
         }
         normalizedUrlResult={normalizedUrlResult}
+        canGetApiKey={!isCustomProvider}
+        onGetApiKey={handleGetApiKey}
       />
     </div>
   );

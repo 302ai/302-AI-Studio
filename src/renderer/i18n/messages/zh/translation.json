@@ -66,7 +66,8 @@
           "url-invalid-format": "URL 格式无效",
           "verification-required": "请先验证 API Key 才可添加提供商",
           "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
-          "verification-hint": "请点击验证按钮确认 API Key 可用性"
+          "verification-hint": "请点击验证按钮确认 API Key 可用性",
+          "get-api-key": "点击此处获取API Key"
         },
         "delete": "删除",
         "description": "个模型",
