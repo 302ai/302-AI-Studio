@@ -235,6 +235,7 @@ export class ProviderService {
         providerId: provider.id,
         parentMessageId: userMessageId,
         modelId: model.id,
+        modelName: model.name,
       });
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,

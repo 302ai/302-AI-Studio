@@ -57,20 +57,20 @@ export function AssistantMessage({
   const providerQuery = triplitClient
     .query("providers")
     .Where("id", "=", message.providerId);
-  const modelQuery = triplitClient
-    .query("models")
-    .Where("id", "=", message.modelId);
-  const { results: modelResults } = useQuery(triplitClient, modelQuery);
+  // const modelQuery = triplitClient
+  //   .query("models")
+  //   .Where("id", "=", message.modelId);
+  // const { results: modelResults } = useQuery(triplitClient, modelQuery);
   const { results: providerResults } = useQuery(triplitClient, providerQuery);
   const providerName = useMemo(() => {
     const provider = providerResults?.[0];
     return provider?.name ?? "";
   }, [providerResults]);
 
-  const modelName = useMemo(() => {
-    const model = modelResults?.[0];
-    return model?.name ?? "AI";
-  }, [modelResults]);
+  // const modelName = useMemo(() => {
+  //   const model = modelResults?.[0];
+  //   return model?.name ?? "AI";
+  // }, [modelResults]);
 
   const attachments = useMemo(() => {
     if (!message.attachments) return [];
@@ -188,8 +188,10 @@ export function AssistantMessage({
           )}
 
           {/* Model name display */}
-          {modelName && (
-            <div className="mb-2 text-muted-fg text-xs">{modelName}</div>
+          {message.modelName && (
+            <div className="mb-2 text-muted-fg text-xs">
+              {message.modelName}
+            </div>
           )}
 
           {/* Think content display */}
