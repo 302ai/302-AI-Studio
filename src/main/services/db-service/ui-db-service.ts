@@ -52,6 +52,10 @@ export class UiDbService extends BaseDbService {
         if (!ui.language) {
           ui.language = "zh";
         }
+
+        if (!ui.selectedModelId) {
+          ui.selectedModelId = "";
+        }
       });
     }
   }
@@ -94,7 +98,7 @@ export class UiDbService extends BaseDbService {
       return;
     }
 
-    await triplitClient.update("ui", this.uiRecord.id, (ui) => {
+    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.activeProviderId = providerId || "";
     });
   }
@@ -132,7 +136,7 @@ export class UiDbService extends BaseDbService {
       return;
     }
 
-    await triplitClient.update("ui", this.uiRecord.id, (ui) => {
+    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.activeThreadId = threadId || "";
     });
   }
@@ -167,7 +171,7 @@ export class UiDbService extends BaseDbService {
       return;
     }
 
-    await triplitClient.update("ui", this.uiRecord.id, (ui) => {
+    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.activeTabId = tabId || "";
     });
   }
@@ -202,6 +206,16 @@ export class UiDbService extends BaseDbService {
       }
 
       ui.activeTabHistory = new Set(historyArray);
+    });
+  }
+
+  async updateSelectedModelId(modelId: string) {
+    if (!this.uiRecord) {
+      return;
+    }
+
+    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
+      ui.selectedModelId = modelId || "";
     });
   }
 }

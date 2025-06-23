@@ -1,6 +1,6 @@
 import { triplitClient } from "@renderer/client";
 import type { Thread } from "@shared/triplit/types";
-import { useQuery } from "@triplit/react";
+import { useQuery, useQueryOne } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 
 const { uiService } = window.service;
@@ -12,14 +12,14 @@ export function useActiveThread() {
 
   // Subscribe to UI state changes
   const uiQuery = triplitClient.query("ui");
-  const { results: uiResults } = useQuery(triplitClient, uiQuery);
+  const { result: ui } = useQueryOne(triplitClient, uiQuery);
 
   // Subscribe to threads changes
   const threadsQuery = triplitClient.query("threads");
   const { results: threads } = useQuery(triplitClient, threadsQuery);
 
   // Get active thread ID from UI state
-  const activeThreadId = uiResults?.[0]?.activeThreadId || null;
+  const activeThreadId = ui?.activeThreadId || null;
 
   // Update selectedThread when activeThreadId changes
   useEffect(() => {

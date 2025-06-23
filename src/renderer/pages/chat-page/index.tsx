@@ -44,7 +44,11 @@ export function ChatPage() {
 
   // 首次加载时直接设置滚动位置，避免闪动
   useLayoutEffect(() => {
-    if (isInitialLoadRef.current && messages.length > 0 && scrollContainerRef.current) {
+    if (
+      isInitialLoadRef.current &&
+      messages.length > 0 &&
+      scrollContainerRef.current
+    ) {
       // 使用 setTimeout 确保在下一个事件循环中执行
       const timeoutId = setTimeout(() => {
         const container = scrollContainerRef.current;
@@ -53,7 +57,7 @@ export function ChatPage() {
           isInitialLoadRef.current = false;
         }
       }, 0);
-      
+
       return () => clearTimeout(timeoutId);
     }
     return undefined;
@@ -65,7 +69,7 @@ export function ChatPage() {
         if (!isEditingMessageRef.current && shouldAutoScroll()) {
           // 非首次加载，根据是否在流输出决定是否使用动画
           scrollToBottom(!streaming);
-        } 
+        }
       });
 
       return () => cancelAnimationFrame(rafId);
@@ -92,10 +96,9 @@ export function ChatPage() {
         className="flex-1 space-y-4 overflow-y-auto pr-6"
         style={{
           scrollbarGutter: "stable",
-          display: messages.length === 0 ? "none" : "block",
         }}
       >
-        <MessageList messages={messages} />
+        {messages.length > 0 && <MessageList messages={messages} />}
       </div>
 
       {streaming && (

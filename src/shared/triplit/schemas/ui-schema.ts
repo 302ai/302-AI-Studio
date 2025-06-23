@@ -19,5 +19,6 @@ export const uiSchema = {
         default: "zh",
       }),
     ),
+    selectedModelId: S.Optional(S.String({ default: "" })),
   }),
 };

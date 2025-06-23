@@ -6,15 +6,20 @@ import type {
   Provider,
   Thread,
 } from "@shared/triplit/types";
-import { useQuery } from "@triplit/react";
-import { useEffect, useState } from "react";
+import { useQuery, useQueryOne } from "@triplit/react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
-const { threadService, tabService, messageService, providerService } =
-  window.service;
+const {
+  threadService,
+  tabService,
+  messageService,
+  providerService,
+  uiService,
+} = window.service;
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -39,11 +44,12 @@ export function useToolBar() {
   const modelsQuery = triplitClient.query("models");
   const { results: models } = useQuery(triplitClient, modelsQuery);
 
-  const [selectedModelId, setSelectedModelId] = useState<string>("");
+  const uiQuery = triplitClient.query("ui");
+  const { result: ui } = useQueryOne(triplitClient, uiQuery);
+  const selectedModelId = ui?.selectedModelId || "";
 
   const handleModelSelect = async (modelId: string) => {
-    setSelectedModelId(modelId);
-    console.log("selectedModelId", modelId);
+    await uiService.updateSelectedModelId(modelId);
 
     if (activeThreadId) {
       try {
@@ -234,16 +240,18 @@ export function useToolBar() {
 
   // Effect: Sync model selection with active thread
   useEffect(() => {
-    if (activeThreadId) {
-      const activeThread = threads.find(
-        (thread) => thread.id === activeThreadId,
-      );
-      if (activeThread) {
-        setSelectedModelId(activeThread.modelId ?? "");
+    const syncSelectedModelId = async () => {
+      if (activeThreadId) {
+        const activeThread = threads.find(
+          (thread) => thread.id === activeThreadId,
+        );
+        if (activeThread) {
+          await uiService.updateSelectedModelId(activeThread.modelId);
+        }
       }
-    } else {
-      setSelectedModelId("");
-    }
+    };
+
+    syncSelectedModelId();
   }, [activeThreadId, threads]);
 
   const handleRefreshMessage = async (messageId: string) => {

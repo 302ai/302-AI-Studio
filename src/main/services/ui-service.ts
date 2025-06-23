@@ -157,4 +157,18 @@ export class UiService {
       throw error;
     }
   }
+
+  // * Selected Model Id
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateSelectedModelId(
+    _event: Electron.IpcMainEvent,
+    modelId: string,
+  ): Promise<void> {
+    try {
+      await this.uiDbService.updateSelectedModelId(modelId);
+    } catch (error) {
+      Logger.error("UiService:updateSelectedModelId error ---->", error);
+      throw error;
+    }
+  }
 }
