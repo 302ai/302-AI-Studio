@@ -73,7 +73,7 @@ export function ChatInput({ className }: ChatInputProps) {
       await sendMessage(currentInput, currentAttachments);
     } catch (error) {
       console.error("Failed to send message:", error);
-      toast.error("Failed to send message");
+      toast.error(t("send-failed"));
       // Restore input on error
       setInput(currentInput);
       // Note: attachments are already cleared, but that's probably fine for error cases

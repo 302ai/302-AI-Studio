@@ -3,6 +3,7 @@
     "input-label": "Enter a message",
     "collected": "Favorites",
     "input-placeholder": "Ask anything...",
+    "send-failed": "Failed to send message",
     "tool-bar": {
       "attach-file": "Attach file(file size cannot exceed 10MB)"
     },
