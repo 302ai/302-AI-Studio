@@ -7,6 +7,10 @@ import { EventNames, emitter } from "./event-service";
 @ServiceRegister("windowService")
 export class WindowService {
   constructor() {
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners() {
     nativeTheme.on("updated", () => {
       this.updateTitleBarOverlay();
     });
@@ -18,9 +22,7 @@ export class WindowService {
 
   private updateTitleBarOverlay() {
     // * setTitleBarOverlay is only available on Windows
-    if (!isWin) {
-      return;
-    }
+    if (!isWin) return;
 
     BrowserWindow.getAllWindows().forEach((window) => {
       window.setTitleBarOverlay(
