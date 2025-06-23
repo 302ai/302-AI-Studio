@@ -6,6 +6,7 @@ import {
 import type { Provider, Thread } from "@shared/triplit/types";
 import Logger from "electron-log";
 import { UiDbService } from "./db-service/ui-db-service";
+import { EventNames, emitter } from "./event-service";
 
 @ServiceRegister("uiService")
 export class UiService {
@@ -13,6 +14,10 @@ export class UiService {
 
   constructor() {
     this.uiDbService = new UiDbService();
+
+    emitter.on(EventNames.PROVIDER_DELETE, () => {
+      this.resetSelectedModelId();
+    });
   }
 
   // * Active Provider Id
@@ -166,6 +171,15 @@ export class UiService {
   ): Promise<void> {
     try {
       await this.uiDbService.updateSelectedModelId(modelId);
+    } catch (error) {
+      Logger.error("UiService:updateSelectedModelId error ---->", error);
+      throw error;
+    }
+  }
+
+  private async resetSelectedModelId(): Promise<void> {
+    try {
+      await this.uiDbService.updateSelectedModelId("");
     } catch (error) {
       Logger.error("UiService:updateSelectedModelId error ---->", error);
       throw error;
