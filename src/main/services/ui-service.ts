@@ -18,6 +18,9 @@ export class UiService {
     emitter.on(EventNames.PROVIDER_DELETE, () => {
       this.resetSelectedModelId();
     });
+    emitter.on(EventNames.PROVIDER_UPDATE, () => {
+      this.resetSelectedModelId();
+    });
   }
 
   // * Active Provider Id
