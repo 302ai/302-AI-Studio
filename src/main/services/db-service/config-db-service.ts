@@ -93,19 +93,38 @@ export class ConfigDbService extends BaseDbService {
     const modelsQuery = triplitClient
       .query("models")
       .Where("providerId", "=", providerId);
-    const modelsData = await triplitClient.fetch(modelsQuery);
+    const existingModels = await triplitClient.fetch(modelsQuery);
 
-    await triplitClient.transact(async (tx) => {
-      const deleteModels = modelsData.map((model) => {
-        return tx.delete("models", model.id);
-      });
-      await Promise.all(deleteModels);
+    const existingModelNames = new Set(
+      existingModels.map((model) => model.name),
+    );
+    const newModelNames = new Set(models.map((model) => model.name));
 
-      const addModels = models.map((model) => {
-        return tx.insert("models", model);
+    const modelsToDelete = existingModels.filter(
+      (model) => !newModelNames.has(model.name),
+    );
+
+    const modelsToAdd = models.filter(
+      (model) => !existingModelNames.has(model.name),
+    );
+
+    if (modelsToDelete.length > 0 || modelsToAdd.length > 0) {
+      await triplitClient.transact(async (tx) => {
+        if (modelsToDelete.length > 0) {
+          const deletePromises = modelsToDelete.map((model) => {
+            return tx.delete("models", model.id);
+          });
+          await Promise.all(deletePromises);
+        }
+
+        if (modelsToAdd.length > 0) {
+          const addPromises = modelsToAdd.map((model) => {
+            return tx.insert("models", model);
+          });
+          await Promise.all(addPromises);
+        }
       });
-      await Promise.all(addModels);
-    });
+    }
   }
 
   private async reorderProviders() {
