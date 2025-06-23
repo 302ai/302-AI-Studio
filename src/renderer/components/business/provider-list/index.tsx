@@ -154,12 +154,10 @@ export function ProviderList() {
           descriptions: [t("add-provider-form.verification-required")],
           body: (
             <AddProvider
-              onValidationStatusChange={(isValid) => {
-                setIsApiKeyValidated(isValid);
-              }}
-              onProviderCfgSet={(providerCfg) => {
-                setProviderCfg(providerCfg);
-              }}
+              onValidationStatusChange={(isValid) =>
+                setIsApiKeyValidated(isValid)
+              }
+              onProviderCfgSet={(providerCfg) => setProviderCfg(providerCfg)}
               providers={providers}
             />
           ),
@@ -191,12 +189,10 @@ export function ProviderList() {
           body: (
             <EditProvider
               provider={action.provider}
-              onValidationStatusChange={(isValid) => {
-                setIsApiKeyValidated(isValid);
-              }}
-              onProviderCfgSet={(providerCfg) => {
-                setProviderCfg(providerCfg);
-              }}
+              onValidationStatusChange={(isValid) =>
+                setIsApiKeyValidated(isValid)
+              }
+              onProviderCfgSet={(providerCfg) => setProviderCfg(providerCfg)}
             />
           ),
           disabled: !isApiKeyValidated,
