@@ -69,7 +69,7 @@ const TextField = ({
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "group flex flex-col gap-y-1"
+        "group flex flex-col gap-y-1",
       )}
     >
       {!props.children ? (

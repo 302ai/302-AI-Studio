@@ -33,7 +33,7 @@ interface FieldProps {
 const fieldStyles = tv({
   slots: {
     description: "text-pretty text-muted-fg text-sm/6",
-    label: "w-fit cursor-default font-medium text-secondary-fg text-sm/6",
+    label: "w-fit cursor-default font-medium text-fg text-sm",
     fieldError: "text-danger text-sm/6 forced-colors:text-[Mark]",
   },
 });
@@ -112,7 +112,7 @@ const FieldGroup = ({ className, ref, ...props }: FieldGroupProps) => {
         fieldGroupStyles({
           ...renderProps,
           className,
-        })
+        }),
       )}
     />
   );
@@ -129,7 +129,7 @@ const Input = ({ className, ref, ...props }: InputProps) => {
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "w-full min-w-0 bg-transparent px-2.5 py-2 text-base text-fg placeholder-muted-fg outline-hidden focus:outline-hidden sm:text-sm/6 [&::-ms-reveal]:hidden [&::-webkit-search-cancel-button]:hidden"
+        "w-full min-w-0 bg-transparent px-2.5 py-2 text-base text-fg placeholder-muted-fg outline-hidden focus:outline-hidden sm:text-sm/6 [&::-ms-reveal]:hidden [&::-webkit-search-cancel-button]:hidden",
       )}
     />
   );
