@@ -62,7 +62,6 @@ export function ChatInput({ className }: ChatInputProps) {
 
     try {
       setIsSending(true);
-
       if (!selectedModelId) {
         toast.error(t("lack-model"));
         return;
