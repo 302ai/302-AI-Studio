@@ -1,6 +1,7 @@
 {
   "chat": {
     "input-label": "Enter a message",
+    "collected": "Favorites",
     "input-placeholder": "Ask anything...",
     "tool-bar": {
       "attach-file": "Attach file(file size cannot exceed 10MB)"

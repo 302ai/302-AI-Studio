@@ -32,6 +32,7 @@ export const ModelSelect = ({
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
+
   const { contains } = useFilter({ sensitivity: "base" });
 
   // Use triplit queries instead of model-setting-store
@@ -104,16 +105,58 @@ export const ModelSelect = ({
     const hasSearch = searchQuery.trim();
     const query = hasSearch ? searchQuery.toLowerCase().trim() : "";
 
+    const allModels: Array<{
+      model: Model;
+      providerId: string;
+      providerName: string;
+    }> = [];
     groupedModels.forEach((group) => {
-      let matchingModels = group.models;
+      group.models.forEach((model) => {
+        allModels.push({
+          model,
+          providerId: group.id,
+          providerName: group.name,
+        });
+      });
+    });
 
-      if (hasSearch) {
-        matchingModels = group.models.filter((model) =>
-          contains(model.name, query),
-        );
-      }
+    const filteredModels = hasSearch
+      ? allModels.filter(({ model }) => contains(model.name, query))
+      : allModels;
 
-      if (matchingModels.length > 0) {
+    const collectedModels = filteredModels.filter(
+      ({ model }) => model.collected,
+    );
+    const nonCollectedModels = filteredModels.filter(
+      ({ model }) => !model.collected,
+    );
+
+    if (collectedModels.length > 0) {
+      items.push({
+        type: "group",
+        id: "group-collected",
+        name: t("collected"),
+        providerId: "collected",
+        model: {} as Model,
+      });
+
+      collectedModels.forEach(({ model, providerId }) => {
+        items.push({
+          type: "model",
+          id: model.id,
+          name: model.name,
+          providerId,
+          model,
+        });
+      });
+    }
+
+    groupedModels.forEach((group) => {
+      const groupNonCollectedModels = nonCollectedModels.filter(
+        ({ providerId }) => providerId === group.id,
+      );
+
+      if (groupNonCollectedModels.length > 0) {
         items.push({
           type: "group",
           id: `group-${group.id}`,
@@ -122,7 +165,7 @@ export const ModelSelect = ({
           model: {} as Model,
         });
 
-        matchingModels.forEach((model) => {
+        groupNonCollectedModels.forEach(({ model }) => {
           items.push({
             type: "model",
             id: model.id,
@@ -135,7 +178,7 @@ export const ModelSelect = ({
     });
 
     return items;
-  }, [groupedModels, searchQuery, contains]);
+  }, [groupedModels, searchQuery, contains, t]);
 
   const listData = useMemo(
     () => ({

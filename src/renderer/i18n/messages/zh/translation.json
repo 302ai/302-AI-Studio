@@ -2,6 +2,7 @@
   "chat": {
     "input-label": "输入消息",
     "input-placeholder": "随便问问...",
+    "collected": "收藏",
     "tool-bar": {
       "attach-file": "上传附件(文件不能超过10MB)"
     },

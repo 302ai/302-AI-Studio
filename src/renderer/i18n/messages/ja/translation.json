@@ -1,6 +1,7 @@
 {
   "chat": {
     "input-label": "メッセージを入力",
+    "collected": "お気に入り",
     "input-placeholder": "何でも聞いてみてください...",
     "tool-bar": {
       "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)"
