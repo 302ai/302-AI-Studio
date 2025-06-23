@@ -33,7 +33,7 @@ export function AppSidebar(props: AppSidebarProps) {
   return (
     <div className="flex h-[calc(100vh-var(--title-bar-height))] w-full flex-1 flex-row">
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
-        <SidebarContent className="max-h-[calc(100vh-var(--title-bar-height))]">
+        <SidebarContent className="max-h-[calc(100vh-var(--title-bar-height))] pb-2">
           {/* All Threads */}
           <SidebarDisclosureGroup
             className="gap-y-0"
