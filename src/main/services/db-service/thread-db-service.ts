@@ -27,9 +27,7 @@ export class ThreadDbService extends BaseDbService {
   }
 
   async getThreadById(threadId: string): Promise<Thread | null> {
-    const query = triplitClient.query("threads").Where("id", "=", threadId);
-    const threads = await triplitClient.fetch(query);
-    return threads[0] || null;
+    return await triplitClient.fetchById("threads", threadId);
   }
 
   async getThreads(): Promise<Thread[]> {

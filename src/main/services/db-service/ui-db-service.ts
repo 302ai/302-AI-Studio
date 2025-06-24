@@ -45,17 +45,11 @@ export class UiDbService extends BaseDbService {
 
     if (ui) {
       await triplitClient.update("ui", ui.id, async (ui) => {
-        if (!ui.theme) {
-          ui.theme = "system";
-        }
+        if (!ui.theme) ui.theme = "system";
 
-        if (!ui.language) {
-          ui.language = "zh";
-        }
+        if (!ui.language) ui.language = "zh";
 
-        if (!ui.selectedModelId) {
-          ui.selectedModelId = "";
-        }
+        if (!ui.selectedModelId) ui.selectedModelId = "";
       });
     }
   }
@@ -67,9 +61,7 @@ export class UiDbService extends BaseDbService {
   }
 
   async setTheme(theme: Theme) {
-    if (!this.uiRecord) {
-      return;
-    }
+    if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.theme = theme;
@@ -83,9 +75,7 @@ export class UiDbService extends BaseDbService {
   }
 
   async setLanguage(language: Language) {
-    if (!this.uiRecord) {
-      return;
-    }
+    if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.language = language;
@@ -94,9 +84,7 @@ export class UiDbService extends BaseDbService {
 
   // * Active Provider Id
   async updateActiveProviderId(providerId: string) {
-    if (!this.uiRecord) {
-      return;
-    }
+    if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.activeProviderId = providerId || "";
@@ -104,9 +92,7 @@ export class UiDbService extends BaseDbService {
   }
 
   async getActiveProviderId(): Promise<string> {
-    if (!this.uiRecord) {
-      return "";
-    }
+    if (!this.uiRecord) return "";
 
     return this.uiRecord.activeProviderId || "";
   }
@@ -132,9 +118,7 @@ export class UiDbService extends BaseDbService {
 
   // * Active Thread Id
   async updateActiveThreadId(threadId: string) {
-    if (!this.uiRecord) {
-      return;
-    }
+    if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.activeThreadId = threadId || "";
@@ -142,9 +126,7 @@ export class UiDbService extends BaseDbService {
   }
 
   async getActiveThreadId(): Promise<string> {
-    if (!this.uiRecord) {
-      return "";
-    }
+    if (!this.uiRecord) return "";
 
     return this.uiRecord.activeThreadId || "";
   }
@@ -167,9 +149,7 @@ export class UiDbService extends BaseDbService {
 
   // * Active Tab Id
   async updateActiveTabId(tabId: string) {
-    if (!this.uiRecord) {
-      return;
-    }
+    if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.activeTabId = tabId || "";
@@ -177,9 +157,7 @@ export class UiDbService extends BaseDbService {
   }
 
   async getActiveTabId(): Promise<string> {
-    if (!this.uiRecord) {
-      return "";
-    }
+    if (!this.uiRecord) return "";
 
     return this.uiRecord.activeTabId || "";
   }
@@ -190,29 +168,22 @@ export class UiDbService extends BaseDbService {
 
   // * Tab History
   async updateActiveTabHistory(tabId: string) {
-    if (!this.uiRecord) {
-      return;
-    }
+    if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       const historyArray = Array.from(ui.activeTabHistory || []);
 
-      if (historyArray[historyArray.length - 1] !== tabId) {
+      if (historyArray[historyArray.length - 1] !== tabId)
         historyArray.push(tabId);
-      }
 
-      if (historyArray.length > 30) {
-        historyArray.shift();
-      }
+      if (historyArray.length > 30) historyArray.shift();
 
       ui.activeTabHistory = new Set(historyArray);
     });
   }
 
   async updateSelectedModelId(modelId: string) {
-    if (!this.uiRecord) {
-      return;
-    }
+    if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.selectedModelId = modelId || "";
