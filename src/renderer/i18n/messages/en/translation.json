@@ -152,7 +152,8 @@
     "lack-provider": "Missing model provider!",
     "selected-model-not-found": "Please select a model first!",
     "provider-not-found-for-selected-model": "Model provider setup error!",
-    "message-not-found": "This message does not exist!"
+    "message-not-found": "This message does not exist!",
+    "failed-to-generate-ai-response": "Failed to generate AI response!"
   },
   "thread-menu": {
     "actions": {

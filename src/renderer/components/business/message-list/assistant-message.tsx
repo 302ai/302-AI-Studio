@@ -217,7 +217,9 @@ export function AssistantMessage({
             </div>
           )}
 
-          {(message.status === "success" || message.status === "stop") && (
+          {(message.status === "success" ||
+            message.status === "stop" ||
+            message.status === "error") && (
             <div className="mt-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
               {message.status === "success" && (
                 <ButtonWithTooltip

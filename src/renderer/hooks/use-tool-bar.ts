@@ -238,7 +238,7 @@ export function useToolBar() {
         );
       } catch (streamError) {
         console.error("Failed to start streaming chat:", streamError);
-        toast.error("Failed to start AI response");
+        toast.error(t("failed-to-generate-ai-response"));
         // Error handling is now done in the streaming hook
       }
     } catch (error) {
@@ -329,8 +329,7 @@ export function useToolBar() {
       console.log("Regenerate data", data);
     } catch (streamError) {
       console.error("Failed to regenerate streaming chat:", streamError);
-      toast.error("Failed to regenerate AI response");
-      // Error handling is now done in the streaming hook
+      toast.error(t("failed-to-generate-ai-response"));
     }
   };
 
