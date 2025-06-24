@@ -138,8 +138,8 @@
 
 ```bash
 # 1️⃣ 克隆项目
-git clone https://github.com/302ai/Chat-Chat-App.git
-cd Chat-Chat-App
+git clone https://github.com/302ai/302-AI-Studio.git
+cd 302-AI-Studio
 
 # 2️⃣ 安装依赖
 yarn install

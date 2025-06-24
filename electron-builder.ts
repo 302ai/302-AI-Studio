@@ -22,14 +22,14 @@ export default {
 
   directories: {
     app: getDevFolder(main),
-    output: `dist/v${version}`,
+    output: `dist/${version}`,
   },
-  
+
   asarUnpack: ["**/node_modules/sharp/**/*", "**/node_modules/@img/**/*"],
 
   mac: {
     artifactName: [
-      `${name}-v${version}`,
+      `${name}-${version}`,
       "-mac",
       "-${arch}.${ext}",
     ].join(""),
@@ -49,7 +49,7 @@ export default {
 
   linux: {
     artifactName: [
-      `${name}-v${version}`,
+      `${name}-${version}`,
       "-${os}.${ext}",
     ].join(""),
     category: "Utilities",
@@ -60,7 +60,7 @@ export default {
   win: {
     executableName: productName,
     artifactName: [
-      `${name}-v${version}`,
+      `${name}-${version}`,
       "-setup",
       "-${arch}.${ext}",
     ].join(""),
@@ -75,7 +75,7 @@ export default {
 
   nsis: {
     artifactName: [
-      `${name}-v${version}`,
+      `${name}-${version}`,
       "-setup",
       "-${arch}.${ext}",
     ].join(""),
