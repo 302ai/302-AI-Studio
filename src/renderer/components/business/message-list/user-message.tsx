@@ -2,6 +2,7 @@ import { ContextMenuItem } from "@renderer/components/ui/context-menu";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Message } from "@shared/triplit/types";
+import { Pencil } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -83,7 +84,9 @@ export function UserMessage({ message }: UserMessageProps) {
               title={t("edit")}
               size="extra-small"
               intent="plain"
-            ></ButtonWithTooltip>
+            >
+              <Pencil className="h-3 w-3" />
+            </ButtonWithTooltip>
           </div>
         </div>
       </div>
