@@ -2,6 +2,7 @@
 import type { Components } from "react-markdown";
 import Markdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
+import remarkCjkFriendly from "remark-cjk-friendly";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { visit } from "unist-util-visit";
@@ -69,6 +70,7 @@ export function MarkdownRenderer({ children }: { children: string }) {
       remarkPlugins={[
         remarkGfm,
         remarkHighlight,
+        remarkCjkFriendly,
         [remarkMath, { singleDollar: true, doubleBackslash: true }],
       ]}
       rehypePlugins={[
