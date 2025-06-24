@@ -3,17 +3,16 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { TYPES } from "@main/shared/types";
 import type { CreateTabData, Tab, UpdateTabData } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { TabDbService } from "./db-service/tab-db-service";
+import { inject, injectable } from "inversify";
+import type { TabDbService } from "./db-service/tab-db-service";
 
-@ServiceRegister("tabService")
+@ServiceRegister(TYPES.TabService)
+@injectable()
 export class TabService {
-  private tabDbService: TabDbService;
-
-  constructor() {
-    this.tabDbService = new TabDbService();
-  }
+  constructor(@inject(TYPES.TabDbService) private tabDbService: TabDbService) {}
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async insertTab(

@@ -1,0 +1,26 @@
+export const TYPES = {
+  // * Core Db Services
+  AttachmentDbService: Symbol.for("attachmentDbService"),
+  ConfigDbService: Symbol.for("ConfigDbService"),
+  MessageDbService: Symbol.for("MessageDbService"),
+  TabDbService: Symbol.for("TabDbService"),
+  ThreadDbService: Symbol.for("ThreadDbService"),
+  UiDbService: Symbol.for("UiDbService"),
+
+  // * Business Services
+  ConfigService: Symbol.for("ConfigService"),
+  ThreadService: Symbol.for("ThreadService"),
+  MessageService: Symbol.for("MessageService"),
+  AttachmentService: Symbol.for("AttachmentService"),
+  UiService: Symbol.for("UiService"),
+  TabService: Symbol.for("TabService"),
+  ChatService: Symbol.for("ChatService"),
+  ProviderService: Symbol.for("ProviderService"),
+
+  // * Utility Services
+  FileParseService: Symbol.for("FileParseService"),
+  FilePreviewService: Symbol.for("FilePreviewService"),
+  ShellService: Symbol.for("ShellService"),
+  WindowService: Symbol.for("WindowService"),
+  TriplitService: Symbol.for("TriplitService"),
+} as const;

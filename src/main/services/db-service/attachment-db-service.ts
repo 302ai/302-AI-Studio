@@ -4,8 +4,10 @@ import type {
   CreateAttachmentData,
   UpdateAttachmentData,
 } from "@shared/triplit/types";
+import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
+@injectable()
 export class AttachmentDbService extends BaseDbService {
   constructor() {
     super("attachments");

@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { createWindow } from "@lib/electron-app/factories/windows/create";
-import { MessageService } from "@main/services/message-service";
+import type { MessageService } from "@main/services/message-service";
 import { abortAllStreams } from "@main/services/provider-service/stream-manager";
 import { WINDOW_SIZE } from "@shared/constants";
 import { BrowserWindow, nativeImage, nativeTheme } from "electron";
@@ -10,6 +10,8 @@ import icon from "../../resources/build/icons/302ai.png?asset";
 import iconWin from "../../resources/build/icons/win-logo.ico?asset";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
 import { isDev, isMac, isWin } from "../constant";
+import { container } from "../shared/bindings";
+import { TYPES } from "../shared/types";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -62,7 +64,9 @@ export async function MainWindow() {
   window.on("close", async (event) => {
     event.preventDefault();
     try {
-      const messageService = new MessageService();
+      const messageService = container.get<MessageService>(
+        TYPES.MessageService,
+      );
       abortAllStreams();
       await messageService.updatePendingMessagesToStop();
     } catch (error) {

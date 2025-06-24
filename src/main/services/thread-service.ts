@@ -1,23 +1,24 @@
+import { TYPES } from "@main/shared/types";
 import type {
   CreateThreadData,
   Thread,
   UpdateThreadData,
 } from "@shared/triplit/types";
 import Logger from "electron-log";
+import { inject, injectable } from "inversify";
 import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
-import { ThreadDbService } from "./db-service/thread-db-service";
+import type { ThreadDbService } from "./db-service/thread-db-service";
 
-@ServiceRegister("threadService")
+@ServiceRegister(TYPES.ThreadService)
+@injectable()
 export class ThreadService {
-  private threadDbService: ThreadDbService;
-
-  constructor() {
-    this.threadDbService = new ThreadDbService();
-  }
+  constructor(
+    @inject(TYPES.ThreadDbService) private threadDbService: ThreadDbService,
+  ) {}
 
   async getThreads(): Promise<Thread[]> {
     const threads = await this.threadDbService.getThreads();

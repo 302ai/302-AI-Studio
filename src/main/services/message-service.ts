@@ -3,22 +3,23 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { TYPES } from "@main/shared/types";
 import type {
   CreateMessageData,
   Message,
   UpdateMessageData,
 } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { MessageDbService } from "./db-service/message-db-service";
+import { inject, injectable } from "inversify";
+import type { MessageDbService } from "./db-service/message-db-service";
 import { EventNames, sendToThread } from "./event-service";
 
-@ServiceRegister("messageService")
+@injectable()
+@ServiceRegister(TYPES.MessageService)
 export class MessageService {
-  private messageDbService: MessageDbService;
-
-  constructor() {
-    this.messageDbService = new MessageDbService();
-  }
+  constructor(
+    @inject(TYPES.MessageDbService) private messageDbService: MessageDbService,
+  ) {}
 
   async _getMessagesByThreadId(threadId: string): Promise<Message[]> {
     const messages =

@@ -3,21 +3,22 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { TYPES } from "@main/shared/types";
 import type {
   CreateMessageData,
   Message,
   UpdateMessageData,
 } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { MessageService } from "./message-service";
+import { inject, injectable } from "inversify";
+import type { MessageService } from "./message-service";
 
-@ServiceRegister("chatService")
+@ServiceRegister(TYPES.ChatService)
+@injectable()
 export class ChatService {
-  private messageService: MessageService;
-
-  constructor() {
-    this.messageService = new MessageService();
-  }
+  constructor(
+    @inject(TYPES.MessageService) private messageService: MessageService,
+  ) {}
 
   async createAssistantMessage(
     message: Omit<

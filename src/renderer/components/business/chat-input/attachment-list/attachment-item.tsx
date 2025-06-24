@@ -19,6 +19,8 @@ interface AttachmentItemProps {
   onRemove: (id: string) => void;
 }
 
+const { filePreviewService } = window.service;
+
 export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
@@ -32,9 +34,10 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
 
   const handlePreview = async () => {
     try {
-      const fileService = window.service.fileService;
       if (attachment.filePath) {
-        const result = await fileService.previewFileByPath(attachment.filePath);
+        const result = await filePreviewService.previewFileByPath(
+          attachment.filePath,
+        );
         if (!result.success) {
           toast.error(t(result.error || "file-preview-failed"));
         }

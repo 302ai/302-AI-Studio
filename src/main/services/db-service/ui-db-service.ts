@@ -6,8 +6,10 @@ import type {
   Thread,
   Ui,
 } from "@shared/triplit/types";
+import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
+@injectable()
 export class UiDbService extends BaseDbService {
   private uiRecord: Ui | null = null;
 

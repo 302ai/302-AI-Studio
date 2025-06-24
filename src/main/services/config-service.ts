@@ -1,3 +1,4 @@
+import { TYPES } from "@main/shared/types";
 import type {
   CreateModelData,
   CreateProviderData,
@@ -10,13 +11,14 @@ import type {
 import type { ModelProvider } from "@shared/types/provider";
 import { nativeTheme } from "electron";
 import Logger from "electron-log";
+import { inject, injectable } from "inversify";
 import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
-import { ConfigDbService } from "./db-service/config-db-service";
-import { UiDbService } from "./db-service/ui-db-service";
+import type { ConfigDbService } from "./db-service/config-db-service";
+import type { UiDbService } from "./db-service/ui-db-service";
 import { EventNames, sendToMain } from "./event-service";
 
 export interface ModelSettingData {
@@ -25,15 +27,13 @@ export interface ModelSettingData {
   providerMap: Record<string, ModelProvider>;
 }
 
-@ServiceRegister("configService")
+@injectable()
+@ServiceRegister(TYPES.ConfigService)
 export class ConfigService {
-  private configDbService: ConfigDbService;
-  private uiDbService: UiDbService;
-
-  constructor() {
-    this.configDbService = new ConfigDbService();
-    this.uiDbService = new UiDbService();
-  }
+  constructor(
+    @inject(TYPES.ConfigDbService) private configDbService: ConfigDbService,
+    @inject(TYPES.UiDbService) private uiDbService: UiDbService,
+  ) {}
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getAppLanguage(_event: Electron.IpcMainEvent): Promise<Language> {

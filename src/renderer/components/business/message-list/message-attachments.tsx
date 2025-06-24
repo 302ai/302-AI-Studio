@@ -19,6 +19,8 @@ interface MessageAttachmentsProps {
   className?: string;
 }
 
+const { filePreviewService } = window.service;
+
 export function MessageAttachments({
   messageId,
   className,
@@ -44,15 +46,11 @@ export function MessageAttachments({
 
   const handlePreview = async (attachment: Attachment) => {
     try {
-      const fileService = window.service.fileService;
-      if (!fileService) {
-        console.error("No file service available");
-        return;
-      }
-
       // 优先使用文件路径直接打开
       if (attachment.filePath) {
-        const result = await fileService.previewFileByPath(attachment.filePath);
+        const result = await filePreviewService.previewFileByPath(
+          attachment.filePath,
+        );
         if (!result.success) {
           console.error("Failed to preview file by path:", result.error);
           toast.error(t(result.error || "file-preview-failed"));

@@ -3,6 +3,7 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { TYPES } from "@main/shared/types";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import type {
   CreateModelData,
@@ -12,8 +13,9 @@ import type {
 } from "@shared/triplit/types";
 import type { LanguageModelUsage } from "ai";
 import Logger from "electron-log";
-import { ChatService } from "../chat-service";
-import { ConfigService } from "../config-service";
+import { inject, injectable } from "inversify";
+import type { ChatService } from "../chat-service";
+import type { ConfigService } from "../config-service";
 import { EventNames, emitter, sendToThread } from "../event-service";
 import type {
   BaseProviderService,
@@ -26,17 +28,16 @@ import {
   createAbortController,
 } from "./stream-manager";
 
-@ServiceRegister("providerService")
+@ServiceRegister(TYPES.ProviderService)
+@injectable()
 export class ProviderService {
-  private configService: ConfigService;
-  private chatService: ChatService;
   private providerMap: Map<string, Provider> = new Map(); // * Cache provider to find provider by id
   private providerInstMap: Map<string, BaseProviderService> = new Map(); // * Cache provider instances to avoid duplicate creation
 
-  constructor() {
-    this.configService = new ConfigService();
-    this.chatService = new ChatService();
-
+  constructor(
+    @inject(TYPES.ConfigService) private configService: ConfigService,
+    @inject(TYPES.ChatService) private chatService: ChatService,
+  ) {
     this.init();
     this.setupEventListeners();
   }

@@ -6,8 +6,10 @@ import type {
   UpdateProviderData,
 } from "@shared/triplit/types";
 import Logger from "electron-log";
+import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
+@injectable()
 export class ConfigDbService extends BaseDbService {
   constructor() {
     super("providers");

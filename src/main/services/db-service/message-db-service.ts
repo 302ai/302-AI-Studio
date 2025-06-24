@@ -4,8 +4,10 @@ import type {
   Message,
   UpdateMessageData,
 } from "@shared/triplit/types";
+import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
+@injectable()
 export class MessageDbService extends BaseDbService {
   constructor() {
     super("messages");
@@ -49,8 +51,8 @@ export class MessageDbService extends BaseDbService {
 
     if (messages?.attachments) {
       await triplitClient.transact(async (tx) => {
-        const deleteAttachmentPromises = messages.attachments.map((attachment) =>
-          tx.delete("attachments", attachment.id)
+        const deleteAttachmentPromises = messages.attachments.map(
+          (attachment) => tx.delete("attachments", attachment.id),
         );
         const deleteMessagePromise = tx.delete("messages", messageId);
 
@@ -87,21 +89,24 @@ export class MessageDbService extends BaseDbService {
 
     await triplitClient.transact(async (tx) => {
       // 收集所有需要删除的附件
-      const allAttachments = messagesWithAttachments.flatMap(message =>
-        message.attachments || []
+      const allAttachments = messagesWithAttachments.flatMap(
+        (message) => message.attachments || [],
       );
 
       // 删除所有附件
       const deleteAttachmentPromises = allAttachments.map((attachment) =>
-        tx.delete("attachments", attachment.id)
+        tx.delete("attachments", attachment.id),
       );
 
       // 删除所有消息
       const deleteMessagePromises = messagesWithAttachments.map((message) =>
-        tx.delete("messages", message.id)
+        tx.delete("messages", message.id),
       );
 
-      await Promise.all([...deleteAttachmentPromises, ...deleteMessagePromises]);
+      await Promise.all([
+        ...deleteAttachmentPromises,
+        ...deleteMessagePromises,
+      ]);
     });
   }
 
@@ -114,21 +119,24 @@ export class MessageDbService extends BaseDbService {
 
     await triplitClient.transact(async (tx) => {
       // 收集所有需要删除的附件
-      const allAttachments = messagesWithAttachments.flatMap(message =>
-        message.attachments || []
+      const allAttachments = messagesWithAttachments.flatMap(
+        (message) => message.attachments || [],
       );
 
       // 删除所有附件
       const deleteAttachmentPromises = allAttachments.map((attachment) =>
-        tx.delete("attachments", attachment.id)
+        tx.delete("attachments", attachment.id),
       );
 
       // 删除所有消息
       const deleteMessagePromises = messagesWithAttachments.map((message) =>
-        tx.delete("messages", message.id)
+        tx.delete("messages", message.id),
       );
 
-      await Promise.all([...deleteAttachmentPromises, ...deleteMessagePromises]);
+      await Promise.all([
+        ...deleteAttachmentPromises,
+        ...deleteMessagePromises,
+      ]);
     });
   }
 

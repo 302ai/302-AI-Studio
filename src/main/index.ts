@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { makeAppWithSingleInstanceLock } from "@lib/electron-app/factories/app/instance";
 import { makeAppSetup } from "@lib/electron-app/factories/app/setup";
 import { app } from "electron";

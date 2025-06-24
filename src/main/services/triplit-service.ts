@@ -6,12 +6,14 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { TYPES } from "@main/shared/types";
 import { initTriplitClient } from "@main/triplit/client";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import { schema } from "@shared/triplit/schema";
 import { createServer, createTriplitStorageProvider } from "@triplit/server";
 import { app } from "electron";
 import Logger from "electron-log";
+import { injectable } from "inversify";
 import portfinder from "portfinder";
 
 portfinder.setBasePort(9000);
@@ -38,7 +40,8 @@ const defaultTriplitConfig: TriplitServerConfig = {
 
 type TriplitServer = ReturnType<Awaited<ReturnType<typeof createServer>>>;
 
-@ServiceRegister("triplitService")
+@ServiceRegister(TYPES.TriplitService)
+@injectable()
 export class TriplitService {
   private server: TriplitServer | null = null;
   private isServerRunning = false;

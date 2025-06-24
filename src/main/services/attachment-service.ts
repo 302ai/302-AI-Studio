@@ -3,21 +3,23 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { TYPES } from "@main/shared/types";
 import type {
   Attachment,
   CreateAttachmentData,
   UpdateAttachmentData,
 } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { AttachmentDbService } from "./db-service/attachment-db-service";
+import { inject, injectable } from "inversify";
+import type { AttachmentDbService } from "./db-service/attachment-db-service";
 
-@ServiceRegister("attachmentService")
+@ServiceRegister(TYPES.AttachmentService)
+@injectable()
 export class AttachmentService {
-  private attachmentDbService: AttachmentDbService;
-
-  constructor() {
-    this.attachmentDbService = new AttachmentDbService();
-  }
+  constructor(
+    @inject(TYPES.AttachmentDbService)
+    private attachmentDbService: AttachmentDbService,
+  ) {}
 
   async _getAttachmentsByMessageId(messageId: string): Promise<Attachment[]> {
     const attachments =

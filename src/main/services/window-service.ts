@@ -2,9 +2,10 @@ import { titleBarOverlayDark, titleBarOverlayLight } from "@main/config";
 import { BrowserWindow, nativeTheme } from "electron";
 import { isWin } from "../constant";
 import { ServiceRegister } from "../shared/reflect";
+import { TYPES } from "../shared/types";
 import { EventNames, emitter } from "./event-service";
 
-@ServiceRegister("windowService")
+@ServiceRegister(TYPES.WindowService)
 export class WindowService {
   constructor() {
     this.setupEventListeners();

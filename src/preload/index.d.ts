@@ -151,7 +151,7 @@ declare global {
         }>;
         getServerPort: () => Promise<number>;
       };
-      fileService: {
+      filePreviewService: {
         previewImage: (
           fileName: string,
           base64Data: string,

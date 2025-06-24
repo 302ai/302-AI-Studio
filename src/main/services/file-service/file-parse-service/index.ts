@@ -1,7 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { TYPES } from "@main/shared/types";
 import { app } from "electron";
 import Logger from "electron-log";
+import { injectable } from "inversify";
 import { nanoid } from "nanoid";
 import { approximateTokenSize } from "tokenx";
 import {
@@ -31,7 +33,8 @@ interface AttachmentForParsing {
  * 合并了 FilePresenter 和 FileParseService 的功能
  * 既提供业务逻辑实现，也提供 IPC 服务接口
  */
-@ServiceRegister("fileParseService")
+@ServiceRegister(TYPES.FileParseService)
+@injectable()
 export class FileParseService implements IFilePresenter {
   private userDataPath: string;
   private maxFileSize: number = 1024 * 1024 * 30; // 30 MB

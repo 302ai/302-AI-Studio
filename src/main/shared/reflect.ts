@@ -9,15 +9,15 @@ export enum CommunicationWay {
   RENDERER_TO_MAIN__TWO_WAY = "RENDERER_TO_MAIN__TWO_WAY",
 }
 
-export function ServiceRegister(serviceName: string) {
+export function ServiceRegister(serviceSymbol: symbol) {
   return (target: any) => {
     const targetName = target.name;
-    // Merge metadata
+
     const data = {
-      service: serviceName, // The name of the service
-      ...Reflect.getMetadata(`${targetName}`, _metadata), // The metadata of the service
+      serviceSymbol,
+      ...Reflect.getMetadata(`${targetName}`, _metadata),
     };
-    // Update metadata
+
     Reflect.defineMetadata(`${targetName}`, data, _metadata);
   };
 }
@@ -25,6 +25,7 @@ export function ServiceRegister(serviceName: string) {
 export function ServiceHandler(communicationWay?: CommunicationWay) {
   return (target: any, methodName: string, descriptor: PropertyDescriptor) => {
     const targetName = target.constructor.name;
+    console.log("🔍 targetName:", targetName);
 
     const existingMetadata =
       Reflect.getMetadata(`${targetName}`, _metadata) || {};
@@ -38,7 +39,6 @@ export function ServiceHandler(communicationWay?: CommunicationWay) {
       way: communicationWay || CommunicationWay.RENDERER_TO_MAIN__TWO_WAY,
     };
 
-    // Update metadata
     Reflect.defineMetadata(`${targetName}`, existingMetadata, _metadata);
   };
 }

@@ -4,8 +4,10 @@ import type {
   Thread,
   UpdateThreadData,
 } from "@shared/triplit/types";
+import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
+@injectable()
 export class ThreadDbService extends BaseDbService {
   constructor() {
     super("threads");

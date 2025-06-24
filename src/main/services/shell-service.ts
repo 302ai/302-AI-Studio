@@ -1,12 +1,15 @@
+import { TYPES } from "@main/shared/types";
 import { shell } from "electron";
 import Logger from "electron-log";
+import { injectable } from "inversify";
 import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
 
-@ServiceRegister("shellService")
+@ServiceRegister(TYPES.ShellService)
+@injectable()
 export class ShellService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async openExternal(_event: Electron.IpcMainEvent, url: string) {

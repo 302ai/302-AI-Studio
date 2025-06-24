@@ -1,18 +1,17 @@
 import { existsSync } from "node:fs";
+import { TYPES } from "@main/shared/types";
+import { inject, injectable } from "inversify";
 import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
 } from "../../../shared/reflect";
-import { ShellService } from "../../shell-service";
+import type { ShellService } from "../../shell-service";
 
-@ServiceRegister("fileService")
+@ServiceRegister(TYPES.FilePreviewService)
+@injectable()
 export class FilePreviewService {
-  private shellService: ShellService;
-
-  constructor() {
-    this.shellService = new ShellService();
-  }
+  constructor(@inject(TYPES.ShellService) private shellService: ShellService) {}
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async previewFileByPath(

@@ -3,18 +3,21 @@ import {
   ServiceHandler,
   ServiceRegister,
 } from "@main/shared/reflect";
+import { TYPES } from "@main/shared/types";
 import type { Provider, Thread } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { UiDbService } from "./db-service/ui-db-service";
+import { inject, injectable } from "inversify";
+import type { UiDbService } from "./db-service/ui-db-service";
 import { EventNames, emitter } from "./event-service";
 
-@ServiceRegister("uiService")
+@ServiceRegister(TYPES.UiService)
+@injectable()
 export class UiService {
-  private uiDbService: UiDbService;
+  constructor(@inject(TYPES.UiDbService) private uiDbService: UiDbService) {
+    this.setupEventListeners();
+  }
 
-  constructor() {
-    this.uiDbService = new UiDbService();
-
+  private setupEventListeners() {
     emitter.on(EventNames.PROVIDER_DELETE, () => {
       this.resetSelectedModelId();
     });
