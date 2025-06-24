@@ -53,7 +53,7 @@ async function makeRelease() {
     exec(
       [
         `git commit -am "${commitMessage}"`,
-        `git tag ${finalVersion}`,
+        `git tag ${finalVersion}`, // Removed 'v' prefix from tag
         "git push",
         "git push --tags",
       ],
