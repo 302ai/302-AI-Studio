@@ -126,9 +126,6 @@ declare global {
         insertMessages: (messages: CreateMessageData[]) => Promise<void>;
       };
       attachmentService: {
-        insertAttachment: (
-          attachment: CreateAttachmentData,
-        ) => Promise<Attachment>;
         insertAttachments: (
           attachments: CreateAttachmentData[],
         ) => Promise<void>;
@@ -136,11 +133,8 @@ declare global {
           attachmentId: string,
           updateData: UpdateAttachmentData,
         ) => Promise<void>;
-        deleteAttachment: (attachmentId: string) => Promise<void>;
         getAttachmentsByMessageId: (messageId: string) => Promise<Attachment[]>;
-        getAttachmentById: (attachmentId: string) => Promise<Attachment | null>;
         deleteAttachmentsByMessageId: (messageId: string) => Promise<void>;
-        deleteAllAttachments: () => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{

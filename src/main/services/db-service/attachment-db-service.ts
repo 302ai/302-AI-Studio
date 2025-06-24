@@ -11,7 +11,9 @@ export class AttachmentDbService extends BaseDbService {
     super("attachments");
   }
 
-  async insertAttachment(attachment: CreateAttachmentData): Promise<Attachment> {
+  async insertAttachment(
+    attachment: CreateAttachmentData,
+  ): Promise<Attachment> {
     return await triplitClient.insert("attachments", attachment);
   }
 
@@ -29,18 +31,18 @@ export class AttachmentDbService extends BaseDbService {
     attachmentId: string,
     updateData: UpdateAttachmentData,
   ): Promise<Attachment> {
-    await triplitClient.update("attachments", attachmentId, async (attachment) => {
-      Object.assign(attachment, updateData);
-    });
+    await triplitClient.update(
+      "attachments",
+      attachmentId,
+      async (attachment) => {
+        Object.assign(attachment, updateData);
+      },
+    );
     const updatedAttachment = await this.getAttachmentById(attachmentId);
     if (!updatedAttachment) {
       throw new Error("Attachment not found");
     }
     return updatedAttachment;
-  }
-
-  async deleteAttachment(attachmentId: string): Promise<void> {
-    await triplitClient.delete("attachments", attachmentId);
   }
 
   async getAttachmentsByMessageId(messageId: string): Promise<Attachment[]> {
@@ -63,18 +65,5 @@ export class AttachmentDbService extends BaseDbService {
     );
 
     await Promise.all(deletePromises);
-  }
-
-  async deleteAllAttachments(): Promise<void> {
-    const attachmentsQuery = triplitClient.query("attachments");
-    const attachments = await triplitClient.fetch(attachmentsQuery);
-
-    await triplitClient.transact(async (tx) => {
-      const deletePromises = attachments.map((attachment) =>
-        tx.delete("attachments", attachment.id),
-      );
-
-      await Promise.all(deletePromises);
-    });
   }
 }
