@@ -1,6 +1,8 @@
 {
   "chat": {
     "input-label": "メッセージを入力",
+    "file-not-found": "ファイルが見つかりませんでした",
+    "file-preview-failed": "ファイルのプレビューに失敗しました",
     "collected": "お気に入り",
     "input-placeholder": "何でも聞いてみてください...",
     "send-failed": "メッセージの送信に失敗しました",

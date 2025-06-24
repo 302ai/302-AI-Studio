@@ -200,6 +200,7 @@ export function useToolBar() {
           name: attachment.name,
           size: attachment.size,
           type: attachment.type,
+          filePath: attachment.filePath || null,
           preview: attachment.preview || null,
           fileData: attachment.fileData || null,
           fileContent: null,

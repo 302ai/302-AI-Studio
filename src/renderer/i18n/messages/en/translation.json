@@ -1,6 +1,8 @@
 {
   "chat": {
     "input-label": "Enter a message",
+    "file-not-found": "File not found",
+    "file-preview-failed": "Failed to preview file",
     "collected": "Favorites",
     "input-placeholder": "Ask anything...",
     "send-failed": "Failed to send message",

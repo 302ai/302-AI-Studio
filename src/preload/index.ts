@@ -1,9 +1,12 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { initPreloadBridge } from "@main/bridge";
-import { contextBridge } from "electron";
+import { contextBridge, webUtils } from "electron";
 
 const api = {
   platform: process.platform,
+  webUtils: {
+    getPathForFile: webUtils.getPathForFile,
+  },
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

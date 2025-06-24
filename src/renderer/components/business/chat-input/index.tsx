@@ -129,6 +129,7 @@ export function ChatInput({ className }: ChatInputProps) {
             size: attachment.size,
             type: attachment.type,
             file,
+            filePath: attachment.filePath || undefined,
             preview: attachment.preview || undefined,
             fileData: attachment.fileData || undefined,
           };
@@ -177,6 +178,7 @@ export function ChatInput({ className }: ChatInputProps) {
         name: attachment.name,
         size: attachment.size,
         type: attachment.type,
+        filePath: attachment.filePath || null,
         preview: attachment.preview || null,
         fileData: attachment.fileData || null,
         fileContent: null, // Will be parsed later if needed

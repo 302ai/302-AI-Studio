@@ -1,6 +1,8 @@
 {
   "chat": {
     "input-label": "输入消息",
+    "file-not-found": "文件不存在",
+    "file-preview-failed": "文件预览失败",
     "input-placeholder": "随便问问...",
     "collected": "收藏",
     "send-failed": "发送消息失败",

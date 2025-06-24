@@ -11,6 +11,8 @@ import {
   FileText,
   Trash2,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface AttachmentItemProps {
   attachment: AttachmentFile;
@@ -18,6 +20,10 @@ interface AttachmentItemProps {
 }
 
 export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "chat",
+  });
+
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes}B`;
     if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)}KB`;
@@ -25,125 +31,17 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
   };
 
   const handlePreview = async () => {
-    console.log("Starting preview for file:", {
-      name: attachment.name,
-      type: attachment.type,
-      hasPreview: !!attachment.preview,
-      hasFileData: !!attachment.fileData,
-      hasFile: !!attachment.file,
-    });
-
     try {
-      let fileData: string | undefined;
-
-      if (attachment.type.startsWith("image/")) {
-        // 处理图片文件
-        fileData = attachment.preview;
-
-        // 如果预览数据无效，尝试从原始文件重新生成
-        if (!fileData || !fileData.startsWith("data:image/")) {
-          console.log("Preview data is invalid, regenerating from file...");
-          if (attachment.file) {
-            try {
-              fileData = await readFileAsDataURL(attachment.file);
-              console.log("Regenerated preview data:", {
-                length: fileData.length,
-                start: fileData.substring(0, 100),
-              });
-            } catch (error) {
-              console.error("Failed to regenerate preview:", error);
-              return;
-            }
-          } else {
-            console.error("No file available to regenerate preview");
-            return;
-          }
-        }
-
-        console.log("About to call main process with image:", {
-          fileName: attachment.name,
-          fileDataType: typeof fileData,
-          fileDataLength: fileData?.length,
-          fileDataStart: fileData?.substring(0, 100),
-        });
-
-        // Use fileService
-        const fileService = window.service.fileService;
-        if (!fileService) {
-          console.error("No file service available");
-          return;
-        }
-
-        const result = await fileService.previewImage(
-          attachment.name,
-          fileData,
-        );
-
+      const fileService = window.service.fileService;
+      if (attachment.filePath) {
+        const result = await fileService.previewFileByPath(attachment.filePath);
         if (!result.success) {
-          console.error("Failed to preview image:", result.error);
-        }
-      } else {
-        // 处理非图片文件（包括音频文件）
-        fileData = attachment.fileData;
-
-        // 如果文件数据无效，尝试从原始文件重新生成
-        if (!fileData && attachment.file) {
-          console.log("File data not available, generating from file...");
-          try {
-            fileData = await readFileAsDataURL(attachment.file);
-            console.log("Generated file data:", {
-              length: fileData.length,
-              start: fileData.substring(0, 100),
-            });
-          } catch (error) {
-            console.error("Failed to generate file data:", error);
-            return;
-          }
-        }
-
-        if (!fileData) {
-          console.error("No file data available for preview");
-          return;
-        }
-
-        console.log("About to call main process with file:", {
-          fileName: attachment.name,
-          mimeType: attachment.type,
-          fileDataType: typeof fileData,
-          fileDataLength: fileData?.length,
-          fileDataStart: fileData?.substring(0, 100),
-        });
-
-        // Use fileService
-        const fileService = window.service.fileService;
-        if (!fileService) {
-          console.error("No file service available");
-          return;
-        }
-
-        const result = await fileService.previewFile(
-          attachment.name,
-          fileData,
-          attachment.type,
-        );
-
-        if (!result.success) {
-          console.error("Failed to preview file:", result.error);
+          toast.error(t(result.error || "file-preview-failed"));
         }
       }
     } catch (error) {
       console.error("Error calling preview service:", error);
     }
-  };
-
-  // 辅助函数：读取文件为 DataURL
-  const readFileAsDataURL = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
   };
 
   const getFileIcon = () => {

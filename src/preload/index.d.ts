@@ -27,6 +27,9 @@ declare global {
     electron: ElectronAPI;
     api: {
       platform: string;
+      webUtils: {
+        getPathForFile: (file: File) => string;
+      };
     };
     service: {
       configService: {
@@ -162,15 +165,10 @@ declare global {
           success: boolean;
           error?: string;
         }>;
-        previewFile: (
-          fileName: string,
-          fileData: string,
-          mimeType: string,
-        ) => Promise<{
+        previewFileByPath: (filePath: string) => Promise<{
           success: boolean;
           error?: string;
         }>;
-        cleanupAllTempFiles: () => void;
       };
       fileParseService: {
         getMimeType: (filePath: string) => Promise<string>;

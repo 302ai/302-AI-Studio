@@ -7,6 +7,7 @@ export const attachmentsSchema = {
     name: S.String(),
     size: S.Number(),
     type: S.String(),
+    filePath: S.String({ nullable: true }),
     preview: S.String({ nullable: true }),
     fileData: S.String({ nullable: true }),
     fileContent: S.String({ nullable: true }),
