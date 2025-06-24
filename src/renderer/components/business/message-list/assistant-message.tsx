@@ -205,7 +205,6 @@ export function AssistantMessage({
               </div>
             </div>
           )}
-          ss
           {message.status === "error" && (
             <div className="mt-2 flex items-center gap-2 text-destructive text-sm">
               <div className="h-2 w-2 rounded-full bg-current" />
