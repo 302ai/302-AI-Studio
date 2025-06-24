@@ -54,8 +54,7 @@ async function makeRelease() {
       [
         `git commit -am "${commitMessage}"`,
         `git tag ${finalVersion}`,
-        "git push --tags",
-        "git push",
+        `git push --atomic origin HEAD ${finalVersion}`,
       ],
       {
         inherit: true,
