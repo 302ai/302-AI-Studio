@@ -85,6 +85,7 @@
     "react-window": "^1.8.11",
     "reflect-metadata": "^0.2.2",
     "rehype-katex": "^7.0.1",
+    "remark-cjk-friendly": "^1.2.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "sharp": "^0.34.2",
