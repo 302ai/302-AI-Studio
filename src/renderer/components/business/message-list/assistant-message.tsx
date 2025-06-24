@@ -183,24 +183,20 @@ export function AssistantMessage({
 
         <div className="w-full min-w-0">
           <MessageAttachments messageId={message.id} className="mb-2" />
-
           {/* Model name display */}
           {message.modelName && (
             <div className="mb-2 text-muted-fg text-xs">
               {message.modelName}
             </div>
           )}
-
           {/* Think content display */}
           <ThinkBlocks content={message.content || ""} messageId={message.id} />
-
           {/* Main content display */}
           {cleanContent && (
-            <div className="overflow-wrap-anywhere w-full whitespace-pre-wrap break-words break-all">
+            <div className="overflow-wrap-anywhere w-full break-words break-all">
               <MarkdownRenderer>{cleanContent}</MarkdownRenderer>
             </div>
           )}
-
           {message.status === "pending" && (
             <div className="mt-2 flex items-center gap-2 text-muted-fg text-sm">
               <div className="flex items-center gap-x-4">
@@ -209,14 +205,13 @@ export function AssistantMessage({
               </div>
             </div>
           )}
-
+          ss
           {message.status === "error" && (
             <div className="mt-2 flex items-center gap-2 text-destructive text-sm">
               <div className="h-2 w-2 rounded-full bg-current" />
               {t("generate-failed")}
             </div>
           )}
-
           {(message.status === "success" ||
             message.status === "stop" ||
             message.status === "error") && (
