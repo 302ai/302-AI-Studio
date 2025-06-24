@@ -66,13 +66,13 @@ async function makeRelease() {
     const ownerAndRepo = extractOwnerAndRepoFromGitRemoteURL(repository);
 
     console.log(
-      `${COLORS.BLUE}> Opening the repository releases page...${COLORS.RESET}`,
+      `${COLORS.YELLOW}> Opening the repository releases page...${COLORS.RESET}`,
     );
 
     await open(`https://github.com/${ownerAndRepo}/releases`);
 
     console.log(
-      `${COLORS.BLUE}> Opening the repository actions page...${COLORS.RESET}`,
+      `${COLORS.YELLOW}> Opening the repository actions page...${COLORS.RESET}`,
     );
 
     await open(`https://github.com/${ownerAndRepo}/actions`);
