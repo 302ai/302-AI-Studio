@@ -1,7 +1,11 @@
 {
   "chat": {
     "input-label": "输入消息",
+    "file-not-found": "文件不存在",
+    "file-preview-failed": "文件预览失败",
     "input-placeholder": "随便问问...",
+    "collected": "收藏",
+    "send-failed": "发送消息失败",
     "tool-bar": {
       "attach-file": "上传附件(文件不能超过10MB)"
     },
@@ -66,7 +70,8 @@
           "url-invalid-format": "URL 格式无效",
           "verification-required": "请先验证 API Key 才可添加提供商",
           "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
-          "verification-hint": "请点击验证按钮确认 API Key 可用性"
+          "verification-hint": "请点击验证按钮确认 API Key 可用性",
+          "get-api-key": "点击此处获取API Key"
         },
         "delete": "删除",
         "description": "个模型",
@@ -147,7 +152,8 @@
     "lack-provider": "缺少模型提供商！",
     "selected-model-not-found": "请先选择一个模型！",
     "provider-not-found-for-selected-model": "模型供应商设置错误！",
-    "message-not-found": "此消息不存在！"
+    "message-not-found": "此消息不存在！",
+    "failed-to-generate-ai-response": "生成AI响应失败！"
   },
   "thread-menu": {
     "actions": {
@@ -182,6 +188,7 @@
     "copy": "复制",
     "refresh": "重新生成",
     "edit": "编辑",
+    "delete": "删除",
     "thinking": "AI正在思考",
     "edit-dialog": {
       "title": "编辑消息",
@@ -191,6 +198,8 @@
       "save-error": "消息更新失败"
     },
     "generate-failed": "生成失败",
+    "delete-success": "消息删除成功",
+    "delete-error": "消息删除失败",
     "context-menu": {
       "create-new-branch": "从此处创建分支",
       "create-new-branch-error": "抱歉，创建分支失败！",

@@ -1,22 +1,23 @@
 import type {
   CreateModelData,
   CreateProviderData,
+  Language,
   Model,
   Provider,
+  Theme,
   UpdateProviderData,
 } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
-import { type LanguageVarious, ThemeMode } from "@shared/types/settings";
+import { nativeTheme } from "electron";
 import Logger from "electron-log";
-import ElectronStore from "electron-store";
 import {
   CommunicationWay,
   ServiceHandler,
   ServiceRegister,
 } from "../shared/reflect";
 import { ConfigDbService } from "./db-service/config-db-service";
+import { UiDbService } from "./db-service/ui-db-service";
 import { EventNames, sendToMain } from "./event-service";
-import { WindowService } from "./window-service";
 
 export interface ModelSettingData {
   modelProviders: ModelProvider[];
@@ -24,46 +25,57 @@ export interface ModelSettingData {
   providerMap: Record<string, ModelProvider>;
 }
 
-enum ConfigKeys {
-  Language = "language",
-  Theme = "theme",
-  Providers = "providers",
-}
-
 @ServiceRegister("configService")
 export class ConfigService {
-  private configStore: ElectronStore = new ElectronStore();
-  private windowService: WindowService;
   private configDbService: ConfigDbService;
+  private uiDbService: UiDbService;
 
   constructor() {
-    this.windowService = new WindowService();
     this.configDbService = new ConfigDbService();
+    this.uiDbService = new UiDbService();
   }
 
-  @ServiceHandler()
-  getLanguage(_event: Electron.IpcMainEvent): string {
-    return this.configStore.get(ConfigKeys.Language, "zh-CN") as string;
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getAppLanguage(_event: Electron.IpcMainEvent): Promise<Language> {
+    try {
+      return this.uiDbService.getLanguage();
+    } catch (error) {
+      Logger.error("ConfigService:getAppLanguage error ---->", error);
+      throw error;
+    }
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  setLanguage(_event: Electron.IpcMainEvent, language: LanguageVarious) {
-    this.configStore.set(ConfigKeys.Language, language);
+  async setAppLanguage(_event: Electron.IpcMainEvent, language: Language) {
+    try {
+      return this.uiDbService.setLanguage(language);
+    } catch (error) {
+      Logger.error("ConfigService:setAppLanguage error ---->", error);
+      throw error;
+    }
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  setTheme(_event: Electron.IpcMainEvent, theme: ThemeMode) {
-    this.configStore.set(ConfigKeys.Theme, theme);
-    this.windowService.setTitleBarOverlay(theme);
+  async setAppTheme(_event: Electron.IpcMainEvent, theme: Theme) {
+    try {
+      await this.uiDbService.setTheme(theme);
+      nativeTheme.themeSource = theme;
+      sendToMain(EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE, null);
+    } catch (error) {
+      Logger.error("ConfigService:setAppTheme error ---->", error);
+      throw error;
+    }
   }
 
-  @ServiceHandler()
-  getTheme(_event: Electron.IpcMainEvent): ThemeMode {
-    const theme = this.configStore.get(
-      ConfigKeys.Theme,
-      ThemeMode.System,
-    ) as ThemeMode;
-    return theme;
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateAppTheme(_event: Electron.IpcMainEvent, theme: Theme) {
+    try {
+      nativeTheme.themeSource = theme;
+      sendToMain(EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE, null);
+    } catch (error) {
+      Logger.error("ConfigService:updateAppTheme error ---->", error);
+      throw error;
+    }
   }
 
   async getProviders(): Promise<Provider[]> {

@@ -6,15 +6,20 @@ import type {
   Provider,
   Thread,
 } from "@shared/triplit/types";
-import { useQuery } from "@triplit/react";
-import { useEffect, useState } from "react";
+import { useQuery, useQueryOne } from "@triplit/react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
-const { threadService, tabService, messageService, providerService } =
-  window.service;
+const {
+  threadService,
+  tabService,
+  messageService,
+  providerService,
+  uiService,
+} = window.service;
 
 export function useToolBar() {
   const { t } = useTranslation("translation", {
@@ -39,11 +44,12 @@ export function useToolBar() {
   const modelsQuery = triplitClient.query("models");
   const { results: models } = useQuery(triplitClient, modelsQuery);
 
-  const [selectedModelId, setSelectedModelId] = useState<string>("");
+  const uiQuery = triplitClient.query("ui");
+  const { result: ui } = useQueryOne(triplitClient, uiQuery);
+  const selectedModelId = ui?.selectedModelId || "";
 
   const handleModelSelect = async (modelId: string) => {
-    setSelectedModelId(modelId);
-    console.log("selectedModelId", modelId);
+    await uiService.updateSelectedModelId(modelId);
 
     if (activeThreadId) {
       try {
@@ -84,7 +90,7 @@ export function useToolBar() {
     messages: Array<{
       role: "user" | "assistant" | "system" | "function";
       content: string;
-      attachments?: string | null;
+      id?: string; // Include message ID for attachment lookup
     }>,
     provider: Provider,
     model: Model,
@@ -177,37 +183,46 @@ export function useToolBar() {
       );
       const nextOrderSeq = existingMessages.length + 1;
 
-      // Prepare attachments data
-      const attachmentsData =
-        attachments && attachments.length > 0
-          ? JSON.stringify(attachments)
-          : null;
-
       // Insert user message
       const userMessage = await messageService.insertMessage({
         threadId: currentActiveThreadId,
         parentMessageId: null,
         role: "user",
         content,
-        attachments: attachmentsData,
         orderSeq: nextOrderSeq,
         tokenCount: content.length,
         status: "success",
       });
 
+      if (attachments && attachments.length > 0) {
+        const attachmentData = attachments.map((attachment) => ({
+          messageId: userMessage.id,
+          name: attachment.name,
+          size: attachment.size,
+          type: attachment.type,
+          filePath: attachment.filePath || null,
+          preview: attachment.preview || null,
+          fileData: attachment.fileData || null,
+          fileContent: null,
+        }));
+
+        await window.service.attachmentService.insertAttachments(
+          attachmentData,
+        );
+      }
+
       console.log("User message sent successfully:", userMessage);
 
-      // Prepare conversation context for AI
       const conversationMessages = [
         ...existingMessages.map((msg) => ({
           role: msg.role as "user" | "assistant" | "system" | "function",
           content: msg.content,
-          attachments: msg.attachments,
+          id: msg.id,
         })),
         {
           role: "user" as const,
           content,
-          attachments: attachmentsData,
+          id: userMessage.id,
         },
       ];
 
@@ -223,7 +238,7 @@ export function useToolBar() {
         );
       } catch (streamError) {
         console.error("Failed to start streaming chat:", streamError);
-        toast.error("Failed to start AI response");
+        toast.error(t("failed-to-generate-ai-response"));
         // Error handling is now done in the streaming hook
       }
     } catch (error) {
@@ -234,16 +249,18 @@ export function useToolBar() {
 
   // Effect: Sync model selection with active thread
   useEffect(() => {
-    if (activeThreadId) {
-      const activeThread = threads.find(
-        (thread) => thread.id === activeThreadId,
-      );
-      if (activeThread) {
-        setSelectedModelId(activeThread.modelId ?? "");
+    const syncSelectedModelId = async () => {
+      if (activeThreadId) {
+        const activeThread = threads.find(
+          (thread) => thread.id === activeThreadId,
+        );
+        if (activeThread) {
+          await uiService.updateSelectedModelId(activeThread.modelId);
+        }
       }
-    } else {
-      setSelectedModelId("");
-    }
+    };
+
+    syncSelectedModelId();
   }, [activeThreadId, threads]);
 
   const handleRefreshMessage = async (messageId: string) => {
@@ -278,7 +295,7 @@ export function useToolBar() {
     const messagesToDelete = existingMessages.slice(messageIndex);
     for (const msg of messagesToDelete) {
       try {
-        await messageService.deleteMessage(msg.id);
+        await messageService.deleteMessage(msg.id, msg.threadId);
       } catch (error) {
         console.error("Failed to delete message:", msg.id, error);
       }
@@ -289,7 +306,7 @@ export function useToolBar() {
       ...context.map((msg) => ({
         role: msg.role as "user" | "assistant" | "system" | "function",
         content: msg.content,
-        attachments: msg.attachments,
+        id: msg.id, // Include message ID for attachment lookup
       })),
     ];
 
@@ -312,8 +329,7 @@ export function useToolBar() {
       console.log("Regenerate data", data);
     } catch (streamError) {
       console.error("Failed to regenerate streaming chat:", streamError);
-      toast.error("Failed to regenerate AI response");
-      // Error handling is now done in the streaming hook
+      toast.error(t("failed-to-generate-ai-response"));
     }
   };
 

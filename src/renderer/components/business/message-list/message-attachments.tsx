@@ -1,5 +1,7 @@
-import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import { triplitClient } from "@renderer/client";
 import { cn } from "@renderer/lib/utils";
+import type { Attachment } from "@shared/triplit/types";
+import { useQuery } from "@triplit/react";
 import {
   File,
   FileAudio,
@@ -9,16 +11,27 @@ import {
   FileSpreadsheet,
   FileText,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface MessageAttachmentsProps {
-  attachments: AttachmentFile[];
+  messageId: string;
   className?: string;
 }
 
 export function MessageAttachments({
-  attachments,
+  messageId,
   className,
 }: MessageAttachmentsProps) {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "chat",
+  });
+
+  const attachmentsQuery = triplitClient
+    .query("attachments")
+    .Where("messageId", "=", messageId);
+  const { results: attachments } = useQuery(triplitClient, attachmentsQuery);
+
   if (!attachments || attachments.length === 0) {
     return null;
   }
@@ -29,58 +42,20 @@ export function MessageAttachments({
     return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
   };
 
-  const handlePreview = async (attachment: AttachmentFile) => {
+  const handlePreview = async (attachment: Attachment) => {
     try {
-      if (attachment.type.startsWith("image/")) {
-        // 处理图片文件
-        const fileData = attachment.preview;
+      const fileService = window.service.fileService;
+      if (!fileService) {
+        console.error("No file service available");
+        return;
+      }
 
-        if (!fileData || !fileData.startsWith("data:image/")) {
-          console.error("Invalid image preview data");
-          return;
-        }
-
-        // Use fileService
-        const fileService = window.service.fileService;
-        if (!fileService) {
-          console.error("No file service available");
-          return;
-        }
-
-        const result = await fileService.previewImage(
-          attachment.name,
-          fileData,
-        );
-
+      // 优先使用文件路径直接打开
+      if (attachment.filePath) {
+        const result = await fileService.previewFileByPath(attachment.filePath);
         if (!result.success) {
-          console.error("Failed to preview image:", result.error);
-        }
-      } else {
-        // 处理非图片文件
-        const fileData = attachment.fileData;
-
-        if (!fileData) {
-          console.error("No file data available for preview");
-          return;
-        }
-
-        console.log("Previewing file:", attachment.name);
-
-        // Use fileService
-        const fileService = window.service.fileService;
-        if (!fileService) {
-          console.error("No file service available");
-          return;
-        }
-
-        const result = await fileService.previewFile(
-          attachment.name,
-          fileData,
-          attachment.type,
-        );
-
-        if (!result.success) {
-          console.error("Failed to preview file:", result.error);
+          console.error("Failed to preview file by path:", result.error);
+          toast.error(t(result.error || "file-preview-failed"));
         }
       }
     } catch (error) {
@@ -88,7 +63,7 @@ export function MessageAttachments({
     }
   };
 
-  const getFileIcon = (attachment: AttachmentFile) => {
+  const getFileIcon = (attachment: Attachment) => {
     const { type, name } = attachment;
     const iconClass = "size-4";
 

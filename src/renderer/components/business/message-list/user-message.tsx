@@ -1,17 +1,19 @@
 import { ContextMenuItem } from "@renderer/components/ui/context-menu";
 import { MenuContent } from "@renderer/components/ui/menu";
-import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Message } from "@shared/triplit/types";
-import { Copy, Pencil } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { Pencil } from "lucide-react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { ButtonWithTooltip } from "../button-with-tooltip";
 import { MessageAttachments } from "./message-attachments";
 
 interface UserMessageProps {
   message: Message;
 }
+
+const { messageService } = window.service;
 
 export function UserMessage({ message }: UserMessageProps) {
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
@@ -24,15 +26,6 @@ export function UserMessage({ message }: UserMessageProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
-
-  const attachments = useMemo(() => {
-    if (!message.attachments) return [];
-    try {
-      return JSON.parse(message.attachments) as AttachmentFile[];
-    } catch {
-      return [];
-    }
-  }, [message.attachments]);
 
   const onEdit = () => {
     emitter.emit(EventNames.MESSAGE_EDIT, message);
@@ -53,6 +46,17 @@ export function UserMessage({ message }: UserMessageProps) {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await messageService.deleteMessage(message.id, message.threadId);
+      setContextMenuOpen(false);
+      toast.success(t("delete-success"));
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error(t("delete-error"));
+    }
+  };
+
   return (
     <>
       {/** biome-ignore lint/a11y/noStaticElementInteractions: needed for context menu handling */}
@@ -63,11 +67,7 @@ export function UserMessage({ message }: UserMessageProps) {
       >
         <div className="w-full min-w-0 max-w-[80%]">
           <div className="ml-auto w-fit max-w-full rounded-2xl bg-accent px-4 py-2">
-            {attachments.length > 0 && (
-              <div className="mb-2">
-                <MessageAttachments attachments={attachments} />
-              </div>
-            )}
+            <MessageAttachments messageId={message.id} className="mb-2" />
 
             {message.content && (
               <div className="overflow-wrap-anywhere w-full whitespace-pre-wrap break-words break-all">
@@ -109,18 +109,23 @@ export function UserMessage({ message }: UserMessageProps) {
           onClose={() => setContextMenuOpen(false)}
           aria-label="User message options"
         >
-          <ContextMenuItem onAction={handleCopy}>
-            <Copy className="mr-2 h-4 w-4" />
-            {t("copy")}
-          </ContextMenuItem>
+          <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
           <ContextMenuItem
             onAction={() => {
               onEdit();
               setContextMenuOpen(false);
             }}
           >
-            <Pencil className="mr-2 h-4 w-4" />
             {t("edit")}
+          </ContextMenuItem>
+          <ContextMenuItem
+            isDanger={true}
+            onAction={() => {
+              handleDelete();
+              setContextMenuOpen(false);
+            }}
+          >
+            {t("delete")}
           </ContextMenuItem>
         </MenuContent>
       )}

@@ -29,5 +29,12 @@ export type Message = Entity<Schema, "messages">;
 export type CreateMessageData = Omit<Message, "id" | "createdAt">;
 export type UpdateMessageData = Partial<Omit<Message, "id">>;
 
+// * Attachments
+export type Attachment = Entity<Schema, "attachments">;
+export type CreateAttachmentData = Omit<Attachment, "id" | "createdAt">;
+export type UpdateAttachmentData = Partial<Omit<Attachment, "id">>;
+
 // * UI
 export type Ui = Entity<Schema, "ui">;
+export type Theme = "light" | "dark" | "system";
+export type Language = "zh" | "en" | "ja";

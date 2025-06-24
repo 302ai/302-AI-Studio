@@ -1,7 +1,11 @@
 {
   "chat": {
     "input-label": "Enter a message",
+    "file-not-found": "File not found",
+    "file-preview-failed": "Failed to preview file",
+    "collected": "Favorites",
     "input-placeholder": "Ask anything...",
+    "send-failed": "Failed to send message",
     "tool-bar": {
       "attach-file": "Attach file(file size cannot exceed 10MB)"
     },
@@ -66,7 +70,8 @@
           "url-invalid-format": "Invalid URL format",
           "verification-required": "Please verify the API Key first before adding the provider",
           "verification-required-notice": "💡 Notice: API verification is required before adding or saving provider configuration.",
-          "verification-hint": "Please click the verify button to confirm API Key availability"
+          "verification-hint": "Please click the verify button to confirm API Key availability",
+          "get-api-key": "Click here to get API Key"
         },
         "delete": "Delete",
         "description": " models",
@@ -147,7 +152,8 @@
     "lack-provider": "Missing model provider!",
     "selected-model-not-found": "Please select a model first!",
     "provider-not-found-for-selected-model": "Model provider setup error!",
-    "message-not-found": "This message does not exist!"
+    "message-not-found": "This message does not exist!",
+    "failed-to-generate-ai-response": "Failed to generate AI response!"
   },
   "thread-menu": {
     "actions": {
@@ -194,6 +200,7 @@
     "copy": "Copy",
     "refresh": "Regenerate",
     "edit": "Edit",
+    "delete": "Delete",
     "thinking": "AI is thinking",
     "edit-dialog": {
       "title": "Edit Message",
@@ -203,6 +210,8 @@
       "save-error": "Failed to update message"
     },
     "generate-failed": "Generate failed",
+    "delete-success": "Message deleted successfully",
+    "delete-error": "Failed to delete message",
     "context-menu": {
       "create-new-branch": "Create new branch from here",
       "create-new-branch-error": "Sorry, the new branch creation failed!",

@@ -1,5 +1,6 @@
 import { Schema as S } from "@triplit/client";
 import {
+  attachmentsSchema,
   messagesSchema,
   modelsSchema,
   providersSchema,
@@ -14,6 +15,7 @@ export const schema = S.Collections({
   tabs: tabsSchema,
   threads: threadsSchema,
   messages: messagesSchema,
+  attachments: attachmentsSchema,
   ui: uiSchema,
 });
 

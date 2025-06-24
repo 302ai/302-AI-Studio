@@ -1,20 +1,34 @@
 import { titleBarOverlayDark, titleBarOverlayLight } from "@main/config";
-import { ThemeMode } from "@shared/types/settings";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, nativeTheme } from "electron";
 import { isWin } from "../constant";
 import { ServiceRegister } from "../shared/reflect";
+import { EventNames, emitter } from "./event-service";
 
 @ServiceRegister("windowService")
 export class WindowService {
-  setTitleBarOverlay(theme: ThemeMode) {
+  constructor() {
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners() {
+    nativeTheme.on("updated", () => {
+      this.updateTitleBarOverlay();
+    });
+
+    emitter.on(EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE, () => {
+      this.updateTitleBarOverlay();
+    });
+  }
+
+  private updateTitleBarOverlay() {
     // * setTitleBarOverlay is only available on Windows
-    if (!isWin) {
-      return;
-    }
+    if (!isWin) return;
 
     BrowserWindow.getAllWindows().forEach((window) => {
       window.setTitleBarOverlay(
-        theme === ThemeMode.Dark ? titleBarOverlayDark : titleBarOverlayLight
+        nativeTheme.shouldUseDarkColors
+          ? titleBarOverlayDark
+          : titleBarOverlayLight,
       );
     });
   }

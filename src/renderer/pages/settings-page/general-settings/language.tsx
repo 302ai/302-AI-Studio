@@ -1,3 +1,4 @@
+import { triplitClient } from "@renderer/client";
 import {
   Select,
   SelectList,
@@ -5,24 +6,29 @@ import {
   SelectTrigger,
 } from "@renderer/components/ui/select";
 import langs from "@renderer/i18n/langs";
-import { useSettingsStore } from "@renderer/store/settings-store";
+import type { Language } from "@shared/triplit/types";
+import { useQueryOne } from "@triplit/react";
 import { Earth } from "lucide-react";
 import type { Key } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 
+const { configService } = window.service;
+
 export function LanguageSelector() {
   const { t, i18n } = useTranslation();
 
-  const language = useSettingsStore((state) => state.language);
-  const setLanguage = useSettingsStore((state) => state.setLanguage);
+  const uiQuery = triplitClient.query("ui");
+  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
+  const lang = uiResult?.language ?? "zh";
+  const currentLang = langs.find((l) => l.key === lang) ?? langs[0];
 
-  const handleLanguageChange = (key: Key | null) => {
+  const handleLanguageChange = async (key: Key | null) => {
     const newLang = key?.toString() ?? "";
-    setLanguage(newLang);
-    i18n.changeLanguage(newLang);
+    await Promise.all([
+      configService.setAppLanguage(newLang as Language),
+      i18n.changeLanguage(newLang),
+    ]);
   };
-
-  const currentLang = langs.find((lang) => lang.key === language) ?? langs[0];
 
   return (
     <div className="flex flex-col gap-2">

@@ -1,36 +1,43 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type { StreamChatParams } from "@main/services/provider-service/base-provider-service";
 import type {
+  Attachment,
+  CreateAttachmentData,
   CreateMessageData,
   CreateModelData,
   CreateProviderData,
   CreateTabData,
   CreateThreadData,
+  Language,
   Message,
   Provider,
   Tab,
+  Theme,
   Thread,
+  UpdateAttachmentData,
   UpdateMessageData,
   UpdateProviderData,
   UpdateTabData,
   UpdateThreadData,
 } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
-import type { LanguageVarious, ThemeMode } from "@shared/types/settings";
 
 declare global {
   interface Window {
     electron: ElectronAPI;
     api: {
       platform: string;
+      webUtils: {
+        getPathForFile: (file: File) => string;
+      };
     };
     service: {
       configService: {
         // * General settings
-        getLanguage: () => Promise<LanguageVarious>;
-        getTheme: () => Promise<ThemeMode>;
-        setLanguage: (language: LanguageVarious) => void;
-        setTheme: (theme: ThemeMode) => void;
+        getAppLanguage: () => Promise<Language>;
+        setAppLanguage: (language: Language) => Promise<void>;
+        setAppTheme: (theme: Theme) => Promise<void>;
+        updateAppTheme: (theme: Theme) => Promise<void>;
 
         // * Provider and models settings
         insertProvider: (provider: CreateProviderData) => Promise<Provider>;
@@ -97,6 +104,7 @@ declare global {
         clearActiveTabId: () => Promise<void>;
         updateActiveTabHistory: (tabId: string) => Promise<void>;
         updateActiveTabId: (tabId: string) => Promise<void>;
+        updateSelectedModelId: (modelId: string) => Promise<void>;
       };
       messageService: {
         insertMessage: (message: CreateMessageData) => Promise<Message>;
@@ -104,7 +112,7 @@ declare global {
           messageId: string,
           updateData: UpdateMessageData,
         ) => Promise<void>;
-        deleteMessage: (messageId: string) => Promise<void>;
+        deleteMessage: (messageId: string, threadId: string) => Promise<void>;
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
         getMessageById: (messageId: string) => Promise<Message | null>;
         deleteMessagesByThreadId: (threadId: string) => Promise<void>;
@@ -113,9 +121,20 @@ declare global {
           messageId: string,
           editData: {
             threadId: string;
-          } & Pick<Message, "content" | "attachments">,
+          } & Pick<Message, "content">,
         ) => Promise<void>;
         insertMessages: (messages: CreateMessageData[]) => Promise<void>;
+      };
+      attachmentService: {
+        insertAttachments: (
+          attachments: CreateAttachmentData[],
+        ) => Promise<void>;
+        updateAttachment: (
+          attachmentId: string,
+          updateData: UpdateAttachmentData,
+        ) => Promise<void>;
+        getAttachmentsByMessageId: (messageId: string) => Promise<Attachment[]>;
+        deleteAttachmentsByMessageId: (messageId: string) => Promise<void>;
       };
       triplitService: {
         getServerStatus: () => Promise<{
@@ -140,15 +159,10 @@ declare global {
           success: boolean;
           error?: string;
         }>;
-        previewFile: (
-          fileName: string,
-          fileData: string,
-          mimeType: string,
-        ) => Promise<{
+        previewFileByPath: (filePath: string) => Promise<{
           success: boolean;
           error?: string;
         }>;
-        cleanupAllTempFiles: () => void;
       };
       fileParseService: {
         getMimeType: (filePath: string) => Promise<string>;
@@ -212,7 +226,7 @@ declare global {
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
       };
       shellService: {
-        openExternal: (url: string) => void;
+        openExternal: (url: string) => Promise<void>;
       };
     };
   }

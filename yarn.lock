@@ -29,7 +29,6 @@ __metadata:
     "@triplit/client": "npm:^1.0.40"
     "@triplit/react": "npm:^1.0.40"
     "@triplit/server": "npm:^1.0.50"
-    "@types/lodash": "npm:^4.17.17"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/node": "npm:^22.13.8"
     "@types/react": "npm:^19.0.10"
@@ -59,10 +58,9 @@ __metadata:
     file-type: "npm:^21.0.0"
     husky: "npm:^9.1.7"
     i18next: "npm:^25.0.0"
-    immer: "npm:^10.1.1"
     katex: "npm:^0.16.11"
     ldrs: "npm:^1.1.7"
-    lodash: "npm:^4.17.21"
+    lodash-es: "npm:^4.17.21"
     lucide-react: "npm:^0.477.0"
     mammoth: "npm:^1.9.1"
     mermaid: "npm:^11.6.0"
@@ -82,6 +80,7 @@ __metadata:
     react-window: "npm:^1.8.11"
     reflect-metadata: "npm:^0.2.2"
     rehype-katex: "npm:^7.0.1"
+    remark-cjk-friendly: "npm:^1.2.0"
     remark-gfm: "npm:^4.0.1"
     remark-math: "npm:^6.0.0"
     rimraf: "npm:^6.0.1"
@@ -105,7 +104,6 @@ __metadata:
     xlsx: "npm:^0.18.5"
     xml2js: "npm:^0.6.2"
     zod: "npm:^3.25.49"
-    zustand: "npm:^5.0.4"
   dependenciesMeta:
     sharp:
       built: false
@@ -4747,7 +4745,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:*, @types/lodash@npm:^4.17.17":
+"@types/lodash@npm:*":
   version: 4.17.17
   resolution: "@types/lodash@npm:4.17.17"
   checksum: 10c0/8e75df02a15f04d4322c5a503e4efd0e7a92470570ce80f17e9f11ce2b1f1a7c994009c9bcff39f07e0f9ffd8ccaff09b3598997c404b801abd5a7eee5a639dc
@@ -8479,6 +8477,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"get-east-asian-width@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "get-east-asian-width@npm:1.3.0"
+  checksum: 10c0/1a049ba697e0f9a4d5514c4623781c5246982bdb61082da6b5ae6c33d838e52ce6726407df285cdbb27ec1908b333cf2820989bd3e986e37bb20979437fdf34b
+  languageName: node
+  linkType: hard
+
 "get-intrinsic@npm:^1.2.4, get-intrinsic@npm:^1.2.5, get-intrinsic@npm:^1.2.6, get-intrinsic@npm:^1.2.7, get-intrinsic@npm:^1.3.0":
   version: 1.3.0
   resolution: "get-intrinsic@npm:1.3.0"
@@ -9148,13 +9153,6 @@ __metadata:
   version: 3.0.6
   resolution: "immediate@npm:3.0.6"
   checksum: 10c0/f8ba7ede69bee9260241ad078d2d535848745ff5f6995c7c7cb41cfdc9ccc213f66e10fa5afb881f90298b24a3f7344b637b592beb4f54e582770cdce3f1f039
-  languageName: node
-  linkType: hard
-
-"immer@npm:^10.1.1":
-  version: 10.1.1
-  resolution: "immer@npm:10.1.1"
-  checksum: 10c0/b749e10d137ccae91788f41bd57e9387f32ea6d6ea8fd7eb47b23fd7766681575efc7f86ceef7fe24c3bc9d61e38ff5d2f49c2663b2b0c056e280a4510923653
   languageName: node
   linkType: hard
 
@@ -10929,6 +10927,39 @@ __metadata:
     micromark-util-symbol: "npm:^2.0.0"
     micromark-util-types: "npm:^2.0.0"
   checksum: 10c0/bd4a794fdc9e88dbdf59eaf1c507ddf26e5f7ddf4e52566c72239c0f1b66adbcd219ba2cd42350debbe24471434d5f5e50099d2b3f4e5762ca222ba8e5b549ee
+  languageName: node
+  linkType: hard
+
+"micromark-extension-cjk-friendly-util@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "micromark-extension-cjk-friendly-util@npm:2.0.0"
+  dependencies:
+    get-east-asian-width: "npm:^1.3.0"
+    micromark-util-character: "npm:^2.0.0"
+    micromark-util-symbol: "npm:^2.0.0"
+  peerDependenciesMeta:
+    micromark-util-types:
+      optional: true
+  checksum: 10c0/194c799d88982ebf785e65a1c29cbded17d5dd3510a1769123ec30ddb7e256502b97753f63e8994d91ebafa1e9b96aa2dc2a90aa4e2f2072269b05652a412886
+  languageName: node
+  linkType: hard
+
+"micromark-extension-cjk-friendly@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "micromark-extension-cjk-friendly@npm:1.2.0"
+  dependencies:
+    devlop: "npm:^1.0.0"
+    micromark-extension-cjk-friendly-util: "npm:^2.0.0"
+    micromark-util-chunked: "npm:^2.0.0"
+    micromark-util-resolve-all: "npm:^2.0.0"
+    micromark-util-symbol: "npm:^2.0.0"
+  peerDependencies:
+    micromark: ^4.0.0
+    micromark-util-types: ^2.0.0
+  peerDependenciesMeta:
+    micromark-util-types:
+      optional: true
+  checksum: 10c0/5be1841629310e21c803b64feb00453fb8ac939be80c2ff473d8b4486d8eca973347520912a6e4abeda5bea4ed8ef39d3db48c4bad8285dd380d9ed34417dd0d
   languageName: node
   linkType: hard
 
@@ -13011,6 +13042,21 @@ __metadata:
     unist-util-visit-parents: "npm:^6.0.0"
     vfile: "npm:^6.0.0"
   checksum: 10c0/73c770319536128b75055d904d06951789d00a0552c11724c0dac2e244dcb21041630552d118a11cc42233fdcd1bfee525e78a0020fde635bd916cceb281dfb1
+  languageName: node
+  linkType: hard
+
+"remark-cjk-friendly@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "remark-cjk-friendly@npm:1.2.0"
+  dependencies:
+    micromark-extension-cjk-friendly: "npm:^1.2.0"
+  peerDependencies:
+    "@types/mdast": ^4.0.0
+    unified: ^11.0.0
+  peerDependenciesMeta:
+    "@types/mdast":
+      optional: true
+  checksum: 10c0/ca7dc4fd50491693c4a84164650b30c3ae027cc7aa11b7a2e3811ab07ad0bf0c73484e37f9aed710bb68f95ca03cc540effe64cbe94bbc055b40e1aa951e2013
   languageName: node
   linkType: hard
 
@@ -15583,27 +15629,6 @@ __metadata:
   version: 3.25.51
   resolution: "zod@npm:3.25.51"
   checksum: 10c0/6fc708a45b0d44282c18da4c93f4d42336a884a42487031b40bacb7e8c5a2e539b7993d3ccba75f445df78050f05ff4e34110ffe03d2c3fcbe557c7fe7c1350a
-  languageName: node
-  linkType: hard
-
-"zustand@npm:^5.0.4":
-  version: 5.0.5
-  resolution: "zustand@npm:5.0.5"
-  peerDependencies:
-    "@types/react": ">=18.0.0"
-    immer: ">=9.0.6"
-    react: ">=18.0.0"
-    use-sync-external-store: ">=1.2.0"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    immer:
-      optional: true
-    react:
-      optional: true
-    use-sync-external-store:
-      optional: true
-  checksum: 10c0/76228022ad589c8ef29227f184d8852277509f88c80afd537de0506a6ded2e7ecc01d21bb79f426867560e4d59553c526e88d01abc46bd32b133d97ff337e19b
   languageName: node
   linkType: hard
 

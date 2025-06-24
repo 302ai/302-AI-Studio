@@ -5,7 +5,6 @@ import { ContextMenuItem } from "@renderer/components/ui/context-menu";
 import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
-import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { useThinkBlocks } from "@renderer/hooks/use-think-blocks";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { formatTimeAgo } from "@renderer/lib/utils";
@@ -57,29 +56,20 @@ export function AssistantMessage({
   const providerQuery = triplitClient
     .query("providers")
     .Where("id", "=", message.providerId);
-  const modelQuery = triplitClient
-    .query("models")
-    .Where("id", "=", message.modelId);
-  const { results: modelResults } = useQuery(triplitClient, modelQuery);
+  // const modelQuery = triplitClient
+  //   .query("models")
+  //   .Where("id", "=", message.modelId);
+  // const { results: modelResults } = useQuery(triplitClient, modelQuery);
   const { results: providerResults } = useQuery(triplitClient, providerQuery);
   const providerName = useMemo(() => {
     const provider = providerResults?.[0];
     return provider?.name ?? "";
   }, [providerResults]);
 
-  const modelName = useMemo(() => {
-    const model = modelResults?.[0];
-    return model?.name ?? "AI";
-  }, [modelResults]);
-
-  const attachments = useMemo(() => {
-    if (!message.attachments) return [];
-    try {
-      return JSON.parse(message.attachments) as AttachmentFile[];
-    } catch {
-      return [];
-    }
-  }, [message.attachments]);
+  // const modelName = useMemo(() => {
+  //   const model = modelResults?.[0];
+  //   return model?.name ?? "AI";
+  // }, [modelResults]);
 
   // Extract clean content with streaming support
   const { cleanContent } = useThinkBlocks(message.content || "");
@@ -170,6 +160,17 @@ export function AssistantMessage({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await messageService.deleteMessage(message.id, message.threadId);
+      setContextMenuOpen(false);
+      toast.success(t("delete-success"));
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error(t("delete-error"));
+    }
+  };
+
   return (
     <>
       {/** biome-ignore lint/a11y/noStaticElementInteractions: needed for context menu handling */}
@@ -181,27 +182,21 @@ export function AssistantMessage({
         <ModelIcon className="size-6" modelName={providerName} />
 
         <div className="w-full min-w-0">
-          {attachments.length > 0 && (
-            <div className="mb-2">
-              <MessageAttachments attachments={attachments} />
+          <MessageAttachments messageId={message.id} className="mb-2" />
+          {/* Model name display */}
+          {message.modelName && (
+            <div className="mb-2 text-muted-fg text-xs">
+              {message.modelName}
             </div>
           )}
-
-          {/* Model name display */}
-          {modelName && (
-            <div className="mb-2 text-muted-fg text-xs">{modelName}</div>
-          )}
-
           {/* Think content display */}
           <ThinkBlocks content={message.content || ""} messageId={message.id} />
-
           {/* Main content display */}
           {cleanContent && (
-            <div className="overflow-wrap-anywhere w-full whitespace-pre-wrap break-words break-all">
+            <div className="overflow-wrap-anywhere w-full break-words break-all">
               <MarkdownRenderer>{cleanContent}</MarkdownRenderer>
             </div>
           )}
-
           {message.status === "pending" && (
             <div className="mt-2 flex items-center gap-2 text-muted-fg text-sm">
               <div className="flex items-center gap-x-4">
@@ -210,15 +205,16 @@ export function AssistantMessage({
               </div>
             </div>
           )}
-
+          ss
           {message.status === "error" && (
             <div className="mt-2 flex items-center gap-2 text-destructive text-sm">
               <div className="h-2 w-2 rounded-full bg-current" />
               {t("generate-failed")}
             </div>
           )}
-
-          {(message.status === "success" || message.status === "stop") && (
+          {(message.status === "success" ||
+            message.status === "stop" ||
+            message.status === "error") && (
             <div className="mt-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
               {message.status === "success" && (
                 <ButtonWithTooltip
@@ -315,6 +311,16 @@ export function AssistantMessage({
             }}
           >
             {t("context-menu.create-new-branch")}
+          </ContextMenuItem>
+
+          <ContextMenuItem
+            isDanger={true}
+            onAction={() => {
+              handleDelete();
+              setContextMenuOpen(false);
+            }}
+          >
+            {t("delete")}
           </ContextMenuItem>
         </MenuContent>
       )}

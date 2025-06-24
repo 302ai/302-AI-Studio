@@ -1,7 +1,11 @@
 {
   "chat": {
     "input-label": "メッセージを入力",
+    "file-not-found": "ファイルが見つかりませんでした",
+    "file-preview-failed": "ファイルのプレビューに失敗しました",
+    "collected": "お気に入り",
     "input-placeholder": "何でも聞いてみてください...",
+    "send-failed": "メッセージの送信に失敗しました",
     "tool-bar": {
       "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)"
     },
@@ -66,7 +70,8 @@
           "url-invalid-format": "無効なURL形式",
           "verification-required": "プロバイダーを追加する前に、まずAPIキーを確認してください",
           "verification-required-notice": "💡 通知：プロバイダー設定を追加または保存する前に、API認証が必要です。",
-          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください"
+          "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください",
+          "get-api-key": "APIキーを取得するには、ここをクリックしてください"
         },
         "delete": "削除",
         "description": "モデル",
@@ -147,7 +152,8 @@
     "lack-provider": "モデルプロバイダーがありません！",
     "selected-model-not-found": "最初にモデルを選択してください！",
     "provider-not-found-for-selected-model": "モデルベンダーのセットアップエラー！",
-    "message-not-found": "このメッセージは存在しません！"
+    "message-not-found": "このメッセージは存在しません！",
+    "failed-to-generate-ai-response": "AI応答の生成に失敗しました！"
   },
   "thread-menu": {
     "actions": {
@@ -194,6 +200,7 @@
     "copy": "コピー",
     "refresh": "再生成",
     "edit": "編集",
+    "delete": "削除",
     "thinking": "AIは考えています",
     "edit-dialog": {
       "title": "メッセージを編集",
@@ -203,6 +210,8 @@
       "save-error": "メッセージの更新に失敗しました"
     },
     "generate-failed": "生成に失敗しました",
+    "delete-success": "メッセージが正常に削除されました",
+    "delete-error": "メッセージの削除に失敗しました",
     "context-menu": {
       "create-new-branch": "新しいブランチを作成",
       "create-new-branch-error": "申し訳ありませんが、新しいブランチの作成は失敗しました！",

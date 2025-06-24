@@ -1,8 +1,11 @@
-import { useSettingsStore } from "@renderer/store/settings-store/general-settings-store";
+import { triplitClient } from "@renderer/client";
+import { useQueryOne } from "@triplit/react";
 import { Toaster as ToasterPrimitive, type ToasterProps } from "sonner";
 
 const Toast = ({ ...props }: ToasterProps) => {
-  const { theme } = useSettingsStore();
+  const uiQuery = triplitClient.query("ui");
+  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
+  const theme = uiResult?.theme ?? "system";
 
   return (
     <ToasterPrimitive

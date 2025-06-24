@@ -12,6 +12,7 @@ export interface AttachmentFile {
   size: number;
   type: string;
   file: File;
+  filePath?: string;
   preview?: string; // base64 data URL for images
   fileData?: string; // base64 file data for non-image files (for preview)
 }
@@ -133,6 +134,7 @@ export function useAttachments() {
             name: file.name,
             size: file.size,
             type: file.type,
+            filePath: file.filePath,
             preview: file.preview,
             fileData: file.fileData,
           }));
@@ -168,6 +170,7 @@ export function useAttachments() {
                 size: file.size,
                 type: file.type,
                 file,
+                filePath: originalData.filePath,
                 preview: originalData.preview,
                 fileData: originalData.fileData,
               };
@@ -229,6 +232,12 @@ export function useAttachments() {
             type: file.type,
             file,
           };
+
+          try {
+            attachment.filePath = window.api.webUtils.getPathForFile(file);
+          } catch (error) {
+            console.warn(`Failed to get file path for ${file.name}:`, error);
+          }
 
           // 生成预览数据
           try {

@@ -1,3 +1,4 @@
+import { AttachmentService } from "./attachment-service";
 import { ChatService } from "./chat-service";
 import { ConfigService } from "./config-service";
 import { FileParseService } from "./file-service/file-parse-service";
@@ -17,6 +18,7 @@ export const services = [
   ConfigService,
   ThreadService,
   MessageService,
+  AttachmentService,
   UiService,
   TabService,
   ChatService,

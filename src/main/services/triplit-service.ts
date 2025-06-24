@@ -16,7 +16,6 @@ import portfinder from "portfinder";
 
 portfinder.setBasePort(9000);
 
-// Triplit服务器配置
 export interface TriplitServerConfig {
   port: number;
   verboseLogs: boolean;
@@ -62,7 +61,6 @@ export class TriplitService {
 
       console.log("client (main process)", client.serverUrl);
 
-      // 监听应用退出事件，确保服务器正确关闭
       app.on("before-quit", () => {
         this.cleanup();
       });
@@ -130,7 +128,7 @@ export class TriplitService {
       ? join(__dirname, "../../../db")
       : app.getPath("userData");
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
-    const defaultDatabaseFile = path.join(defaultDatabaseDir, "db.sqlite");
+    const defaultDatabaseFile = path.join(defaultDatabaseDir, "appDb.sqlite");
 
     Logger.info("Default database file:", defaultDatabaseFile);
 

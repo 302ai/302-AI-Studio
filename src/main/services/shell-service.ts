@@ -17,4 +17,18 @@ export class ShellService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async openPath(
+    _event: Electron.IpcMainInvokeEvent,
+    path: string,
+  ): Promise<string> {
+    try {
+      const result = await shell.openPath(path);
+      return result;
+    } catch (error) {
+      Logger.error("ShellService:openPath error ---->", error);
+      throw error;
+    }
+  }
 }

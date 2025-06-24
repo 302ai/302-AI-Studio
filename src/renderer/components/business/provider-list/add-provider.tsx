@@ -23,6 +23,8 @@ interface AddProviderProps {
   providers: Provider[];
 }
 
+const { shellService } = window.service;
+
 export function AddProvider({
   onValidationStatusChange,
   onProviderCfgSet,
@@ -38,6 +40,7 @@ export function AddProvider({
   const [providerType, setProviderType] = useState("openai");
   const [apiKey, setApiKey] = useState("");
   const [baseUrl, setBaseURL] = useState("");
+  const [website, setWebsite] = useState<string>("");
   const [customName, setCustomName] = useState("");
   const [isChecking, setIsChecking] = useState<
     "idle" | "loading" | "success" | "failed"
@@ -107,14 +110,13 @@ export function AddProvider({
   };
 
   const handleProviderSelect = (key: string) => {
-    console.log("handleProviderSelect", key);
     // When the SelectOption id is "custom" it means the user wants to add a custom provider
     if (key === "custom") {
       setProviderId("custom");
       setProviderName("");
       setBaseURL(""); // leave empty for custom provider
       setProviderType("openai"); // reset to default
-
+      setWebsite("");
       if (keyValidationStatus !== "unverified") {
         handleValidationStatusReset();
       }
@@ -136,11 +138,16 @@ export function AddProvider({
       // Set API type, then set Base URL (so useMemo can correctly calculate normalized result)
       setProviderType(foundProvider.apiType);
       setBaseURL(defaultBaseUrl);
+      setWebsite(foundProvider.websites?.apiKey || "");
     }
 
     if (keyValidationStatus !== "unverified") {
       handleValidationStatusReset();
     }
+  };
+
+  const handleGetApiKey = async () => {
+    await shellService.openExternal(website);
   };
 
   return (
@@ -201,7 +208,9 @@ export function AddProvider({
         canCheckKey={canCheckKey}
         isChecking={isChecking}
         onValidationStatusReset={handleValidationStatusReset}
+        onGetApiKey={handleGetApiKey}
         normalizedUrlResult={normalizedUrlResult}
+        canGetApiKey={!!website}
       />
     </div>
   );

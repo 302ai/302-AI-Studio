@@ -33,7 +33,7 @@ export function AppSidebar(props: AppSidebarProps) {
   return (
     <div className="flex h-[calc(100vh-var(--title-bar-height))] w-full flex-1 flex-row">
       <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
-        <SidebarContent>
+        <SidebarContent className="max-h-[calc(100vh-var(--title-bar-height))] pb-2">
           {/* All Threads */}
           <SidebarDisclosureGroup
             className="gap-y-0"
@@ -83,7 +83,7 @@ export function AppSidebar(props: AppSidebarProps) {
 
       <SidebarInset
         className={cn(
-          "min-h-[calc(100vh-var(--title-bar-height))]",
+          "min-h-full",
           state === "expanded" && "max-w-[calc(100vw-var(--sidebar-width))]",
         )}
       >

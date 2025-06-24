@@ -62,7 +62,6 @@ export function ChatInput({ className }: ChatInputProps) {
 
     try {
       setIsSending(true);
-
       if (!selectedModelId) {
         toast.error(t("lack-model"));
         return;
@@ -74,7 +73,7 @@ export function ChatInput({ className }: ChatInputProps) {
       await sendMessage(currentInput, currentAttachments);
     } catch (error) {
       console.error("Failed to send message:", error);
-      toast.error("Failed to send message");
+      toast.error(t("send-failed"));
       // Restore input on error
       setInput(currentInput);
       // Note: attachments are already cleared, but that's probably fine for error cases
@@ -104,48 +103,37 @@ export function ChatInput({ className }: ChatInputProps) {
   // 从消息附件数据加载附件
   const loadAttachmentsFromMessage = useCallback(
     async (message: Message) => {
-      if (!message.attachments) {
-        await clearAttachments();
-        return;
-      }
-
       try {
-        const messageAttachments = JSON.parse(message.attachments);
-        if (
-          !Array.isArray(messageAttachments) ||
-          messageAttachments.length === 0
-        ) {
+        // Get attachments from database using the new attachment service
+        const messageAttachments =
+          await window.service.attachmentService.getAttachmentsByMessageId(
+            message.id,
+          );
+
+        if (!messageAttachments || messageAttachments.length === 0) {
           await clearAttachments();
           return;
         }
 
         // 将消息附件转换为AttachmentFile格式
-        const loadedAttachments = messageAttachments.map(
-          (attachment: {
-            id: string;
-            name: string;
-            size: number;
-            type: string;
-            preview?: string;
-            fileData?: string;
-          }) => {
-            // 创建一个虚拟的File对象用于显示
-            const blob = new Blob([], { type: attachment.type });
-            const file = new File([blob], attachment.name, {
-              type: attachment.type,
-            });
+        const loadedAttachments = messageAttachments.map((attachment) => {
+          // 创建一个虚拟的File对象用于显示
+          const blob = new Blob([], { type: attachment.type });
+          const file = new File([blob], attachment.name, {
+            type: attachment.type,
+          });
 
-            return {
-              id: attachment.id,
-              name: attachment.name,
-              size: attachment.size,
-              type: attachment.type,
-              file,
-              preview: attachment.preview,
-              fileData: attachment.fileData,
-            };
-          },
-        );
+          return {
+            id: attachment.id,
+            name: attachment.name,
+            size: attachment.size,
+            type: attachment.type,
+            file,
+            filePath: attachment.filePath || undefined,
+            preview: attachment.preview || undefined,
+            fileData: attachment.fileData || undefined,
+          };
+        });
 
         // 直接设置附件状态，不保存到tab（因为这是编辑模式）
         setAttachmentsDirectly(loadedAttachments);
@@ -171,11 +159,34 @@ export function ChatInput({ className }: ChatInputProps) {
 
   const handleSave = async () => {
     if (!editMessageId) return;
+
+    // Update message content
     await messageService.editMessage(editMessageId, {
       content: input,
-      attachments: JSON.stringify(attachments),
       threadId: activeThreadId ?? "",
     });
+
+    // Delete existing attachments for this message
+    await window.service.attachmentService.deleteAttachmentsByMessageId(
+      editMessageId,
+    );
+
+    // Insert new attachments if any
+    if (attachments.length > 0) {
+      const attachmentData = attachments.map((attachment) => ({
+        messageId: editMessageId,
+        name: attachment.name,
+        size: attachment.size,
+        type: attachment.type,
+        filePath: attachment.filePath || null,
+        preview: attachment.preview || null,
+        fileData: attachment.fileData || null,
+        fileContent: null, // Will be parsed later if needed
+      }));
+
+      await window.service.attachmentService.insertAttachments(attachmentData);
+    }
+
     setEditMessageId(null);
     await clearInputAndAttachments();
   };

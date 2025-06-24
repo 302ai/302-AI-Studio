@@ -235,6 +235,7 @@ export class ProviderService {
         providerId: provider.id,
         parentMessageId: userMessageId,
         modelId: model.id,
+        modelName: model.name,
       });
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,
@@ -258,6 +259,22 @@ export class ProviderService {
 
       if (fullContent !== "") {
         usage = await result.usage;
+      }
+
+      if (fullContent === "") {
+        await this.chatService.updateMessage(assistantMessage.id, {
+          tokenCount: usage?.outputTokens ?? 0,
+          status: "error",
+        });
+        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+          threadId,
+          status: "error",
+          userMessageId: userMessageId,
+        });
+        return {
+          success: false,
+          error: "No content received from provider",
+        };
       }
 
       await this.chatService.updateMessage(assistantMessage.id, {
