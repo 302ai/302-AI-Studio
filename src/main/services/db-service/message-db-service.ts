@@ -40,7 +40,25 @@ export class MessageDbService extends BaseDbService {
   }
 
   async deleteMessage(messageId: string): Promise<void> {
-    await triplitClient.delete("messages", messageId);
+    const query = triplitClient
+      .query("messages")
+      .Where("id", "=", messageId)
+      .Include("attachments");
+
+    const messages = await triplitClient.fetchOne(query);
+
+    if (messages?.attachments) {
+      await triplitClient.transact(async (tx) => {
+        const deleteAttachmentPromises = messages.attachments.map((attachment) =>
+          tx.delete("attachments", attachment.id)
+        );
+        const deleteMessagePromise = tx.delete("messages", messageId);
+
+        await Promise.all([...deleteAttachmentPromises, deleteMessagePromise]);
+      });
+    } else {
+      await triplitClient.delete("messages", messageId);
+    }
   }
 
   async getMessagesByThreadId(threadId: string): Promise<Message[]> {
@@ -58,27 +76,59 @@ export class MessageDbService extends BaseDbService {
   }
 
   async deleteMessagesByThreadId(threadId: string): Promise<void> {
-    const messages = await this.getMessagesByThreadId(threadId);
+    // 使用 Include 获取消息及其关联的附件
+    const query = triplitClient
+      .query("messages")
+      .Where("threadId", "=", threadId)
+      .Include("attachments")
+      .Order("createdAt", "ASC");
+
+    const messagesWithAttachments = await triplitClient.fetch(query);
 
     await triplitClient.transact(async (tx) => {
-      const deletePromises = messages.map((message) =>
-        tx.delete("messages", message.id),
+      // 收集所有需要删除的附件
+      const allAttachments = messagesWithAttachments.flatMap(message =>
+        message.attachments || []
       );
 
-      await Promise.all(deletePromises);
+      // 删除所有附件
+      const deleteAttachmentPromises = allAttachments.map((attachment) =>
+        tx.delete("attachments", attachment.id)
+      );
+
+      // 删除所有消息
+      const deleteMessagePromises = messagesWithAttachments.map((message) =>
+        tx.delete("messages", message.id)
+      );
+
+      await Promise.all([...deleteAttachmentPromises, ...deleteMessagePromises]);
     });
   }
 
   async deleteAllMessages(): Promise<void> {
-    const messagesQuery = triplitClient.query("messages");
-    const messages = await triplitClient.fetch(messagesQuery);
+    // 使用 Include 获取所有消息及其关联的附件
+    const messagesQuery = triplitClient
+      .query("messages")
+      .Include("attachments");
+    const messagesWithAttachments = await triplitClient.fetch(messagesQuery);
 
     await triplitClient.transact(async (tx) => {
-      const deletePromises = messages.map((message) =>
-        tx.delete("messages", message.id),
+      // 收集所有需要删除的附件
+      const allAttachments = messagesWithAttachments.flatMap(message =>
+        message.attachments || []
       );
 
-      await Promise.all(deletePromises);
+      // 删除所有附件
+      const deleteAttachmentPromises = allAttachments.map((attachment) =>
+        tx.delete("attachments", attachment.id)
+      );
+
+      // 删除所有消息
+      const deleteMessagePromises = messagesWithAttachments.map((message) =>
+        tx.delete("messages", message.id)
+      );
+
+      await Promise.all([...deleteAttachmentPromises, ...deleteMessagePromises]);
     });
   }
 

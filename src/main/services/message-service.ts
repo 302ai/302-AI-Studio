@@ -9,18 +9,15 @@ import type {
   UpdateMessageData,
 } from "@shared/triplit/types";
 import Logger from "electron-log";
-import { AttachmentService } from "./attachment-service";
 import { MessageDbService } from "./db-service/message-db-service";
 import { EventNames, sendToThread } from "./event-service";
 
 @ServiceRegister("messageService")
 export class MessageService {
   private messageDbService: MessageDbService;
-  private attachmentService: AttachmentService;
 
   constructor() {
     this.messageDbService = new MessageDbService();
-    this.attachmentService = new AttachmentService();
   }
 
   async _getMessagesByThreadId(threadId: string): Promise<Message[]> {
@@ -105,10 +102,6 @@ export class MessageService {
       const messageToDelete =
         await this.messageDbService.getMessageById(messageId);
 
-      // Delete associated attachments first
-      await this.attachmentService._deleteAttachmentsByMessageId(messageId);
-
-      // Then delete the message
       await this.messageDbService.deleteMessage(messageId);
 
       if (messageToDelete) {
