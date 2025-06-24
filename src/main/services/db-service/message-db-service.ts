@@ -48,8 +48,9 @@ export class MessageDbService extends BaseDbService {
       .query("messages")
       .Where("threadId", "=", threadId)
       .Order("createdAt", "ASC");
+    const messages = await triplitClient.fetch(query);
 
-    return await triplitClient.fetch(query);
+    return messages;
   }
 
   async getMessageById(messageId: string): Promise<Message | null> {
@@ -58,11 +59,14 @@ export class MessageDbService extends BaseDbService {
 
   async deleteMessagesByThreadId(threadId: string): Promise<void> {
     const messages = await this.getMessagesByThreadId(threadId);
-    const deletePromises = messages.map((message) =>
-      triplitClient.delete("messages", message.id),
-    );
 
-    await Promise.all(deletePromises);
+    await triplitClient.transact(async (tx) => {
+      const deletePromises = messages.map((message) =>
+        tx.delete("messages", message.id),
+      );
+
+      await Promise.all(deletePromises);
+    });
   }
 
   async deleteAllMessages(): Promise<void> {
