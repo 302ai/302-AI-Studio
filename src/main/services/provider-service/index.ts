@@ -261,6 +261,22 @@ export class ProviderService {
         usage = await result.usage;
       }
 
+      if (fullContent === "") {
+        await this.chatService.updateMessage(assistantMessage.id, {
+          tokenCount: usage?.outputTokens ?? 0,
+          status: "error",
+        });
+        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+          threadId,
+          status: "error",
+          userMessageId: userMessageId,
+        });
+        return {
+          success: false,
+          error: "No content received from provider",
+        };
+      }
+
       await this.chatService.updateMessage(assistantMessage.id, {
         tokenCount: usage?.outputTokens ?? 0,
         status: "success",

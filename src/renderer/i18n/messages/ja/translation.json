@@ -152,7 +152,8 @@
     "lack-provider": "モデルプロバイダーがありません！",
     "selected-model-not-found": "最初にモデルを選択してください！",
     "provider-not-found-for-selected-model": "モデルベンダーのセットアップエラー！",
-    "message-not-found": "このメッセージは存在しません！"
+    "message-not-found": "このメッセージは存在しません！",
+    "failed-to-generate-ai-response": "AI応答の生成に失敗しました！"
   },
   "thread-menu": {
     "actions": {

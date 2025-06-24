@@ -152,7 +152,8 @@
     "lack-provider": "缺少模型提供商！",
     "selected-model-not-found": "请先选择一个模型！",
     "provider-not-found-for-selected-model": "模型供应商设置错误！",
-    "message-not-found": "此消息不存在！"
+    "message-not-found": "此消息不存在！",
+    "failed-to-generate-ai-response": "生成AI响应失败！"
   },
   "thread-menu": {
     "actions": {
