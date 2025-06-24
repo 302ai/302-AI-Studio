@@ -1,5 +1,6 @@
 import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
 import Logger from "electron-log";
+import { AttachmentService } from "../services/attachment-service";
 import { FilePresenter } from "../services/file-service/file-parse-service";
 
 // Type definitions for AI SDK content parts - using the actual AI SDK types
@@ -38,9 +39,7 @@ export async function convertToModelMessage(
 
   if (message.role === "user" && (message.id || messageId)) {
     // Get attachments from database using the new attachment service
-    const attachmentService = new (
-      await import("../services/attachment-service")
-    ).AttachmentService();
+    const attachmentService = new AttachmentService();
     const attachmentId = message.id || messageId;
     let attachments: AttachmentData[] = [];
 
