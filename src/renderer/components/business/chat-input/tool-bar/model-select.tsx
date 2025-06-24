@@ -49,6 +49,8 @@ export const ModelSelect = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<List>(null);
+  const scrollPositionRef = useRef<number>(0);
 
   const handleModelSelect = useCallback(
     (modelId: string) => {
@@ -57,6 +59,14 @@ export const ModelSelect = ({
     },
     [onSelect],
   );
+
+  const handleToggleOpen = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
+
+  const handleScroll = useCallback((props: { scrollOffset: number }) => {
+    scrollPositionRef.current = props.scrollOffset;
+  }, []);
 
   // Create provider map and provider model map from triplit data
   const { providerMap, providerModelMap } = useMemo(() => {
@@ -203,7 +213,7 @@ export const ModelSelect = ({
       <Button
         ref={triggerRef}
         className="group flex items-center gap-2 px-1 [--btn-overlay:theme(--color-hover-transparent)]"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggleOpen}
         intent="plain"
       >
         {selectedModel ? (
@@ -242,12 +252,15 @@ export const ModelSelect = ({
           <div className="max-h-[250px] min-w-[240px] max-w-[240px] p-1">
             {filteredItems.length > 0 ? (
               <List
+                ref={listRef}
                 height={Math.min(250, filteredItems.length * 30)}
                 itemCount={filteredItems.length}
                 itemSize={30}
                 itemData={listData}
                 overscanCount={5}
                 width="100%"
+                initialScrollOffset={scrollPositionRef.current}
+                onScroll={handleScroll}
                 style={{
                   scrollbarGutter: "stable",
                 }}
