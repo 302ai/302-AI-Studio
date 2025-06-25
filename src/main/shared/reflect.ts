@@ -25,7 +25,6 @@ export function ServiceRegister(serviceSymbol: symbol) {
 export function ServiceHandler(communicationWay?: CommunicationWay) {
   return (target: any, methodName: string, descriptor: PropertyDescriptor) => {
     const targetName = target.constructor.name;
-    console.log("🔍 targetName:", targetName);
 
     const existingMetadata =
       Reflect.getMetadata(`${targetName}`, _metadata) || {};

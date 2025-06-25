@@ -50,8 +50,6 @@ export function initMainBridge(): void {
             ipcMain.handle(`${name}:${methodName}`, boundHandler);
           }
         });
-
-        console.log(`✅ Resolved service '${name}' from Inversify container`);
       } else {
         console.error(`❌ Failed to resolve service '${service.name}'`);
         return;
