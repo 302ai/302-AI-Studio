@@ -12,13 +12,35 @@ import {
   ServiceRegister,
 } from "../shared/reflect";
 import type { ThreadDbService } from "./db-service/thread-db-service";
+import { EventNames, emitter } from "./event-service";
 
 @ServiceRegister(TYPES.ThreadService)
 @injectable()
 export class ThreadService {
   constructor(
     @inject(TYPES.ThreadDbService) private threadDbService: ThreadDbService,
-  ) {}
+  ) {
+    emitter.on(EventNames.PROVIDER_DELETE, ({ providerId }) => {
+      this.resetThreadByProviderId(providerId);
+    });
+  }
+
+  private async resetThreadByProviderId(providerId: string) {
+    try {
+      const threads = await this.threadDbService.getThreads();
+      for (const thread of threads) {
+        if (thread.providerId === providerId) {
+          await this.threadDbService.updateThread(thread.id, {
+            providerId: "",
+            modelId: "",
+          });
+        }
+      }
+    } catch (error) {
+      Logger.error("ThreadService:resetProviderId error ---->", error);
+      throw error;
+    }
+  }
 
   async getThreads(): Promise<Thread[]> {
     const threads = await this.threadDbService.getThreads();
