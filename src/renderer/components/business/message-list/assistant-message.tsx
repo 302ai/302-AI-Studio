@@ -215,7 +215,7 @@ export function AssistantMessage({
             message.status === "stop" ||
             message.status === "error") && (
             <div className="mt-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-              {message.status === "success" && (
+              {(message.status === "success" || message.status === "stop") && (
                 <ButtonWithTooltip
                   type="button"
                   onClick={handleCopy}
@@ -243,7 +243,7 @@ export function AssistantMessage({
                 <RefreshCcw className="h-3 w-3" />
               </ButtonWithTooltip>
 
-              {message.status === "success" && (
+              {(message.status === "success" || message.status === "stop") && (
                 <ButtonWithTooltip
                   type="button"
                   onClick={handleEdit}
@@ -294,14 +294,16 @@ export function AssistantMessage({
           >
             {t("refresh")}
           </ContextMenuItem>
-          <ContextMenuItem
-            onAction={() => {
-              handleEdit();
-              setContextMenuOpen(false);
-            }}
-          >
-            {t("edit")}
-          </ContextMenuItem>
+          {(message.status === "success" || message.status === "stop") && (
+            <ContextMenuItem
+              onAction={() => {
+                handleEdit();
+                setContextMenuOpen(false);
+              }}
+            >
+              {t("edit")}
+            </ContextMenuItem>
+          )}
 
           <ContextMenuItem
             onAction={() => {
