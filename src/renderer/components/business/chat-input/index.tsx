@@ -203,7 +203,7 @@ export function ChatInput({ className }: ChatInputProps) {
   }, [activeThreadId]);
 
   return (
-    <div className={cn("mx-auto w-full max-w-2xl", className)}>
+    <div className={cn("mx-auto w-full max-w-[800px]", className)}>
       {attachments.length > 0 && (
         <div className="mb-2">
           <AttachmentList
