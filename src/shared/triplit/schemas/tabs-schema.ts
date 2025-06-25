@@ -7,6 +7,9 @@ export const tabsSchema = {
     type: S.String({
       enum: ["thread", "setting"],
     }),
+    path: S.String({
+      nullable: true,
+    }),
     inputValue: S.String({
       nullable: true,
     }),
