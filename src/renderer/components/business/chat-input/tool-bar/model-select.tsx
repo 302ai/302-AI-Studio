@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: ignore */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: ignore */
-import { IconAsterisk, IconChevronLgDown } from "@intentui/icons";
+import { IconChevronLgDown } from "@intentui/icons";
 import { triplitClient } from "@renderer/client";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
@@ -259,7 +259,6 @@ export const ModelSelect = ({
           onClick={handleOpenModelSettings}
           type="button"
         >
-          <IconAsterisk className="size-3 text-red-500 " />
           <span className="truncate text-sm underline">
             {t("model-select")}
           </span>
