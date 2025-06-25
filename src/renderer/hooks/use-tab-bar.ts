@@ -94,9 +94,7 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
    */
   useEffect(() => {
     if (activeTab) {
-      navigate(
-        activeTab.type === "setting" ? "/settings/general-settings" : "/",
-      );
+      navigate(activeTab?.path || "/");
     }
   }, [activeTab, navigate]);
 

@@ -44,21 +44,28 @@ export function BasicTitleBar() {
   const handleAddNewTab = async (type: "thread" | "setting") => {
     if (type === "setting") {
       // Check if a setting tab already exists
-      const existingSettingTab = tabs.find(tab => tab.type === "setting");
+      const existingSettingTab = tabs.find((tab) => tab.type === "setting");
 
       if (existingSettingTab) {
         // Activate the existing setting tab
-        const promises = [setActiveTabId(existingSettingTab.id), setActiveThreadId('')];
+        const promises = [
+          setActiveTabId(existingSettingTab.id),
+          setActiveThreadId(""),
+        ];
         await Promise.all(promises);
         return;
       }
     }
 
     const newTab = await tabService.insertTab({
-      title: type === "thread" ? t("thread.new-thread-title") : t("settings.tab-title"),
+      title:
+        type === "thread"
+          ? t("thread.new-thread-title")
+          : t("settings.tab-title"),
       type,
+      path: type === "thread" ? "/" : "/settings/general-settings",
     });
-    const promises = [setActiveTabId(newTab.id), setActiveThreadId('')];
+    const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
     await Promise.all(promises);
   };
 

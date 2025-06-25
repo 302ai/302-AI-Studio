@@ -1,18 +1,22 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: ignore */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: ignore */
-import { IconChevronLgDown } from "@intentui/icons";
+import { IconAsterisk, IconChevronLgDown } from "@intentui/icons";
 import { triplitClient } from "@renderer/client";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
 import { SearchField } from "@renderer/components/ui/search-field";
-import type { Model, Provider } from "@shared/triplit/types";
+import { useActiveTab } from "@renderer/hooks/use-active-tab";
+import type { Model, Provider, Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { SearchX } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { FixedSizeList as List } from "react-window";
 import { type ListItem, ModelRowList } from "./model-row-list";
+
+const { tabService } = window.service;
 
 interface GroupedModel {
   id: string;
@@ -34,6 +38,8 @@ export const ModelSelect = ({
   });
 
   const { contains } = useFilter({ sensitivity: "base" });
+  const { setActiveTabId } = useActiveTab();
+  const navigate = useNavigate();
 
   // Use triplit queries instead of model-setting-store
   const providersQuery = triplitClient
@@ -67,6 +73,38 @@ export const ModelSelect = ({
   const handleScroll = useCallback((props: { scrollOffset: number }) => {
     scrollPositionRef.current = props.scrollOffset;
   }, []);
+
+  const handleOpenModelSettings = useCallback(async () => {
+    try {
+      const tabsQuery = triplitClient.query("tabs");
+      const tabs = await triplitClient.fetch(tabsQuery);
+      const existingSettingTab = tabs?.find(
+        (tab: Tab) => tab.type === "setting",
+      );
+
+      if (existingSettingTab) {
+        await tabService.updateTab(existingSettingTab.id, {
+          path: "/settings/model-settings",
+        });
+        await setActiveTabId(existingSettingTab.id);
+        setTimeout(() => {
+          navigate("/settings/model-settings");
+        }, 100);
+      } else {
+        const newTab = await tabService.insertTab({
+          title: t("tab-title"),
+          type: "setting",
+          path: "/settings/model-settings",
+        });
+        await setActiveTabId(newTab.id);
+        setTimeout(() => {
+          navigate("/settings/model-settings");
+        }, 100);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [setActiveTabId, navigate, t]);
 
   // Create provider map and provider model map from triplit data
   const { providerMap, providerModelMap } = useMemo(() => {
@@ -109,6 +147,11 @@ export const ModelSelect = ({
 
     return result;
   }, [providerModelMap, providerMap]);
+
+  // Check if there are no available providers or models
+  const hasNoProviders = useMemo(() => {
+    return !providers || providers.length === 0 || groupedModels.length === 0;
+  }, [providers, groupedModels]);
 
   const filteredItems = useMemo(() => {
     const items: ListItem[] = [];
@@ -210,35 +253,48 @@ export const ModelSelect = ({
 
   return (
     <div className="relative flex w-fit min-w-[130px] justify-end">
-      <Button
-        ref={triggerRef}
-        className="group flex items-center gap-2 px-1 [--btn-overlay:theme(--color-hover-transparent)]"
-        onClick={handleToggleOpen}
-        intent="plain"
-      >
-        {selectedModel ? (
-          <>
-            <ModelIcon
-              modelName={selectedModel.name}
-              className="dark:bg-white"
-            />
-            <span className="truncate text-muted-fg group-hover:text-fg">
-              {selectedModel.name}
-            </span>
-          </>
-        ) : (
-          <span className="truncate text-muted-fg group-hover:text-fg">
-            {t("model-select-placeholder")}
+      {hasNoProviders ? (
+        <button
+          className="group flex cursor-pointer items-center text-primary transition-colors"
+          onClick={handleOpenModelSettings}
+          type="button"
+        >
+          <IconAsterisk className="size-3 text-red-500 " />
+          <span className="truncate text-sm underline">
+            {t("model-select")}
           </span>
-        )}
-        <IconChevronLgDown
-          className={`size-4 shrink-0 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </Button>
+        </button>
+      ) : (
+        <Button
+          ref={triggerRef}
+          className="group flex items-center gap-2 px-1 [--btn-overlay:theme(--color-hover-transparent)]"
+          onClick={handleToggleOpen}
+          intent="plain"
+        >
+          {selectedModel ? (
+            <>
+              <ModelIcon
+                modelName={selectedModel.name}
+                className="dark:bg-white"
+              />
+              <span className="truncate text-muted-fg group-hover:text-fg">
+                {selectedModel.name}
+              </span>
+            </>
+          ) : (
+            <span className="truncate text-muted-fg group-hover:text-fg">
+              {t("model-select-placeholder")}
+            </span>
+          )}
+          <IconChevronLgDown
+            className={`size-4 shrink-0 transition-transform ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </Button>
+      )}
 
-      {isOpen && (
+      {isOpen && !hasNoProviders && (
         <div className="absolute bottom-full z-50 mb-1 min-w-[240px] max-w-[240px] overflow-hidden rounded-md border border-border bg-overlay shadow-md">
           <div className="border-b bg-muted p-2">
             <SearchField
@@ -278,7 +334,7 @@ export const ModelSelect = ({
       )}
 
       {/* Click outside to close */}
-      {isOpen && (
+      {isOpen && !hasNoProviders && (
         <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       )}
     </div>

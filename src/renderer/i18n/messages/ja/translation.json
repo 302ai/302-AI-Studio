@@ -11,6 +11,8 @@
     },
     "model-select-label": "モデルを選択します",
     "model-select-placeholder": "モデルを選択してください...",
+    "model-select": "モデルを設定",
+    "tab-title": "設定",
     "model-search-placeholder": "検索...",
     "no-models-found": "一致するモデルは見つかりませんでした...",
     "lack-model": "最初にモデルを選択してください！",

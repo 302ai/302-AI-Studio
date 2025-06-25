@@ -11,6 +11,8 @@
     },
     "model-select-label": "选择模型",
     "model-select-placeholder": "请选择一个模型...",
+    "model-select": "设置模型",
+    "tab-title": "设置",
     "model-search-placeholder": "搜索...",
     "no-models-found": "没有找到匹配的模型...",
     "lack-model": "请先选择一个模型！",

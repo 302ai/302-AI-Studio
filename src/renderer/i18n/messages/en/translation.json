@@ -11,6 +11,7 @@
     },
     "model-select-label": "Select a model",
     "model-select-placeholder": "Please select a model...",
+    "model-select": "Set Model",
     "model-search-placeholder": "Search...",
     "no-models-found": "No matching model was found...",
     "lack-model": "Please select a model first!",
