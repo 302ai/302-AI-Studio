@@ -18,7 +18,7 @@ interface ChatInputProps {
   className?: string;
 }
 
-const { messageService } = window.service;
+const { messageService, attachmentService } = window.service;
 
 export function ChatInput({ className }: ChatInputProps) {
   const { t } = useTranslation("translation", {
@@ -133,7 +133,7 @@ export function ChatInput({ className }: ChatInputProps) {
             size: attachment.size,
             type: attachment.type,
             file,
-            filePath: attachment.filePath || undefined,
+            filePath: attachment.filePath,
             preview: attachment.preview || undefined,
             fileData: attachment.fileData || undefined,
           };
@@ -182,13 +182,13 @@ export function ChatInput({ className }: ChatInputProps) {
         name: attachment.name,
         size: attachment.size,
         type: attachment.type,
-        filePath: attachment.filePath || null,
+        filePath: attachment.filePath,
         preview: attachment.preview || null,
         fileData: attachment.fileData || null,
         fileContent: null, // Will be parsed later if needed
       }));
 
-      await window.service.attachmentService.insertAttachments(attachmentData);
+      await attachmentService.insertAttachments(attachmentData);
     }
 
     setEditMessageId(null);

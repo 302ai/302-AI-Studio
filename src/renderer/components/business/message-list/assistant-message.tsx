@@ -9,11 +9,11 @@ import { useThinkBlocks } from "@renderer/hooks/use-think-blocks";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { formatTimeAgo } from "@renderer/lib/utils";
 import type { CreateMessageData, Message } from "@shared/triplit/types";
-import { useQuery } from "@triplit/react";
+import { useQueryOne } from "@triplit/react";
 import { enUS, ja, zhCN } from "date-fns/locale";
 import i18next from "i18next";
 import { Check, Copy, Pencil, RefreshCcw } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ButtonWithTooltip } from "../button-with-tooltip";
@@ -56,15 +56,7 @@ export function AssistantMessage({
   const providerQuery = triplitClient
     .query("providers")
     .Where("id", "=", message.providerId);
-  // const modelQuery = triplitClient
-  //   .query("models")
-  //   .Where("id", "=", message.modelId);
-  // const { results: modelResults } = useQuery(triplitClient, modelQuery);
-  const { results: providerResults } = useQuery(triplitClient, providerQuery);
-  const providerName = useMemo(() => {
-    const provider = providerResults?.[0];
-    return provider?.name ?? "";
-  }, [providerResults]);
+  const { result: provider } = useQueryOne(triplitClient, providerQuery);
 
   // const modelName = useMemo(() => {
   //   const model = modelResults?.[0];
@@ -104,6 +96,7 @@ export function AssistantMessage({
       const thread = await createThread({
         title: t("context-menu.new-thread-title"),
         modelId: selectedModelId,
+        providerId: provider?.id ?? "",
       });
 
       if (!thread) {
@@ -179,7 +172,7 @@ export function AssistantMessage({
         className="group flex flex-row gap-2"
         onContextMenu={handleContextMenu}
       >
-        <ModelIcon className="size-6" modelName={providerName} />
+        <ModelIcon className="size-6" modelName={provider?.name ?? ""} />
 
         <div className="w-full min-w-0">
           <MessageAttachments messageId={message.id} className="mb-2" />

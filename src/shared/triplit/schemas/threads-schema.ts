@@ -5,6 +5,7 @@ export const threadsSchema = {
     id: S.Id({ format: "nanoid" }),
     title: S.String(),
     modelId: S.String(),
+    providerId: S.String(),
     createdAt: S.Date({ default: S.Default.now() }),
     updatedAt: S.Date({ default: S.Default.now() }),
     collected: S.Boolean({ default: false }),
@@ -15,4 +16,4 @@ export const threadsSchema = {
       where: [["threadId", "=", "$id"]],
     }),
   },
-}
+};

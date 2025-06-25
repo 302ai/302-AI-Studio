@@ -19,6 +19,7 @@ const {
   messageService,
   providerService,
   uiService,
+  attachmentService,
 } = window.service;
 
 export function useToolBar() {
@@ -53,8 +54,10 @@ export function useToolBar() {
 
     if (activeThreadId) {
       try {
+        const providerId = models?.find((m) => m.id === modelId)?.providerId;
         await threadService.updateThread(activeThreadId, {
           modelId,
+          providerId,
         });
       } catch (error) {
         console.error("update thread error", error);
@@ -66,10 +69,11 @@ export function useToolBar() {
     threadData: CreateThreadData,
   ): Promise<Thread | null> => {
     try {
-      const { title, modelId } = threadData;
+      const { title, modelId, providerId } = threadData;
       const createData: CreateThreadData = {
         title,
         modelId,
+        providerId,
       };
 
       const thread = await threadService.insertThread(createData);
@@ -124,12 +128,32 @@ export function useToolBar() {
       let currentActiveThreadId: string | null = activeThreadId;
       let currentActiveTabId: string | null = activeTabId;
 
+      if (!selectedModelId) {
+        throw new Error("No model selected");
+      }
+
+      // Find the selected model and its provider
+      const selectedModel = models?.find(
+        (model) => model.id === selectedModelId,
+      );
+      if (!selectedModel) {
+        throw new Error("Selected model not found");
+      }
+
+      const provider = providers?.find(
+        (p) => p.id === selectedModel.providerId,
+      );
+      if (!provider) {
+        throw new Error("Provider not found for selected model");
+      }
+
       const needCreateTab = tabs?.length === 0;
       const needCreateThread = needCreateTab || !activeTab?.threadId;
       if (needCreateThread) {
         const thread = await createThread({
           title: content,
           modelId: selectedModelId,
+          providerId: provider.id,
         });
 
         if (thread) {
@@ -158,25 +182,6 @@ export function useToolBar() {
         throw new Error("No active thread or tab available");
       }
 
-      if (!selectedModelId) {
-        throw new Error("No model selected");
-      }
-
-      // Find the selected model and its provider
-      const selectedModel = models?.find(
-        (model) => model.id === selectedModelId,
-      );
-      if (!selectedModel) {
-        throw new Error("Selected model not found");
-      }
-
-      const provider = providers?.find(
-        (p) => p.id === selectedModel.providerId,
-      );
-      if (!provider) {
-        throw new Error("Provider not found for selected model");
-      }
-
       // Get existing messages for context
       const existingMessages = await messageService.getMessagesByThreadId(
         currentActiveThreadId,
@@ -200,15 +205,13 @@ export function useToolBar() {
           name: attachment.name,
           size: attachment.size,
           type: attachment.type,
-          filePath: attachment.filePath || null,
+          filePath: attachment.filePath,
           preview: attachment.preview || null,
           fileData: attachment.fileData || null,
           fileContent: null,
         }));
 
-        await window.service.attachmentService.insertAttachments(
-          attachmentData,
-        );
+        await attachmentService.insertAttachments(attachmentData);
       }
 
       console.log("User message sent successfully:", userMessage);

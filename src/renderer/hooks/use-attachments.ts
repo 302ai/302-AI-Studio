@@ -12,7 +12,7 @@ export interface AttachmentFile {
   size: number;
   type: string;
   file: File;
-  filePath?: string;
+  filePath: string;
   preview?: string; // base64 data URL for images
   fileData?: string; // base64 file data for non-image files (for preview)
 }
@@ -231,6 +231,7 @@ export function useAttachments() {
             size: file.size,
             type: file.type,
             file,
+            filePath: "",
           };
 
           try {
