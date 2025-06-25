@@ -83,7 +83,11 @@ export function ChatInput({ className }: ChatInputProps) {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
       event.preventDefault();
       if (!isSending && input.trim()) {
         handleSendMessage();
