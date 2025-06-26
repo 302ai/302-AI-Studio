@@ -4,7 +4,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
   {
     id: "302AI",
     name: "302AI",
-    apiType: "openai",
+    apiType: "302ai",
     apiKey: "",
     baseUrl: "https://api.302.ai/v1",
     enabled: false,

@@ -17,6 +17,7 @@ import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
 import { EventNames, emitter, sendToThread } from "../event-service";
+import { AI302ProviderService } from "./302AI-provider-service";
 import type {
   BaseProviderService,
   StreamChatParams,
@@ -143,6 +144,8 @@ export class ProviderService {
     switch (provider.apiType) {
       case "openai":
         return new OpenAIProviderService(provider);
+      case "302ai":
+        return new AI302ProviderService(provider);
 
       default:
         Logger.warn(`Unknown provider type: ${provider.apiType}`);

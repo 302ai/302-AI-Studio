@@ -68,6 +68,7 @@ export class OpenAIProviderService extends BaseProviderService {
       fetch: createReasoningFetch(),
     });
   }
+
   protected async fetchProviderModels(options?: {
     timeout: number;
   }): Promise<CreateModelData[]> {
