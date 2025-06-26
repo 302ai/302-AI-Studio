@@ -129,8 +129,14 @@ export function ModelList() {
 
   const loading = !ready || isPending;
 
+  if (allModels.length === 0) {
+    return null;
+  }
+
   return (
     <>
+      <div>{t("label")}</div>
+
       <div className="flex items-center justify-between">
         <ModelFilter onTabChange={setTabKey} />
         <SearchField

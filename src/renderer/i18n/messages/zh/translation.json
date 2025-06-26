@@ -46,7 +46,8 @@
         "search-placeholder": "搜索..."
       },
       "model-provider": {
-        "add-provider": "添加",
+        "add-provider": "添加模型",
+        "add": "添加",
         "add-provider-form": {
           "check-key": "验证",
           "custom-provider": "自定义提供商",
@@ -89,7 +90,7 @@
           "edit": "配置",
           "add-provider-confirm": "添加"
         },
-        "no-provider-description": "尚未添加模型供应商...",
+        "no-provider-description": "暂无模型供应商",
         "edit-provider-form": {
           "check-key-success": "API Key 验证成功！",
           "check-key-failed": "API Key 验证失败！",

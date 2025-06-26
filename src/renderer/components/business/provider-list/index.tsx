@@ -4,9 +4,12 @@ import {
   Droppable,
   type DropResult,
 } from "@hello-pangea/dnd";
+import empty from "@renderer/assets/images/empty.svg?url";
+import darkEmpty from "@renderer/assets/images/empty-dark.svg?url";
 import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
+
 import {
   type ModalAction,
   useProviderList,
@@ -14,7 +17,6 @@ import {
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import debounce from "lodash-es/debounce";
-import { PackageOpen, Plus } from "lucide-react";
 import React, {
   useCallback,
   useEffect,
@@ -304,17 +306,20 @@ export function ProviderList() {
   return (
     <>
       <div className="flex h-full flex-col">
-        <Button
-          className="w-fit shrink-0"
-          size="small"
-          intent="outline"
-          onClick={() => setState({ type: "add" })}
-        >
-          <Plus className="size-4" />
-          {t("add-provider")}
-        </Button>
+        <div className="flex justify-between">
+          <div>{t("label")}</div>
+          {providers.length > 0 ? (
+            <Button
+              className="h-8 w-20 shrink-0"
+              intent="primary"
+              onClick={() => setState({ type: "add" })}
+            >
+              {t("add")}
+            </Button>
+          ) : null}
+        </div>
 
-        <div ref={listContainerRef} className="mt-2 h-[calc(100%-56px)]">
+        <div ref={listContainerRef} className="mt-2 flex-1">
           {loading ? (
             <div
               className="flex items-center justify-center"
@@ -358,10 +363,23 @@ export function ProviderList() {
               </Droppable>
             </DragDropContext>
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-fg">
+            <div className="flex h-full translate-y-24 items-center justify-center text-muted-fg">
               <div className="flex flex-col items-center gap-2 text-sm">
-                <PackageOpen className="size-9" />
+                <img src={empty} alt="empty" className="size-52 dark:hidden" />
+                <img
+                  src={darkEmpty}
+                  alt="empty"
+                  className="hidden size-52 dark:block"
+                />
                 <p>{t("no-provider-description")}</p>
+                <Button
+                  className="w-36 shrink-0"
+                  intent="primary"
+                  onClick={() => setState({ type: "add" })}
+                >
+                  {/* <Plus className="size-4" /> */}
+                  {t("add-provider")}
+                </Button>
               </div>
             </div>
           )}

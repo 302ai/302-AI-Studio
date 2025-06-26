@@ -46,7 +46,8 @@
         "search-placeholder": "検索..."
       },
       "model-provider": {
-        "add-provider": "追加",
+        "add-provider": "モデルを追加",
+        "add": "追加",
         "add-provider-form": {
           "check-key": "確認する",
           "custom-provider": "カスタムプロバイダー",
@@ -87,9 +88,9 @@
           "delete-description-2": "このプロバイダーが提供するすべてのモデルが削除され、",
           "delete-description-3": "これらのデフォルトモデルを設定したアシスタントは他のデフォルトモデルに変更されます。",
           "edit": "設定",
-          "add-provider-confirm": "に追加"
+          "add-provider-confirm": "追加"
         },
-        "no-provider-description": "モデルベンダーはまだ追加されていません...",
+        "no-provider-description": "プロバイダーがまだ追加されていません",
         "edit-provider-form": {
           "check-key-success": "APIキー検証に正常に！",
           "check-key-failed": "APIキー検証に失敗しました！",

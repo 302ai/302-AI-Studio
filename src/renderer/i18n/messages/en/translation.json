@@ -45,7 +45,8 @@
         "search-placeholder": "Search..."
       },
       "model-provider": {
-        "add-provider": "Add",
+        "add-provider": "Add Model",
+        "add": "Add",
         "add-provider-form": {
           "check-key": "Verify",
           "custom-provider": "Custom Provider",
@@ -88,7 +89,7 @@
           "edit": "Configure",
           "add-provider-confirm": "Add"
         },
-        "no-provider-description": "Model providers have not been added yet...",
+        "no-provider-description": "No model providers",
         "edit-provider-form": {
           "check-key-success": "API Key Verification Successfully!",
           "check-key-failed": "API Key Verification failed!",
