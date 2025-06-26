@@ -19,12 +19,9 @@ export function ai302Fetcher(
         bodyData["file-parse"] = true;
         bodyData["parse-service"] = "jina";
 
-        bodyData["r1-fusion"] = enableReason;
-
-        Logger.info(
-          "webSearchConfigwebSearchConfigwebSearchConfigwebSearchConfig",
-          webSearchConfig,
-        );
+        if (enableReason) {
+          bodyData["r1-fusion"] = true;
+        }
 
         if (webSearchConfig.enabled) {
           bodyData["web-search"] = true;
