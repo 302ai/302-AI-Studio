@@ -17,7 +17,7 @@ import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
 import { EventNames, emitter, sendToThread } from "../event-service";
-import { AI302ProviderService } from "./302AI-provider-service";
+import { AI302ProviderService } from "./302AI-provider-service/302AI-provider-service";
 import type {
   BaseProviderService,
   StreamChatParams,

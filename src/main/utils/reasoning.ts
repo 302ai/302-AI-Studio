@@ -1,51 +1,55 @@
 export function createReasoningFetch(): typeof fetch {
   return async (url, options) => {
     const response = await fetch(url, options);
-    const clonedResponse = response.clone();
-    const contentType = response.headers.get("content-type");
-    if (contentType?.includes("text/event-stream")) {
-      const originalStream = clonedResponse.body;
-      if (originalStream) {
-        const reader = originalStream.getReader();
-        const decoder = new TextDecoder();
-
-        const reasoningProcessor = new ReasoningProcessor();
-
-        const interceptedStream = new ReadableStream({
-          start: (controller) => {
-            const pump = () => {
-              return reader.read().then(({ done, value }) => {
-                if (done) {
-                  controller.close();
-                  return;
-                }
-
-                const chunk = decoder.decode(value, { stream: true });
-
-                const processedChunk =
-                  reasoningProcessor.processSSEChunk(chunk);
-
-                const encoder = new TextEncoder();
-                const processedValue = encoder.encode(processedChunk);
-
-                controller.enqueue(processedValue);
-                return pump();
-              });
-            };
-            return pump();
-          },
-        });
-
-        return new Response(interceptedStream, {
-          status: response.status,
-          statusText: response.statusText,
-          headers: response.headers,
-        });
-      }
-    }
-
-    return response;
+    const reasoningProcessor = new ReasoningProcessor();
+    return interceptSSEResponse(response, reasoningProcessor);
   };
+}
+
+export function interceptSSEResponse(
+  response: Response,
+  processor: ReasoningProcessor,
+): Response {
+  const clonedResponse = response.clone();
+  const contentType = response.headers.get("content-type");
+
+  if (contentType?.includes("text/event-stream")) {
+    const originalStream = clonedResponse.body;
+    if (originalStream) {
+      const reader = originalStream.getReader();
+      const decoder = new TextDecoder();
+
+      const interceptedStream = new ReadableStream({
+        start: (controller) => {
+          const pump = () => {
+            return reader.read().then(({ done, value }) => {
+              if (done) {
+                controller.close();
+                return;
+              }
+
+              const chunk = decoder.decode(value, { stream: true });
+              const processedChunk = processor.processSSEChunk(chunk);
+              const encoder = new TextEncoder();
+              const processedValue = encoder.encode(processedChunk);
+
+              controller.enqueue(processedValue);
+              return pump();
+            });
+          };
+          return pump();
+        },
+      });
+
+      return new Response(interceptedStream, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+      });
+    }
+  }
+
+  return response;
 }
 
 class ReasoningProcessor {

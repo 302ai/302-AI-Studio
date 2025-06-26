@@ -1,15 +1,19 @@
+import { createOpenAI } from "@ai-sdk/openai";
 import type { Provider, UpdateProviderData } from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
-import type { StreamChatParams } from "./base-provider-service";
-import { OpenAIProviderService } from "./openAI-provider-service";
+import type { StreamChatParams } from "../base-provider-service";
+import { OpenAIProviderService } from "../openAI-provider-service";
+import { ai302Fetcher } from "./302AI-fetcher";
 
 export class AI302ProviderService extends OpenAIProviderService {
-  protected ai302: Provider;
-
   constructor(provider: Provider) {
     super(provider);
 
-    this.ai302 = provider;
+    this.openai = createOpenAI({
+      apiKey: provider.apiKey,
+      baseURL: provider.baseUrl,
+      fetch: ai302Fetcher(),
+    });
   }
 
   async checkApiKey(): Promise<{
@@ -20,12 +24,16 @@ export class AI302ProviderService extends OpenAIProviderService {
   }
 
   updateProvider(updateData: UpdateProviderData): void {
-    super.updateProvider(updateData);
-
-    this.ai302 = {
-      ...this.ai302,
+    this.provider = {
+      ...this.provider,
       ...updateData,
     };
+
+    this.openai = createOpenAI({
+      apiKey: updateData.apiKey,
+      baseURL: updateData.baseUrl,
+      fetch: ai302Fetcher(),
+    });
   }
 
   async startStreamChat(
