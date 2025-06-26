@@ -1,3 +1,5 @@
+import Logger from "electron-log";
+
 export function createReasoningFetch(): typeof fetch {
   return async (url, options) => {
     const response = await fetch(url, options);
@@ -54,6 +56,8 @@ export function interceptSSEResponse(
 
 class ReasoningProcessor {
   private isInThinkingMode = false;
+  private citations: string[] = [];
+  private hasAddedCitations = false;
 
   processSSEChunk(chunk: string): string {
     const lines = chunk.split("\n");
@@ -61,6 +65,7 @@ class ReasoningProcessor {
 
     for (const line of lines) {
       if (line.startsWith("data: ")) {
+        Logger.info("line", line);
         try {
           const jsonStr = line.substring(6);
           if (jsonStr.trim() === "[DONE]") {
@@ -78,6 +83,14 @@ class ReasoningProcessor {
           }
 
           const data = JSON.parse(jsonStr);
+
+          if (
+            data.citations &&
+            Array.isArray(data.citations) &&
+            this.citations.length === 0
+          ) {
+            this.citations = data.citations;
+          }
 
           if (data.choices?.[0]?.delta?.reasoning_content) {
             const reasoningContent = data.choices[0].delta.reasoning_content;
@@ -100,6 +113,23 @@ class ReasoningProcessor {
             this.isInThinkingMode = false;
           }
 
+          if (
+            data.choices?.[0]?.finish_reason === "stop" &&
+            this.citations.length > 0 &&
+            !this.hasAddedCitations
+          ) {
+            const existingContent = data.choices[0].delta?.content || "";
+            const citationsText = this.formatCitations();
+
+            if (data.choices[0].delta) {
+              data.choices[0].delta.content = existingContent + citationsText;
+            } else {
+              data.choices[0].delta = { content: citationsText };
+            }
+
+            this.hasAddedCitations = true;
+          }
+
           processedLines.push(`data: ${JSON.stringify(data)}`);
         } catch (_error) {
           processedLines.push(line);
@@ -112,8 +142,21 @@ class ReasoningProcessor {
     return processedLines.join("\n");
   }
 
+  private formatCitations(): string {
+    if (this.citations.length === 0) return "";
+
+    let citationsText = "\n";
+    this.citations.forEach((citation, index) => {
+      citationsText += `[${index + 1}] ${citation}\n`;
+    });
+
+    return citationsText;
+  }
+
   reset(): void {
     this.isInThinkingMode = false;
+    this.citations = [];
+    this.hasAddedCitations = false;
   }
 }
 
