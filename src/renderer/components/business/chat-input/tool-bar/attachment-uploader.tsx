@@ -4,6 +4,7 @@ import {
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
 import { ALLOWED_TYPES } from "@renderer/hooks/use-attachments";
+import { cn } from "@renderer/lib/utils";
 import { Atom, Globe, Paperclip } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -60,7 +61,10 @@ export function AttachmentUploader({ onFilesSelect }: AttachmentUploaderProps) {
 
       <Tooltip>
         <TooltipTrigger
-          className={`size-8 ${isThinkingActive ? "bg-primary/15 text-primary" : ""}`}
+          className={cn(
+            "size-8",
+            isThinkingActive && "bg-primary/15 text-primary",
+          )}
           intent="plain"
           size="square-petite"
           onClick={handleThinking}
@@ -74,7 +78,10 @@ export function AttachmentUploader({ onFilesSelect }: AttachmentUploaderProps) {
 
       <Tooltip>
         <TooltipTrigger
-          className={`size-8 ${isOnlineActive ? "bg-primary/15 text-primary" : ""}`}
+          className={cn(
+            "size-8",
+            isOnlineActive && "bg-primary/15 text-primary",
+          )}
           intent="plain"
           size="square-petite"
           onClick={handleOnLineSearch}
