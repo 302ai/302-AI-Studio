@@ -175,7 +175,7 @@ export class ConfigService {
     searchProvider: SearchService,
   ) {
     try {
-      return this.uiDbService.setSearchService(searchProvider);
+      await this.uiDbService.setSearchService(searchProvider);
     } catch (error) {
       Logger.error("ConfigService:setSearchService error ---->", error);
       throw error;

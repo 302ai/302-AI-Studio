@@ -39,3 +39,8 @@ export type Ui = Entity<Schema, "ui">;
 export type Theme = "light" | "dark" | "system";
 export type Language = "zh" | "en" | "ja";
 export type SearchService = "search1api" | "tavily" | "exa" | "bochaai";
+
+// * Settings
+export type Settings = Entity<Schema, "settings">;
+export type CreateSettingsData = Omit<Settings, "id" | "createdAt">;
+export type UpdateSettingsData = Partial<Omit<Settings, "id">>;

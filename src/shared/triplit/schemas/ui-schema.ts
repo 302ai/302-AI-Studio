@@ -23,7 +23,5 @@ export const uiSchema = {
     }),
 
     selectedModelId: S.String({ default: "" }),
-    enableWebSearch: S.Boolean({ default: false }),
-    enableReason: S.Boolean({ default: false }),
   }),
 };

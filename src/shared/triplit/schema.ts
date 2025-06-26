@@ -4,6 +4,7 @@ import {
   messagesSchema,
   modelsSchema,
   providersSchema,
+  settingsSchema,
   tabsSchema,
   threadsSchema,
   uiSchema,
@@ -17,6 +18,7 @@ export const schema = S.Collections({
   messages: messagesSchema,
   attachments: attachmentsSchema,
   ui: uiSchema,
+  settings: settingsSchema,
 });
 
 export type Schema = typeof schema;

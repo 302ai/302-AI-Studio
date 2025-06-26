@@ -11,7 +11,7 @@ export function useActiveThread() {
   );
 
   // Subscribe to UI state changes
-  const uiQuery = triplitClient.query("ui");
+  const uiQuery = triplitClient.query("ui").Select(["activeThreadId"]);
   const { result: ui } = useQueryOne(triplitClient, uiQuery);
 
   // Subscribe to threads changes

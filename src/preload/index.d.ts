@@ -231,6 +231,10 @@ declare global {
       shellService: {
         openExternal: (url: string) => Promise<void>;
       };
+      settingsService: {
+        setEnableWebSearch: (enable: boolean) => Promise<void>;
+        setEnableReason: (enable: boolean) => Promise<void>;
+      };
     };
   }
 }

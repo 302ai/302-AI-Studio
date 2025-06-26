@@ -7,7 +7,6 @@ import type {
   Thread,
   Ui,
 } from "@shared/triplit/types";
-import Logger from "electron-log";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
@@ -24,16 +23,11 @@ export class UiDbService extends BaseDbService {
     const query = triplitClient.query("ui");
     const ui = await triplitClient.fetch(query);
 
-    if (ui.length === 0) {
-      await this.initDB();
-    } else {
-      this.uiRecord = ui[0];
-      await this.migrateDB();
-    }
+    this.uiRecord = ui.length === 0 ? await this.initDB() : ui[0];
   }
 
   private async initDB() {
-    this.uiRecord = await triplitClient.insert("ui", {
+    return await triplitClient.insert("ui", {
       activeProviderId: "",
       activeThreadId: "",
       activeTabId: "",
@@ -42,31 +36,25 @@ export class UiDbService extends BaseDbService {
       language: "zh",
       searchProvider: "search1api",
       selectedModelId: "",
-      enableWebSearch: false,
-      enableReason: false,
     });
   }
 
-  private async migrateDB() {
-    const query = triplitClient.query("ui");
-    const ui = await triplitClient.fetchOne(query);
+  // private async migrateDB() {
+  //   const query = triplitClient.query("ui");
+  //   const ui = await triplitClient.fetchOne(query);
 
-    if (ui) {
-      await triplitClient.update("ui", ui.id, async (ui) => {
-        if (!ui.theme) ui.theme = "system";
+  //   if (ui) {
+  //     await triplitClient.update("ui", ui.id, async (ui) => {
+  //       if (!ui.theme) ui.theme = "system";
 
-        if (!ui.language) ui.language = "zh";
+  //       if (!ui.language) ui.language = "zh";
 
-        if (!ui.searchProvider) ui.searchProvider = "search1api";
+  //       if (!ui.searchProvider) ui.searchProvider = "search1api";
 
-        if (!ui.selectedModelId) ui.selectedModelId = "";
-
-        if (!ui.enableWebSearch) ui.enableWebSearch = false;
-
-        if (!ui.enableReason) ui.enableReason = false;
-      });
-    }
-  }
+  //       if (!ui.selectedModelId) ui.selectedModelId = "";
+  //     });
+  //   }
+  // }
 
   async getTheme(): Promise<Theme> {
     const query = triplitClient.query("ui");
@@ -209,23 +197,6 @@ export class UiDbService extends BaseDbService {
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.selectedModelId = modelId || "";
-    });
-  }
-
-  async setEnableWebSearch(enable: boolean) {
-    Logger.info("setEnableWebSearch", enable);
-    if (!this.uiRecord) return;
-
-    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
-      ui.enableWebSearch = enable;
-    });
-  }
-
-  async setEnableReason(enable: boolean) {
-    if (!this.uiRecord) return;
-
-    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
-      ui.enableReason = enable;
     });
   }
 }

@@ -1,3 +1,4 @@
+import { triplitClient } from "@renderer/client";
 import {
   Tooltip,
   TooltipContent,
@@ -5,19 +6,24 @@ import {
 } from "@renderer/components/ui/tooltip";
 import { ALLOWED_TYPES } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
+import { useQueryOne } from "@triplit/react";
 import { Atom, Globe, Paperclip } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ActionGroupProps {
   onFilesSelect: (files: FileList) => void;
 }
 
+const { settingsService } = window.service;
+
 export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
   const { t } = useTranslation();
 
-  const [isThinkingActive, setIsThinkingActive] = useState(false);
-  const [isOnlineActive, setIsOnlineActive] = useState(false);
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
+  const enabledWebSearch = settingsResult?.enableWebSearch ?? false;
+  const enabledReason = settingsResult?.enableReason ?? false;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,14 +40,12 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
     event.target.value = "";
   };
 
-  const handleOnLineSearch = () => {
-    setIsOnlineActive(!isOnlineActive);
-    console.log("handleOnLineSearch", !isOnlineActive);
+  const handleWebSearch = async () => {
+    await settingsService.setEnableWebSearch(!enabledWebSearch);
   };
 
-  const handleThinking = () => {
-    setIsThinkingActive(!isThinkingActive);
-    console.log("handleThinking", !isThinkingActive);
+  const handleReason = async () => {
+    await settingsService.setEnableReason(!enabledReason);
   };
 
   return (
@@ -64,11 +68,11 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
         <TooltipTrigger
           className={cn(
             "size-8",
-            isThinkingActive && "bg-primary/15 text-primary",
+            enabledReason && "bg-primary/15 text-primary",
           )}
           intent="plain"
           size="square-petite"
-          onClick={handleThinking}
+          onClick={handleReason}
         >
           <Atom className="size-4" />
         </TooltipTrigger>
@@ -81,11 +85,11 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
         <TooltipTrigger
           className={cn(
             "size-8",
-            isOnlineActive && "bg-primary/15 text-primary",
+            enabledWebSearch && "bg-primary/15 text-primary",
           )}
           intent="plain"
           size="square-petite"
-          onClick={handleOnLineSearch}
+          onClick={handleWebSearch}
         >
           <Globe className="size-4" />
         </TooltipTrigger>
