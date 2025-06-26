@@ -25,13 +25,9 @@ export function SearchProvider() {
   const uiQuery = triplitClient.query("ui");
   const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
   const currentSearchProvider = uiResult?.searchProvider ?? "search1api";
-  const currentProvider =
-    searchProviders.find((p) => p.key === currentSearchProvider) ??
-    searchProviders[0];
 
   const handleSearchProviderChange = async (key: Key | null) => {
-    const newProvider = key?.toString() ?? "";
-    await configService.setSearchProvider(newProvider);
+    await configService.setSearchProvider(key as string);
   };
 
   return (
@@ -39,7 +35,7 @@ export function SearchProvider() {
       <div>{t("settings.general-settings.search-provider.label")}</div>
       <Select
         className="w-[240px]"
-        selectedKey={currentProvider.key}
+        selectedKey={currentSearchProvider}
         onSelectionChange={handleSearchProviderChange}
         aria-label="Select search provider"
       >
