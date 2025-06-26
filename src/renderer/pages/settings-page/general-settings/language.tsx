@@ -8,7 +8,6 @@ import {
 import langs from "@renderer/i18n/langs";
 import type { Language } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
-import { Earth } from "lucide-react";
 import type { Key } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 
@@ -41,7 +40,7 @@ export function LanguageSelector() {
       >
         <SelectTrigger
           className="h-9 cursor-pointer rounded-xl text-secondary-fg"
-          prefix={<Earth className="mr-1 size-4" />}
+          // prefix={<Earth className="mr-1 size-4" />}
         />
         <SelectList popoverClassName="min-w-[240px]" items={langs}>
           {({ key, prefix, nativeName }) => (
