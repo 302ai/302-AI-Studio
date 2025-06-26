@@ -19,6 +19,12 @@ export const uiSchema = {
         default: "zh",
       }),
     ),
+    searchProvider: S.Optional(
+      S.String({
+        enum: ["search1api", "tavily", "exa", "bochaai"],
+        default: "search1api",
+      }),
+    ),
     selectedModelId: S.Optional(S.String({ default: "" })),
   }),
 };

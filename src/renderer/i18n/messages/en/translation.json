@@ -30,6 +30,9 @@
         "label": "Language"
       },
       "name": "General Settings",
+      "search-provider": {
+        "label": "Search Provider"
+      },
       "theme": {
         "dark": "Dark",
         "label": "Theme",

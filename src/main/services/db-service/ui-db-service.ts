@@ -38,6 +38,7 @@ export class UiDbService extends BaseDbService {
       activeTabHistory: new Set(),
       theme: "system",
       language: "zh",
+      searchProvider: "search1api",
     });
   }
 
@@ -50,6 +51,8 @@ export class UiDbService extends BaseDbService {
         if (!ui.theme) ui.theme = "system";
 
         if (!ui.language) ui.language = "zh";
+
+        if (!ui.searchProvider) ui.searchProvider = "search1api";
 
         if (!ui.selectedModelId) ui.selectedModelId = "";
       });
@@ -81,6 +84,14 @@ export class UiDbService extends BaseDbService {
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.language = language;
+    });
+  }
+
+  async setSearchProvider(searchProvider: string) {
+    if (!this.uiRecord) return;
+
+    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
+      ui.searchProvider = searchProvider;
     });
   }
 

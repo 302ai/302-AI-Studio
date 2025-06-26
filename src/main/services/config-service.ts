@@ -167,4 +167,17 @@ export class ConfigService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setSearchProvider(
+    _event: Electron.IpcMainEvent,
+    searchProvider: string,
+  ) {
+    try {
+      return this.uiDbService.setSearchProvider(searchProvider);
+    } catch (error) {
+      Logger.error("ConfigService:setSearchProvider error ---->", error);
+      throw error;
+    }
+  }
 }

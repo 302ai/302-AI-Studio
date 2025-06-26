@@ -31,6 +31,9 @@
         "label": "言語"
       },
       "name": "一般設定",
+      "search-provider": {
+        "label": "検索プロバイダー"
+      },
       "theme": {
         "dark": "ダーク",
         "label": "テーマ",
