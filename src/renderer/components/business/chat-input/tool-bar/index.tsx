@@ -1,4 +1,4 @@
-import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
+import plane from "@renderer/assets/images/plane.svg?url";
 import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
@@ -48,15 +48,26 @@ export function ToolBar({
           />
 
           <Separator className="h-1/2 w-[2px]" orientation="vertical" />
-
-          <Button
-            intent="plain"
+          {/* <Button
+            intent="primary"
             size="square-petite"
             shape="circle"
             onClick={handleSendMessageClick}
             isDisabled={isDisabled}
+            // className="!rounded-lg"
           >
-            <ArrowUpCircleIcon className="!size-8" />
+            <Send className="!size-4" />
+          </Button> */}
+          <Button
+            intent="outline"
+            size="square-petite"
+            shape="square"
+            onClick={handleSendMessageClick}
+            isDisabled={isDisabled}
+            className="!rounded-[10px] !bg-primary !text-white"
+          >
+            <img src={plane} alt="plane" className="!size-5" />
+            {/* <Send className="!size-4" /> */}
           </Button>
         </div>
       </div>
