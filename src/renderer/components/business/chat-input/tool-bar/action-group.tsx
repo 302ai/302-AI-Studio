@@ -13,11 +13,12 @@ import { useTranslation } from "react-i18next";
 
 interface ActionGroupProps {
   onFilesSelect: (files: FileList) => void;
+  disabled: boolean;
 }
 
 const { settingsService } = window.service;
 
-export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
+export function ActionGroup({ onFilesSelect, disabled }: ActionGroupProps) {
   const { t } = useTranslation();
 
   const settingsQuery = triplitClient.query("settings");
@@ -28,6 +29,7 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAttachFile = () => {
+    if (disabled) return;
     fileInputRef.current?.click();
   };
 
@@ -41,10 +43,12 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
   };
 
   const handleWebSearch = async () => {
+    if (disabled) return;
     await settingsService.setEnableWebSearch(!enabledWebSearch);
   };
 
   const handleReason = async () => {
+    if (disabled) return;
     await settingsService.setEnableReason(!enabledReason);
   };
 
@@ -69,6 +73,7 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
           className={cn(
             "size-8",
             enabledReason && "bg-primary/15 text-primary",
+            disabled && "cursor-not-allowed opacity-50",
           )}
           intent="plain"
           size="square-petite"
@@ -77,7 +82,11 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
           <Atom className="size-4" />
         </TooltipTrigger>
         <TooltipContent>
-          <span>{t("chat.tool-bar.thinking")}</span>
+          <span>
+            {disabled
+              ? t("chat.tool-bar.disabled")
+              : t("chat.tool-bar.thinking")}
+          </span>
         </TooltipContent>
       </Tooltip>
 
@@ -86,6 +95,7 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
           className={cn(
             "size-8",
             enabledWebSearch && "bg-primary/15 text-primary",
+            disabled && "cursor-not-allowed opacity-50",
           )}
           intent="plain"
           size="square-petite"
@@ -94,7 +104,11 @@ export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
           <Globe className="size-4" />
         </TooltipTrigger>
         <TooltipContent>
-          <span>{t("chat.tool-bar.online-search")}</span>
+          <span>
+            {disabled
+              ? t("chat.tool-bar.disabled")
+              : t("chat.tool-bar.online-search")}
+          </span>
         </TooltipContent>
       </Tooltip>
 

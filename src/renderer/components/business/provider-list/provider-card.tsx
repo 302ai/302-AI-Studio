@@ -71,7 +71,10 @@ export function ProviderCard({
       aria-label={provider.name}
     >
       <CardHeader className="flex items-center gap-3 pl-4">
-        <ModelIcon modelName={provider.name ?? ""} className="size-8" />
+        <ModelIcon
+          modelName={provider.name ?? ""}
+          className="size-8 bg-white"
+        />
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">

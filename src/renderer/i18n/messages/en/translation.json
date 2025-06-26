@@ -9,7 +9,8 @@
     "tool-bar": {
       "attach-file": "Attach file(file size cannot exceed 10MB)",
       "online-search": "Online Search",
-      "thinking": "Thinking"
+      "thinking": "Thinking",
+      "disabled": "Only models from 302.AI Provider are available"
     },
     "model-select-label": "Select a model",
     "model-select-placeholder": "Please select a model...",

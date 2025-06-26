@@ -2,7 +2,10 @@ import { triplitClient } from "@main/triplit/client";
 import type { SearchService, Settings } from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
-
+export interface WebSearchConfig {
+  enabled: boolean;
+  service?: SearchService;
+}
 @injectable()
 export class SettingsDbService extends BaseDbService {
   private settingsRecord: Settings | null = null;
@@ -73,5 +76,16 @@ export class SettingsDbService extends BaseDbService {
         setting.searchService = searchService;
       },
     );
+  }
+
+  async getEnableReason(): Promise<boolean> {
+    return this.settingsRecord?.enableReason ?? false;
+  }
+
+  async getWebSearchConfig(): Promise<WebSearchConfig> {
+    return {
+      enabled: this.settingsRecord?.enableWebSearch ?? false,
+      service: this.settingsRecord?.searchService ?? "search1api",
+    };
   }
 }

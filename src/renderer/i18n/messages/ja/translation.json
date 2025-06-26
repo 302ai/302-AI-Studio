@@ -9,7 +9,8 @@
     "tool-bar": {
       "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)",
       "online-search": "オンライン検索",
-      "thinking": "思考"
+      "thinking": "思考",
+      "disabled": "302.AIベンダーのモデルのみ使用可能"
     },
     "model-select-label": "モデルを選択します",
     "model-select-placeholder": "モデルを選択してください...",

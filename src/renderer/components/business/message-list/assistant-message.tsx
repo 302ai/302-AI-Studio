@@ -172,7 +172,10 @@ export function AssistantMessage({
         className="group flex flex-row gap-2"
         onContextMenu={handleContextMenu}
       >
-        <ModelIcon className="size-6" modelName={provider?.name ?? ""} />
+        <ModelIcon
+          className="size-6 bg-white"
+          modelName={provider?.name ?? ""}
+        />
 
         <div className="w-full min-w-0">
           <MessageAttachments messageId={message.id} className="mb-2" />

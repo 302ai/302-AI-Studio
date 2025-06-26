@@ -7,7 +7,10 @@ import { TYPES } from "@main/shared/types";
 import type { SearchService } from "@shared/triplit/types";
 import Logger from "electron-log";
 import { inject, injectable } from "inversify";
-import type { SettingsDbService } from "./db-service/settings-db-service";
+import type {
+  SettingsDbService,
+  WebSearchConfig,
+} from "./db-service/settings-db-service";
 
 @injectable()
 @ServiceRegister(TYPES.SettingsService)
@@ -47,6 +50,24 @@ export class SettingsService {
     } catch (error) {
       Logger.error("SettingsService:setsearchService error ---->", error);
       throw error;
+    }
+  }
+
+  async getEnableReason(): Promise<boolean> {
+    try {
+      return await this.settingsDbService.getEnableReason();
+    } catch (error) {
+      Logger.error("SettingsService:getEnableReason error ---->", error);
+      return false;
+    }
+  }
+
+  async getWebSearchConfig(): Promise<WebSearchConfig> {
+    try {
+      return await this.settingsDbService.getWebSearchConfig();
+    } catch (error) {
+      Logger.error("SettingsService:getWebSearchConfig error ---->", error);
+      return { enabled: false, service: "search1api" };
     }
   }
 }

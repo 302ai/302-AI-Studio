@@ -9,7 +9,8 @@
     "tool-bar": {
       "attach-file": "上传附件(文件不能超过10MB)",
       "online-search": "联网搜索",
-      "thinking": "推理"
+      "thinking": "推理",
+      "disabled": "仅302.AI供应商的模型可用"
     },
     "model-select-label": "选择模型",
     "model-select-placeholder": "请选择一个模型...",

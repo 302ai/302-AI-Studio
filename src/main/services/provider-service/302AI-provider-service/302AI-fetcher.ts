@@ -1,10 +1,14 @@
+import type { WebSearchConfig } from "@main/services/db-service/settings-db-service";
 import {
   interceptSSEResponse,
   ReasoningProcessor,
 } from "@main/utils/reasoning";
 import Logger from "electron-log";
 
-export function ai302Fetcher(): typeof fetch {
+export function ai302Fetcher(
+  enableReason: boolean = false,
+  webSearchConfig: WebSearchConfig = { enabled: false, service: "search1api" },
+): typeof fetch {
   return async (url, options) => {
     let modifiedOptions = options;
 
@@ -15,7 +19,17 @@ export function ai302Fetcher(): typeof fetch {
         bodyData["file-parse"] = true;
         bodyData["parse-service"] = "jina";
 
-        Logger.info("Added file-parse parameter to request body");
+        bodyData["r1-fusion"] = enableReason;
+
+        Logger.info(
+          "webSearchConfigwebSearchConfigwebSearchConfigwebSearchConfig",
+          webSearchConfig,
+        );
+
+        if (webSearchConfig.enabled) {
+          bodyData["web-search"] = true;
+          bodyData["search-service"] = webSearchConfig.service || "search1api";
+        }
 
         modifiedOptions = {
           ...options,

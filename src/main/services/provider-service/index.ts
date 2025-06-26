@@ -17,6 +17,7 @@ import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
 import { EventNames, emitter, sendToThread } from "../event-service";
+import type { SettingsService } from "../settings-service";
 import { AI302ProviderService } from "./302AI-provider-service/302AI-provider-service";
 import type {
   BaseProviderService,
@@ -38,6 +39,7 @@ export class ProviderService {
   constructor(
     @inject(TYPES.ConfigService) private configService: ConfigService,
     @inject(TYPES.ChatService) private chatService: ChatService,
+    @inject(TYPES.SettingsService) private settingsService: SettingsService,
   ) {
     this.init();
     this.setupEventListeners();
@@ -145,7 +147,7 @@ export class ProviderService {
       case "openai":
         return new OpenAIProviderService(provider);
       case "302ai":
-        return new AI302ProviderService(provider);
+        return new AI302ProviderService(provider, this.settingsService);
 
       default:
         Logger.warn(`Unknown provider type: ${provider.apiType}`);
