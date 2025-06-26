@@ -12,7 +12,6 @@ import { SearchX } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { FixedSizeList as List } from "react-window";
 import { type ListItem, ModelRowList } from "./model-row-list";
 
@@ -38,8 +37,7 @@ export const ModelSelect = ({
   });
 
   const { contains } = useFilter({ sensitivity: "base" });
-  const { setActiveTabId } = useActiveTab();
-  const navigate = useNavigate();
+  const { setActiveTabId, tabs } = useActiveTab();
 
   // Use triplit queries instead of model-setting-store
   const providersQuery = triplitClient
@@ -76,8 +74,6 @@ export const ModelSelect = ({
 
   const handleOpenModelSettings = useCallback(async () => {
     try {
-      const tabsQuery = triplitClient.query("tabs");
-      const tabs = await triplitClient.fetch(tabsQuery);
       const existingSettingTab = tabs?.find(
         (tab: Tab) => tab.type === "setting",
       );
@@ -87,9 +83,6 @@ export const ModelSelect = ({
           path: "/settings/model-settings",
         });
         await setActiveTabId(existingSettingTab.id);
-        setTimeout(() => {
-          navigate("/settings/model-settings");
-        }, 100);
       } else {
         const newTab = await tabService.insertTab({
           title: t("tab-title"),
@@ -97,14 +90,11 @@ export const ModelSelect = ({
           path: "/settings/model-settings",
         });
         await setActiveTabId(newTab.id);
-        setTimeout(() => {
-          navigate("/settings/model-settings");
-        }, 100);
       }
     } catch (error) {
       console.error(error);
     }
-  }, [setActiveTabId, navigate, t]);
+  }, [setActiveTabId, tabs, t]);
 
   // Create provider map and provider model map from triplit data
   const { providerMap, providerModelMap } = useMemo(() => {
@@ -255,11 +245,11 @@ export const ModelSelect = ({
     <div className="relative flex w-fit min-w-[130px] justify-end">
       {hasNoProviders ? (
         <button
-          className="group flex cursor-pointer items-center text-primary transition-colors"
+          className="group flex cursor-pointer items-center transition-colors"
           onClick={handleOpenModelSettings}
           type="button"
         >
-          <span className="truncate text-sm underline">
+          <span className="truncate text-[#494454] text-sm underline dark:text-[#FFFFFF]">
             {t("model-select")}
           </span>
         </button>

@@ -24,10 +24,14 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
   const [tabs, setTabs] = useState<Tab[]>([]);
   const [tabWidth, setTabWidth] = useState<number>(200);
 
-  const activateTabId = (id: string) => {
+  const activateTabId = async (id: string) => {
     setActiveTabId(id);
-
-    emitter.emit(EventNames.TAB_SELECT, { tabId: id });
+    try {
+      await tabService.activateTab(id);
+      emitter.emit(EventNames.TAB_SELECT, { tabId: id });
+    } catch (error) {
+      console.error("Failed to activate tab:", error);
+    }
   };
 
   const handleDragEnd = async (result: DropResult) => {

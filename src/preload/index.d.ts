@@ -77,6 +77,7 @@ declare global {
           toIndex: number,
           tabs: Tab[],
         ) => Promise<void>;
+        activateTab: (tabId: string) => Promise<void>;
       };
       providerService: {
         checkApiKey: (provider: Provider) => Promise<{

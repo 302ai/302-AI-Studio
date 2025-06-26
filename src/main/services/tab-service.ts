@@ -84,4 +84,22 @@ export class TabService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async activateTab(
+    _event: Electron.IpcMainEvent,
+    tabId: string,
+  ): Promise<void> {
+    try {
+      const tab = await this.tabDbService.getTab(tabId);
+      if (tab && tab.type === "setting") {
+        await this.tabDbService.updateTab(tabId, {
+          path: "/settings/general-settings",
+        });
+      }
+    } catch (error) {
+      Logger.error("TabService:activateTab error ---->", error);
+      throw error;
+    }
+  }
 }

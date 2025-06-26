@@ -51,8 +51,10 @@ export function BasicTitleBar() {
         const promises = [
           setActiveTabId(existingSettingTab.id),
           setActiveThreadId(""),
+          tabService.activateTab(existingSettingTab.id)
         ];
         await Promise.all(promises);
+
         return;
       }
     }
