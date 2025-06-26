@@ -79,13 +79,17 @@ export class SettingsDbService extends BaseDbService {
   }
 
   async getEnableReason(): Promise<boolean> {
-    return this.settingsRecord?.enableReason ?? false;
+    const query = triplitClient.query("settings");
+    const settings = await triplitClient.fetch(query);
+    return settings[0].enableReason;
   }
 
   async getWebSearchConfig(): Promise<WebSearchConfig> {
+    const query = triplitClient.query("settings");
+    const settings = await triplitClient.fetch(query);
     return {
-      enabled: this.settingsRecord?.enableWebSearch ?? false,
-      service: this.settingsRecord?.searchService ?? "search1api",
+      enabled: settings[0].enableWebSearch,
+      service: settings[0].searchService,
     };
   }
 }
