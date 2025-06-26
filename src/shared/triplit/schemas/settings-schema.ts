@@ -5,5 +5,9 @@ export const settingsSchema = {
     id: S.Id({ format: "nanoid" }),
     enableWebSearch: S.Boolean({ default: false }),
     enableReason: S.Boolean({ default: false }),
+    searchService: S.String({
+      enum: ["search1api", "tavily", "exa", "bochaai"],
+      default: "search1api",
+    }),
   }),
 };

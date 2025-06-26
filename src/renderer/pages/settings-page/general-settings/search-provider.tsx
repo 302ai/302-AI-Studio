@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 const { configService } = window.service;
 
-const searchProviders = [
+const searchServices = [
   { key: "search1api", label: "search1api" },
   { key: "tavily", label: "tavily" },
   { key: "exa", label: "exa" },
@@ -23,11 +23,11 @@ const searchProviders = [
 export function SearchProvider() {
   const { t } = useTranslation();
 
-  const uiQuery = triplitClient.query("ui");
-  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
-  const currentSearchProvider = uiResult?.searchProvider ?? "search1api";
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
+  const currentsearchService = settingsResult?.searchService ?? "search1api";
 
-  const handleSearchProviderChange = async (key: Key | null) => {
+  const handlesearchServiceChange = async (key: Key | null) => {
     await configService.setSearchService(key as SearchService);
   };
 
@@ -36,15 +36,15 @@ export function SearchProvider() {
       <div>{t("settings.general-settings.search-provider.label")}</div>
       <Select
         className="w-[240px]"
-        selectedKey={currentSearchProvider}
-        onSelectionChange={handleSearchProviderChange}
+        selectedKey={currentsearchService}
+        onSelectionChange={handlesearchServiceChange}
         aria-label="Select search provider"
       >
         <SelectTrigger
           className="h-9 cursor-pointer rounded-xl text-secondary-fg"
           prefix={<Search className="mr-1 size-4" />}
         />
-        <SelectList popoverClassName="min-w-[240px]" items={searchProviders}>
+        <SelectList popoverClassName="min-w-[240px]" items={searchServices}>
           {(provider) => (
             <SelectOption
               className="flex cursor-pointer justify-between"

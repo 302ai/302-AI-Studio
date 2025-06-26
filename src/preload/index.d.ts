@@ -37,7 +37,7 @@ declare global {
         // * General settings
         getAppLanguage: () => Promise<Language>;
         setAppLanguage: (language: Language) => Promise<void>;
-        setSearchService: (searchProvider: SearchService) => Promise<void>;
+        setSearchService: (searchService: SearchService) => Promise<void>;
         setAppTheme: (theme: Theme) => Promise<void>;
         updateAppTheme: (theme: Theme) => Promise<void>;
 
@@ -234,6 +234,7 @@ declare global {
       settingsService: {
         setEnableWebSearch: (enable: boolean) => Promise<void>;
         setEnableReason: (enable: boolean) => Promise<void>;
+        setsearchService: (searchService: SearchService) => Promise<void>;
       };
     };
   }

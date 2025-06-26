@@ -2,7 +2,6 @@ import { triplitClient } from "@main/triplit/client";
 import type {
   Language,
   Provider,
-  SearchService,
   Theme,
   Thread,
   Ui,
@@ -34,7 +33,6 @@ export class UiDbService extends BaseDbService {
       activeTabHistory: new Set(),
       theme: "system",
       language: "zh",
-      searchProvider: "search1api",
       selectedModelId: "",
     });
   }
@@ -48,8 +46,6 @@ export class UiDbService extends BaseDbService {
   //       if (!ui.theme) ui.theme = "system";
 
   //       if (!ui.language) ui.language = "zh";
-
-  //       if (!ui.searchProvider) ui.searchProvider = "search1api";
 
   //       if (!ui.selectedModelId) ui.selectedModelId = "";
   //     });
@@ -81,14 +77,6 @@ export class UiDbService extends BaseDbService {
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
       ui.language = language;
-    });
-  }
-
-  async setSearchService(searchProvider: SearchService) {
-    if (!this.uiRecord) return;
-
-    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
-      ui.searchProvider = searchProvider;
     });
   }
 

@@ -19,6 +19,7 @@ import {
   ServiceRegister,
 } from "../shared/reflect";
 import type { ConfigDbService } from "./db-service/config-db-service";
+import type { SettingsDbService } from "./db-service/settings-db-service";
 import type { UiDbService } from "./db-service/ui-db-service";
 import { EventNames, sendToMain } from "./event-service";
 
@@ -34,6 +35,8 @@ export class ConfigService {
   constructor(
     @inject(TYPES.ConfigDbService) private configDbService: ConfigDbService,
     @inject(TYPES.UiDbService) private uiDbService: UiDbService,
+    @inject(TYPES.SettingsDbService)
+    private settingsDbService: SettingsDbService,
   ) {}
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
@@ -172,10 +175,10 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setSearchService(
     _event: Electron.IpcMainEvent,
-    searchProvider: SearchService,
+    searchService: SearchService,
   ) {
     try {
-      await this.uiDbService.setSearchService(searchProvider);
+      await this.settingsDbService.setSearchService(searchService);
     } catch (error) {
       Logger.error("ConfigService:setSearchService error ---->", error);
       throw error;
