@@ -7,7 +7,9 @@
     "input-placeholder": "Ask anything...",
     "send-failed": "Failed to send message",
     "tool-bar": {
-      "attach-file": "Attach file(file size cannot exceed 10MB)"
+      "attach-file": "Attach file(file size cannot exceed 10MB)",
+      "online-search": "Online Search",
+      "thinking": "Thinking"
     },
     "model-select-label": "Select a model",
     "model-select-placeholder": "Please select a model...",

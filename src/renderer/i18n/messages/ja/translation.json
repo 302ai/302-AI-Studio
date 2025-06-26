@@ -7,7 +7,9 @@
     "input-placeholder": "何でも聞いてみてください...",
     "send-failed": "メッセージの送信に失敗しました",
     "tool-bar": {
-      "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)"
+      "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)",
+      "online-search": "オンライン検索",
+      "thinking": "思考"
     },
     "model-select-label": "モデルを選択します",
     "model-select-placeholder": "モデルを選択してください...",
