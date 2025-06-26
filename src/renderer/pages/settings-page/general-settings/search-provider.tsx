@@ -5,6 +5,7 @@ import {
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
+import type { SearchService } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
 import { Search } from "lucide-react";
 import type { Key } from "react-aria-components";
@@ -27,7 +28,7 @@ export function SearchProvider() {
   const currentSearchProvider = uiResult?.searchProvider ?? "search1api";
 
   const handleSearchProviderChange = async (key: Key | null) => {
-    await configService.setSearchProvider(key as string);
+    await configService.setSearchService(key as SearchService);
   };
 
   return (
