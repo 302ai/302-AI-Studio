@@ -9,12 +9,13 @@ import { Atom, Globe, Paperclip } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-interface AttachmentUploaderProps {
+interface ActionGroupProps {
   onFilesSelect: (files: FileList) => void;
 }
 
-export function AttachmentUploader({ onFilesSelect }: AttachmentUploaderProps) {
+export function ActionGroup({ onFilesSelect }: ActionGroupProps) {
   const { t } = useTranslation();
+
   const [isThinkingActive, setIsThinkingActive] = useState(false);
   const [isOnlineActive, setIsOnlineActive] = useState(false);
 
@@ -44,7 +45,7 @@ export function AttachmentUploader({ onFilesSelect }: AttachmentUploaderProps) {
   };
 
   return (
-    <>
+    <div className="flex flex-row items-center gap-x-2">
       <Tooltip>
         <TooltipTrigger
           className="size-8"
@@ -101,6 +102,6 @@ export function AttachmentUploader({ onFilesSelect }: AttachmentUploaderProps) {
         accept={ALLOWED_TYPES.join(",")}
         onChange={handleFileChange}
       />
-    </>
+    </div>
   );
 }

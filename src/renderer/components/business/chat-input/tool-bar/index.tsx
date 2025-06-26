@@ -3,7 +3,7 @@ import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
-import { AttachmentUploader } from "./attachment-uploader";
+import { ActionGroup } from "./action-group";
 import { ModelSelect } from "./model-select";
 
 interface ToolBarProps {
@@ -39,9 +39,7 @@ export function ToolBar({
       )}
     >
       <div className="flex w-full flex-row justify-between">
-        <div className="flex flex-row items-center gap-x-2">
-          <AttachmentUploader onFilesSelect={onFilesSelect} />
-        </div>
+        <ActionGroup onFilesSelect={onFilesSelect} />
 
         <div className="flex flex-row items-center gap-x-2">
           <ModelSelect

@@ -2,6 +2,7 @@ import { triplitClient } from "@main/triplit/client";
 import type {
   Language,
   Provider,
+  SearchService,
   Theme,
   Thread,
   Ui,
@@ -24,10 +25,11 @@ export class UiDbService extends BaseDbService {
 
     if (ui.length === 0) {
       await this.initDB();
-    } else {
-      this.uiRecord = ui[0];
-      await this.migrateDB();
     }
+    // else {
+    //   this.uiRecord = ui[0];
+    //   await this.migrateDB();
+    // }
   }
 
   private async initDB() {
@@ -39,25 +41,27 @@ export class UiDbService extends BaseDbService {
       theme: "system",
       language: "zh",
       searchProvider: "search1api",
+      enableWebSearch: false,
+      enableReason: false,
     });
   }
 
-  private async migrateDB() {
-    const query = triplitClient.query("ui");
-    const ui = await triplitClient.fetchOne(query);
+  // private async migrateDB() {
+  //   const query = triplitClient.query("ui");
+  //   const ui = await triplitClient.fetchOne(query);
 
-    if (ui) {
-      await triplitClient.update("ui", ui.id, async (ui) => {
-        if (!ui.theme) ui.theme = "system";
+  //   if (ui) {
+  //     await triplitClient.update("ui", ui.id, async (ui) => {
+  //       if (!ui.theme) ui.theme = "system";
 
-        if (!ui.language) ui.language = "zh";
+  //       if (!ui.language) ui.language = "zh";
 
-        if (!ui.searchProvider) ui.searchProvider = "search1api";
+  //       if (!ui.searchProvider) ui.searchProvider = "search1api";
 
-        if (!ui.selectedModelId) ui.selectedModelId = "";
-      });
-    }
-  }
+  //       if (!ui.selectedModelId) ui.selectedModelId = "";
+  //     });
+  //   }
+  // }
 
   async getTheme(): Promise<Theme> {
     const query = triplitClient.query("ui");
@@ -87,7 +91,7 @@ export class UiDbService extends BaseDbService {
     });
   }
 
-  async setSearchProvider(searchProvider: string) {
+  async setSearchService(searchProvider: SearchService) {
     if (!this.uiRecord) return;
 
     await triplitClient.update("ui", this.uiRecord.id, async (ui) => {

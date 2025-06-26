@@ -5,6 +5,7 @@ import type {
   Language,
   Model,
   Provider,
+  SearchService,
   Theme,
   UpdateProviderData,
 } from "@shared/triplit/types";
@@ -169,14 +170,14 @@ export class ConfigService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async setSearchProvider(
+  async setSearchService(
     _event: Electron.IpcMainEvent,
-    searchProvider: string,
+    searchProvider: SearchService,
   ) {
     try {
-      return this.uiDbService.setSearchProvider(searchProvider);
+      return this.uiDbService.setSearchService(searchProvider);
     } catch (error) {
-      Logger.error("ConfigService:setSearchProvider error ---->", error);
+      Logger.error("ConfigService:setSearchService error ---->", error);
       throw error;
     }
   }

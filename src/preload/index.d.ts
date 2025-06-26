@@ -11,6 +11,7 @@ import type {
   Language,
   Message,
   Provider,
+  SearchService,
   Tab,
   Theme,
   Thread,
@@ -36,7 +37,7 @@ declare global {
         // * General settings
         getAppLanguage: () => Promise<Language>;
         setAppLanguage: (language: Language) => Promise<void>;
-        setSearchProvider: (searchProvider: string) => Promise<void>;
+        setSearchService: (searchProvider: SearchService) => Promise<void>;
         setAppTheme: (theme: Theme) => Promise<void>;
         updateAppTheme: (theme: Theme) => Promise<void>;
 

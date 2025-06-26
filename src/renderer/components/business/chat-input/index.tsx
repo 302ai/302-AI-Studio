@@ -33,6 +33,7 @@ export function ChatInput({ className }: ChatInputProps) {
     setAttachmentsDirectly,
   } = useAttachments();
   const { input, setInput, handleInputChange, clearInput } = useTabInput();
+
   const [isSending, setIsSending] = useState(false);
   const [editMessageId, setEditMessageId] = useState<string | null>(null);
   const {
@@ -40,7 +41,6 @@ export function ChatInput({ className }: ChatInputProps) {
     handleModelSelect,
     handleSendMessage: sendMessage,
   } = useToolBar();
-
   const { activeThreadId } = useThread();
 
   const canSendMessage = input.trim() && !isSending;
