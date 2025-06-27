@@ -6,6 +6,7 @@ import { PackageOpen } from "lucide-react";
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -22,7 +23,6 @@ export function ModelList() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-list",
   });
-
   const { selectedProvider } = useActiveProvider();
 
   const modelsQuery = triplitClient.query("models");
@@ -41,6 +41,8 @@ export function ModelList() {
   const [isPending, startTransition] = useTransition();
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
 
   const [tabKey, setTabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,19 +97,34 @@ export function ModelList() {
     [filteredModels, providersMap],
   );
 
-  // !!!!!!!!!!!!!!!!!!!!!! 魔法代码 !!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO: 后续优化
-  const modelListContainer = document.querySelector("#model-list-container");
-  const [, setContainerHeight] = useState(0);
   const updateHeight = useCallback(() => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const availableHeight = window.innerHeight - rect.top - 8;
     setContainerHeight(availableHeight);
   }, []);
+
+  // 使用 callback ref 确保在 DOM 挂载时立即计算高度
+  const setContainerRef = useCallback((node: HTMLDivElement | null) => {
+    containerRef.current = node;
+    if (node) {
+      // DOM 挂载后立即计算高度
+      const rect = node.getBoundingClientRect();
+      const availableHeight = window.innerHeight - rect.top - 8;
+      setContainerHeight(availableHeight);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    // 由于使用了 callback ref，这里只需要在依赖变化时更新高度
+    updateHeight();
+  }, [updateHeight]);
+
   useEffect(() => {
     window.addEventListener("resize", updateHeight);
+
     const ro = new ResizeObserver(updateHeight);
+
     if (containerRef.current) ro.observe(containerRef.current);
 
     return () => {
@@ -115,7 +132,6 @@ export function ModelList() {
       ro.disconnect();
     };
   }, [updateHeight]);
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   useEffect(() => {
     if (!providersFetching && !modelsFetching) {
@@ -143,16 +159,14 @@ export function ModelList() {
           placeholder={t("search-placeholder")}
         />
       </div>
-      {/** biome-ignore lint/nursery/useUniqueElementIds: ignore */}
       <div
-        ref={containerRef}
-        id="model-list-container"
+        ref={setContainerRef}
         className="flex h-full flex-col overflow-hidden rounded-xl border border-border"
       >
         {loading ? (
           <div
             className="flex items-center justify-center"
-            style={{ height: modelListContainer?.clientHeight }}
+            style={{ height: containerHeight }}
           >
             <Fetching />
           </div>
@@ -160,7 +174,7 @@ export function ModelList() {
           <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
             {filteredModels.length > 0 ? (
               <List
-                height={modelListContainer?.clientHeight ?? 244}
+                height={containerHeight}
                 itemCount={filteredModels.length}
                 itemSize={40}
                 itemData={listData}
