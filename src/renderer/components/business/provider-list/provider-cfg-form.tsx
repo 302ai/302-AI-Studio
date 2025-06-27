@@ -268,6 +268,7 @@ export function ProviderCfgForm({
       >
         {[
           { label: "OpenAI", value: "openai" },
+          { label: "302.AI", value: "302ai" },
           // TODO: add providers
           // { label: "OpenAI-Response", value: "openai-responses" },
           // { label: "Gemini", value: "gemini" },
