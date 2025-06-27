@@ -1,3 +1,5 @@
+import Logger from "electron-log";
+
 export function createReasoningFetch(): typeof fetch {
   return async (url, options) => {
     const response = await fetch(url, options);
@@ -62,20 +64,20 @@ class ReasoningProcessor {
     const processedLines: string[] = [];
 
     for (const line of lines) {
+      Logger.info("linelinelinelinelinelinelinelinelinelinelinelineline", line);
       if (line.startsWith("data: ")) {
         try {
           const jsonStr = line.substring(6);
           if (jsonStr.trim() === "[DONE]") {
             if (this.isInThinkingMode) {
-              const doneData = JSON.parse(jsonStr);
-              if (doneData?.choices?.[0]?.delta) {
-                doneData.choices[0].delta.content = `${doneData.choices[0].delta.content || ""}</think>`;
-              }
-              this.isInThinkingMode = false;
+              // 在流结束时关闭思考标签
+              const doneData = {
+                choices: [{ delta: { content: "</think>" } }],
+              };
               processedLines.push(`data: ${JSON.stringify(doneData)}`);
-            } else {
-              processedLines.push(line);
+              this.isInThinkingMode = false;
             }
+            processedLines.push(line);
             continue;
           }
 
@@ -102,11 +104,14 @@ class ReasoningProcessor {
             }
 
             delete data.choices[0].delta.reasoning_content;
-          } else if (this.isInThinkingMode) {
-            const existingContent = data.choices[0]?.delta?.content || "";
-            if (data.choices?.[0]?.delta) {
-              data.choices[0].delta.content = `</think>${existingContent}`;
-            }
+          } else if (
+            this.isInThinkingMode &&
+            data.choices?.[0]?.delta?.content &&
+            data.choices[0].delta.content.trim() !== ""
+          ) {
+            // 只有当有实际内容且在思考模式时，才关闭思考标签并切换到普通内容
+            const existingContent = data.choices[0].delta.content;
+            data.choices[0].delta.content = `</think>${existingContent}`;
             this.isInThinkingMode = false;
           }
 
