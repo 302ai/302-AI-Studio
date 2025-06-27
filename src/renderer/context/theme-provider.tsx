@@ -21,9 +21,9 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const { configService } = window.service;
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const uiQuery = triplitClient.query("ui");
-  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
-  const theme = uiResult?.theme ?? "system";
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
+  const theme = settingsResult?.theme ?? "system";
 
   const [isSystemDark, setIsSystemDark] = useState(
     window.matchMedia("(prefers-color-scheme: dark)").matches,

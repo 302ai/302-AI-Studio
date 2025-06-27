@@ -7,16 +7,6 @@ export const uiSchema = {
     activeThreadId: S.String({ default: "" }),
     activeTabId: S.String({ default: "" }),
     activeTabHistory: S.Set(S.String(), { default: new Set() }),
-    theme: S.String({
-      enum: ["light", "dark", "system"],
-      default: "system",
-    }),
-
-    language: S.String({
-      enum: ["zh", "en", "ja"],
-      default: "zh",
-    }),
-
     selectedModelId: S.String({ default: "" }),
   }),
 };

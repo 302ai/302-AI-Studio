@@ -13,9 +13,9 @@ export function ThemeSwitcher() {
     keyPrefix: "settings.general-settings.theme",
   });
 
-  const uiQuery = triplitClient.query("ui");
-  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
-  const theme = uiResult?.theme ?? "system";
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
+  const theme = settingsResult?.theme ?? "system";
 
   const [thumbStyle, setThumbStyle] = useState({});
 

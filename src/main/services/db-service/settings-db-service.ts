@@ -30,6 +30,8 @@ export class SettingsDbService extends BaseDbService {
       enableWebSearch: false,
       enableReason: false,
       searchService: "search1api",
+      theme: "system",
+      language: "zh",
     });
   }
 
@@ -91,5 +93,33 @@ export class SettingsDbService extends BaseDbService {
       enabled: settings[0].enableWebSearch,
       service: settings[0].searchService,
     };
+  }
+
+  async setTheme(theme: "light" | "dark" | "system") {
+    if (!this.settingsRecord) return;
+    await triplitClient.update(
+      "settings",
+      this.settingsRecord.id,
+      async (setting) => {
+        setting.theme = theme;
+      },
+    );
+  }
+
+  async getLanguage(): Promise<"zh" | "en" | "ja"> {
+    const query = triplitClient.query("settings");
+    const settings = await triplitClient.fetchOne(query);
+    return (settings?.language as "zh" | "en" | "ja") ?? "zh";
+  }
+
+  async setLanguage(language: "zh" | "en" | "ja") {
+    if (!this.settingsRecord) return;
+    await triplitClient.update(
+      "settings",
+      this.settingsRecord.id,
+      async (setting) => {
+        setting.language = language;
+      },
+    );
   }
 }

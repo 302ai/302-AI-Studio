@@ -3,9 +3,9 @@ import { useQueryOne } from "@triplit/react";
 import { Toaster as ToasterPrimitive, type ToasterProps } from "sonner";
 
 const Toast = ({ ...props }: ToasterProps) => {
-  const uiQuery = triplitClient.query("ui");
-  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
-  const theme = uiResult?.theme ?? "system";
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
+  const theme = settingsResult?.theme ?? "system";
 
   return (
     <ToasterPrimitive

@@ -16,9 +16,9 @@ const { configService } = window.service;
 export function LanguageSelector() {
   const { t, i18n } = useTranslation();
 
-  const uiQuery = triplitClient.query("ui");
-  const { result: uiResult } = useQueryOne(triplitClient, uiQuery);
-  const lang = uiResult?.language ?? "zh";
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
+  const lang = settingsResult?.language ?? "zh";
   const currentLang = langs.find((l) => l.key === lang) ?? langs[0];
 
   const handleLanguageChange = async (key: Key | null) => {

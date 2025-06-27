@@ -9,5 +9,13 @@ export const settingsSchema = {
       enum: ["search1api", "tavily", "exa", "bochaai"],
       default: "search1api",
     }),
+    theme: S.String({
+      enum: ["light", "dark", "system"],
+      default: "system",
+    }),
+    language: S.String({
+      enum: ["zh", "en", "ja"],
+      default: "zh",
+    }),
   }),
 };

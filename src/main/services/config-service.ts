@@ -20,7 +20,6 @@ import {
 } from "../shared/reflect";
 import type { ConfigDbService } from "./db-service/config-db-service";
 import type { SettingsDbService } from "./db-service/settings-db-service";
-import type { UiDbService } from "./db-service/ui-db-service";
 import { EventNames, sendToMain } from "./event-service";
 
 export interface ModelSettingData {
@@ -34,7 +33,6 @@ export interface ModelSettingData {
 export class ConfigService {
   constructor(
     @inject(TYPES.ConfigDbService) private configDbService: ConfigDbService,
-    @inject(TYPES.UiDbService) private uiDbService: UiDbService,
     @inject(TYPES.SettingsDbService)
     private settingsDbService: SettingsDbService,
   ) {}
@@ -42,7 +40,7 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getAppLanguage(_event: Electron.IpcMainEvent): Promise<Language> {
     try {
-      return this.uiDbService.getLanguage();
+      return this.settingsDbService.getLanguage();
     } catch (error) {
       Logger.error("ConfigService:getAppLanguage error ---->", error);
       throw error;
@@ -52,7 +50,7 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setAppLanguage(_event: Electron.IpcMainEvent, language: Language) {
     try {
-      return this.uiDbService.setLanguage(language);
+      return this.settingsDbService.setLanguage(language);
     } catch (error) {
       Logger.error("ConfigService:setAppLanguage error ---->", error);
       throw error;
@@ -62,7 +60,7 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setAppTheme(_event: Electron.IpcMainEvent, theme: Theme) {
     try {
-      await this.uiDbService.setTheme(theme);
+      await this.settingsDbService.setTheme(theme);
       nativeTheme.themeSource = theme;
       sendToMain(EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE, null);
     } catch (error) {

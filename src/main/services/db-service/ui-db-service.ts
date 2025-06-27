@@ -1,11 +1,5 @@
 import { triplitClient } from "@main/triplit/client";
-import type {
-  Language,
-  Provider,
-  Theme,
-  Thread,
-  Ui,
-} from "@shared/triplit/types";
+import type { Provider, Thread, Ui } from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
@@ -31,8 +25,6 @@ export class UiDbService extends BaseDbService {
       activeThreadId: "",
       activeTabId: "",
       activeTabHistory: new Set(),
-      theme: "system",
-      language: "zh",
       selectedModelId: "",
     });
   }
@@ -51,34 +43,6 @@ export class UiDbService extends BaseDbService {
   //     });
   //   }
   // }
-
-  async getTheme(): Promise<Theme> {
-    const query = triplitClient.query("ui");
-    const ui = await triplitClient.fetchOne(query);
-    return (ui?.theme as Theme) ?? "system";
-  }
-
-  async setTheme(theme: Theme) {
-    if (!this.uiRecord) return;
-
-    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
-      ui.theme = theme;
-    });
-  }
-
-  async getLanguage(): Promise<Language> {
-    const query = triplitClient.query("ui");
-    const ui = await triplitClient.fetchOne(query);
-    return (ui?.language as Language) ?? "zh";
-  }
-
-  async setLanguage(language: Language) {
-    if (!this.uiRecord) return;
-
-    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
-      ui.language = language;
-    });
-  }
 
   // * Active Provider Id
   async updateActiveProviderId(providerId: string) {
