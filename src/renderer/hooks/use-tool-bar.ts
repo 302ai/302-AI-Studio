@@ -18,7 +18,7 @@ const {
   tabService,
   messageService,
   providerService,
-  uiService,
+  settingsService,
   attachmentService,
 } = window.service;
 
@@ -45,12 +45,12 @@ export function useToolBar() {
   const modelsQuery = triplitClient.query("models");
   const { results: models } = useQuery(triplitClient, modelsQuery);
 
-  const uiQuery = triplitClient.query("ui");
-  const { result: ui } = useQueryOne(triplitClient, uiQuery);
-  const selectedModelId = ui?.selectedModelId || "";
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settings } = useQueryOne(triplitClient, settingsQuery);
+  const selectedModelId = settings?.selectedModelId || "";
 
   const handleModelSelect = async (modelId: string) => {
-    await uiService.updateSelectedModelId(modelId);
+    await settingsService.updateSelectedModelId(modelId);
 
     if (activeThreadId) {
       try {
@@ -258,7 +258,7 @@ export function useToolBar() {
           (thread) => thread.id === activeThreadId,
         );
         if (activeThread) {
-          await uiService.updateSelectedModelId(activeThread.modelId);
+          await settingsService.updateSelectedModelId(activeThread.modelId);
         }
       }
     };

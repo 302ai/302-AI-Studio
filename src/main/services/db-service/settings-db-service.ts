@@ -21,7 +21,9 @@ export class SettingsDbService extends BaseDbService {
 
     this.settingsRecord =
       settings.length === 0 ? await this.initDB() : settings[0];
-
+    if (settings.length === 0) {
+      await this.migrateDB();
+    }
     await this.resetWebSearchAndReason();
   }
 
@@ -32,7 +34,23 @@ export class SettingsDbService extends BaseDbService {
       searchService: "search1api",
       theme: "system",
       language: "zh",
+      selectedModelId: "",
     });
+  }
+
+  private async migrateDB() {
+    const query = triplitClient.query("settings");
+    const settings = await triplitClient.fetchOne(query);
+
+    if (settings) {
+      await triplitClient.update("settings", settings.id, async (setting) => {
+        if (!setting.theme) setting.theme = "system";
+
+        if (!setting.language) setting.language = "zh";
+
+        if (!setting.selectedModelId) setting.selectedModelId = "";
+      });
+    }
   }
 
   private async resetWebSearchAndReason() {
@@ -119,6 +137,17 @@ export class SettingsDbService extends BaseDbService {
       this.settingsRecord.id,
       async (setting) => {
         setting.language = language;
+      },
+    );
+  }
+
+  async setSelectedModelId(modelId: string) {
+    if (!this.settingsRecord) return;
+    await triplitClient.update(
+      "settings",
+      this.settingsRecord.id,
+      async (setting) => {
+        setting.selectedModelId = modelId || "";
       },
     );
   }

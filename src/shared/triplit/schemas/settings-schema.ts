@@ -17,5 +17,6 @@ export const settingsSchema = {
       enum: ["zh", "en", "ja"],
       default: "zh",
     }),
+    selectedModelId: S.String({ default: "" }),
   }),
 };

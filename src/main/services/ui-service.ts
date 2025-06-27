@@ -8,23 +8,11 @@ import type { Provider, Thread } from "@shared/triplit/types";
 import Logger from "electron-log";
 import { inject, injectable } from "inversify";
 import type { UiDbService } from "./db-service/ui-db-service";
-import { EventNames, emitter } from "./event-service";
 
 @ServiceRegister(TYPES.UiService)
 @injectable()
 export class UiService {
-  constructor(@inject(TYPES.UiDbService) private uiDbService: UiDbService) {
-    this.setupEventListeners();
-  }
-
-  private setupEventListeners() {
-    emitter.on(EventNames.PROVIDER_DELETE, () => {
-      this.resetSelectedModelId();
-    });
-    emitter.on(EventNames.PROVIDER_UPDATE, () => {
-      this.resetSelectedModelId();
-    });
-  }
+  constructor(@inject(TYPES.UiDbService) private uiDbService: UiDbService) {}
 
   // * Active Provider Id
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
@@ -165,29 +153,6 @@ export class UiService {
       await this.uiDbService.updateActiveTabId(tabId);
     } catch (error) {
       Logger.error("UiService:updateActiveTabId error ---->", error);
-      throw error;
-    }
-  }
-
-  // * Selected Model Id
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async updateSelectedModelId(
-    _event: Electron.IpcMainEvent,
-    modelId: string,
-  ): Promise<void> {
-    try {
-      await this.uiDbService.updateSelectedModelId(modelId);
-    } catch (error) {
-      Logger.error("UiService:updateSelectedModelId error ---->", error);
-      throw error;
-    }
-  }
-
-  private async resetSelectedModelId(): Promise<void> {
-    try {
-      await this.uiDbService.updateSelectedModelId("");
-    } catch (error) {
-      Logger.error("UiService:updateSelectedModelId error ---->", error);
       throw error;
     }
   }

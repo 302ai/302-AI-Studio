@@ -25,7 +25,6 @@ export class UiDbService extends BaseDbService {
       activeThreadId: "",
       activeTabId: "",
       activeTabHistory: new Set(),
-      selectedModelId: "",
     });
   }
 
@@ -144,11 +143,4 @@ export class UiDbService extends BaseDbService {
     });
   }
 
-  async updateSelectedModelId(modelId: string) {
-    if (!this.uiRecord) return;
-
-    await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
-      ui.selectedModelId = modelId || "";
-    });
-  }
 }

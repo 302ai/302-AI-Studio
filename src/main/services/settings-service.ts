@@ -11,6 +11,7 @@ import type {
   SettingsDbService,
   WebSearchConfig,
 } from "./db-service/settings-db-service";
+import { emitter, EventNames } from "./event-service";
 
 @injectable()
 @ServiceRegister(TYPES.SettingsService)
@@ -18,7 +19,18 @@ export class SettingsService {
   constructor(
     @inject(TYPES.SettingsDbService)
     private settingsDbService: SettingsDbService,
-  ) {}
+  ) {
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners() {
+    emitter.on(EventNames.PROVIDER_DELETE, () => {
+      this.resetSelectedModelId();
+    });
+    emitter.on(EventNames.PROVIDER_UPDATE, () => {
+      this.resetSelectedModelId();
+    });
+  }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setEnableWebSearch(_event: Electron.IpcMainEvent, enable: boolean) {
@@ -68,6 +80,28 @@ export class SettingsService {
     } catch (error) {
       Logger.error("SettingsService:getWebSearchConfig error ---->", error);
       return { enabled: false, service: "search1api" };
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateSelectedModelId(
+    _event: Electron.IpcMainEvent,
+    modelId: string,
+  ) {
+    try {
+      await this.settingsDbService.setSelectedModelId(modelId);
+    } catch (error) {
+      Logger.error("SettingsService:updateSelectedModelId error ---->", error);
+      throw error;
+    }
+  }
+
+  private async resetSelectedModelId(): Promise<void> {
+    try {
+      await this.settingsDbService.setSelectedModelId("");
+    } catch (error) {
+      Logger.error("SettingsService:resetSelectedModelId error ---->", error);
+      throw error;
     }
   }
 }
