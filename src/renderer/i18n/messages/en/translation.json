@@ -23,6 +23,25 @@
     "edit-message-only-save": "Only Save"
   },
   "settings": {
+    "about-settings": {
+      "name": "About",
+      "version": "Version",
+      "description": {
+        "title": "Application Description",
+        "content": "302 AI Studio is a powerful AI chat application that provides users with intelligent conversation experiences. It supports multiple AI models, features file upload and web search capabilities, and is committed to creating the best AI interaction platform for users."
+      },
+      "website": {
+        "title": "Official Website"
+      },
+      "copyright": {
+        "title": "Copyright",
+        "content": "© 2024 302.AI. All rights reserved."
+      },
+      "license": {
+        "title": "License",
+        "content": "MIT License"
+      }
+    },
     "assistant-settings": {
       "name": "Assistant Settings"
     },

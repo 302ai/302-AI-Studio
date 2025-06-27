@@ -24,6 +24,25 @@
     "edit-message-only-save": "保存のみ"
   },
   "settings": {
+    "about-settings": {
+      "name": "について",
+      "version": "バージョン",
+      "description": {
+        "title": "アプリケーションの説明",
+        "content": "302 AI Studio は、強力なAIチャットアプリケーションで、ユーザーにインテリジェントな対話体験を提供します。複数のAIモデルをサポートし、ファイルアップロード、オンライン検索などの機能を備えており、ユーザーに最高のAIインタラクションプラットフォームを構築することに専念しています。"
+      },
+      "website": {
+        "title": "公式ウェブサイト"
+      },
+      "copyright": {
+        "title": "著作権情報",
+        "content": "© 2024 302.AI. 全著作権所有。"
+      },
+      "license": {
+        "title": "ライセンス",
+        "content": "MIT License"
+      }
+    },
     "assistant-settings": {
       "name": "アシスタント設定"
     },

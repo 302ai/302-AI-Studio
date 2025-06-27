@@ -24,6 +24,25 @@
     "edit-message-only-save": "仅保存"
   },
   "settings": {
+    "about-settings": {
+      "name": "关于",
+      "version": "版本",
+      "description": {
+        "title": "应用描述",
+        "content": "302 AI Studio 是一个强大的AI聊天应用，为用户提供智能对话体验。支持多种AI模型，具备文件上传、联网搜索等功能，致力于为用户打造最佳的AI交互平台。"
+      },
+      "website": {
+        "title": "官方网站"
+      },
+      "copyright": {
+        "title": "版权信息",
+        "content": "© 2024 302.AI. 保留所有权利。"
+      },
+      "license": {
+        "title": "许可证",
+        "content": "MIT License"
+      }
+    },
     "assistant-settings": {
       "name": "助手设置"
     },

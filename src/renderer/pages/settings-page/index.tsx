@@ -2,6 +2,7 @@ import { Tab, TabList, Tabs } from "@renderer/components/business/setting-tabs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { AboutSettings } from "./about-settings";
 import { GeneralSettings } from "./general-settings";
 import { ModelSettings } from "./model-settings";
 
@@ -23,6 +24,11 @@ export function SettingsPage() {
         name: "model-settings",
         path: "/settings/model-settings",
         label: t("model-settings.name"),
+      },
+      {
+        name: "about-settings",
+        path: "/settings/about-settings",
+        label: t("about-settings.name"),
       },
       // {
       //   name: "tool-settings",
@@ -80,6 +86,7 @@ export function SettingsPage() {
         <Routes>
           <Route path="/general-settings" element={<GeneralSettings />} />
           <Route path="/model-settings" element={<ModelSettings />} />
+          <Route path="/about-settings" element={<AboutSettings />} />
           {/* <Route path="/tool-settings" element={<ToolSettings />} />
           <Route path="/assistant-settings" element={<AssistantSettings />} /> */}
         </Routes>
