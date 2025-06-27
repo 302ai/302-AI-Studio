@@ -19,11 +19,13 @@ export class SettingsDbService extends BaseDbService {
     const query = triplitClient.query("settings");
     const settings = await triplitClient.fetch(query);
 
-    this.settingsRecord =
-      settings.length === 0 ? await this.initDB() : settings[0];
     if (settings.length === 0) {
+      this.settingsRecord = await this.initDB();
+    } else {
+      this.settingsRecord = settings[0];
       await this.migrateDB();
     }
+
     await this.resetWebSearchAndReason();
   }
 
@@ -44,10 +46,6 @@ export class SettingsDbService extends BaseDbService {
 
     if (settings) {
       await triplitClient.update("settings", settings.id, async (setting) => {
-        if (!setting.theme) setting.theme = "system";
-
-        if (!setting.language) setting.language = "zh";
-
         if (!setting.selectedModelId) setting.selectedModelId = "";
       });
     }

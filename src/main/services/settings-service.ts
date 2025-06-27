@@ -11,7 +11,7 @@ import type {
   SettingsDbService,
   WebSearchConfig,
 } from "./db-service/settings-db-service";
-import { emitter, EventNames } from "./event-service";
+import { EventNames, emitter } from "./event-service";
 
 @injectable()
 @ServiceRegister(TYPES.SettingsService)
@@ -84,10 +84,7 @@ export class SettingsService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async updateSelectedModelId(
-    _event: Electron.IpcMainEvent,
-    modelId: string,
-  ) {
+  async updateSelectedModelId(_event: Electron.IpcMainEvent, modelId: string) {
     try {
       await this.settingsDbService.setSelectedModelId(modelId);
     } catch (error) {

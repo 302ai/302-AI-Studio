@@ -16,7 +16,12 @@ export class UiDbService extends BaseDbService {
     const query = triplitClient.query("ui");
     const ui = await triplitClient.fetch(query);
 
-    this.uiRecord = ui.length === 0 ? await this.initDB() : ui[0];
+    if (ui.length === 0) {
+      this.uiRecord = await this.initDB();
+    } else {
+      this.uiRecord = ui[0];
+      await this.migrateDB();
+    }
   }
 
   private async initDB() {
@@ -25,23 +30,20 @@ export class UiDbService extends BaseDbService {
       activeThreadId: "",
       activeTabId: "",
       activeTabHistory: new Set(),
+      selectedModelId: "",
     });
   }
 
-  // private async migrateDB() {
-  //   const query = triplitClient.query("ui");
-  //   const ui = await triplitClient.fetchOne(query);
+  private async migrateDB() {
+    const query = triplitClient.query("ui");
+    const ui = await triplitClient.fetchOne(query);
 
-  //   if (ui) {
-  //     await triplitClient.update("ui", ui.id, async (ui) => {
-  //       if (!ui.theme) ui.theme = "system";
-
-  //       if (!ui.language) ui.language = "zh";
-
-  //       if (!ui.selectedModelId) ui.selectedModelId = "";
-  //     });
-  //   }
-  // }
+    if (ui) {
+      await triplitClient.update("ui", ui.id, async (ui) => {
+        if (!ui.selectedModelId) ui.selectedModelId = "";
+      });
+    }
+  }
 
   // * Active Provider Id
   async updateActiveProviderId(providerId: string) {
@@ -142,5 +144,4 @@ export class UiDbService extends BaseDbService {
       ui.activeTabHistory = new Set(historyArray);
     });
   }
-
 }
