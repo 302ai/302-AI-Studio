@@ -29,7 +29,6 @@ export function ActionGroup({ onFilesSelect, disabled }: ActionGroupProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAttachFile = () => {
-    if (disabled) return;
     fileInputRef.current?.click();
   };
 
