@@ -19,7 +19,9 @@ import { EventNames, sendToThread } from "./event-service";
 export class MessageService {
   constructor(
     @inject(TYPES.MessageDbService) private messageDbService: MessageDbService,
-  ) {}
+  ) {
+    this.updatePendingMessagesToStop();
+  }
 
   async _getMessagesByThreadId(threadId: string): Promise<Message[]> {
     const messages =
