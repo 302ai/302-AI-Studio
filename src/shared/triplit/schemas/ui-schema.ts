@@ -7,6 +7,5 @@ export const uiSchema = {
     activeThreadId: S.String({ default: "" }),
     activeTabId: S.String({ default: "" }),
     activeTabHistory: S.Set(S.String(), { default: new Set() }),
-    selectedModelId: S.String({ default: "" }),
   }),
 };

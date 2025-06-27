@@ -20,7 +20,7 @@ export class UiDbService extends BaseDbService {
       this.uiRecord = await this.initDB();
     } else {
       this.uiRecord = ui[0];
-      await this.migrateDB();
+      // await this.migrateDB();
     }
   }
 
@@ -30,20 +30,19 @@ export class UiDbService extends BaseDbService {
       activeThreadId: "",
       activeTabId: "",
       activeTabHistory: new Set(),
-      selectedModelId: "",
     });
   }
 
-  private async migrateDB() {
-    const query = triplitClient.query("ui");
-    const ui = await triplitClient.fetchOne(query);
+  // private async migrateDB() {
+  //   const query = triplitClient.query("ui");
+  //   const ui = await triplitClient.fetchOne(query);
 
-    if (ui) {
-      await triplitClient.update("ui", ui.id, async (ui) => {
-        if (!ui.selectedModelId) ui.selectedModelId = "";
-      });
-    }
-  }
+  //   if (ui) {
+  //     await triplitClient.update("ui", ui.id, async (ui) => {
+  //       if (!ui.selectedModelId) ui.selectedModelId = "";
+  //     });
+  //   }
+  // }
 
   // * Active Provider Id
   async updateActiveProviderId(providerId: string) {

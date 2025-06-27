@@ -23,7 +23,7 @@ export class SettingsDbService extends BaseDbService {
       this.settingsRecord = await this.initDB();
     } else {
       this.settingsRecord = settings[0];
-      await this.migrateDB();
+      // await this.migrateDB();
     }
 
     await this.resetWebSearchAndReason();
@@ -40,16 +40,16 @@ export class SettingsDbService extends BaseDbService {
     });
   }
 
-  private async migrateDB() {
-    const query = triplitClient.query("settings");
-    const settings = await triplitClient.fetchOne(query);
+  // private async migrateDB() {
+  //   const query = triplitClient.query("settings");
+  //   const settings = await triplitClient.fetchOne(query);
 
-    if (settings) {
-      await triplitClient.update("settings", settings.id, async (setting) => {
-        if (!setting.selectedModelId) setting.selectedModelId = "";
-      });
-    }
-  }
+  //   if (settings) {
+  //     await triplitClient.update("settings", settings.id, async (setting) => {
+  //       if (!setting.selectedModelId) setting.selectedModelId = "";
+  //     });
+  //   }
+  // }
 
   private async resetWebSearchAndReason() {
     if (!this.settingsRecord) return;
