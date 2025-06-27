@@ -270,7 +270,7 @@ export function ProviderList() {
 
   const updateHeight = useCallback(() => {
     if (listContainerRef.current) {
-      const height = listContainerRef.current.clientHeight;
+      const height = listContainerRef.current.clientHeight - 8;
       setListHeight(height);
     }
   }, []);
