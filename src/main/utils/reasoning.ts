@@ -1,5 +1,3 @@
-import Logger from "electron-log";
-
 export function createReasoningFetch(): typeof fetch {
   return async (url, options) => {
     const response = await fetch(url, options);
@@ -64,7 +62,6 @@ class ReasoningProcessor {
     const processedLines: string[] = [];
 
     for (const line of lines) {
-      Logger.info("linelinelinelinelinelinelinelinelinelinelinelineline", line);
       if (line.startsWith("data: ")) {
         try {
           const jsonStr = line.substring(6);
