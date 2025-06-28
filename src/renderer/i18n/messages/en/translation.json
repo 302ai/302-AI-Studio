@@ -245,7 +245,9 @@
       "new-thread-title": "New Chat"
     },
     "think": "Thinking",
-    "outputing": "Outputing..."
+    "outputing": "Outputing...",
+    "reason": "reasoning",
+    "completed": "Completed"
   },
   "stop-generating": "Stop",
   "new-thread": {

@@ -1,3 +1,24 @@
+interface SSEData {
+  choices?: Array<{
+    delta?: {
+      content?: string;
+      reasoning_content?: string;
+    };
+    finish_reason?: string;
+  }>;
+  citations?: string[];
+}
+
+interface DeltaContent {
+  content?: string;
+  reasoning_content?: string;
+}
+
+interface Choice {
+  delta?: DeltaContent;
+  finish_reason?: string;
+}
+
 export function createReasoningFetch(): typeof fetch {
   return async (url, options) => {
     const response = await fetch(url, options);
@@ -56,100 +77,172 @@ class ReasoningProcessor {
   private isInThinkingMode = false;
   private citations: string[] = [];
   private hasAddedCitations = false;
+  private readonly isInReasoningMode: boolean;
+
+  constructor(isInReasoningMode = false) {
+    this.isInReasoningMode = isInReasoningMode;
+  }
 
   processSSEChunk(chunk: string): string {
     const lines = chunk.split("\n");
-    const processedLines: string[] = [];
-
-    for (const line of lines) {
-      if (line.startsWith("data: ")) {
-        try {
-          const jsonStr = line.substring(6);
-          if (jsonStr.trim() === "[DONE]") {
-            if (this.isInThinkingMode) {
-              // 在流结束时关闭思考标签
-              const doneData = {
-                choices: [{ delta: { content: "</think>" } }],
-              };
-              processedLines.push(`data: ${JSON.stringify(doneData)}`);
-              this.isInThinkingMode = false;
-            }
-            processedLines.push(line);
-            continue;
-          }
-
-          const data = JSON.parse(jsonStr);
-
-          if (
-            data.citations &&
-            Array.isArray(data.citations) &&
-            this.citations.length === 0
-          ) {
-            this.citations = data.citations;
-          }
-
-          if (data.choices?.[0]?.delta?.reasoning_content) {
-            const reasoningContent = data.choices[0].delta.reasoning_content;
-            const existingContent = data.choices[0].delta.content || "";
-
-            if (!this.isInThinkingMode) {
-              data.choices[0].delta.content = `${existingContent}<think>${reasoningContent}`;
-              this.isInThinkingMode = true;
-            } else {
-              data.choices[0].delta.content =
-                existingContent + reasoningContent;
-            }
-
-            delete data.choices[0].delta.reasoning_content;
-          } else if (
-            this.isInThinkingMode &&
-            data.choices?.[0]?.delta?.content &&
-            data.choices[0].delta.content.trim() !== ""
-          ) {
-            // 只有当有实际内容且在思考模式时，才关闭思考标签并切换到普通内容
-            const existingContent = data.choices[0].delta.content;
-            data.choices[0].delta.content = `</think>${existingContent}`;
-            this.isInThinkingMode = false;
-          }
-
-          if (
-            data.choices?.[0]?.finish_reason === "stop" &&
-            this.citations.length > 0 &&
-            !this.hasAddedCitations
-          ) {
-            const existingContent = data.choices[0].delta?.content || "";
-            const citationsText = this.formatCitations();
-
-            if (data.choices[0].delta) {
-              data.choices[0].delta.content = existingContent + citationsText;
-            } else {
-              data.choices[0].delta = { content: citationsText };
-            }
-
-            this.hasAddedCitations = true;
-          }
-
-          processedLines.push(`data: ${JSON.stringify(data)}`);
-        } catch (_error) {
-          processedLines.push(line);
-        }
-      } else {
-        processedLines.push(line);
-      }
-    }
-
+    const processedLines = lines.map((line) => this.processLine(line));
     return processedLines.join("\n");
   }
 
+  private processLine(line: string): string {
+    if (!line.startsWith("data: ")) {
+      return line;
+    }
+
+    const jsonStr = line.substring(6); // * remove "data: "
+
+    if (this.isDoneMessage(jsonStr)) {
+      return this.handleDoneMessage(line);
+    }
+
+    try {
+      const data = JSON.parse(jsonStr) as SSEData;
+      this.extractCitations(data);
+      this.processReasoningContent(data);
+      this.addCitationsIfNeeded(data);
+      return `data: ${JSON.stringify(data)}`;
+    } catch {
+      return line;
+    }
+  }
+
+  private isDoneMessage(jsonStr: string): boolean {
+    return jsonStr.trim() === "[DONE]";
+  }
+
+  private handleDoneMessage(line: string): string {
+    if (this.isInThinkingMode) {
+      const endThinkingData = this.createEndThinkingData();
+      return `data: ${JSON.stringify(endThinkingData)}\n${line}`;
+    }
+    return line;
+  }
+
+  private createEndThinkingData(): SSEData {
+    return {
+      choices: [
+        {
+          delta: {
+            content: this.isInReasoningMode ? "</reason>" : "</think>",
+          },
+        },
+      ],
+    };
+  }
+
+  private extractCitations(data: SSEData): void {
+    const citations = data.citations;
+    if (this.citations.length === 0 && citations && citations.length > 0) {
+      this.citations = citations;
+    }
+  }
+
+  private processReasoningContent(data: SSEData): void {
+    const choice = this.getFirstChoice(data);
+    const delta = choice?.delta;
+
+    if (!delta) {
+      return;
+    }
+
+    const hasReasoningContent = Boolean(delta.reasoning_content);
+    const existingContent = delta.content || "";
+
+    if (hasReasoningContent) {
+      this.handleReasoningContent(delta, existingContent);
+    } else if (this.isInThinkingMode) {
+      this.handleEndOfThinking(delta, existingContent);
+    }
+  }
+
+  private handleReasoningContent(
+    delta: DeltaContent,
+    existingContent: string,
+  ): void {
+    const reasoningContent = delta.reasoning_content;
+
+    if (!reasoningContent) {
+      return;
+    }
+
+    if (!this.isInThinkingMode) {
+      delta.content = this.createThinkingStartContent(
+        existingContent,
+        reasoningContent,
+      );
+      this.isInThinkingMode = true;
+    } else {
+      delta.content = existingContent + reasoningContent;
+    }
+
+    delete delta.reasoning_content;
+  }
+
+  private createThinkingStartContent(
+    existingContent: string,
+    reasoningContent: string,
+  ): string {
+    const tag = this.isInReasoningMode ? "<reason>" : "<think>";
+    return `${existingContent}${tag}${reasoningContent}`;
+  }
+
+  private handleEndOfThinking(
+    delta: DeltaContent,
+    existingContent: string,
+  ): void {
+    const endTag = this.isInReasoningMode ? "</reason>" : "</think>";
+    delta.content = `${endTag}${existingContent}`;
+    this.isInThinkingMode = false;
+  }
+
+  private addCitationsIfNeeded(data: SSEData): void {
+    const choice = this.getFirstChoice(data);
+
+    if (!this.shouldAddCitations(choice)) return;
+
+    const delta = choice?.delta;
+    const existingContent = delta?.content || "";
+    const citationsText = this.formatCitations();
+
+    if (choice && delta) {
+      delta.content = existingContent + citationsText;
+      this.hasAddedCitations = true;
+    } else if (choice) {
+      choice.delta = { content: citationsText };
+      this.hasAddedCitations = true;
+    }
+  }
+
+  private shouldAddCitations(choice: Choice | undefined): boolean {
+    if (!choice) return false;
+
+    return (
+      choice.finish_reason === "stop" &&
+      this.citations.length > 0 &&
+      !this.hasAddedCitations
+    );
+  }
+
+  private getFirstChoice(data: SSEData): Choice | undefined {
+    const choices = data.choices;
+    return choices && choices.length > 0 ? choices[0] : undefined;
+  }
+
   private formatCitations(): string {
-    if (this.citations.length === 0) return "";
+    if (this.citations.length === 0) {
+      return "";
+    }
 
-    let citationsText = "\n";
-    this.citations.forEach((citation, index) => {
-      citationsText += `[${index + 1}] ${citation}\n`;
-    });
+    const citationLines = this.citations.map(
+      (citation, index) => `[${index + 1}] ${citation}`,
+    );
 
-    return citationsText;
+    return `\n${citationLines.join("\n")}\n`;
   }
 
   reset(): void {

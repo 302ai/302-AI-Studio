@@ -234,7 +234,9 @@
       "new-thread-title": "新会话"
     },
     "think": "思考过程",
-    "outputing": "输出中..."
+    "outputing": "输出中...",
+    "reason": "推理过程",
+    "completed": "已完成"
   },
   "common": {
     "copied-success": "已复制",

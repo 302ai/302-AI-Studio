@@ -1,11 +1,11 @@
 import { triplitClient } from "@renderer/client";
+import { ContentBlocks } from "@renderer/components/business/markdown/content-blocks";
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
-import { ThinkBlocks } from "@renderer/components/business/markdown/markdown-think-blocks";
 import { ContextMenuItem } from "@renderer/components/ui/context-menu";
 import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
-import { useThinkBlocks } from "@renderer/hooks/use-think-blocks";
+import { useContentBlocks } from "@renderer/hooks/use-content-blocks";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { formatTimeAgo } from "@renderer/lib/utils";
 import type { CreateMessageData, Message } from "@shared/triplit/types";
@@ -58,13 +58,8 @@ export function AssistantMessage({
     .Where("id", "=", message.providerId);
   const { result: provider } = useQueryOne(triplitClient, providerQuery);
 
-  // const modelName = useMemo(() => {
-  //   const model = modelResults?.[0];
-  //   return model?.name ?? "AI";
-  // }, [modelResults]);
-
-  // Extract clean content with streaming support
-  const { cleanContent } = useThinkBlocks(message.content || "");
+  // Extract clean content with streaming support for all block types
+  const { cleanContent } = useContentBlocks(message.content || "");
 
   const handleCopy = async () => {
     try {
@@ -185,8 +180,11 @@ export function AssistantMessage({
               {message.modelName}
             </div>
           )}
-          {/* Think content display */}
-          <ThinkBlocks content={message.content || ""} messageId={message.id} />
+          {/* Unified content blocks rendering */}
+          <ContentBlocks
+            content={message.content || ""}
+            messageId={message.id}
+          />
           {/* Main content display */}
           {cleanContent && (
             <div className="overflow-wrap-anywhere w-full break-words break-all">

@@ -38,7 +38,7 @@ export function ai302Fetcher(
     }
 
     const response = await fetch(url, modifiedOptions);
-    const reasoningProcessor = new ReasoningProcessor();
+    const reasoningProcessor = new ReasoningProcessor(enableReason);
     return interceptSSEResponse(response, reasoningProcessor);
   };
 }

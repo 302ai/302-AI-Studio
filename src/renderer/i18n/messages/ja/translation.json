@@ -246,7 +246,9 @@
       "new-thread-title": "新しい会話"
     },
     "think": "思考過程",
-    "outputing": "出力中..."
+    "outputing": "出力中...",
+    "reason": "推論プロセス",
+    "completed": "完了しました"
   },
   "stop-generating": "停止",
   "new-thread": {

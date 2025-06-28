@@ -137,7 +137,7 @@ export class OpenAIProviderService extends BaseProviderService {
 
         experimental_transform: smoothStream({
           chunking: "line",
-          delayInMs: 20,
+          delayInMs: null,
         }),
         abortSignal: abortController.signal,
       });
