@@ -242,7 +242,8 @@
     "context-menu": {
       "create-new-branch": "Create new branch from here",
       "create-new-branch-error": "Sorry, the new branch creation failed!",
-      "new-thread-title": "New Chat"
+      "new-thread-title": "New Chat",
+      "copy-selected": "Copy selected text"
     },
     "think": "Thinking",
     "outputing": "Outputing...",

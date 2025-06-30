@@ -72,6 +72,24 @@ export function AssistantMessage({
     }
   };
 
+  const handleCopySelected = async () => {
+    try {
+      const selection = window.getSelection();
+      const selectedText = selection?.toString() || "";
+      if (selectedText) {
+        await navigator.clipboard.writeText(selectedText);
+        setContextMenuOpen(false);
+      }
+    } catch (error) {
+      console.error("复制选中内容失败:", error);
+    }
+  };
+
+  const getSelectedText = () => {
+    const selection = window.getSelection();
+    return selection?.toString() || "";
+  };
+
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     setContextMenuPosition({ x: e.clientX, y: e.clientY });
@@ -279,6 +297,11 @@ export function AssistantMessage({
           onClose={() => setContextMenuOpen(false)}
           aria-label="Assistant message options"
         >
+          {getSelectedText() && (
+            <ContextMenuItem onAction={handleCopySelected}>
+              {t("context-menu.copy-selected")}
+            </ContextMenuItem>
+          )}
           <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
           <ContextMenuItem
             onAction={() => {

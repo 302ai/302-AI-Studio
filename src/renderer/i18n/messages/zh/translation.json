@@ -231,7 +231,8 @@
     "context-menu": {
       "create-new-branch": "从此处创建分支",
       "create-new-branch-error": "抱歉，创建分支失败！",
-      "new-thread-title": "新会话"
+      "new-thread-title": "新会话",
+      "copy-selected": "复制选中的内容"
     },
     "think": "思考过程",
     "outputing": "输出中...",

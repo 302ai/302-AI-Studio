@@ -47,6 +47,24 @@ export function UserMessage({ message }: UserMessageProps) {
     }
   };
 
+  const handleCopySelected = async () => {
+    try {
+      const selection = window.getSelection();
+      const selectedText = selection?.toString() || "";
+      if (selectedText) {
+        await navigator.clipboard.writeText(selectedText);
+        setContextMenuOpen(false);
+      }
+    } catch (error) {
+      console.error("复制选中内容失败:", error);
+    }
+  };
+
+  const getSelectedText = () => {
+    const selection = window.getSelection();
+    return selection?.toString() || "";
+  };
+
   const handleDelete = async () => {
     try {
       await messageService.deleteMessage(message.id, message.threadId);
@@ -110,6 +128,11 @@ export function UserMessage({ message }: UserMessageProps) {
           onClose={() => setContextMenuOpen(false)}
           aria-label="User message options"
         >
+          {getSelectedText() && (
+            <ContextMenuItem onAction={handleCopySelected}>
+              {t("context-menu.copy-selected")}
+            </ContextMenuItem>
+          )}
           <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
           <ContextMenuItem
             onAction={() => {

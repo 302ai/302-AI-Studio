@@ -243,7 +243,8 @@
     "context-menu": {
       "create-new-branch": "新しいブランチを作成",
       "create-new-branch-error": "申し訳ありませんが、新しいブランチの作成は失敗しました！",
-      "new-thread-title": "新しい会話"
+      "new-thread-title": "新しい会話",
+      "copy-selected": "選択したテキストをコピー"
     },
     "think": "思考過程",
     "outputing": "出力中...",
