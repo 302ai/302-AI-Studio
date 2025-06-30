@@ -28,7 +28,7 @@ const useContextMenuTrigger = () => {
   const context = use(ContextMenuTriggerContext);
   if (!context) {
     throw new Error(
-      "useContextMenuTrigger must be used within a ContextMenuTrigger"
+      "useContextMenuTrigger must be used within a ContextMenuTrigger",
     );
   }
   return context;
@@ -73,7 +73,7 @@ const ContextMenuTrigger = ({
     <button
       className={twMerge(
         "cursor-default focus:outline-hidden disabled:opacity-60 disabled:forced-colors:disabled:text-[GrayText]",
-        className
+        className,
       )}
       ref={buttonRef}
       aria-haspopup="menu"
@@ -94,7 +94,7 @@ type ContextMenuContentProps<T> = Omit<
 >;
 
 const ContextMenuContent = <T extends object>(
-  props: ContextMenuContentProps<T>
+  props: ContextMenuContentProps<T>,
 ) => {
   const { contextMenuOffset, setContextMenuOffset, buttonRef } =
     useContextMenuTrigger();
@@ -103,7 +103,7 @@ const ContextMenuContent = <T extends object>(
       isOpen={!!contextMenuOffset}
       onOpenChange={() => setContextMenuOffset(null)}
       triggerRef={buttonRef}
-      shouldFlip={false}
+      shouldFlip={true}
       placement="bottom left"
       offset={contextMenuOffset?.offset}
       crossOffset={contextMenuOffset?.crossOffset}
