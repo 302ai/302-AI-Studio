@@ -59,8 +59,8 @@ export function useThreadMenu(thread: Thread) {
   };
 
   const handleDeleteAll = async () => {
-    await threadService.deleteAllThreads();
-    await messageService.deleteAllMessages();
+    const threadIds = await threadService.deleteAllThreads();
+    await messageService.deleteAllMessages(threadIds);
 
     emitter.emit(EventNames.THREAD_DELETE_ALL, null);
 

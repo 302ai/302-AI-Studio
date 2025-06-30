@@ -67,7 +67,7 @@ declare global {
           updateData: UpdateThreadData,
         ) => Promise<void>;
         getThreadById: (threadId: string) => Promise<Thread | null>;
-        deleteAllThreads: () => Promise<void>;
+        deleteAllThreads: () => Promise<string[]>;
       };
       tabService: {
         insertTab: (tab: CreateTabData) => Promise<Tab>;
@@ -118,7 +118,7 @@ declare global {
         getMessagesByThreadId: (threadId: string) => Promise<Message[]>;
         getMessageById: (messageId: string) => Promise<Message | null>;
         deleteMessagesByThreadId: (threadId: string) => Promise<void>;
-        deleteAllMessages: () => Promise<void>;
+        deleteAllMessages: (threadIds?: string[]) => Promise<void>;
         editMessage: (
           messageId: string,
           editData: {

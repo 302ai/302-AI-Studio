@@ -204,9 +204,17 @@ export class MessageService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async deleteAllMessages(): Promise<void> {
+  async deleteAllMessages(threadIds?: string[]): Promise<void> {
     try {
-      await this.messageDbService.deleteAllMessages();
+      if (threadIds) {
+        await Promise.all(
+          threadIds.map((threadId) =>
+            this.messageDbService.deleteMessagesByThreadId(threadId),
+          ),
+        );
+      } else {
+        await this.messageDbService.deleteAllMessages();
+      }
     } catch (error) {
       Logger.error("MessageService: deleteAllMessages error ---->", error);
       throw error;
