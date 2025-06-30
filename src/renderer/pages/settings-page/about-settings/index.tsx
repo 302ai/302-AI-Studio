@@ -1,20 +1,20 @@
 import logoImage from "@renderer/assets/images/logo.png";
+import { Link } from "@renderer/components/ui/link";
 import { ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import packageJson from "../../../../../package.json";
 
 const { shellService } = window.service;
-
 export function AboutSettings() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.about-settings",
   });
 
-  // 从package.json获取的应用信息
   const appInfo = {
-    name: "302 AI Studio",
-    version: "25.26.5",
-    homepage: "https://302.ai",
-    description: "302 AI Studio",
+    name: packageJson.productName,
+    version: packageJson.version,
+    homepage: packageJson.homepage,
+    description: packageJson.description,
   };
 
   const handleLinkClick = (url: string) => {
@@ -22,7 +22,7 @@ export function AboutSettings() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-6">
+    <div className="flex h-full flex-col items-center justify-center gap-6">
       {/* Logo和应用信息 - 居中显示 */}
       <div className="flex flex-col items-center gap-4 text-center">
         <img
@@ -48,14 +48,13 @@ export function AboutSettings() {
 
       {/* 官网链接 - 居中显示 */}
       <div className="flex flex-col items-center gap-2">
-        <button
-          type="button"
+        <Link
           onClick={() => handleLinkClick(appInfo.homepage)}
-          className="flex items-center gap-2 text-primary text-sm transition-colors hover:text-primary/80"
+          className="flex cursor-pointer items-center gap-2 text-primary text-sm hover:bg-none"
         >
           <span>{appInfo.homepage}</span>
           <ExternalLink className="size-3" />
-        </button>
+        </Link>
       </div>
 
       {/* 版权和许可证信息 - 居中显示 */}
