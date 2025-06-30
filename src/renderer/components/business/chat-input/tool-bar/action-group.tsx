@@ -7,7 +7,7 @@ import {
 import { ALLOWED_TYPES } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
 import { useQueryOne } from "@triplit/react";
-import { Atom, Globe, Paperclip } from "lucide-react";
+import { Globe, Lightbulb, Paperclip } from "lucide-react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -78,7 +78,7 @@ export function ActionGroup({ onFilesSelect, disabled }: ActionGroupProps) {
           size="square-petite"
           onClick={handleReason}
         >
-          <Atom className="size-4" />
+          <Lightbulb className="size-4" />
         </TooltipTrigger>
         <TooltipContent>
           <span>

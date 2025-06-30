@@ -1,3 +1,5 @@
+// import Logger from "electron-log";
+
 interface SSEData {
   choices?: Array<{
     delta?: {
@@ -77,7 +79,7 @@ class ReasoningProcessor {
   private isInThinkingMode = false;
   private citations: string[] = [];
   private hasAddedCitations = false;
-  private readonly isInReasoningMode: boolean;
+  private isInReasoningMode: boolean;
 
   constructor(isInReasoningMode = false) {
     this.isInReasoningMode = isInReasoningMode;
@@ -150,12 +152,15 @@ class ReasoningProcessor {
       return;
     }
 
-    const hasReasoningContent = Boolean(delta.reasoning_content);
+    // Logger.info("reasoning", delta);
+
+    const hasReasoningContent = "reasoning_content" in delta;
+
     const existingContent = delta.content || "";
 
     if (hasReasoningContent) {
       this.handleReasoningContent(delta, existingContent);
-    } else if (this.isInThinkingMode) {
+    } else if (this.isInThinkingMode && !hasReasoningContent) {
       this.handleEndOfThinking(delta, existingContent);
     }
   }
@@ -195,7 +200,13 @@ class ReasoningProcessor {
     delta: DeltaContent,
     existingContent: string,
   ): void {
-    const endTag = this.isInReasoningMode ? "</reason>" : "</think>";
+    let endTag = "</think>";
+
+    if (this.isInReasoningMode) {
+      this.isInReasoningMode = false;
+      endTag = "</reason>";
+    }
+
     delta.content = `${endTag}${existingContent}`;
     this.isInThinkingMode = false;
   }
