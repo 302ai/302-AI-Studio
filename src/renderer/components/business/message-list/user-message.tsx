@@ -1,4 +1,7 @@
-import { ContextMenuItem } from "@renderer/components/ui/context-menu";
+import {
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from "@renderer/components/ui/context-menu";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Message } from "@shared/triplit/types";
@@ -128,12 +131,15 @@ export function UserMessage({ message }: UserMessageProps) {
           onClose={() => setContextMenuOpen(false)}
           aria-label="User message options"
         >
+          <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
           {getSelectedText() && (
             <ContextMenuItem onAction={handleCopySelected}>
               {t("context-menu.copy-selected")}
             </ContextMenuItem>
           )}
-          <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
+
+          <ContextMenuSeparator />
+
           <ContextMenuItem
             onAction={() => {
               onEdit();

@@ -1,7 +1,10 @@
 import { triplitClient } from "@renderer/client";
 import { ContentBlocks } from "@renderer/components/business/markdown/content-blocks";
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
-import { ContextMenuItem } from "@renderer/components/ui/context-menu";
+import {
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from "@renderer/components/ui/context-menu";
 import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
@@ -297,12 +300,15 @@ export function AssistantMessage({
           onClose={() => setContextMenuOpen(false)}
           aria-label="Assistant message options"
         >
+          <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
           {getSelectedText() && (
             <ContextMenuItem onAction={handleCopySelected}>
               {t("context-menu.copy-selected")}
             </ContextMenuItem>
           )}
-          <ContextMenuItem onAction={handleCopy}>{t("copy")}</ContextMenuItem>
+
+          <ContextMenuSeparator />
+
           <ContextMenuItem
             onAction={() => {
               handleRefresh();
@@ -311,6 +317,17 @@ export function AssistantMessage({
           >
             {t("refresh")}
           </ContextMenuItem>
+          <ContextMenuItem
+            onAction={() => {
+              handleCreateNewBranch();
+              setContextMenuOpen(false);
+            }}
+          >
+            {t("context-menu.create-new-branch")}
+          </ContextMenuItem>
+
+          <ContextMenuSeparator />
+
           {(message.status === "success" || message.status === "stop") && (
             <ContextMenuItem
               onAction={() => {
@@ -321,16 +338,6 @@ export function AssistantMessage({
               {t("edit")}
             </ContextMenuItem>
           )}
-
-          <ContextMenuItem
-            onAction={() => {
-              handleCreateNewBranch();
-              setContextMenuOpen(false);
-            }}
-          >
-            {t("context-menu.create-new-branch")}
-          </ContextMenuItem>
-
           <ContextMenuItem
             isDanger={true}
             onAction={() => {
