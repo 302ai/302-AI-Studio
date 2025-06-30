@@ -3,7 +3,7 @@ import type { ModelProvider } from "@shared/types/provider";
 export const DEFAULT_PROVIDERS: ModelProvider[] = [
   {
     id: "302AI",
-    name: "302AI",
+    name: "302.AI",
     apiType: "302ai",
     apiKey: "",
     baseUrl: "https://api.302.ai/v1",
