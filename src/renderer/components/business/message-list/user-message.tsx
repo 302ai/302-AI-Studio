@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ButtonWithTooltip } from "../button-with-tooltip";
+import { LinkifiedText } from "./linkified-text";
 import { MessageAttachments } from "./message-attachments";
 
 interface UserMessageProps {
@@ -71,7 +72,7 @@ export function UserMessage({ message }: UserMessageProps) {
 
             {message.content && (
               <div className="overflow-wrap-anywhere w-full whitespace-pre-wrap break-words break-all">
-                {message.content}
+                <LinkifiedText text={message.content} />
               </div>
             )}
           </div>

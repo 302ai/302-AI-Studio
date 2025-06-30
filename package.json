@@ -65,6 +65,8 @@
     "inversify": "^7.5.2",
     "katex": "^0.16.11",
     "ldrs": "^1.1.7",
+    "linkify-react": "^4.3.1",
+    "linkifyjs": "^4.3.1",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.477.0",
     "mammoth": "^1.9.1",

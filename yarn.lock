@@ -61,6 +61,8 @@ __metadata:
     inversify: "npm:^7.5.2"
     katex: "npm:^0.16.11"
     ldrs: "npm:^1.1.7"
+    linkify-react: "npm:^4.3.1"
+    linkifyjs: "npm:^4.3.1"
     lodash-es: "npm:^4.17.21"
     lucide-react: "npm:^0.477.0"
     mammoth: "npm:^1.9.1"
@@ -10278,6 +10280,23 @@ __metadata:
   version: 1.2.4
   resolution: "lines-and-columns@npm:1.2.4"
   checksum: 10c0/3da6ee62d4cd9f03f5dc90b4df2540fb85b352081bee77fe4bbcd12c9000ead7f35e0a38b8d09a9bb99b13223446dd8689ff3c4959807620726d788701a83d2d
+  languageName: node
+  linkType: hard
+
+"linkify-react@npm:^4.3.1":
+  version: 4.3.1
+  resolution: "linkify-react@npm:4.3.1"
+  peerDependencies:
+    linkifyjs: ^4.0.0
+    react: ">= 15.0.0"
+  checksum: 10c0/9cd05223a0c9f80325518f3ffdd449dc3030538d35e4a07da0c03936e21346e530e61e7835fa89e36bed876ec61d578f59990910c47e88c4ffaa7fee99772ec5
+  languageName: node
+  linkType: hard
+
+"linkifyjs@npm:^4.3.1":
+  version: 4.3.1
+  resolution: "linkifyjs@npm:4.3.1"
+  checksum: 10c0/fcd7d36ce1b03adb19dcc84b3b375f0b9d6e88d8885461bc69e5d5cbf1cd666cd740e175f015ac5ce600154a4f2bc68f4aed3920b1254aa4c6e9b42f49b3de79
   languageName: node
   linkType: hard
 
