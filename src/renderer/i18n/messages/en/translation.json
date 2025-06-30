@@ -206,7 +206,7 @@
       },
       "delete-all": {
         "title": "Are you sure you want to delete all conversations?",
-        "description": "The conversation cannot be restored after deletion, please be cautious.",
+        "description": "Except for collected conversations, all other conversations will be deleted and cannot be restored. Please be cautious.",
         "confirmText": "Delete all"
       }
     }

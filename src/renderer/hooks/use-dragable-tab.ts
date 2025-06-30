@@ -52,11 +52,20 @@ export function useDragableTab({ id }: HookParams) {
       }
     };
 
-    const handleThreadDeleteAll = async () => {
-      for (const tab of tabs) {
-        await tabService.deleteTab(tab.id);
+    const handleThreadDeleteAll = async (event: { threadIds: string[] }) => {
+      const tabsToDelete = event.threadIds
+        .map((threadId) => tabs.find((tab) => tab.threadId === threadId))
+        .filter((tab) => tab !== undefined);
+
+      if (tabsToDelete.length > 0) {
+        try {
+          await Promise.all(
+            tabsToDelete.map((tab) => tabService.deleteTab(tab.id)),
+          );
+        } catch (error) {
+          console.error("Error deleting tabs:", error);
+        }
       }
-      emitter.emit(EventNames.TAB_CLOSE_ALL, null);
     };
 
     const unsubscribes = [

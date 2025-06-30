@@ -106,10 +106,11 @@ export class ThreadService {
     }
   }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async deleteAllThreads(): Promise<string[]> {
     try {
-      return await this.threadDbService.deleteAllThreads();
+      const threadIds = await this.threadDbService.deleteAllThreads();
+      return threadIds;
     } catch (error) {
       Logger.error("ThreadService:deleteAllThreads error ---->", error);
       throw error;

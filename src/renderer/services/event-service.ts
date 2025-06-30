@@ -28,7 +28,9 @@ type Events = {
   [EventNames.THREAD_DELETE]: {
     threadId: string;
   };
-  [EventNames.THREAD_DELETE_ALL]: null;
+  [EventNames.THREAD_DELETE_ALL]: {
+    threadIds: string[];
+  };
   [EventNames.THREAD_SELECT]: {
     thread: Thread;
   };
