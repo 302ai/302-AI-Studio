@@ -244,15 +244,15 @@ export const ModelSelect = ({
   return (
     <div className="relative flex w-fit min-w-[130px] justify-end">
       {hasNoProviders ? (
-        <button
-          className="group flex cursor-pointer items-center transition-colors"
+        <Button
+          className="group hover:!bg-transparent flex cursor-pointer items-center transition-colors"
           onClick={handleOpenModelSettings}
-          type="button"
+          intent="plain"
         >
           <span className="truncate text-[#494454] text-sm underline dark:text-[#FFFFFF]">
             {t("model-select")}
           </span>
-        </button>
+        </Button>
       ) : (
         <Button
           ref={triggerRef}

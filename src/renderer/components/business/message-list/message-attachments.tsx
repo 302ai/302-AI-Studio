@@ -1,4 +1,5 @@
 import { triplitClient } from "@renderer/client";
+import { Button } from "@renderer/components/ui/button";
 import { cn } from "@renderer/lib/utils";
 import type { Attachment } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -127,9 +128,9 @@ export function MessageAttachments({
         <div key={attachment.id} className="group relative">
           {attachment.type.startsWith("image/") && attachment.preview ? (
             // 图片预览 - 气泡内样式
-            <button
-              type="button"
-              className="relative cursor-pointer overflow-hidden rounded-lg border-0 bg-transparent p-0 transition-opacity"
+            <Button
+              intent="plain"
+              className="hover:!bg-transparent !h-auto !w-auto !px-0 !py-0 relative cursor-pointer overflow-hidden rounded-lg border-0 bg-transparent p-0 transition-opacity [--btn-overlay:transparent]"
               onClick={() => handlePreview(attachment)}
               aria-label={`Preview image ${attachment.name}`}
             >
@@ -145,18 +146,18 @@ export function MessageAttachments({
                   <span>({formatFileSize(attachment.size)})</span>
                 </div>
               </div>
-            </button>
+            </Button>
           ) : (
             // 非图片文件 - 气泡内样式
-            <button
-              type="button"
+            <Button
               className={cn(
                 "flex w-full items-center gap-2 rounded-lg p-2 text-left",
                 "border border-border bg-muted/50",
-                "cursor-pointer transition-colors",
+                "hover:!bg-muted/50 hover:!shadow-none cursor-pointer transition-colors",
               )}
               onClick={() => handlePreview(attachment)}
               aria-label={`Preview file ${attachment.name}`}
+              intent="plain"
             >
               {getFileIcon(attachment)}
               <div className="min-w-0 flex-1">
@@ -167,7 +168,7 @@ export function MessageAttachments({
                   {formatFileSize(attachment.size)}
                 </div>
               </div>
-            </button>
+            </Button>
           )}
         </div>
       ))}
