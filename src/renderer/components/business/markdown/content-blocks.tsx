@@ -50,7 +50,7 @@ export function ContentBlocks({ content, messageId }: ContentBlocksProps) {
             >
               <div className="flex w-full items-center gap-2">
                 <motion.div
-                  animate={{ rotate: isCollapsed ? 90 : 0 }}
+                  animate={{ rotate: isCollapsed ? 90 : -90 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
                   <IconChevronRight className="size-5" />
