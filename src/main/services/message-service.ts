@@ -122,6 +122,36 @@ export class MessageService {
     }
   }
 
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async deleteMessagesByIds(
+    _event: Electron.IpcMainEvent,
+    messageIds: string[],
+    threadId: string,
+  ): Promise<void> {
+    try {
+      const messagesToDelete = await Promise.all(
+        messageIds.map((messageId) =>
+          this.messageDbService.getMessageById(messageId),
+        ),
+      );
+
+      await this.messageDbService.deleteMessagesByIds(messageIds);
+
+      if (messagesToDelete.length > 0) {
+        sendToThread(threadId, EventNames.MESSAGE_ACTIONS, {
+          threadId,
+          actions: {
+            type: "delete-multiple",
+            messages: messagesToDelete as Message[],
+          },
+        });
+      }
+    } catch (error) {
+      Logger.error("MessageService: deleteMessagesByIds error ---->", error);
+      throw error;
+    }
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getMessagesByThreadId(
     _event: Electron.IpcMainEvent,

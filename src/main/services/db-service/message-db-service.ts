@@ -110,6 +110,36 @@ export class MessageDbService extends BaseDbService {
     });
   }
 
+  async deleteMessagesByIds(messageIds: string[]): Promise<void> {
+    if (messageIds.length === 0) {
+      return;
+    }
+    const query = triplitClient
+      .query("messages")
+      .Where("id", "=", messageIds)
+      .Include("attachments");
+    const messagesWithAttachments = await triplitClient.fetch(query);
+
+    await triplitClient.transact(async (tx) => {
+      const allAttachments = messagesWithAttachments.flatMap(
+        (message) => message?.attachments || [],
+      );
+
+      const deleteAttachmentPromises = allAttachments.map((attachment) =>
+        tx.delete("attachments", attachment.id),
+      );
+
+      const deleteMessagePromises = messagesWithAttachments.map((message) =>
+        tx.delete("messages", message?.id ?? ""),
+      );
+
+      await Promise.all([
+        ...deleteAttachmentPromises,
+        ...deleteMessagePromises,
+      ]);
+    });
+  }
+
   async deleteAllMessages(): Promise<void> {
     // 使用 Include 获取所有消息及其关联的附件
     const messagesQuery = triplitClient

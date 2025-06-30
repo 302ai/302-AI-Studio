@@ -61,16 +61,15 @@ export function ChatInput({ className }: ChatInputProps) {
     const currentAttachments = attachments;
 
     try {
-      setIsSending(true);
       if (!selectedModelId) {
         toast.error(t("lack-model"));
         return;
       }
 
+      setIsSending(true);
       await clearInputAndAttachments();
-
       // Send message with stored values
-      await sendMessage(currentInput, currentAttachments);
+      await sendMessage(currentInput, currentAttachments, editMessageId ?? "");
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error(t("send-failed"));

@@ -101,8 +101,9 @@ export function useChat() {
       data: {
         threadId: string;
         actions: {
-          type: "edit" | "delete" | "delete-single";
+          type: "edit" | "delete" | "delete-single" | "delete-multiple";
           message?: Message;
+          messages?: Message[];
         };
       },
     ) => {
@@ -136,6 +137,20 @@ export function useChat() {
             setMessages((prevMessages) =>
               prevMessages.filter(
                 (message) => message.id !== data.actions.message?.id,
+              ),
+            );
+          }
+          break;
+
+        case "delete-multiple":
+          if (data.actions.messages) {
+            // Delete multiple messages
+            const messageIdsToDelete = new Set(
+              data.actions.messages.map((msg) => msg.id),
+            );
+            setMessages((prevMessages) =>
+              prevMessages.filter(
+                (message) => !messageIdsToDelete.has(message.id),
               ),
             );
           }

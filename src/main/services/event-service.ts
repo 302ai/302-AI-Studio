@@ -49,8 +49,9 @@ type Events = {
   [EventNames.MESSAGE_ACTIONS]: {
     threadId: string;
     actions: {
-      type: "edit" | "delete" | "delete-single";
+      type: "edit" | "delete" | "delete-single" | "delete-multiple";
       message?: Message;
+      messages?: Message[];
     };
   };
   [EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE]: null;

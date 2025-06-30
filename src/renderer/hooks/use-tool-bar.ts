@@ -123,6 +123,7 @@ export function useToolBar() {
   const handleSendMessage = async (
     content: string,
     attachments?: AttachmentFile[],
+    editMessageId?: string,
   ): Promise<void> => {
     try {
       let currentActiveThreadId: string | null = activeThreadId;
@@ -186,6 +187,83 @@ export function useToolBar() {
       const existingMessages = await messageService.getMessagesByThreadId(
         currentActiveThreadId,
       );
+
+      // 处理编辑模型下的发送
+      if (editMessageId !== "") {
+        const messageToEdit = existingMessages.find(
+          (m) => m.id === editMessageId,
+        );
+        if (!messageToEdit) {
+          throw new Error("Message to edit not found");
+        }
+        const messageIndex = existingMessages.findIndex(
+          (m) => m.id === editMessageId,
+        );
+        const context = existingMessages.slice(0, messageIndex);
+
+        const messagesToDelete = existingMessages.slice(messageIndex);
+        for (const msg of messagesToDelete) {
+          await messageService.deleteMessage(msg.id, msg.threadId);
+          if (!messageToEdit) {
+            throw new Error("Message to edit not found");
+          }
+        }
+
+        try {
+          const userMessage = await messageService.insertMessage({
+            threadId: currentActiveThreadId,
+            parentMessageId: null,
+            role: "user",
+            content,
+            orderSeq: messageToEdit.orderSeq,
+            tokenCount: content.length,
+            status: "success",
+          });
+
+          if (attachments && attachments.length > 0) {
+            const attachmentData = attachments.map((attachment) => ({
+              messageId: userMessage.id,
+              name: attachment.name,
+              size: attachment.size,
+              type: attachment.type,
+              filePath: attachment.filePath,
+              preview: attachment.preview || null,
+              fileData: attachment.fileData || null,
+              fileContent: null,
+            }));
+
+            await attachmentService.insertAttachments(attachmentData);
+          }
+
+          const updatedConversationMessages = [
+            ...context.map((msg) => ({
+              role: msg.role as "user" | "assistant" | "system" | "function",
+              content: msg.content,
+              id: msg.id, // Include message ID for attachment lookup
+            })),
+            {
+              role: "user" as const,
+              content,
+              id: userMessage.id, // Include the new message ID for attachment lookup
+            },
+          ];
+
+          await startStreamChat(
+            currentActiveTabId,
+            currentActiveThreadId,
+            userMessage.id,
+            updatedConversationMessages,
+            provider,
+            selectedModel,
+          );
+        } catch (streamError) {
+          console.error("Failed to start streaming chat:", streamError);
+          toast.error(t("failed-to-generate-ai-response"));
+          // Error handling is now done in the streaming hook
+        }
+        return;
+      }
+
       const nextOrderSeq = existingMessages.length + 1;
 
       // Insert user message
