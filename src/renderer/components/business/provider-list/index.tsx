@@ -35,6 +35,8 @@ import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
 import { ProviderCard } from "./provider-card";
 
+const domainsOf302 = ["302.cn", "302.ai"];
+
 const ListRow = React.memo(function ListRow({
   index,
   style,
@@ -168,14 +170,19 @@ export function ProviderList() {
           action: async () => {
             if (providerCfg) {
               const { name, baseUrl, apiKey, apiType, custom } = providerCfg;
+              const is302Provider = domainsOf302.some((domain) =>
+                baseUrl?.includes(domain),
+              );
+              const newApiType = is302Provider ? "302ai" : apiType;
               const provider: CreateProviderData = {
                 name,
                 baseUrl,
                 apiKey,
-                apiType,
+                apiType: newApiType,
                 custom: custom ?? false,
                 enabled: true,
               };
+
               await handleAddProvider(provider);
               handleCloseModal();
             }
@@ -200,7 +207,15 @@ export function ProviderList() {
           disabled: !isApiKeyValidated,
           action: async () => {
             if (providerCfg) {
-              await handleUpdateProvider(providerCfg);
+              const is302Provider = domainsOf302.some((domain) =>
+                providerCfg?.baseUrl?.includes(domain),
+              );
+              const newApiType = is302Provider ? "302ai" : providerCfg.apiType;
+
+              await handleUpdateProvider({
+                ...providerCfg,
+                apiType: newApiType,
+              });
               handleCloseModal();
             }
           },
