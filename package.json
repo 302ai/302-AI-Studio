@@ -1,7 +1,7 @@
 {
   "displayName": "302AIStudio",
   "name": "302AIStudio",
-  "productName": "302 AI Studio",
+  "productName": "302AIStudio",
   "description": "302 AI Studio",
   "version": "25.27.5",
   "main": "./node_modules/.dev/main/index.js",

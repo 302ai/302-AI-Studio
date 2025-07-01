@@ -12,11 +12,11 @@ import { getDevFolder } from "./src/lib/electron-app/release/utils/path";
 
 const author = _author?.name ?? _author
 const currentYear = new Date().getFullYear();
-const authorInKebabCase = author.replace(/\s+/g, "-");
-const appId = `com.${authorInKebabCase}.${name}`.toLowerCase();
+// const authorInKebabCase = author.replace(/\s+/g, "-");
+// const appId = `com.${authorInKebabCase}.${name}`.toLowerCase();
 
 export default {
-  appId,
+  appId: "com.302ai.302aistudio",
   productName: productName,
   copyright: `Copyright © ${currentYear} — ${author}`,
 
@@ -37,6 +37,7 @@ export default {
     category: "public.app-category.utilities",
     gatekeeperAssess: false,
     hardenedRuntime: true,
+    notarize: false,
     entitlementsInherit: `${resources}/build/mac/entitlements.mac.plist`,
     target: [
       {
