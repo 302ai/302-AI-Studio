@@ -34,10 +34,9 @@ export default async function (context) {
     console.log('Uploading app for notarization, this may take several minutes...');
 
     await notarize({
-      tool: 'notarytool',
       appPath: appPath,
       appBundleId: appBundleId,
-      appleId: process.env.APPLE_ID,
+      appleId: process.env.APPLE_USERNAME,
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.ASC_PROVIDER
     });
