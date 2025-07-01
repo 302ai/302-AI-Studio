@@ -358,7 +358,7 @@ git push origin feature/amazing-feature
 
 ## 📄 许可证
 
-本项目基于 [MIT License](LICENSE) 开源，你可以自由使用、修改和分发。
+本项目基于 [AGPL-3.0](LICENSE) 开源。
 
 ---
 
