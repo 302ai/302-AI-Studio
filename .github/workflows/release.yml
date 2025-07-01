@@ -45,7 +45,7 @@ jobs:
         run: sudo apt-get install libarchive-tools rpm
 
       - name: Release Electron app
-        uses: DarkGuy10/action-electron-builder@v1.0.0
+        uses: samuelmeuli/action-electron-builder@v1
         with:
           package_manager: "yarn"
           # GitHub token, automatically provided to the action
