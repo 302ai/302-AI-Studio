@@ -1,5 +1,10 @@
 <div align="center">
-  <img src="./docs/imgs/logo.png" alt="302 AI Studio Logo" width="120" />
+<h3 align="center">
+  <a href="https://302.ai"><img
+    src="https://raw.githubusercontent.com/302ai/.github/refs/heads/main/302AI.png"
+    height="50"
+  /></a>
+</h3>
   
   # 🚀 302 AI Studio
   
