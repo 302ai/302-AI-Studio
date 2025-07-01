@@ -44,6 +44,13 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu-latest')
         run: sudo apt-get install libarchive-tools rpm
 
+      - name: Prepare for app notarization
+        if: startsWith(matrix.os, 'macos')
+        # Import Apple API key for app notarization on macOS
+        run: |
+          mkdir -p ~/private_keys/
+          echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
+
       - name: Release Electron app
         uses: DarkGuy10/action-electron-builder@v1.0.0
         with:
@@ -63,3 +70,6 @@ jobs:
           max_attempts: 3
         env:
           NODE_OPTIONS: --max-old-space-size=8192
+          # macOS notarization API key
+          API_KEY_ID: ${{ secrets.api_key_id }}
+          API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}

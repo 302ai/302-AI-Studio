@@ -50,6 +50,8 @@ export default {
     ],
   },
 
+  afterSign: "electron-builder-notarize",
+
   linux: {
     artifactName: [
       `${name}-${version}`,
