@@ -11,7 +11,7 @@
     "name": "302.AI",
     "email": "support@302.ai"
   },
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "scripts": {
     "start": "electron-vite preview",
     "dev": "electron-vite dev --watch",
