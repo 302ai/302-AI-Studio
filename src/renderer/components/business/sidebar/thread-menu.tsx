@@ -1,3 +1,4 @@
+import { triplitClient } from "@renderer/client";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -11,16 +12,36 @@ import {
   useThreadMenu,
 } from "@renderer/hooks/use-thread-menu";
 import type { Thread } from "@shared/triplit/types";
-import { Eraser, FolderX, Package, Pencil, Trash2 } from "lucide-react";
+import { useQuery, useQueryOne } from "@triplit/react";
+import {
+  Eraser,
+  FileText,
+  FolderX,
+  Package,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ModalAction } from "../modal-action";
 
 interface ThreadMenuProps {
   thread: Thread;
 }
+const { messageService, providerService, threadService } = window.service;
 
 export function ThreadMenu({ thread }: ThreadMenuProps) {
   const { t } = useTranslation();
+  const providersQuery = triplitClient.query("providers");
+  const { results: providers } = useQuery(triplitClient, providersQuery);
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settings } = useQueryOne(triplitClient, settingsQuery);
+  const selectedModelId = settings?.selectedModelId || "";
+  const modelsQuery = triplitClient.query("models");
+  const { results: models } = useQuery(triplitClient, modelsQuery);
+  const messagesQuery = triplitClient
+    .query("messages")
+    .Where("threadId", "=", thread.id);
+  const { results: messages } = useQuery(triplitClient, messagesQuery);
 
   const {
     state,
@@ -87,8 +108,31 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           confirmText: t("thread-menu.actions.delete-all.confirmText"),
           action: async () => await handleDeleteAll(),
         };
+
       default:
         return initialsState;
+    }
+  };
+
+  const handleGenerateTitle = async () => {
+    const messages = await messageService.getMessagesByThreadId(thread.id);
+    const model = models?.find((m) => m.id === selectedModelId);
+    const provider = providers?.find((p) => p.id === model?.providerId);
+
+    if (!provider || !model) {
+      return;
+    }
+
+    const result = await providerService.summaryTitle({
+      messages,
+      provider,
+      model,
+    });
+    console.log("result", result);
+    if (result.success) {
+      await threadService.updateThread(thread.id, {
+        title: result.text,
+      });
     }
   };
 
@@ -102,6 +146,18 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
           <ContextMenuItem onAction={() => setState("rename")}>
             <Pencil className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.rename")}
+          </ContextMenuItem>
+          <ContextMenuItem
+            onAction={handleGenerateTitle}
+            isDisabled={!selectedModelId || messages?.length === 0}
+            className={
+              !selectedModelId || messages?.length === 0
+                ? "cursor-default"
+                : "cursor-pointer"
+            }
+          >
+            <FileText className="mr-2 h-4 w-4" />
+            {t("sidebar.menu-item.generate-title")}
           </ContextMenuItem>
           <ContextMenuItem onAction={() => setState("clean-messages")}>
             <Eraser className="mr-2 h-4 w-4" />

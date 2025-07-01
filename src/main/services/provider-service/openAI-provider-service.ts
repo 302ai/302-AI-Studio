@@ -12,6 +12,7 @@ import type {
 
 // Import AI SDK types
 import {
+  generateText,
   type StreamTextResult,
   smoothStream,
   streamText,
@@ -21,6 +22,7 @@ import Logger from "electron-log";
 import {
   BaseProviderService,
   type StreamChatParams,
+  type SummaryTitleParams,
 } from "./base-provider-service";
 
 export class OpenAIProviderService extends BaseProviderService {
@@ -145,6 +147,34 @@ export class OpenAIProviderService extends BaseProviderService {
       return result;
     } catch (error) {
       Logger.error("Failed to start stream chat:", error);
+      throw error;
+    }
+  }
+
+  async summaryTitle(params: SummaryTitleParams): Promise<{
+    text: string;
+  }> {
+    const { messages, model: originModel } = params;
+
+    try {
+      const model = this.openai(originModel.name);
+
+      Logger.info(`Starting generate text for model ${originModel.name}`);
+
+      const conversationText = messages
+        .map((m) => `${m.role}: ${m.content}`)
+        .join("\n");
+      const prompt = `请为以下对话生成一个简洁的标题，不超过10个字，不使用标点符号或其他特殊符号，标题语言应该匹配对话的语言：\n\n${conversationText}`;
+      const result = await generateText({
+        model: model,
+        messages: [{ role: "user", content: prompt }],
+      });
+
+      return {
+        text: result.text,
+      };
+    } catch (error) {
+      Logger.error("Failed to generate text:", error);
       throw error;
     }
   }

@@ -29,6 +29,12 @@ export interface StreamChatParams {
   provider: Provider;
 }
 
+export interface SummaryTitleParams {
+  messages: ChatMessage[];
+  model: { id: string; name: string };
+  provider: Provider;
+}
+
 export abstract class BaseProviderService {
   protected provider: Provider;
   protected models: CreateModelData[] = [];
@@ -83,4 +89,8 @@ export abstract class BaseProviderService {
     params: StreamChatParams,
     abortController: AbortController,
   ): Promise<StreamTextResult<ToolSet, never>>;
+
+  abstract summaryTitle(params: SummaryTitleParams): Promise<{
+    text: string;
+  }>;
 }

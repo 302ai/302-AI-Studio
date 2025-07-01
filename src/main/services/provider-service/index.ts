@@ -352,4 +352,54 @@ export class ProviderService {
     );
     return { success: true };
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async summaryTitle(
+    _event: Electron.IpcMainEvent,
+    params: {
+      messages: { role: string; content: string; id?: string }[];
+      provider: Provider;
+      model: { id: string; name: string };
+    },
+  ): Promise<{
+    success: boolean;
+    text?: string;
+    error?: string;
+  }> {
+    const { messages, provider, model } = params;
+
+    try {
+      const providerInst = this.getProviderInst(provider.id);
+      if (!providerInst) {
+        return {
+          success: false,
+          error: `Provider instance not found: ${provider.id}`,
+        };
+      }
+
+      const result = await providerInst.summaryTitle({
+        messages: messages.map((msg) => ({
+          role: msg.role as "user" | "assistant" | "system" | "function",
+          content: msg.content,
+          id: msg.id,
+        })),
+        model,
+        provider,
+      });
+
+      Logger.info(`Generate text completed for provider ${provider.id}`);
+
+      return {
+        success: true,
+        text: result.text,
+      };
+    } catch (error) {
+      Logger.error(`Generate text error for provider ${provider.id}:`, error);
+
+      return {
+        success: false,
+        error: extractErrorMessage(error),
+      };
+    }
+  }
 }

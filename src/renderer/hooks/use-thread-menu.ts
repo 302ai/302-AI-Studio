@@ -1,5 +1,5 @@
 import type { Thread } from "@shared/triplit/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EventNames, emitter } from "../services/event-service";
 import { useActiveThread } from "./use-active-thread";
 
@@ -7,7 +7,8 @@ export type MenuModelActionType =
   | "rename"
   | "clean-messages"
   | "delete"
-  | "delete-all";
+  | "delete-all"
+  | "generate-title";
 
 const { threadService, messageService } = window.service;
 
@@ -74,6 +75,12 @@ export function useThreadMenu(thread: Thread) {
 
     closeModal();
   };
+
+  useEffect(() => {
+    if (thread.title) {
+      setNewTitle(thread.title);
+    }
+  }, [thread.title]);
 
   return {
     state,

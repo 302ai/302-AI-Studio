@@ -125,6 +125,7 @@ export function useToolBar() {
     attachments?: AttachmentFile[],
     editMessageId?: string,
   ): Promise<void> => {
+    let needSummaryTitle = false;
     try {
       let currentActiveThreadId: string | null = activeThreadId;
       let currentActiveTabId: string | null = activeTabId;
@@ -151,6 +152,7 @@ export function useToolBar() {
       const needCreateTab = tabs?.length === 0;
       const needCreateThread = needCreateTab || !activeTab?.threadId;
       if (needCreateThread) {
+        needSummaryTitle = true;
         const thread = await createThread({
           title: content,
           modelId: selectedModelId,
@@ -317,6 +319,21 @@ export function useToolBar() {
           provider,
           selectedModel, // Use model name for the API call
         );
+        if (needSummaryTitle) {
+          const queryMessages = await messageService.getMessagesByThreadId(
+            currentActiveThreadId,
+          );
+          const result = await providerService.summaryTitle({
+            messages: queryMessages,
+            provider,
+            model: selectedModel,
+          });
+          if (result.success) {
+            await threadService.updateThread(currentActiveThreadId, {
+              title: result.text,
+            });
+          }
+        }
       } catch (streamError) {
         console.error("Failed to start streaming chat:", streamError);
         toast.error(t("failed-to-generate-ai-response"));

@@ -139,6 +139,7 @@
     "menu-item": {
       "clean-messages": "Clear Messages",
       "collect-thread": "Favorite",
+      "generate-title": "Generate Title",
       "delete": "Delete",
       "rename": "Rename",
       "uncollect-thread": "Unfavorite",

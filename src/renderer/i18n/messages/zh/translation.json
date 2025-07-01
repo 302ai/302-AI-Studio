@@ -140,6 +140,7 @@
     "menu-item": {
       "clean-messages": "清空消息",
       "collect-thread": "收藏",
+      "generate-title": "生成标题",
       "delete": "删除",
       "rename": "重命名",
       "uncollect-thread": "取消收藏",

@@ -140,6 +140,7 @@
     "menu-item": {
       "clean-messages": "メッセージをクリア",
       "collect-thread": "お気に入り",
+      "generate-title": "タイトルを生成",
       "delete": "削除",
       "rename": "名前を変更",
       "uncollect-thread": "お気に入りを解除",

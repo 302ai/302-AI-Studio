@@ -2,7 +2,10 @@ import { createOpenAI } from "@ai-sdk/openai";
 import type { Provider, UpdateProviderData } from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
 import type { SettingsService } from "../../settings-service";
-import type { StreamChatParams } from "../base-provider-service";
+import type {
+  StreamChatParams,
+  SummaryTitleParams,
+} from "../base-provider-service";
 import { OpenAIProviderService } from "../openAI-provider-service";
 import { ai302Fetcher } from "./302AI-fetcher";
 
@@ -63,5 +66,17 @@ export class AI302ProviderService extends OpenAIProviderService {
     });
 
     return await super.startStreamChat(params, abortController);
+  }
+
+  async summaryTitle(params: SummaryTitleParams): Promise<{
+    text: string;
+  }> {
+    this.openai = createOpenAI({
+      apiKey: this.provider.apiKey,
+      baseURL: this.provider.baseUrl,
+      fetch: ai302Fetcher(false, { enabled: false }),
+    });
+
+    return await super.summaryTitle(params);
   }
 }

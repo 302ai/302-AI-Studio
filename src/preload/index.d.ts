@@ -93,6 +93,15 @@ declare global {
         stopStreamChat: (params: {
           threadId: string;
         }) => Promise<{ success: boolean }>;
+        summaryTitle: (params: {
+          messages: { role: string; content: string; id?: string }[];
+          provider: Provider;
+          model: { id: string; name: string };
+        }) => Promise<{
+          success: boolean;
+          text?: string;
+          error?: string;
+        }>;
       };
       uiService: {
         updateActiveProviderId: (providerId: string) => Promise<void>;
