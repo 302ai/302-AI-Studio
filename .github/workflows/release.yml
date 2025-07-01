@@ -52,6 +52,10 @@ jobs:
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
 
+          # Mac certs
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+
           # If the commit is tagged with a version (e.g. "25.26.0"),
           # release the app after building
           release: true

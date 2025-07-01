@@ -35,6 +35,9 @@ export default {
     ].join(""),
     icon: `${resources}/build/icons/302ai.png`,
     category: "public.app-category.utilities",
+    gatekeeperAssess: false,
+    hardenedRuntime: true,
+    entitlementsInherit: `${resources}/build/mac/entitlements.mac.plist`,
     target: [
       {
         target: "dmg",
