@@ -44,6 +44,26 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu-latest')
         run: sudo apt-get install libarchive-tools rpm
 
+      # macOS 相关步骤
+      - name: Setup macOS Keychain and Import Certificate
+        if: matrix.os == 'macos-latest'
+        env:
+          MAC_CERTS: ${{ secrets.mac_certs }}
+          MAC_CERTS_PASSWORD: ${{ secrets.mac_certs_password }}
+        run: |
+          security create-keychain -p github-actions build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p github-actions build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
+          echo "$MAC_CERTS" | base64 --decode > certificate.p12
+          security import certificate.p12 -k build.keychain -P "$MAC_CERTS_PASSWORD" -T /usr/bin/codesign
+          security list-keychains -d user -s build.keychain
+          rm -f certificate.p12
+
+      - name: List app contents (for debug)
+        if: matrix.os == 'macos-latest'
+        run: ls -lR dist || true
+
       - name: Release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
