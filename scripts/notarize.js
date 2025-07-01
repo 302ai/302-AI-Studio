@@ -10,10 +10,10 @@ export default async function (context) {
   }
 
   // Check required environment variables
-  if (!process.env.APPLE_ID || !process.env.APPLE_ID_PASSWORD || !process.env.ASC_PROVIDER) {
+  if (!process.env.APPLE_USERNAME || !process.env.APPLE_ID_PASSWORD || !process.env.ASC_PROVIDER) {
     console.warn('⚠️  Notarization credentials not found, skipping notarization');
     console.log('Please set the following environment variables:');
-    console.log('- APPLE_ID: Apple Developer account');
+    console.log('- APPLE_USERNAME: Apple Developer account');
     console.log('- APPLE_ID_PASSWORD: App-specific password');
     console.log('- ASC_PROVIDER: Certificate provider (Team ID)');
     return;
