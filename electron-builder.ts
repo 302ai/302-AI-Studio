@@ -51,7 +51,7 @@ export default {
     ],
   },
 
-  afterSign: "electron-builder-notarize",
+  afterSign: "./scripts/notarize.js",
 
   linux: {
     artifactName: [

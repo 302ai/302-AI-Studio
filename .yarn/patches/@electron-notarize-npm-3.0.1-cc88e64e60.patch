@@ -1,0 +1,21 @@
+diff --git a/lib/check-signature.js b/lib/check-signature.js
+index d1184011cfd52daa4a8ae7f444724332bd2b558d..8bf6975bc2fad50cfb70df090d33bd101e538746 100644
+--- a/lib/check-signature.js
++++ b/lib/check-signature.js
+@@ -3,14 +3,14 @@ import { spawn } from './spawn.js';
+ import debug from 'debug';
+ const d = debug('electron-notarize');
+ const codesignDisplay = async (opts) => {
+-    const result = await spawn('codesign', ['-dv', '-vvvv', '--deep', path.basename(opts.appPath)], {
++    const result = await spawn('codesign', ['-dv', '-vvvv', '--deep', `./${path.basename(opts.appPath)}`], {
+         cwd: path.dirname(opts.appPath),
+     });
+     return result;
+ };
+ const codesign = async (opts) => {
+     d('attempting to check codesign of app:', opts.appPath);
+-    const result = await spawn('codesign', ['-vvv', '--deep', '--strict', path.basename(opts.appPath)], {
++    const result = await spawn('codesign', ['-vvv', '--deep', '--strict', `./${path.basename(opts.appPath)}`], {
+         cwd: path.dirname(opts.appPath),
+     });
+     return result;
