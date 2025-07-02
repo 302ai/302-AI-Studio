@@ -1,10 +1,18 @@
+import { ArtifactPreviewPanel } from "@renderer/components/business/artifacts/artifact-preview-panel";
 import { ChatInput } from "@renderer/components/business/chat-input";
 import { MessageList } from "@renderer/components/business/message-list";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { useChat } from "@renderer/hooks/use-chat";
+import { EventNames, emitter } from "@renderer/services/event-service";
 import { motion } from "motion/react";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { NewThread } from "./new-thread";
 
@@ -19,9 +27,28 @@ export function ChatPage() {
 
   const isWelcomeState = !activeThreadId;
 
+  // 监听预览面板状态变化以调整布局
+  const [isCodePreviewOpen, setIsCodePreviewOpen] = useState(false);
+
   useEffect(() => {
     isEditingMessageRef.current = isEditingMessage;
   }, [isEditingMessage]);
+
+  // 监听预览面板状态变化
+  useEffect(() => {
+    const unsubscribeOpen = emitter.on(EventNames.CODE_PREVIEW_OPEN, () => {
+      setIsCodePreviewOpen(true);
+    });
+
+    const unsubscribeClose = emitter.on(EventNames.CODE_PREVIEW_CLOSE, () => {
+      setIsCodePreviewOpen(false);
+    });
+
+    return () => {
+      unsubscribeOpen();
+      unsubscribeClose();
+    };
+  }, []);
 
   const scrollToBottom = useCallback((instant = false) => {
     if (scrollContainerRef.current) {
@@ -93,51 +120,58 @@ export function ChatPage() {
   }
 
   return (
-    <motion.div
-      key="chat-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="flex h-full flex-1 flex-col p-6 pr-0"
-    >
-      <div
-        ref={scrollContainerRef}
-        className="flex-1 space-y-4 overflow-y-auto pr-6"
-        style={{
-          scrollbarGutter: "stable",
-        }}
-      >
-        {messages.length > 0 && <MessageList messages={messages} />}
-      </div>
-
-      {streaming && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="flex justify-center py-2 pr-6"
-        >
-          <Button
-            intent="outline"
-            size="small"
-            className="shrink-0"
-            onClick={stopStreamChat}
-          >
-            {t("stop-generating")}
-          </Button>
-        </motion.div>
-      )}
-
+    <div className="relative flex h-full w-full">
+      {/* 主聊天区域 */}
       <motion.div
-        layoutId="chat-input"
-        transition={{
-          duration: 0.3,
-          ease: "easeInOut",
+        key="chat-page"
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+          flexBasis: isCodePreviewOpen ? "60%" : "100%",
         }}
-        className="flex-shrink-0 pt-4 pr-6"
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="relative flex h-full min-w-0 flex-col p-6 pr-0"
       >
-        <ChatInput />
+        <div
+          ref={scrollContainerRef}
+          className="flex-1 space-y-4 overflow-y-auto pr-6"
+          style={{
+            scrollbarGutter: "stable",
+          }}
+        >
+          {messages.length > 0 && <MessageList messages={messages} />}
+        </div>
+        {streaming && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex justify-center py-2 pr-6"
+          >
+            <Button
+              intent="outline"
+              size="small"
+              className="shrink-0"
+              onClick={stopStreamChat}
+            >
+              {t("stop-generating")}
+            </Button>
+          </motion.div>
+        )}
+        <motion.div
+          layoutId="chat-input"
+          transition={{
+            duration: 0.3,
+            ease: "easeInOut",
+          }}
+          className="flex-shrink-0 pt-4 pr-6"
+        >
+          <ChatInput />
+        </motion.div>
       </motion.div>
-    </motion.div>
+
+      {/* Artifact 预览 */}
+      <ArtifactPreviewPanel />
+    </div>
   );
 }

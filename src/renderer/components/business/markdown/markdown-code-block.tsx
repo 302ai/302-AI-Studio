@@ -1,10 +1,14 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: ignore array index key */
+
 import { cn } from "@renderer/lib/utils";
+import { EventNames, emitter } from "@renderer/services/event-service";
+import { Eye } from "lucide-react";
 import mermaid from "mermaid";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { bundledLanguages, codeToTokens } from "shiki";
+import { ButtonWithTooltip } from "../button-with-tooltip";
 import { CopyButton } from "../copy-button";
 
 interface CodeBlockProps {
@@ -12,6 +16,21 @@ interface CodeBlockProps {
   className?: string;
   language: string;
 }
+
+// 检测代码是否可预览
+const isPreviewableCode = (language: string): boolean => {
+  // HTML检测
+  if (language.toLowerCase() === "html") {
+    return true;
+  }
+
+  // SVG检测
+  if (language.toLowerCase() === "svg") {
+    return true;
+  }
+
+  return false;
+};
 
 export function MarkdownCodeBlock({
   children,
@@ -33,6 +52,8 @@ export function MarkdownCodeBlock({
     className,
   );
 
+  const canPreview = isPreviewableCode(language);
+
   return (
     <div className="group/code relative my-3">
       <Suspense
@@ -47,6 +68,23 @@ export function MarkdownCodeBlock({
         </HighlightedPre>
 
         <div className="invisible absolute top-2 right-2 flex space-x-1 opacity-0 transition-all duration-200 group-hover/code:visible group-hover/code:opacity-100">
+          {canPreview && (
+            <ButtonWithTooltip
+              title="预览代码"
+              onPress={() => {
+                // 使用 emitter 发送事件到 chat-page
+                emitter.emit(EventNames.CODE_PREVIEW_OPEN, {
+                  code,
+                  language,
+                });
+              }}
+              size="small"
+              intent="outline"
+              className="h-8 w-8 p-0"
+            >
+              <Eye className="h-4 w-4" />
+            </ButtonWithTooltip>
+          )}
           <CopyButton content={code} />
         </div>
       </Suspense>
