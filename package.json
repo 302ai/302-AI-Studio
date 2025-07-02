@@ -158,6 +158,6 @@
     }
   },
   "resolutions": {
-    "@electron/notarize@npm:2.5.0": "patch:@electron/notarize@npm%3A3.0.1#~/.yarn/patches/@electron-notarize-npm-3.0.1-cc88e64e60.patch"
+    "@electron/notarize@npm:^3.0.1": "patch:@electron/notarize@npm%3A3.0.1#~/.yarn/patches/@electron-notarize-npm-3.0.1-cc88e64e60.patch"
   }
 }

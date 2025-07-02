@@ -37,8 +37,8 @@ export default {
     category: "public.app-category.utilities",
     gatekeeperAssess: false,
     hardenedRuntime: true,
-    notarize: true,
-    entitlements: "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
+    notarize: false,
+    entitlements: `${resources}/build/mac/entitlements.mac.plist`,
     target: [
       {
         target: "dmg",
