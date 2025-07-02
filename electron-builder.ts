@@ -39,6 +39,7 @@ export default {
     hardenedRuntime: true,
     notarize: false,
     entitlements: `${resources}/build/mac/entitlements.mac.plist`,
+    entitlementsInherit: `${resources}/build/mac/entitlements.mac.plist`,
     target: [
       {
         target: "dmg",
