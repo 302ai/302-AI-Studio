@@ -59,11 +59,11 @@ jobs:
           # If the commit is tagged with a version (e.g. "25.26.0"),
           # release the app after building
           release: true
-          build_script_name: "prebuild"
+          # build_script_name: "prebuild"
           max_attempts: 3
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           # macOS notarization API key
-          APPLE_ID: ${{ secrets.APPLE_USERNAME }}
-          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          ASC_PROVIDER: ${{ secrets.ASC_PROVIDER }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

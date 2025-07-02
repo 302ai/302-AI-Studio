@@ -11,8 +11,9 @@ import {
   type MenuModelActionType,
   useThreadMenu,
 } from "@renderer/hooks/use-thread-menu";
+import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import type { Thread } from "@shared/triplit/types";
-import { useQuery, useQueryOne } from "@triplit/react";
+import { useQuery } from "@triplit/react";
 import {
   Eraser,
   FileText,
@@ -27,21 +28,24 @@ import { ModalAction } from "../modal-action";
 interface ThreadMenuProps {
   thread: Thread;
 }
-const { messageService, providerService, threadService } = window.service;
+const { messageService, providerService, threadService, tabService } =
+  window.service;
 
 export function ThreadMenu({ thread }: ThreadMenuProps) {
   const { t } = useTranslation();
   const providersQuery = triplitClient.query("providers");
   const { results: providers } = useQuery(triplitClient, providersQuery);
-  const settingsQuery = triplitClient.query("settings");
-  const { result: settings } = useQueryOne(triplitClient, settingsQuery);
-  const selectedModelId = settings?.selectedModelId || "";
   const modelsQuery = triplitClient.query("models");
   const { results: models } = useQuery(triplitClient, modelsQuery);
   const messagesQuery = triplitClient
     .query("messages")
     .Where("threadId", "=", thread.id);
   const { results: messages } = useQuery(triplitClient, messagesQuery);
+
+  const tabsQuery = triplitClient.query("tabs");
+  const { results: tabs } = useQuery(triplitClient, tabsQuery);
+
+  const { selectedModelId } = useToolBar();
 
   const {
     state,
@@ -128,11 +132,17 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
       provider,
       model,
     });
-    console.log("result", result);
     if (result.success) {
       await threadService.updateThread(thread.id, {
         title: result.text,
       });
+
+      const tab = tabs?.find((t) => t.threadId === thread.id);
+      if (tab) {
+        await tabService.updateTab(tab.id, {
+          title: result.text,
+        });
+      }
     }
   };
 

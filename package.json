@@ -3,7 +3,7 @@
   "name": "302AIStudio",
   "productName": "302 AI Studio",
   "description": "302 AI Studio",
-  "version": "25.27.5",
+  "version": "25.27.16",
   "main": "./node_modules/.dev/main/index.js",
   "homepage": "https://302.ai",
   "resources": "src/resources",
@@ -15,7 +15,8 @@
   "scripts": {
     "start": "electron-vite preview",
     "dev": "electron-vite dev --watch",
-    "build": "npm run typecheck && electron-builder",
+    "build": "npm run prebuild && npm run typecheck",
+    "build:original": "npm run typecheck && electron-builder",
     "build:check": "yarn typecheck",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
@@ -106,7 +107,7 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@electron-toolkit/utils": "^4.0.0",
-    "@electron/notarize": "^3.0.1",
+    "@electron/notarize": "patch:@electron/notarize@npm%3A3.0.1#~/.yarn/patches/@electron-notarize-npm-3.0.1-cc88e64e60.patch",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/vite": "^4.1.4",
     "@triplit/cli": "^1.0.50",
@@ -155,5 +156,8 @@
     "sharp": {
       "built": false
     }
+  },
+  "resolutions": {
+    "@electron/notarize@npm:^3.0.1": "patch:@electron/notarize@npm%3A3.0.1#~/.yarn/patches/@electron-notarize-npm-3.0.1-cc88e64e60.patch"
   }
 }

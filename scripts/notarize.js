@@ -10,12 +10,12 @@ export default async function (context) {
   }
 
   // Check required environment variables
-  if (!process.env.APPLE_USERNAME || !process.env.APPLE_ID_PASSWORD || !process.env.ASC_PROVIDER) {
+  if (!process.env.APPLE_ID || !process.env.APPLE_APP_SPECIFIC_PASSWORD || !process.env.APPLE_TEAM_ID) {
     console.warn('⚠️  Notarization credentials not found, skipping notarization');
     console.log('Please set the following environment variables:');
-    console.log('- APPLE_USERNAME: Apple Developer account');
-    console.log('- APPLE_ID_PASSWORD: App-specific password');
-    console.log('- ASC_PROVIDER: Certificate provider (Team ID)');
+    console.log('- APPLE_ID: Apple Developer account');
+    console.log('- APPLE_APP_SPECIFIC_PASSWORD: App-specific password');
+    console.log('- APPLE_TEAM_ID: Certificate provider (Team ID)');
     return;
   }
 
@@ -24,21 +24,21 @@ export default async function (context) {
   // Get app path and info
   const appName = context.packager.appInfo.productFilename;
   const appPath = `${appOutDir}/${appName}.app`;
-  const appBundleId = context.packager.appInfo.id;
 
   console.log(`App path: ${appPath}`);
-  console.log(`Bundle ID: ${appBundleId}`);
-  console.log(`Certificate provider: ${process.env.ASC_PROVIDER}`);
+  console.log(`Bundle ID: com.302ai.302aistudio`);
+  console.log(`Certificate provider: ${process.env.APPLE_TEAM_ID}`);
 
   try {
     console.log('Uploading app for notarization, this may take several minutes...');
 
     await notarize({
+      tool: 'notarytool',
       appPath: appPath,
-      appBundleId: appBundleId,
-      appleId: process.env.APPLE_USERNAME,
-      appleIdPassword: process.env.APPLE_ID_PASSWORD,
-      teamId: process.env.ASC_PROVIDER
+      appBundleId: 'com.302ai.302aistudio',
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_APP_SPECIFIC_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID
     });
 
     console.log('✅ App notarization successful!');
