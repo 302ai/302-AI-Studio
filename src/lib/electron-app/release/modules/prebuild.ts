@@ -1,4 +1,4 @@
-import { writeFile } from "node:fs/promises";
+import { cp, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import packageJSON from "../../../../../package.json";
 import trustedDependencies from "../../../../../trusted-dependencies-scripts.json";
@@ -14,6 +14,7 @@ async function createPackageJSONDistVersion() {
 
   try {
     const devFolder = getDevFolder(main);
+    const projectRoot = resolve(__dirname, "../../../../../");
 
     await Promise.all([
       writeFile(
@@ -26,6 +27,10 @@ async function createPackageJSONDistVersion() {
       ),
       // * Create empty yarn.lock file to avoid yarn error
       writeFile(resolve(devFolder, "yarn.lock"), ""),
+      // * Copy .yarn folder to dev folder
+      cp(resolve(projectRoot, ".yarn"), resolve(devFolder, ".yarn"), {
+        recursive: true,
+      }),
     ]);
 
     // biome-ignore lint/suspicious/noExplicitAny: ignore any
