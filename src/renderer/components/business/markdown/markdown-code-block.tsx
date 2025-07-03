@@ -39,6 +39,9 @@ export function MarkdownCodeBlock({
   language,
   ...restProps
 }: CodeBlockProps) {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "artifacts",
+  });
   const code =
     typeof children === "string"
       ? children
@@ -71,7 +74,7 @@ export function MarkdownCodeBlock({
         <div className="invisible absolute top-2 right-2 flex space-x-1 opacity-0 transition-all duration-200 group-hover/code:visible group-hover/code:opacity-100">
           {canPreview && (
             <ButtonWithTooltip
-              title="预览代码"
+              title={t("preview")}
               onPress={() => {
                 // 使用 emitter 发送事件到 chat-page
                 emitter.emit(EventNames.CODE_PREVIEW_OPEN, {
