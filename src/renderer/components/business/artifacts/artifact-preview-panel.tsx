@@ -1,12 +1,17 @@
+import { Button } from "@renderer/components/ui/button";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import { AnimatePresence, motion } from "framer-motion";
-import { Code, Eye, X } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useId, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CodeArtifact from "./code-artifact";
 import { HtmlPreview } from "./html-artifact";
 import SvgArtifact from "./svg-artifact";
 
 export const ArtifactPreviewPanel = () => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "artifacts",
+  });
   const titleId = useId();
   const [drawerContent, setDrawerContent] = useState("preview");
 
@@ -126,14 +131,14 @@ export const ArtifactPreviewPanel = () => {
           {/* 顶部导航栏 */}
           <div className="flex h-11 items-center justify-between border-gray-200 border-b bg-card px-4 dark:border-gray-700">
             <div className="flex shrink-0 items-center gap-2">
-              <button
-                type="button"
+              <Button
+                size="square-petite"
+                intent="plain"
                 onClick={handleClose}
                 className="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-800"
-                aria-label="关闭预览"
               >
-                <X size={18} />
-              </button>
+                <ArrowLeft size={18} />
+              </Button>
               {/* <h2
                 id={titleId}
                 className="font-semibold text-gray-800 dark:text-gray-200"
@@ -144,38 +149,32 @@ export const ArtifactPreviewPanel = () => {
 
             <div className="flex items-center gap-2">
               {/* 预览/代码切换按钮 */}
-              {
-                <div className="flex items-center rounded-lg bg-gray-100 p-0.5 dark:bg-gray-800">
-                  <button
-                    type="button"
-                    className={`rounded-md px-3 py-1 font-medium text-sm ${
-                      drawerContent === "preview"
-                        ? "bg-white shadow dark:bg-gray-700"
-                        : "text-gray-500 dark:text-gray-400"
-                    }`}
-                    onClick={() => setDrawerContent("preview")}
-                  >
-                    <div className="flex items-center gap-1">
-                      <Eye size={14} />
-                      Preview
-                    </div>
-                  </button>
-                  <button
-                    type="button"
-                    className={`rounded-md px-3 py-1 font-medium text-sm ${
-                      drawerContent === "code"
-                        ? "bg-white shadow dark:bg-gray-700"
-                        : "text-gray-500 dark:text-gray-400"
-                    }`}
-                    onClick={() => setDrawerContent("code")}
-                  >
-                    <div className="flex items-center gap-1">
-                      <Code size={14} />
-                      Code
-                    </div>
-                  </button>
-                </div>
-              }
+              <div className="flex items-center rounded-md bg-gray-100 p-0.5 dark:bg-gray-800">
+                <Button
+                  intent="plain"
+                  size="extra-small"
+                  className={`rounded px-3 py-1 font-medium text-xs transition-all duration-200 ${
+                    drawerContent === "preview"
+                      ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100"
+                      : "text-gray-600 hover:bg-gray-200/50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600/50 dark:hover:text-gray-200"
+                  }`}
+                  onClick={() => setDrawerContent("preview")}
+                >
+                  {t("preview")}
+                </Button>
+                <Button
+                  intent="plain"
+                  size="extra-small"
+                  className={`rounded px-3 py-1 font-medium text-xs transition-all duration-200 ${
+                    drawerContent === "code"
+                      ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100"
+                      : "text-gray-600 hover:bg-gray-200/50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600/50 dark:hover:text-gray-200"
+                  }`}
+                  onClick={() => setDrawerContent("code")}
+                >
+                  {t("code")}
+                </Button>
+              </div>
             </div>
           </div>
 
