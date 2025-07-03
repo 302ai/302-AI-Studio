@@ -18,7 +18,7 @@ __metadata:
     "@electron-toolkit/preload": "npm:^3.0.2"
     "@electron-toolkit/tsconfig": "npm:^1.0.1"
     "@electron-toolkit/utils": "npm:^4.0.0"
-    "@electron/notarize": "npm:^3.0.1"
+    "@electron/notarize": "patch:@electron/notarize@npm%3A3.0.1#~/.yarn/patches/@electron-notarize-npm-3.0.1-cc88e64e60.patch"
     "@hello-pangea/dnd": "npm:^18.0.1"
     "@heroicons/react": "npm:^2.2.0"
     "@intentui/icons": "npm:^1.10.33"
