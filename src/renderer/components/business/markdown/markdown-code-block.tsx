@@ -43,7 +43,6 @@ export function MarkdownCodeBlock({
     typeof children === "string"
       ? children
       : childrenTakeAllStringContents(children);
-  console.log(language, code);
 
   if (language === "mermaid") {
     return <MermaidWrapper>{code}</MermaidWrapper>;
