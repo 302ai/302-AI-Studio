@@ -10,10 +10,10 @@ const CodeArtifact = ({ code, language }: CodeArtifactProps) => {
   const codeEditorRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="m-4 h-full overflow-hidden rounded-lg ">
+    <div className="h-full w-full overflow-hidden">
       <div
         ref={codeEditorRef}
-        className="h-full overflow-auto bg-background p-3 font-mono text-xs leading-relaxed"
+        className="h-full w-full overflow-auto bg-background font-mono text-xs leading-relaxed"
       >
         <CodeRenderer content={code} language={language} />
       </div>
@@ -49,6 +49,7 @@ const CodeRenderer = ({
   return (
     <Editor
       height="100%"
+      width="100%"
       language={monacoLanguage}
       theme={"vs-dark"}
       value={content}

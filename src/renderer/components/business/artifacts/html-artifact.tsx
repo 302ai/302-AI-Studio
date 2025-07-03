@@ -109,11 +109,11 @@ export const HtmlPreview: React.FC<HtmlPreviewProps> = ({
   }, [isPreview]);
 
   return (
-    <div className="h-full w-full overflow-auto rounded-lg border border-border/20 bg-white dark:bg-gray-900">
+    <div className="h-full w-full overflow-auto bg-white dark:bg-gray-900">
       <iframe
         ref={iframeRef}
         srcDoc={content}
-        className="h-full min-h-[400px] w-full rounded-lg border-0"
+        className="h-full min-h-[400px] w-full border-0"
         sandbox="allow-scripts allow-same-origin"
         title="HTML Preview"
         style={{

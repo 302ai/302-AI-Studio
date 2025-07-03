@@ -67,8 +67,8 @@ export const ArtifactPreviewPanel = () => {
   const renderArtifactContent = () => {
     if (drawerContent === "code") {
       return (
-        <div className="h-full space-y-4">
-          <div className="h-full overflow-hidden rounded-lg bg-white dark:border-gray-700 dark:bg-gray-800">
+        <div className="h-full w-full">
+          <div className="h-full w-full overflow-hidden bg-white dark:border-gray-700 dark:bg-gray-800">
             <CodeArtifact code={code} language={language} />
           </div>
         </div>
@@ -94,15 +94,15 @@ export const ArtifactPreviewPanel = () => {
 
       case "html":
         return (
-          <div className="h-full p-4">
+          <div className="h-full w-full">
             <HtmlPreview content={code} isPreview={true} />
           </div>
         );
 
       default:
         return (
-          <div className="h-full p-4">
-            <div className="h-full overflow-hidden rounded-lg bg-white dark:border-gray-700 dark:bg-gray-800">
+          <div className="h-full w-full">
+            <div className="h-full w-full overflow-hidden bg-white dark:border-gray-700 dark:bg-gray-800">
               <CodeArtifact code={code} language={language} />
             </div>
           </div>
