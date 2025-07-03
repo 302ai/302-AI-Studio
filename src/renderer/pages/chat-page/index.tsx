@@ -120,17 +120,18 @@ export function ChatPage() {
   }
 
   return (
-    <div className="relative flex h-full w-full">
+    <motion.div
+      key="chat-page"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className={`relative flex h-full w-full ${isCodePreviewOpen ? "" : "flex-1"}`}
+    >
       {/* 主聊天区域 */}
-      <motion.div
-        key="chat-page"
-        initial={{ opacity: 0 }}
-        animate={{
-          opacity: 1,
-          flexBasis: isCodePreviewOpen ? "60%" : "100%",
-        }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="relative flex h-full min-w-0 flex-col p-6 pr-0"
+      <div
+        className={`flex h-full flex-col p-6 pr-0 transition-all duration-300 ease-in-out ${
+          isCodePreviewOpen ? "flex-[0_0_60%]" : "flex-1"
+        }`}
       >
         <div
           ref={scrollContainerRef}
@@ -168,10 +169,10 @@ export function ChatPage() {
         >
           <ChatInput />
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* Artifact 预览 */}
       <ArtifactPreviewPanel />
-    </div>
+    </motion.div>
   );
 }
