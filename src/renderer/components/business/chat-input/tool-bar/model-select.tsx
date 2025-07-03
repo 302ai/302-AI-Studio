@@ -124,7 +124,9 @@ export const ModelSelect = ({
     const result: GroupedModel[] = [];
 
     Object.entries(providerModelMap).forEach(([providerId, models]) => {
-      const enabledModels = models.filter((model) => model.enabled);
+      const enabledModels = models
+        .filter((model) => model.enabled)
+        .sort((a, b) => a.name.localeCompare(b.name));
 
       if (enabledModels.length > 0) {
         result.push({
@@ -167,12 +169,12 @@ export const ModelSelect = ({
       ? allModels.filter(({ model }) => contains(model.name, query))
       : allModels;
 
-    const collectedModels = filteredModels.filter(
-      ({ model }) => model.collected,
-    );
-    const nonCollectedModels = filteredModels.filter(
-      ({ model }) => !model.collected,
-    );
+    const collectedModels = filteredModels
+      .filter(({ model }) => model.collected)
+      .sort((a, b) => a.model.name.localeCompare(b.model.name));
+    const nonCollectedModels = filteredModels
+      .filter(({ model }) => !model.collected)
+      .sort((a, b) => a.model.name.localeCompare(b.model.name));
 
     if (collectedModels.length > 0) {
       items.push({
@@ -208,15 +210,17 @@ export const ModelSelect = ({
           model: {} as Model,
         });
 
-        groupNonCollectedModels.forEach(({ model }) => {
-          items.push({
-            type: "model",
-            id: model.id,
-            name: model.name,
-            providerId: group.id,
-            model,
+        groupNonCollectedModels
+          .sort((a, b) => a.model.name.localeCompare(b.model.name))
+          .forEach(({ model }) => {
+            items.push({
+              type: "model",
+              id: model.id,
+              name: model.name,
+              providerId: group.id,
+              model,
+            });
           });
-        });
       }
     });
 

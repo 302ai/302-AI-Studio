@@ -258,5 +258,9 @@
   },
   "attachment": {
     "file-too-large": "文件大小不能超过10MB"
+  },
+  "artifacts": {
+    "preview": "预览",
+    "code": "代码"
   }
 }

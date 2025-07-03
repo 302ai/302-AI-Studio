@@ -18,6 +18,10 @@ export enum EventNames {
 
   // * Message events
   MESSAGE_EDIT = "message:edit",
+
+  // * Code preview events
+  CODE_PREVIEW_OPEN = "code-preview:open",
+  CODE_PREVIEW_CLOSE = "code-preview:close",
 }
 
 type Events = {
@@ -46,6 +50,11 @@ type Events = {
   };
   [EventNames.TAB_CLOSE_ALL]: null;
   [EventNames.MESSAGE_EDIT]: Message;
+  [EventNames.CODE_PREVIEW_OPEN]: {
+    code: string;
+    language: string;
+  };
+  [EventNames.CODE_PREVIEW_CLOSE]: null;
 };
 
 const mittInstance = mitt<Events>();

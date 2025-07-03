@@ -1,10 +1,15 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: ignore array index key */
+/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: Mermaid generates trusted SVG content */
+
 import { cn } from "@renderer/lib/utils";
+import { EventNames, emitter } from "@renderer/services/event-service";
+import { Eye } from "lucide-react";
 import mermaid from "mermaid";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { bundledLanguages, codeToTokens } from "shiki";
+import { ButtonWithTooltip } from "../button-with-tooltip";
 import { CopyButton } from "../copy-button";
 
 interface CodeBlockProps {
@@ -13,12 +18,30 @@ interface CodeBlockProps {
   language: string;
 }
 
+// 检测代码是否可预览
+const isPreviewableCode = (language: string): boolean => {
+  // HTML检测
+  if (language.toLowerCase() === "html") {
+    return true;
+  }
+
+  // SVG检测
+  if (language.toLowerCase() === "svg") {
+    return true;
+  }
+
+  return false;
+};
+
 export function MarkdownCodeBlock({
   children,
   className,
   language,
   ...restProps
 }: CodeBlockProps) {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "artifacts",
+  });
   const code =
     typeof children === "string"
       ? children
@@ -32,6 +55,8 @@ export function MarkdownCodeBlock({
     "overflow-x-scroll rounded-xl bg-muted p-3 font-mono text-sm",
     className,
   );
+
+  const canPreview = isPreviewableCode(language);
 
   return (
     <div className="group/code relative my-3">
@@ -47,6 +72,23 @@ export function MarkdownCodeBlock({
         </HighlightedPre>
 
         <div className="invisible absolute top-2 right-2 flex space-x-1 opacity-0 transition-all duration-200 group-hover/code:visible group-hover/code:opacity-100">
+          {canPreview && (
+            <ButtonWithTooltip
+              title={t("preview")}
+              onPress={() => {
+                // 使用 emitter 发送事件到 chat-page
+                emitter.emit(EventNames.CODE_PREVIEW_OPEN, {
+                  code,
+                  language,
+                });
+              }}
+              size="small"
+              intent="outline"
+              className="h-8 w-8 p-0"
+            >
+              <Eye className="h-4 w-4" />
+            </ButtonWithTooltip>
+          )}
           <CopyButton content={code} />
         </div>
       </Suspense>
@@ -144,7 +186,11 @@ const MermaidWrapper = ({ children }: { children: string }) => {
 
   return (
     <div className="group/mermaid relative my-4">
-      <div ref={elementRef} className="flex justify-center overflow-x-auto" />
+      <div
+        ref={elementRef}
+        className="flex justify-center overflow-x-auto"
+        dangerouslySetInnerHTML={{ __html: svg }}
+      />
       <div className="invisible absolute top-2 right-2 opacity-0 transition-all duration-200 group-hover/mermaid:visible group-hover/mermaid:opacity-100">
         <div className="rounded-lg border border-border/50 bg-background/90 shadow-lg backdrop-blur-sm">
           <CopyButton content={children} />

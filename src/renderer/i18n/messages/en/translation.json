@@ -257,5 +257,9 @@
   },
   "attachment": {
     "file-too-large": "File size cannot exceed 10MB"
+  },
+  "artifacts": {
+    "preview": "Preview",
+    "code": "Code"
   }
 }
