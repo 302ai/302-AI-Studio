@@ -77,16 +77,17 @@ export function ModelList() {
     );
   }, [allModels, collected, selectedProvider]);
 
-  // * Apply search filter to base models
   const filteredModels = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return baseModels;
+    let models = baseModels;
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      models = baseModels.filter((model) =>
+        model.name.toLowerCase().includes(query),
+      );
     }
 
-    const query = searchQuery.toLowerCase().trim();
-    return baseModels.filter((model) =>
-      model.name.toLowerCase().includes(query),
-    );
+    return models.sort((a, b) => a.name.localeCompare(b.name));
   }, [baseModels, searchQuery]);
 
   const listData = useMemo(
