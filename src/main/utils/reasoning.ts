@@ -1,5 +1,7 @@
 // import Logger from "electron-log";
 
+import Logger from "electron-log";
+
 interface SSEData {
   choices?: Array<{
     delta?: {
@@ -80,6 +82,7 @@ class ReasoningProcessor {
   private citations: string[] = [];
   private hasAddedCitations = false;
   private isInReasoningMode: boolean;
+  private isStartWithThink = false;
 
   constructor(isInReasoningMode = false) {
     this.isInReasoningMode = isInReasoningMode;
@@ -93,8 +96,22 @@ class ReasoningProcessor {
 
   private processLine(line: string): string {
     if (!line.startsWith("data: ")) {
+      let data: { error?: { message: string } };
+      try {
+        data = JSON.parse(line);
+      } catch (_error) {
+        return line;
+      }
+
+      if (data?.error) {
+        // * error":{"err_code":-10003,"message":"Network error, please try again later","message_cn":"网络错误，请稍后重试","message_jp":"ネットワークエラー、後でもう一度お試しください。  ","type":"api_error"}}
+        throw new Error(data.error.message);
+      }
+
       return line;
     }
+
+    // Logger.info("line", line);
 
     const jsonStr = line.substring(6); // * remove "data: "
 
@@ -114,6 +131,9 @@ class ReasoningProcessor {
   }
 
   private isDoneMessage(jsonStr: string): boolean {
+    if (jsonStr.trim() === "[DONE]") {
+      Logger.info("isDoneMessage,isDoneMessage,isDoneMessage,isDoneMessage");
+    }
     return jsonStr.trim() === "[DONE]";
   }
 
@@ -158,7 +178,12 @@ class ReasoningProcessor {
 
     const existingContent = delta.content || "";
 
-    if (hasReasoningContent) {
+    const startWithThink = existingContent === "<think>";
+    if (startWithThink) {
+      this.isStartWithThink = true;
+    }
+
+    if (hasReasoningContent || startWithThink || this.isStartWithThink) {
       this.handleReasoningContent(delta, existingContent);
     } else if (this.isInThinkingMode && !hasReasoningContent) {
       this.handleEndOfThinking(delta, existingContent);
@@ -171,21 +196,24 @@ class ReasoningProcessor {
   ): void {
     const reasoningContent = delta.reasoning_content;
 
-    if (!reasoningContent) {
+    if (reasoningContent) {
+      if (!this.isInThinkingMode) {
+        delta.content = this.createThinkingStartContent(
+          existingContent,
+          reasoningContent,
+        );
+
+        this.isInThinkingMode = true;
+      } else {
+        delta.content = existingContent + reasoningContent;
+      }
+
+      delete delta.reasoning_content;
+
       return;
-    }
-
-    if (!this.isInThinkingMode) {
-      delta.content = this.createThinkingStartContent(
-        existingContent,
-        reasoningContent,
-      );
-      this.isInThinkingMode = true;
     } else {
-      delta.content = existingContent + reasoningContent;
+      this.isInThinkingMode = true;
     }
-
-    delete delta.reasoning_content;
   }
 
   private createThinkingStartContent(
@@ -205,6 +233,11 @@ class ReasoningProcessor {
     if (this.isInReasoningMode) {
       this.isInReasoningMode = false;
       endTag = "</reason>";
+    }
+
+    if (this.isStartWithThink) {
+      endTag = "";
+      this.isStartWithThink = false;
     }
 
     delta.content = `${endTag}${existingContent}`;
