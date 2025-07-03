@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: ignore array index key */
+/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: Mermaid generates trusted SVG content */
 
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
@@ -42,6 +43,7 @@ export function MarkdownCodeBlock({
     typeof children === "string"
       ? children
       : childrenTakeAllStringContents(children);
+  console.log(language, code);
 
   if (language === "mermaid") {
     return <MermaidWrapper>{code}</MermaidWrapper>;
@@ -182,7 +184,11 @@ const MermaidWrapper = ({ children }: { children: string }) => {
 
   return (
     <div className="group/mermaid relative my-4">
-      <div ref={elementRef} className="flex justify-center overflow-x-auto" />
+      <div
+        ref={elementRef}
+        className="flex justify-center overflow-x-auto"
+        dangerouslySetInnerHTML={{ __html: svg }}
+      />
       <div className="invisible absolute top-2 right-2 opacity-0 transition-all duration-200 group-hover/mermaid:visible group-hover/mermaid:opacity-100">
         <div className="rounded-lg border border-border/50 bg-background/90 shadow-lg backdrop-blur-sm">
           <CopyButton content={children} />
