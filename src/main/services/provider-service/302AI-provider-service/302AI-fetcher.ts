@@ -18,6 +18,7 @@ export function ai302Fetcher(
 
         bodyData["file-parse"] = true;
         bodyData["parse-service"] = "jina";
+        bodyData["ocr_model"] = "gpt-4o-mini";
 
         if (enableReason) {
           bodyData["r1-fusion"] = true;
