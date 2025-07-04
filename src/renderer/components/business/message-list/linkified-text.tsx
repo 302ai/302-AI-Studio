@@ -12,17 +12,26 @@ export function LinkifiedText({ text }: LinkifiedTextProps) {
     shellService.openExternal(href);
   };
 
+  // 验证URL是否为有效链接
+  const validateUrl = (value: string, type: string) => {
+    if (type === "url") {
+      const hasProtocol = /^https?:\/\//i.test(value);
+      const isDomainLike = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/.*)?$/i.test(value);
+      const isValidDomain =
+        /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/i.test(value) &&
+        value.split(".").length >= 2 &&
+        value.split(".")[0].length > 1 &&
+        !value.match(/\.(data|txt|log|tmp|temp|bak|old)$/i);
+
+      return hasProtocol || (isDomainLike && isValidDomain);
+    }
+    return true;
+  };
+
   return (
     <Linkify
       options={{
-        // onClick: (event: React.MouseEvent<HTMLAnchorElement>) => {
-        //   event.preventDefault();
-        //   event.stopPropagation();
-        //   const href = event.currentTarget.href;
-        //   console.log("Link clicked:", href);
-        //   handleLinkClick(href);
-        //   return false;
-        // },
+        validate: validateUrl,
         render({ attributes, content }) {
           return (
             <a
