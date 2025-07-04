@@ -36,11 +36,7 @@ export async function MainWindow() {
     titleBarOverlay: shouldUseDarkColors
       ? titleBarOverlayDark
       : titleBarOverlayLight,
-    backgroundColor: isMac
-      ? undefined
-      : shouldUseDarkColors
-        ? "#181818"
-        : "#FFFFFF",
+    backgroundColor: shouldUseDarkColors ? "#181818" : "#FFFFFF",
     trafficLightPosition: isMac ? { x: 12, y: 12 } : undefined,
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
