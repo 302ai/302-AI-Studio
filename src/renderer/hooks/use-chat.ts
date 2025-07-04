@@ -1,6 +1,6 @@
 import { parseAndUpdateAttachments } from "@renderer/utils/parse-file";
 import type { Message } from "@shared/triplit/types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useActiveThread } from "./use-active-thread";
 
 const { chatService, providerService } = window.service;
@@ -11,11 +11,26 @@ enum IpcRendererEvent {
   MESSAGE_ACTIONS = "message:actions",
 }
 
-export function useChat() {
+export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
   const { activeThreadId } = useActiveThread();
   const [messages, setMessages] = useState<Message[]>([]);
   const [streaming, setStreaming] = useState(false);
-  const [isEditingMessage, setIsEditingMessage] = useState(false);
+  const [isAutoScroll, setIsAutoScroll] = useState(true);
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(false);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 500;
+
+    setIsAutoScroll(isAtBottom);
+  }, [scrollRef]);
+
+  const handleAutoScroll = useCallback(() => {
+    if (streaming && isAutoScroll) {
+      setShouldScrollToBottom(true);
+    }
+  }, [streaming, isAutoScroll]);
 
   const fetchMessages = useCallback(
     async (threadId: string): Promise<Message[]> => {
@@ -44,6 +59,8 @@ export function useChat() {
     ) => {
       try {
         if (data.threadId !== activeThreadId) return;
+
+        handleAutoScroll();
 
         switch (data.status) {
           case "pending": {
@@ -92,7 +109,7 @@ export function useChat() {
         console.error("Failed to get messages: ", err);
       }
     },
-    [activeThreadId, fetchMessages],
+    [activeThreadId, fetchMessages, handleAutoScroll],
   );
 
   const handleMessageActions = useCallback(
@@ -111,20 +128,15 @@ export function useChat() {
 
       switch (data.actions.type) {
         case "edit":
-          if (data.actions.message) {
-            setIsEditingMessage(true);
-            setMessages((prevMessages) =>
-              prevMessages.map((message) =>
-                message.id === data.actions.message?.id
-                  ? data.actions.message
-                  : message,
-              ),
-            );
-            // 延迟后重置编辑状态
-            setTimeout(() => {
-              setIsEditingMessage(false);
-            }, 500);
-          }
+          if (!data.actions.message) return;
+
+          setMessages((prevMessages) =>
+            prevMessages.map((message) =>
+              message.id === data.actions.message?.id
+                ? data.actions.message
+                : message,
+            ),
+          );
           break;
 
         case "delete":
@@ -132,29 +144,30 @@ export function useChat() {
           break;
 
         case "delete-single":
-          if (data.actions.message) {
-            // Delete specific message
-            setMessages((prevMessages) =>
-              prevMessages.filter(
-                (message) => message.id !== data.actions.message?.id,
-              ),
-            );
-          }
+          if (!data.actions.message) return;
+          // Delete specific message
+          setMessages((prevMessages) =>
+            prevMessages.filter(
+              (message) => message.id !== data.actions.message?.id,
+            ),
+          );
           break;
 
-        case "delete-multiple":
-          if (data.actions.messages) {
-            // Delete multiple messages
-            const messageIdsToDelete = new Set(
-              data.actions.messages.map((msg) => msg.id),
-            );
-            setMessages((prevMessages) =>
-              prevMessages.filter(
-                (message) => !messageIdsToDelete.has(message.id),
-              ),
-            );
-          }
+        case "delete-multiple": {
+          if (!data.actions.messages) return;
+
+          // Delete multiple messages
+          const messageIdsToDelete = new Set(
+            data.actions.messages.map((msg) => msg.id),
+          );
+          setMessages((prevMessages) =>
+            prevMessages.filter(
+              (message) => !messageIdsToDelete.has(message.id),
+            ),
+          );
+
           break;
+        }
 
         default: {
           fetchMessages(data.threadId);
@@ -166,9 +179,7 @@ export function useChat() {
   );
 
   const stopStreamChat = useCallback(async () => {
-    if (!activeThreadId) {
-      return;
-    }
+    if (!activeThreadId) return;
     try {
       await providerService.stopStreamChat({
         threadId: activeThreadId,
@@ -199,20 +210,29 @@ export function useChat() {
   }, [handleStreamStatusUpdate, handleMessageActions, activeThreadId]);
 
   useEffect(() => {
-    if (activeThreadId) {
-      fetchMessages(activeThreadId).then((messages) => {
-        const newMessages = messages;
-        setMessages(newMessages);
-        setStreaming(newMessages.at(-1)?.status === "pending");
-      });
-    }
+    if (!activeThreadId) return;
+    setMessages([]);
+
+    fetchMessages(activeThreadId).then((messages) => {
+      setMessages(messages);
+      setShouldScrollToBottom(true);
+      setStreaming(messages.at(-1)?.status === "pending");
+    });
   }, [activeThreadId, fetchMessages]);
 
+  useLayoutEffect(() => {
+    if (shouldScrollToBottom && scrollRef.current) {
+      const el = scrollRef.current;
+      el.scrollTop = el.scrollHeight;
+      setShouldScrollToBottom(false);
+    }
+  }, [shouldScrollToBottom, scrollRef.current]);
+
   return {
+    activeThreadId,
     messages,
     streaming,
-    isEditingMessage,
-
+    handleScroll,
     stopStreamChat,
   };
 }
