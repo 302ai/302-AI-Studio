@@ -5,7 +5,6 @@ import {
 } from "@main/utils/message-converter";
 import type { Provider, UpdateProviderData } from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
-import Logger from "electron-log";
 import type { SettingsService } from "../../settings-service";
 import type {
   StreamChatParams,
@@ -91,7 +90,6 @@ export class AI302ProviderService extends OpenAIProviderService {
       } else {
         newMessages = newMessages.filter((item) => {
           if (Array.isArray(item?.content)) {
-            Logger.info("item?.content:::", item?.content);
             return !item?.content.some((item) => item.type === "image");
           }
           return true;

@@ -1,7 +1,6 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
-import { convertMessagesToModelMessages } from "@main/utils/message-converter";
 import { createReasoningFetch } from "@main/utils/reasoning";
 import type {
   CreateModelData,
@@ -112,31 +111,16 @@ export class OpenAIProviderService extends BaseProviderService {
     params: StreamChatParams,
     abortController: AbortController,
   ): Promise<StreamTextResult<ToolSet, never>> {
-    const {
-      tabId,
-      threadId,
-      userMessageId,
-      messages,
-      model: originModel,
-      provider,
-    } = params;
+    const { tabId, threadId, messages, model: originModel } = params;
 
     try {
       const model = this.openai(originModel.name);
 
       Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
-      let newMessages = messages as ModelMessage[];
-
-      if (provider.name !== "302.AI") {
-        newMessages = await convertMessagesToModelMessages(
-          messages,
-          userMessageId,
-        );
-      }
 
       const result = streamText({
         model: model,
-        messages: newMessages,
+        messages: messages as ModelMessage[],
 
         experimental_transform: smoothStream({
           chunking: "line",
@@ -159,8 +143,6 @@ export class OpenAIProviderService extends BaseProviderService {
 
     try {
       const model = this.openai(originModel.name);
-
-      Logger.info(`Starting generate text for model ${originModel.name}`);
 
       const conversationText = messages
         .map((m) => `${m.role}: ${m.content}`)

@@ -72,7 +72,7 @@ export async function convertToModelMessage(
       const contentParts: ContentPart[] = [];
 
       // Add text content if it exists
-      if (message.content.trim()) {
+      if (typeof message.content === "string" && message.content.trim()) {
         contentParts.push({
           type: "text",
           text: message.content,
@@ -160,12 +160,6 @@ export async function convertToModelMessage(
     role: message.role as "user" | "assistant" | "system",
     content: message.content,
   } as ModelMessage;
-
-  Logger.info("Created simple message:", {
-    role: result.role,
-    contentLength:
-      typeof result.content === "string" ? result.content.length : "not-string",
-  });
 
   return result;
 }

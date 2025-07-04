@@ -5,6 +5,10 @@ import {
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
 import { extractErrorMessage } from "@main/utils/error-utils";
+import {
+  type ChatMessage,
+  convertMessagesToModelMessages,
+} from "@main/utils/message-converter";
 import type {
   CreateModelData,
   Message,
@@ -229,6 +233,14 @@ export class ProviderService {
     try {
       const providerInst = this.getProviderInst(provider.id);
       const abortController = createAbortController(threadId);
+      const is302AI = providerInst instanceof AI302ProviderService;
+      if (!is302AI) {
+        const newMessages = await convertMessagesToModelMessages(
+          params.messages,
+          userMessageId,
+        );
+        params.messages = newMessages as ChatMessage[];
+      }
 
       const result = await providerInst.startStreamChat(
         params,
