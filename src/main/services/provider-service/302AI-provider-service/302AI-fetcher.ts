@@ -8,6 +8,7 @@ import Logger from "electron-log";
 export function ai302Fetcher(
   enableReason: boolean = false,
   webSearchConfig: WebSearchConfig = { enabled: false, service: "search1api" },
+  enableVison: boolean = false,
 ): typeof fetch {
   return async (url, options) => {
     let modifiedOptions = options;
@@ -18,8 +19,10 @@ export function ai302Fetcher(
 
         bodyData["file-parse"] = true;
         bodyData["parse-service"] = "jina";
-        bodyData["ocr_model"] = "gpt-4o-mini";
-
+        if (enableVison) {
+          // biome-ignore lint/complexity/useLiteralKeys: <ignore>
+          bodyData["ocr_model"] = "gpt-4.1-nano";
+        }
         if (enableReason) {
           bodyData["r1-fusion"] = true;
         }

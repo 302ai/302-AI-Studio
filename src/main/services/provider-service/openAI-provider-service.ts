@@ -2,17 +2,16 @@ import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import { convertMessagesToModelMessages } from "@main/utils/message-converter";
-
 import { createReasoningFetch } from "@main/utils/reasoning";
 import type {
   CreateModelData,
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-
 // Import AI SDK types
 import {
   generateText,
+  type ModelMessage,
   type StreamTextResult,
   smoothStream,
   streamText,
@@ -80,18 +79,17 @@ export class OpenAIProviderService extends BaseProviderService {
         baseUrl: this.provider.baseUrl,
         timeout: options?.timeout,
       });
-
-      const modelIds = response.data.map((model) => model.id.trim()) || [];
-      const formatedModels = modelIds.map((id) => {
-        return {
-          name: id,
-          providerId: this.provider.id,
-          custom: false,
-          enabled: true,
-          collected: false,
-          capabilities: new Set(["vision", "file"]),
-        };
-      });
+      const formatedModels =
+        response.data.map((model) => {
+          return {
+            name: model.id.trim(),
+            providerId: this.provider.id,
+            custom: false,
+            enabled: true,
+            collected: false,
+            capabilities: new Set(model.is_moderated ? ["vision", "file"] : []),
+          };
+        }) || [];
 
       Logger.info(
         "Fetched OpenAI models successfully, the count is:",
@@ -120,22 +118,25 @@ export class OpenAIProviderService extends BaseProviderService {
       userMessageId,
       messages,
       model: originModel,
+      provider,
     } = params;
 
     try {
       const model = this.openai(originModel.name);
 
       Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
+      let newMessages = messages as ModelMessage[];
 
-      // Convert messages to ModelMessage format with attachment support
-      const modelMessages = await convertMessagesToModelMessages(
-        messages,
-        userMessageId,
-      );
+      if (provider.name !== "302.AI") {
+        newMessages = await convertMessagesToModelMessages(
+          messages,
+          userMessageId,
+        );
+      }
 
       const result = streamText({
         model: model,
-        messages: modelMessages,
+        messages: newMessages,
 
         experimental_transform: smoothStream({
           chunking: "line",

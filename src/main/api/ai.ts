@@ -7,6 +7,7 @@ const openAIModelSchema = z.object({
   data: z.array(
     z.object({
       id: z.string(),
+      is_moderated: z.boolean(),
     }),
   ),
 });

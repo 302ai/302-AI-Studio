@@ -44,13 +44,13 @@ export async function convertToModelMessage(
     const attachmentService = container.get<AttachmentService>(
       TYPES.AttachmentService,
     );
-    const attachmentId = message.id || messageId;
+    const newMessageId = message.id || messageId;
     let attachments: AttachmentData[] = [];
 
-    if (attachmentId) {
+    if (newMessageId) {
       try {
         const dbAttachments =
-          await attachmentService._getAttachmentsByMessageId(attachmentId);
+          await attachmentService._getAttachmentsByMessageId(newMessageId);
         attachments = dbAttachments.map((att) => ({
           id: att.id,
           name: att.name,
@@ -137,7 +137,7 @@ export async function convertToModelMessage(
       } as ModelMessage;
 
       // If attachments were updated with parsed content, update them in database
-      if (attachmentsUpdated && attachmentId) {
+      if (attachmentsUpdated && newMessageId) {
         try {
           for (const attachment of attachments) {
             if (attachment.fileContent) {
