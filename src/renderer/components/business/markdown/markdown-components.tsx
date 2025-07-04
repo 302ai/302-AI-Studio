@@ -69,7 +69,7 @@ export const COMPONENTS = {
     "p",
     "whitespace-pre-wrap [&_.katex]:leading-tight [&_.katex-display]:leading-tight [&_.katex]:subpixel-antialiased [&_.katex-display]:subpixel-antialiased",
   ),
-  hr: withClass("hr", "border-border/20"),
+  hr: withClass("hr", "my-6 border-1 bg-border"),
   mark: withClass("mark", "bg-yellow-200 dark:bg-yellow-800 rounded px-1"),
 };
 
