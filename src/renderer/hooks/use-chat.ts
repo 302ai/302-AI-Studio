@@ -21,7 +21,7 @@ export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
-    const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 500;
+    const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 200;
 
     setIsAutoScroll(isAtBottom);
   }, [scrollRef]);

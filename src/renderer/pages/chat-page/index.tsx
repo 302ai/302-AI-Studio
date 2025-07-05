@@ -23,15 +23,8 @@ export function ChatPage() {
     return <NewThread />;
   }
 
-  if (messages.length === 0) {
-    return null;
-  }
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+    <div
       className={`relative flex h-full w-full ${isArtifactOpen ? "" : "flex-1"}`}
     >
       <div
@@ -79,6 +72,6 @@ export function ChatPage() {
       </div>
 
       <ArtifactPreviewPanel />
-    </motion.div>
+    </div>
   );
 }
