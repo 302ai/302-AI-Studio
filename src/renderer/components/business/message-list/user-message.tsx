@@ -6,6 +6,7 @@ import { MenuContent } from "@renderer/components/ui/menu";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Message } from "@shared/triplit/types";
 import { Pencil } from "lucide-react";
+
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -92,7 +93,7 @@ export function UserMessage({ message }: UserMessageProps) {
             <MessageAttachments messageId={message.id} className="mb-2" />
 
             {message.content && (
-              <div className="overflow-wrap-anywhere w-full whitespace-pre-wrap break-words break-all">
+              <div className="overflow-wrap-anywhere w-full break-words break-all">
                 <LinkifiedText text={message.content} />
               </div>
             )}
