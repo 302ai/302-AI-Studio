@@ -1,20 +1,20 @@
 import type { DropResult } from "@hello-pangea/dnd";
 import { triplitClient } from "@renderer/client";
-import type { Tab, Thread } from "@shared/triplit/types";
+import type { Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
 import { useActiveTab } from "./use-active-tab";
-
-interface UseTabBarProps {
-  tabBarRef: React.RefObject<HTMLDivElement>;
-}
+import { useActiveThread } from "./use-active-thread";
 
 const { tabService } = window.service;
 
-export function useTabBar({ tabBarRef }: UseTabBarProps) {
+export function useTabBar() {
+  const { t } = useTranslation();
   const { activeTabId, activeTab, setActiveTabId } = useActiveTab();
+  const { setActiveThreadId } = useActiveThread();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
   const { results: alltabs } = useQuery(triplitClient, tabsQuery);
@@ -22,7 +22,36 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
   const navigate = useNavigate();
 
   const [tabs, setTabs] = useState<Tab[]>([]);
-  const [tabWidth, setTabWidth] = useState<number>(200);
+
+  const handleAddNewTab = async (type: "thread" | "setting") => {
+    if (type === "setting") {
+      // Check if a setting tab already exists
+      const existingSettingTab = tabs.find((tab) => tab.type === "setting");
+
+      if (existingSettingTab) {
+        // Activate the existing setting tab
+        const promises = [
+          setActiveTabId(existingSettingTab.id),
+          setActiveThreadId(""),
+          tabService.activateTab(existingSettingTab.id),
+        ];
+        await Promise.all(promises);
+
+        return;
+      }
+    }
+
+    const newTab = await tabService.insertTab({
+      title:
+        type === "thread"
+          ? t("thread.new-thread-title")
+          : t("settings.tab-title"),
+      type,
+      path: type === "thread" ? "/" : "/settings/general-settings",
+    });
+    const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+    await Promise.all(promises);
+  };
 
   const activateTabId = async (id: string) => {
     setActiveTabId(id);
@@ -60,26 +89,6 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     }
   };
 
-  const calculateTabWidth = useCallback(() => {
-    if (!tabBarRef.current) return;
-
-    const containerWidth = tabBarRef.current.clientWidth;
-    const bufferSpace = 20;
-    const availableWidth = containerWidth - bufferSpace;
-
-    const minTabWidth = 32;
-    const maxTabWidth = 200;
-
-    const idealWidth = availableWidth / tabs.length;
-
-    const newTabWidth = Math.max(
-      minTabWidth,
-      Math.min(maxTabWidth, idealWidth),
-    );
-
-    setTabWidth(newTabWidth);
-  }, [tabs.length, tabBarRef.current]);
-
   useEffect(() => {
     setTabs(alltabs || []);
   }, [alltabs]);
@@ -102,57 +111,12 @@ export function useTabBar({ tabBarRef }: UseTabBarProps) {
     }
   }, [activeTab, navigate]);
 
-  /**
-   * * This effect is used to calculate the width of the tab
-   */
-  useEffect(() => {
-    calculateTabWidth();
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateTabWidth();
-    });
-
-    if (tabBarRef.current) {
-      resizeObserver.observe(tabBarRef.current);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [calculateTabWidth, tabBarRef.current]);
-
-  /**
-   * * This effect is used to handle the click event for a thread in the sidebar
-   */
-  useEffect(() => {
-    const handleThreadSelect = async (event: { thread: Thread }) => {
-      const { id, title } = event.thread;
-
-      const existingTab = tabs.find((tab) => tab.threadId === id);
-
-      if (existingTab) {
-        await setActiveTabId(existingTab.id);
-      } else {
-        const newTab = await tabService.insertTab({
-          title,
-          threadId: id,
-          type: "thread",
-        });
-        await setActiveTabId(newTab.id);
-      }
-    };
-
-    const unsub = emitter.on(EventNames.THREAD_SELECT, handleThreadSelect);
-
-    return () => unsub();
-  }, [setActiveTabId, tabs]);
-
   return {
     tabs,
     activeTabId,
-    tabWidth,
-
     activateTabId,
+    setActiveTabId,
+    handleAddNewTab,
     handleDragEnd,
   };
 }

@@ -4,6 +4,7 @@ import { MessageList } from "@renderer/components/business/message-list";
 import { Button } from "@renderer/components/ui/button";
 import { useArtifact } from "@renderer/hooks/use-artifact";
 import { useChat } from "@renderer/hooks/use-chat";
+import { cn } from "@renderer/lib/utils";
 import { motion } from "motion/react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -25,12 +26,16 @@ export function ChatPage() {
 
   return (
     <div
-      className={`relative flex h-full w-full ${isArtifactOpen ? "" : "flex-1"}`}
+      className={cn(
+        "relative flex h-[calc(100%-var(--chat-page-title-bar-height))] w-full",
+        isArtifactOpen ? "" : "flex-1",
+      )}
     >
       <div
-        className={`flex h-full flex-col p-6 pr-0 transition-all duration-300 ease-in-out ${
-          isArtifactOpen ? "flex-[0_0_60%]" : "flex-1"
-        }`}
+        className={cn(
+          "flex h-full flex-col p-6 pt-0 pr-0 transition-all duration-300 ease-in-out ",
+          isArtifactOpen ? "flex-[0_0_60%]" : "flex-1",
+        )}
       >
         <div
           ref={scrollRef}

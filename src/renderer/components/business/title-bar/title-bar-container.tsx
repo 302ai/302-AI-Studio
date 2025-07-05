@@ -14,7 +14,7 @@ export function TitlebarContainer({ children, ...props }: TitlebarProps) {
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center bg-navbar",
+        "flex w-full flex-row items-center border-b border-b-border bg-navbar pl-[10px]",
         isMac ? "pl-[60px]" : "",
       )}
       style={dragRegion}

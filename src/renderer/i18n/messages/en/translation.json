@@ -155,7 +155,8 @@
       "placeholder": "Search..."
     },
     "search-thread": {
-      "tooltip": "Search Conversations"
+      "tooltip": "Search Conversations",
+      "placeholder": "Search"
     },
     "section": {
       "collected": "Favorites",

@@ -156,7 +156,8 @@
       "placeholder": "搜索..."
     },
     "search-thread": {
-      "tooltip": "搜索会话"
+      "tooltip": "搜索会话",
+      "placeholder": "搜索"
     },
     "section": {
       "collected": "收藏",

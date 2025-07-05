@@ -156,7 +156,8 @@
       "placeholder": "検索..."
     },
     "search-thread": {
-      "tooltip": "会話を検索"
+      "tooltip": "会話を検索",
+      "placeholder": "検索"
     },
     "section": {
       "collected": "お気に入り",

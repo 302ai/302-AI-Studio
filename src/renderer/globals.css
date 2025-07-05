@@ -216,6 +216,7 @@
     --sidebar-width-collapsed: 95px;
     --setting-tab-list-width: 148px;
     --chat-input-toolbar-height: 40px;
+    --chat-page-title-bar-height: 44px;
   }
 
   html {

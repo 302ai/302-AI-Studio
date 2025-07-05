@@ -1,27 +1,16 @@
 import {
   TitlebarCenter,
   TitlebarContainer,
-  TitlebarLeft,
   TitlebarRight,
 } from "@renderer/components/business/title-bar/title-bar-container";
 import { Separator } from "@renderer/components/ui/separator";
-import { useSidebar } from "@renderer/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
-import { isMac } from "@renderer/config/constant";
-import { useActiveTab } from "@renderer/hooks/use-active-tab";
-import { useActiveThread } from "@renderer/hooks/use-active-thread";
-import { cn } from "@renderer/lib/utils";
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-  Search,
-  Settings,
-  SquarePlus,
-} from "lucide-react";
+import { useTabBar } from "@renderer/hooks/use-tab-bar";
+import { Settings } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabBar } from "../tab-bar";
@@ -29,47 +18,11 @@ import { ThreadSearcher } from "./thread-searcher";
 
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
-const { tabService } = window.service;
-
 export function BasicTitleBar() {
   const { t } = useTranslation();
-  const { toggleSidebar, state } = useSidebar();
-  const { setActiveTabId, tabs } = useActiveTab();
-  const { setActiveThreadId } = useActiveThread();
+  const { handleAddNewTab } = useTabBar();
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const isSidebarCollapsed = state === "collapsed";
-
-  const handleAddNewTab = async (type: "thread" | "setting") => {
-    if (type === "setting") {
-      // Check if a setting tab already exists
-      const existingSettingTab = tabs.find((tab) => tab.type === "setting");
-
-      if (existingSettingTab) {
-        // Activate the existing setting tab
-        const promises = [
-          setActiveTabId(existingSettingTab.id),
-          setActiveThreadId(""),
-          tabService.activateTab(existingSettingTab.id)
-        ];
-        await Promise.all(promises);
-
-        return;
-      }
-    }
-
-    const newTab = await tabService.insertTab({
-      title:
-        type === "thread"
-          ? t("thread.new-thread-title")
-          : t("settings.tab-title"),
-      type,
-      path: type === "thread" ? "/" : "/settings/general-settings",
-    });
-    const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
-    await Promise.all(promises);
-  };
 
   const handleSearchThread = () => {
     setIsOpen(!isOpen);
@@ -78,7 +31,7 @@ export function BasicTitleBar() {
   return (
     <>
       <TitlebarContainer>
-        <TitlebarLeft
+        {/* <TitlebarLeft
           className={cn(
             "flex flex-row items-center justify-end gap-2 px-2",
             "transition-[width] duration-200 ease-linear",
@@ -92,7 +45,6 @@ export function BasicTitleBar() {
                 : "w-[var(--sidebar-width-collapsed)]",
           )}
         >
-          {/* Sidebar Toggle */}
           <Tooltip>
             <TooltipTrigger
               className="size-8"
@@ -115,7 +67,6 @@ export function BasicTitleBar() {
             </TooltipContent>
           </Tooltip>
 
-          {/* Search Thread */}
           <Tooltip>
             <TooltipTrigger
               className={cn("size-8", { hidden: isSidebarCollapsed })}
@@ -131,7 +82,6 @@ export function BasicTitleBar() {
             </TooltipContent>
           </Tooltip>
 
-          {/* Add New Tab */}
           <Tooltip>
             <TooltipTrigger
               className="size-8"
@@ -152,13 +102,13 @@ export function BasicTitleBar() {
             "h-[20px] w-[1px]",
             state === "expanded" ? "hidden" : "",
           )}
-        />
+        /> */}
 
         <TitlebarCenter>
           <TabBar />
         </TitlebarCenter>
 
-        <Separator orientation="vertical" className="mx-2 h-[20px] w-[1px]" />
+        <Separator orientation="vertical" className="mx-1 h-[20px] w-[1px]" />
 
         <TitlebarRight>
           <Tooltip>

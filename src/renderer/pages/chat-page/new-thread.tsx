@@ -8,7 +8,7 @@ export function NewThread() {
     keyPrefix: "new-thread",
   });
   return (
-    <div className="flex h-full flex-1 flex-col items-center justify-center gap-6 p-6">
+    <div className="flex h-[calc(100%-var(--chat-page-title-bar-height))] flex-1 flex-col items-center justify-center gap-6 p-6">
       <BlurText
         text={t("hello-world")}
         animateBy="letters"
