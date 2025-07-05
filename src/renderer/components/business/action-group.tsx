@@ -30,64 +30,62 @@ export function ActionGroup({
   const { t } = useTranslation();
 
   return (
-    <>
-      <CardAction className={cn("flex items-center gap-1", className)}>
-        {/* Star */}
-        {onStar && (
-          <Tooltip>
-            <TooltipTrigger
-              intent="plain"
-              size={size}
-              shape={shape}
-              onClick={onStar}
-            >
-              <Star
-                className={cn(
-                  "size-4",
-                  stared ? "fill-yellow-500 text-yellow-500" : ""
-                )}
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              {t("settings.model-settings.model-provider.star")}
-            </TooltipContent>
-          </Tooltip>
-        )}
+    <CardAction className={cn("flex items-center gap-1", className)}>
+      {/* Star */}
+      {onStar && (
+        <Tooltip>
+          <TooltipTrigger
+            intent="plain"
+            size={size}
+            shape={shape}
+            onClick={onStar}
+          >
+            <Star
+              className={cn(
+                "size-4",
+                stared ? "fill-yellow-500 text-yellow-500" : "",
+              )}
+            />
+          </TooltipTrigger>
+          <TooltipContent>
+            {t("settings.model-settings.model-provider.star")}
+          </TooltipContent>
+        </Tooltip>
+      )}
 
-        {/* Edit */}
-        {onEdit && (
-          <Tooltip>
-            <TooltipTrigger
-              intent="plain"
-              size={size}
-              shape={shape}
-              onClick={onEdit}
-            >
-              <PencilLine className="size-4" />
-            </TooltipTrigger>
-            <TooltipContent>
-              {t("settings.model-settings.model-provider.edit")}
-            </TooltipContent>
-          </Tooltip>
-        )}
+      {/* Edit */}
+      {onEdit && (
+        <Tooltip>
+          <TooltipTrigger
+            intent="plain"
+            size={size}
+            shape={shape}
+            onClick={onEdit}
+          >
+            <PencilLine className="size-4" />
+          </TooltipTrigger>
+          <TooltipContent>
+            {t("settings.model-settings.model-provider.edit")}
+          </TooltipContent>
+        </Tooltip>
+      )}
 
-        {/* Delete */}
-        {onDelete && (
-          <Tooltip>
-            <TooltipTrigger
-              intent="plain"
-              size={size}
-              shape={shape}
-              onClick={onDelete}
-            >
-              <CircleX className="size-4" />
-            </TooltipTrigger>
-            <TooltipContent>
-              {t("settings.model-settings.model-provider.delete")}
-            </TooltipContent>
-          </Tooltip>
-        )}
-      </CardAction>
-    </>
+      {/* Delete */}
+      {onDelete && (
+        <Tooltip>
+          <TooltipTrigger
+            intent="plain"
+            size={size}
+            shape={shape}
+            onClick={onDelete}
+          >
+            <CircleX className="size-4" />
+          </TooltipTrigger>
+          <TooltipContent>
+            {t("settings.model-settings.model-provider.delete")}
+          </TooltipContent>
+        </Tooltip>
+      )}
+    </CardAction>
   );
 }

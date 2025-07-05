@@ -31,7 +31,6 @@ __metadata:
     "@triplit/client": "npm:^1.0.40"
     "@triplit/react": "npm:^1.0.40"
     "@triplit/server": "npm:^1.0.50"
-    "@types/add": "npm:^2"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/node": "npm:^22.13.8"
     "@types/react": "npm:^19.0.10"
@@ -40,7 +39,6 @@ __metadata:
     "@types/semver": "npm:^7.5.8"
     "@types/xml2js": "npm:^0"
     "@vitejs/plugin-react": "npm:^4.3.4"
-    add: "npm:2.0.6"
     ai: "npm:^5.0.0-alpha.8"
     better-sqlite3: "npm:^11.10.0"
     class-variance-authority: "npm:^0.7.1"
@@ -110,7 +108,6 @@ __metadata:
     vite-tsconfig-paths: "npm:^5.1.4"
     xlsx: "npm:^0.18.5"
     xml2js: "npm:^0.6.2"
-    yarn: "npm:1.22.22"
     zod: "npm:^3.25.49"
   dependenciesMeta:
     sharp:
@@ -4429,13 +4426,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/add@npm:^2":
-  version: 2.0.3
-  resolution: "@types/add@npm:2.0.3"
-  checksum: 10c0/d18841b43d3799f69db0bdae380d19d05f43b716315c5bfd4d6c1b3467bada2644eab8c04bb5afdb94bba87604da06d466f22fe30df6bcf0518c373593bb474a
-  languageName: node
-  linkType: hard
-
 "@types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -5119,13 +5109,6 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 10c0/dec73ff59b7d6628a01eebaece7f2bdb8bb62b9b5926dcad0f8931f2b8b79c2be21f6c68ac095592adb5adb15831a3635d9343e6a91d028bbe85d564875ec3ec
-  languageName: node
-  linkType: hard
-
-"add@npm:2.0.6":
-  version: 2.0.6
-  resolution: "add@npm:2.0.6"
-  checksum: 10c0/6b21d5f2e58cf5e15d56cc6f9ebce04f04f4c33ae25f09d600ddacf8df00036ba521f17feb1b3f81307b7c6d2ef0bed8b511a0f86f062eb90c2f909b48b588ae
   languageName: node
   linkType: hard
 
@@ -15745,16 +15728,6 @@ __metadata:
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^21.1.1"
   checksum: 10c0/ccd7e723e61ad5965fffbb791366db689572b80cca80e0f96aad968dfff4156cd7cd1ad18607afe1046d8241e6fb2d6c08bf7fa7bfb5eaec818735d8feac8f05
-  languageName: node
-  linkType: hard
-
-"yarn@npm:1.22.22":
-  version: 1.22.22
-  resolution: "yarn@npm:1.22.22"
-  bin:
-    yarn: bin/yarn.js
-    yarnpkg: bin/yarn.js
-  checksum: 10c0/8c77198c93d7542e7f4e131c63b66de357b7076ecfbcfe709ec0d674115c2dd9edaa45196e5510e6e9366d368707a802579e3402071002e1c9d9a99d491478de
   languageName: node
   linkType: hard
 
