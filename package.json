@@ -102,7 +102,7 @@
     "zod": "^3.25.49"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0-beta.6",
+    "@biomejs/biome": "^2.0.6",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@electron-toolkit/preload": "^3.0.2",
