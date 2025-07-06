@@ -77,6 +77,16 @@ export class TabDbService extends BaseDbService {
     return currentActiveTabId || "";
   }
 
+  async deleteAllTabs(): Promise<void> {
+    const tabsQuery = triplitClient.query("tabs");
+    const tabs = await triplitClient.fetch(tabsQuery);
+
+    await triplitClient.transact(async (tx) => {
+      const deletePromises = tabs.map((tab) => tx.delete("tabs", tab.id));
+      await Promise.all(deletePromises);
+    });
+  }
+
   async updateTab(tabId: string, updateData: UpdateTabData): Promise<void> {
     await triplitClient.update("tabs", tabId, updateData);
     await this.reorderTabs();

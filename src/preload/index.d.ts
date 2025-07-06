@@ -72,6 +72,7 @@ declare global {
       tabService: {
         insertTab: (tab: CreateTabData) => Promise<Tab>;
         deleteTab: (tabId: string) => Promise<string>;
+        deleteAllTabs: () => Promise<void>;
         updateTab: (tabId: string, updateData: UpdateTabData) => Promise<void>;
         getTab: (tabId: string) => Promise<Tab | null>;
         moveTab: (

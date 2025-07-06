@@ -25,14 +25,12 @@ export function useDragableTab({ id }: HookParams) {
 
   const handleTabCloseAll = useCallback(async () => {
     try {
-      for (const tab of tabs) {
-        await tabService.deleteTab(tab.id);
-      }
+      await tabService.deleteAllTabs();
       emitter.emit(EventNames.TAB_CLOSE_ALL, null);
     } catch (error) {
       console.error("Error closing all tabs:", error);
     }
-  }, [tabs]);
+  }, []);
 
   useEffect(() => {
     const handleThreadRename = async (event: {

@@ -43,6 +43,16 @@ export class TabService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async deleteAllTabs(_event: Electron.IpcMainEvent): Promise<void> {
+    try {
+      await this.tabDbService.deleteAllTabs();
+    } catch (error) {
+      Logger.error("TabService:deleteAllTabs error ---->", error);
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async updateTab(
     _event: Electron.IpcMainEvent,
     tabId: string,
