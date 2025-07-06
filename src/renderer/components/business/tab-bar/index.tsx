@@ -10,7 +10,7 @@ import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Thread } from "@shared/triplit/types";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Tab } from "./tab";
 
@@ -37,7 +37,51 @@ export function TabBar() {
   } = useTabBar();
 
   const [isDragging, setIsDragging] = useState(false);
-  const [draggingTabId, setDraggingTabId] = useState<string | null>(null);
+  const [tabWidth, setTabWidth] = useState<number>(200);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const addButtonWidth = 33;
+  const separatorWidth = 9;
+
+  const calculateTabWidth = useCallback(() => {
+    if (!containerRef.current) return;
+
+    const containerWidth = containerRef.current.offsetWidth;
+    const availableWidth =
+      containerWidth - addButtonWidth - separatorWidth * tabs.length;
+
+    const minTabWidth = 0;
+    const maxTabWidth = 200;
+
+    const idealWidth = availableWidth / tabs.length;
+
+    const newTabWidth = Math.max(
+      minTabWidth,
+      Math.min(maxTabWidth, idealWidth),
+    );
+
+    setTabWidth(newTabWidth);
+  }, [tabs.length]);
+
+  /**
+   * * This effect is used to calculate the width of the tab
+   */
+  useEffect(() => {
+    calculateTabWidth();
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateTabWidth();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [calculateTabWidth]);
 
   /**
    * * This effect is used to handle the click event for a thread in the sidebar
@@ -69,12 +113,10 @@ export function TabBar() {
     <DragDropContext
       onDragStart={(start: DragStart) => {
         setIsDragging(true);
-        setDraggingTabId(start.draggableId);
         activateTabId(start.draggableId);
       }}
       onDragEnd={(result) => {
         setIsDragging(false);
-        setDraggingTabId(null);
         handleDragEnd(result);
       }}
     >
@@ -82,21 +124,18 @@ export function TabBar() {
         {(provided) => (
           <div
             className="flex h-full flex-1 flex-row overflow-hidden"
-            ref={provided.innerRef}
+            ref={(node) => {
+              containerRef.current = node;
+              provided.innerRef(node);
+            }}
             {...provided.droppableProps}
           >
             {tabs.map(({ id, title, type }, index) => (
-              <div
-                key={id}
-                className={cn(
-                  "flex items-center",
-                  draggingTabId === id ? "" : "min-w-8 max-w-52 flex-1",
-                )}
-              >
+              <div key={id} className="flex items-center">
                 <Separator
                   orientation="vertical"
                   className={cn(
-                    "h-[20px] w-[1px] self-center transition-opacity duration-200",
+                    "mx-1 h-[20px] w-[1px] self-center transition-opacity duration-200",
                     index === 0 ||
                       tabs[index - 1].id === activeTabId ||
                       id === activeTabId
@@ -112,22 +151,25 @@ export function TabBar() {
                   isActive={id === activeTabId}
                   onClick={() => activateTabId(id)}
                   type={type}
-                  isDragging={isDragging}
+                  width={tabWidth}
                 />
               </div>
             ))}
             <div
               className={cn("flex items-center", {
-                "opacity-0": isDragging || tabs.length === 0,
+                "opacity-0": isDragging,
               })}
             >
               <Separator
                 orientation="vertical"
-                className="h-[20px] w-[1px] self-center"
+                className={cn(
+                  "mx-1 h-[20px] w-[1px]",
+                  tabs.length === 0 ? "opacity-0" : "opacity-100",
+                )}
               />
               <Tooltip>
                 <TooltipTrigger
-                  className="ml-1 size-6 flex-shrink-0 self-center"
+                  className="size-6 flex-shrink-0 self-center"
                   intent="plain"
                   shape="circle"
                   size="square-petite"

@@ -11,7 +11,6 @@ import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
 import { CopyX, Settings2, X } from "lucide-react";
 import { motion } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface TabProps {
@@ -20,8 +19,8 @@ interface TabProps {
   title: string;
   isActive: boolean;
   onClick: () => void;
+  width: number;
   type: "thread" | "setting";
-  isDragging: boolean;
 }
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
@@ -31,36 +30,14 @@ export function Tab({
   title,
   isActive,
   onClick,
+  width,
   type,
-  isDragging,
 }: TabProps) {
   const { t } = useTranslation();
   const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
     id,
     index,
   });
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState<number>(200);
-
-  const updateWidth = useCallback(() => {
-    if (containerRef.current && !isDragging) {
-      setWidth(containerRef.current.offsetWidth);
-    }
-  }, [isDragging]);
-
-  useEffect(() => {
-    updateWidth();
-
-    const resizeObserver = new ResizeObserver(updateWidth);
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [updateWidth]);
 
   // * The three different compression states for the tab
   const isCompressedOne = width <= 100;
@@ -72,23 +49,22 @@ export function Tab({
       {(provided, snapshot) => (
         <ContextMenu>
           <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            exit={{ width: 0 }}
-            transition={{ duration: 0.3 }}
-            className="size-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="h-[80%]"
           >
-            <ContextMenuTrigger className="size-full p-1">
+            <ContextMenuTrigger className="size-full">
               <div
                 ref={(node) => {
                   ref.current = node;
                   provided.innerRef(node);
-                  containerRef.current = node;
                 }}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 className={cn(
-                  "relative flex h-full w-full select-none items-center rounded-full",
+                  "relative mt-[1px] flex h-full select-none items-center rounded-full px-3",
                   isCompressedThree
                     ? "justify-center px-0"
                     : "justify-between px-2",
@@ -106,6 +82,9 @@ export function Tab({
                 tabIndex={0}
                 style={
                   {
+                    width: `${width}px`,
+                    minWidth: `${width}px`,
+                    maxWidth: `${width}px`,
                     ...noDragRegion,
                     ...provided.draggableProps.style,
                     cursor: "pointer",
