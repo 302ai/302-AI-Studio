@@ -332,6 +332,9 @@ export function useToolBar() {
             await threadService.updateThread(currentActiveThreadId, {
               title: result.text,
             });
+            await tabService.updateTab(currentActiveTabId, {
+              title: result.text,
+            });
           }
         }
       } catch (streamError) {
