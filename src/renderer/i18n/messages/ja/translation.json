@@ -228,6 +228,8 @@
   },
   "message": {
     "copy": "コピー",
+    "copy-success": "コピーに成功しました",
+    "copy-failed": "コピーが失敗しました",
     "refresh": "再生成",
     "edit": "編集",
     "delete": "削除",

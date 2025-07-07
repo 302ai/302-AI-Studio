@@ -227,6 +227,8 @@
   },
   "message": {
     "copy": "Copy",
+    "copy-success": "Copied successfully",
+    "copy-failed": "Copy failed",
     "refresh": "Regenerate",
     "edit": "Edit",
     "delete": "Delete",

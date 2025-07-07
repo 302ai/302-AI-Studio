@@ -216,6 +216,8 @@
   },
   "message": {
     "copy": "复制",
+    "copy-success": "复制成功",
+    "copy-failed": "复制失败",
     "refresh": "重新生成",
     "edit": "编辑",
     "delete": "删除",
