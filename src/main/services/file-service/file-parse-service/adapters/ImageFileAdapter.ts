@@ -2,8 +2,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { BaseFileAdapter } from "./BaseFileAdapter";
-// import { VisionService } from '../llm/VisionService'
-// import { loadVisionConfig } from '../../utils/env'
 
 export class ImageFileAdapter extends BaseFileAdapter {
   private maxFileSize: number;
@@ -14,7 +12,6 @@ export class ImageFileAdapter extends BaseFileAdapter {
     compressWidth?: number;
     compressHeight?: number;
   } = {};
-  // private visionDescription: string | undefined
 
   constructor(filePath: string, maxFileSize: number) {
     super(filePath);
@@ -99,10 +96,6 @@ export class ImageFileAdapter extends BaseFileAdapter {
   }
 
   async getContent(): Promise<string | undefined> {
-    // if (this.visionDescription === undefined) {
-    //   this.visionDescription = await this.generateImageDescription()
-    // }
-    // return this.visionDescription
     return "";
   }
 }

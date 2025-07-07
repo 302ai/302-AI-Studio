@@ -5,8 +5,7 @@ export { AudioFileAdapter } from "./AudioFileAdapter";
 export { BaseFileAdapter } from "./BaseFileAdapter";
 export { CodeFileAdapter } from "./CodeFileAdapter";
 export { CsvFileAdapter } from "./CsvFileAdapter";
-// Directory adapter
-export { DirectoryAdapter } from "./DirectoryAdapter";
+
 export { DocFileAdapter } from "./DocFileAdapter";
 export { ExcelFileAdapter } from "./ExcelFileAdapter";
 // Types

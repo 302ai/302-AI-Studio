@@ -16,9 +16,9 @@ import type {
   FileAdapterConstructor,
   ImageFileAdapter,
 } from "./adapters";
-import { DirectoryAdapter, UnsupportFileAdapter } from "./adapters";
+import { UnsupportFileAdapter } from "./adapters";
 import { detectMimeType, getMimeTypeAdapterMap } from "./mime";
-import type { FileOperation, IFilePresenter, MessageFile } from "./type";
+import type { IFilePresenter, MessageFile } from "./type";
 
 // Local type definition for attachment parsing
 interface AttachmentForParsing {
@@ -48,109 +48,6 @@ export class FileParseService implements IFilePresenter {
   }
 
   // ========== IPC Service Methods ==========
-
-  /**
-   * Get MIME type of a file
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async getMimeTypeIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    filePath: string,
-  ): Promise<string> {
-    return this.getMimeType(filePath);
-  }
-
-  /**
-   * Prepare a file for processing
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async prepareFileIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    absPath: string,
-    typeInfo?: string,
-  ): Promise<MessageFile> {
-    return this.prepareFile(absPath, typeInfo);
-  }
-
-  /**
-   * Prepare a directory for processing
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async prepareDirectoryIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    absPath: string,
-  ): Promise<MessageFile> {
-    return this.prepareDirectory(absPath);
-  }
-
-  /**
-   * Write temporary file
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async writeTempIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    file: {
-      name: string;
-      content: string | Buffer | ArrayBuffer;
-    },
-  ): Promise<string> {
-    return this.writeTemp(file);
-  }
-
-  /**
-   * Write base64 image to temporary file
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async writeImageBase64IPC(
-    _event: Electron.IpcMainInvokeEvent,
-    file: { name: string; content: string },
-  ): Promise<string> {
-    return this.writeImageBase64(file);
-  }
-
-  /**
-   * Check if path is a directory
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async isDirectoryIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    absPath: string,
-  ): Promise<boolean> {
-    return this.isDirectory(absPath);
-  }
-
-  /**
-   * Read file content
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async readFileIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    relativePath: string,
-  ): Promise<string> {
-    return this.readFile(relativePath);
-  }
-
-  /**
-   * Write file content
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async writeFileIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    operation: { path: string; content?: string },
-  ): Promise<void> {
-    return this.writeFile(operation);
-  }
-
-  /**
-   * Delete file
-   */
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async deleteFileIPC(
-    _event: Electron.IpcMainInvokeEvent,
-    relativePath: string,
-  ): Promise<void> {
-    return this.deleteFile(relativePath);
-  }
 
   /**
    * Parse file content using local file adapters
@@ -212,22 +109,6 @@ export class FileParseService implements IFilePresenter {
     return detectMimeType(filePath);
   }
 
-  async readFile(relativePath: string): Promise<string> {
-    const fullPath = path.join(this.userDataPath, relativePath);
-    return fs.readFile(fullPath, "utf-8");
-  }
-
-  async writeFile(operation: FileOperation): Promise<void> {
-    const fullPath = path.join(this.userDataPath, operation.path);
-    await fs.mkdir(path.dirname(fullPath), { recursive: true });
-    await fs.writeFile(fullPath, operation.content || "", "utf-8");
-  }
-
-  async deleteFile(relativePath: string): Promise<void> {
-    const fullPath = path.join(this.userDataPath, relativePath);
-    await fs.unlink(fullPath);
-  }
-
   async createFileAdapter(
     filePath: string,
     typeInfo?: string,
@@ -259,26 +140,7 @@ export class FileParseService implements IFilePresenter {
     return new AdapterConstructor(filePath, this.maxFileSize);
   }
 
-  async prepareDirectory(absPath: string): Promise<MessageFile> {
-    const fullPath = path.join(absPath);
-    const adapter = new DirectoryAdapter(fullPath);
-    await adapter.processDirectory();
-    return {
-      name: adapter.dirMetaData?.dirName ?? "",
-      token: approximateTokenSize(adapter.dirMetaData?.dirName ?? ""),
-      path: adapter.dirPath,
-      mimeType: "directory",
-      metadata: {
-        fileName: adapter.dirMetaData?.dirName ?? "",
-        fileSize: 0,
-        fileDescription: "directory",
-        fileCreated: adapter.dirMetaData?.dirCreated ?? new Date(),
-        fileModified: adapter.dirMetaData?.dirModified ?? new Date(),
-      },
-      thumbnail: "",
-      content: "",
-    };
-  }
+
 
   async prepareFile(absPath: string, typeInfo?: string): Promise<MessageFile> {
     const fullPath = path.join(absPath);
@@ -383,49 +245,7 @@ export class FileParseService implements IFilePresenter {
     return tempPath;
   }
 
-  async writeImageBase64(file: {
-    name: string;
-    content: string;
-  }): Promise<string> {
-    // 检查是否是base64格式的图片数据
-    if (!file.content.startsWith("data:image/")) {
-      throw new Error("Invalid image base64 data");
-    }
 
-    // 从base64字符串中提取实际的图片数据
-    const base64Data = file.content.split(",")[1];
-    if (!base64Data) {
-      throw new Error("Invalid base64 image format");
-    }
-
-    // 将base64转换为二进制数据
-    const binaryData = Buffer.from(base64Data, "base64");
-
-    // 获取文件扩展名
-    const mimeMatch = file.content.match(/^data:image\/([a-zA-Z0-9]+);base64,/);
-    const ext = mimeMatch ? `.${mimeMatch[1].toLowerCase()}` : ".png";
-
-    // 生成临时文件名
-    const tempName = `${nanoid()}${ext}`;
-    const tempPath = path.join(this.tempDir, tempName);
-
-    // 写入文件
-    await fs.writeFile(tempPath, binaryData);
-
-    return tempPath;
-  }
-
-  async isDirectory(absPath: string): Promise<boolean> {
-    try {
-      const fullPath = path.join(absPath);
-      const stats = await fs.stat(fullPath);
-      return stats.isDirectory();
-    } catch (error) {
-      Logger.error("isDirectory error ---->", error);
-      // If the path doesn't exist or there's any other error, return false
-      return false;
-    }
-  }
 }
 
 function calculateImageTokens(adapter: ImageFileAdapter): number {
