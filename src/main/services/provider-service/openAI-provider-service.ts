@@ -1,20 +1,17 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
-import { parseModels } from "@main/utils/models";
+import { detectModelProvider, parseModels } from "@main/utils/models";
 import { createReasoningFetch } from "@main/utils/reasoning";
 import type {
   CreateModelData,
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-// Import AI SDK types
 import {
   generateText,
   type ModelMessage,
   type StreamTextResult,
-  smoothStream,
-  streamText,
   type ToolSet,
 } from "ai";
 import Logger from "electron-log";
@@ -113,22 +110,27 @@ export class OpenAIProviderService extends BaseProviderService {
     params: StreamChatParams,
     abortController: AbortController,
   ): Promise<StreamTextResult<ToolSet, never>> {
-    const { tabId, threadId, messages, model: originModel } = params;
+    const { messages, model: originModel } = params;
 
     try {
       const model = this.openai(originModel.name);
 
-      Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
+      const isClaude = detectModelProvider(originModel.name) === "anthropic";
 
-      const result = streamText({
-        model: model,
-        messages: messages as ModelMessage[],
+      if (isClaude) {
+        this.openai = createOpenAI({
+          apiKey: this.provider.apiKey,
+          baseURL: this.provider.baseUrl,
+          fetch: createReasoningFetch(isClaude),
+        });
+      }
 
-        experimental_transform: smoothStream({
-          chunking: "line",
-        }),
-        abortSignal: abortController.signal,
-      });
+      const result = await this._startStreamChat(
+        params,
+        abortController,
+        model,
+        messages as ModelMessage[],
+      );
 
       return result;
     } catch (error) {

@@ -23,9 +23,30 @@ interface Choice {
   finish_reason?: string;
 }
 
-export function createReasoningFetch(): typeof fetch {
+export function createReasoningFetch(isClaude: boolean = false): typeof fetch {
   return async (url, options) => {
-    const response = await fetch(url, options);
+    let modifiedOptions = options;
+
+    if (options?.method === "POST" && options?.body) {
+      try {
+        const bodyData = JSON.parse(options.body as string);
+
+        if (isClaude) {
+          bodyData.thinking = {
+            type: "enabled",
+            budget_tokens: 16000,
+          };
+        }
+        modifiedOptions = {
+          ...options,
+          body: JSON.stringify(bodyData),
+        };
+      } catch (error) {
+        Logger.error("Failed to parse request body:", error);
+      }
+    }
+
+    const response = await fetch(url, modifiedOptions);
     const reasoningProcessor = new ReasoningProcessor();
     return interceptSSEResponse(response, reasoningProcessor);
   };

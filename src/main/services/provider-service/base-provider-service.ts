@@ -7,7 +7,14 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import type { StreamTextResult, ToolSet } from "ai";
+import {
+  type LanguageModel,
+  type ModelMessage,
+  type StreamTextResult,
+  smoothStream,
+  streamText,
+  type ToolSet,
+} from "ai";
 import Logger from "electron-log";
 import {
   cleanupAbortController as cleanupAbortControllerForTab,
@@ -89,6 +96,34 @@ export abstract class BaseProviderService {
     params: StreamChatParams,
     abortController: AbortController,
   ): Promise<StreamTextResult<ToolSet, never>>;
+
+  protected async _startStreamChat(
+    params: StreamChatParams,
+    abortController: AbortController,
+    languageModel: LanguageModel,
+    modelMessages: ModelMessage[],
+  ): Promise<StreamTextResult<ToolSet, never>> {
+    const { tabId, threadId } = params;
+
+    try {
+      Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
+
+      const result = streamText({
+        model: languageModel,
+        messages: modelMessages,
+
+        experimental_transform: smoothStream({
+          chunking: "line",
+        }),
+        abortSignal: abortController.signal,
+      });
+
+      return result;
+    } catch (error) {
+      Logger.error("Failed to start stream chat:", error);
+      throw error;
+    }
+  }
 
   abstract summaryTitle(params: SummaryTitleParams): Promise<{
     text: string;

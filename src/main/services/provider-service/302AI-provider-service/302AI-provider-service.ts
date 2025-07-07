@@ -116,9 +116,11 @@ export class AI302ProviderService extends OpenAIProviderService {
       fetch: ai302Fetcher(canReason, webSearchConfig, enableVision, isClaude),
     });
 
-    return await super.startStreamChat(
+    return await super._startStreamChat(
       { ...params, messages: newMessages as ChatMessage[] },
       abortController,
+      this.openai(model.name),
+      newMessages,
     );
   }
 
