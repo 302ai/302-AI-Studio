@@ -1,4 +1,3 @@
-import * as crypto from "node:crypto";
 import * as fs from "node:fs";
 import path from "node:path";
 import { detectMimeType } from "../mime";
@@ -13,15 +12,9 @@ export abstract class BaseFileAdapter {
     this.filePath = filePath;
   }
 
-  protected async readFile(): Promise<Buffer> {
-    return fs.promises.readFile(this.filePath);
-  }
 
-  protected async calculateFileHash(fileBuffer: Buffer): Promise<string> {
-    const hash = crypto.createHash("sha256");
-    hash.update(fileBuffer);
-    return hash.digest("hex");
-  }
+
+
 
   protected async extractBasicInfo(): Promise<{
     fileSize: number;

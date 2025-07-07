@@ -183,39 +183,7 @@ export class PdfFileAdapter extends BaseFileAdapter {
     return markdownParagraphs.filter((p) => p).join("\n\n");
   }
 
-  // 获取指定页面的原始文本内容
-  public async getPageContent(pageNumber: number): Promise<string | undefined> {
-    const pdfData = await this.loadPdfData();
-    if (!pdfData || !pdfData.pageContents) return undefined;
 
-    // 页码从1开始，数组索引从0开始
-    const pageIndex = pageNumber - 1;
-    if (pageIndex < 0 || pageIndex >= pdfData.pageContents.length) {
-      return undefined;
-    }
-
-    return pdfData.pageContents[pageIndex];
-  }
-
-  // 获取指定页面的Markdown格式内容
-  public async getPageMarkdown(
-    pageNumber: number,
-  ): Promise<string | undefined> {
-    const pageContent = await this.getPageContent(pageNumber);
-    if (!pageContent) return undefined;
-
-    return this.convertTextToMarkdown(pageContent);
-  }
-
-  // 获取所有页面的Markdown格式内容
-  public async getAllPagesMarkdown(): Promise<string[] | undefined> {
-    const pdfData = await this.loadPdfData();
-    if (!pdfData || !pdfData.pageContents) return undefined;
-
-    return pdfData.pageContents.map((pageContent) =>
-      this.convertTextToMarkdown(pageContent),
-    );
-  }
 
   async getContent(): Promise<string | undefined> {
     if (this.fileContent === undefined) {
