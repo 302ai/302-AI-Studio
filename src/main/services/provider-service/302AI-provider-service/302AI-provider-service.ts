@@ -1,10 +1,18 @@
 import { createOpenAI } from "@ai-sdk/openai";
+import { fetchOpenAIModels } from "@main/api/ai";
+import { extractErrorMessage } from "@main/utils/error-utils";
 import {
   type ChatMessage,
   convertMessagesToModelMessages,
 } from "@main/utils/message-converter";
-import type { Provider, UpdateProviderData } from "@shared/triplit/types";
+import { parseModels } from "@main/utils/models";
+import type {
+  CreateModelData,
+  Provider,
+  UpdateProviderData,
+} from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
+import Logger from "electron-log";
 import type { SettingsService } from "../../settings-service";
 import type {
   StreamChatParams,
@@ -98,16 +106,61 @@ export class AI302ProviderService extends OpenAIProviderService {
       }
     }
 
+    const canReason = !model.capabilities.has("reasoning") && enableReason;
+
     this.openai = createOpenAI({
       apiKey: this.provider.apiKey,
       baseURL: this.provider.baseUrl,
-      fetch: ai302Fetcher(enableReason, webSearchConfig, enableVision),
+      fetch: ai302Fetcher(canReason, webSearchConfig, enableVision),
     });
 
     return await super.startStreamChat(
       { ...params, messages: newMessages as ChatMessage[] },
       abortController,
     );
+  }
+
+  protected async fetchProviderModels(options?: {
+    timeout: number;
+  }): Promise<CreateModelData[]> {
+    try {
+      const response = await fetchOpenAIModels({
+        apiKey: this.provider.apiKey,
+        baseUrl: this.provider.baseUrl,
+        timeout: options?.timeout,
+      });
+      const formatedModels =
+        response.data.map((model) => {
+          const capabilities = parseModels(model.id);
+          return {
+            name: model.id.trim(),
+            providerId: this.provider.id,
+            custom: false,
+            enabled: true,
+            collected: false,
+            capabilities: new Set(
+              model.is_moderated
+                ? ["vision", "file", ...capabilities]
+                : capabilities,
+            ),
+          };
+        }) || [];
+
+      Logger.info(
+        "Fetched 302.AI models successfully, the count is:",
+        formatedModels.length,
+      );
+
+      return formatedModels;
+    } catch (error) {
+      Logger.error("Failed to fetch 302.AI models:", error);
+
+      if (error instanceof Error) {
+        throw error;
+      }
+
+      throw new Error(extractErrorMessage(error));
+    }
   }
 
   async summaryTitle(params: SummaryTitleParams): Promise<{

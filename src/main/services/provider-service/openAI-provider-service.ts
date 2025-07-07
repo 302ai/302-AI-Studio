@@ -1,6 +1,7 @@
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
+import { parseModels } from "@main/utils/models";
 import { createReasoningFetch } from "@main/utils/reasoning";
 import type {
   CreateModelData,
@@ -80,13 +81,14 @@ export class OpenAIProviderService extends BaseProviderService {
       });
       const formatedModels =
         response.data.map((model) => {
+          const capabilities = parseModels(model.id);
           return {
             name: model.id.trim(),
             providerId: this.provider.id,
             custom: false,
             enabled: true,
             collected: false,
-            capabilities: new Set(model.is_moderated ? ["vision", "file"] : []),
+            capabilities,
           };
         }) || [];
 

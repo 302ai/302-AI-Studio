@@ -19,6 +19,7 @@ export function ai302Fetcher(
 
         bodyData["file-parse"] = true;
         bodyData["parse-service"] = "jina";
+
         if (enableVison) {
           // biome-ignore lint/complexity/useLiteralKeys: <ignore>
           bodyData["ocr_model"] = "gpt-4.1-nano";

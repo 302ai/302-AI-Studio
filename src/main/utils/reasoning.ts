@@ -111,7 +111,7 @@ class ReasoningProcessor {
       return line;
     }
 
-    // Logger.info("line", line);
+    Logger.info("line", line);
 
     const jsonStr = line.substring(6); // * remove "data: "
 
@@ -172,9 +172,10 @@ class ReasoningProcessor {
       return;
     }
 
-    // Logger.info("reasoning", delta);
-
     const hasReasoningContent = "reasoning_content" in delta;
+    const reasoningContentIsNotNull = delta.reasoning_content !== null;
+    const reasoningContentIsEmpty = delta.reasoning_content === "";
+    const contentIsNull = delta.content === null;
 
     const existingContent = delta.content || "";
 
@@ -183,9 +184,20 @@ class ReasoningProcessor {
       this.isStartWithThink = true;
     }
 
-    if (hasReasoningContent || startWithThink || this.isStartWithThink) {
+    if (
+      (hasReasoningContent &&
+        reasoningContentIsNotNull &&
+        !reasoningContentIsEmpty) ||
+      startWithThink ||
+      this.isStartWithThink
+    ) {
       this.handleReasoningContent(delta, existingContent);
-    } else if (this.isInThinkingMode && !hasReasoningContent) {
+    } else if (
+      this.isInThinkingMode &&
+      (!hasReasoningContent ||
+        !reasoningContentIsNotNull ||
+        (reasoningContentIsEmpty && contentIsNull))
+    ) {
       this.handleEndOfThinking(delta, existingContent);
     }
   }
@@ -194,13 +206,14 @@ class ReasoningProcessor {
     delta: DeltaContent,
     existingContent: string,
   ): void {
+    const hasReasoningContent = "reasoning_content" in delta;
     const reasoningContent = delta.reasoning_content;
 
-    if (reasoningContent) {
+    if (reasoningContent || hasReasoningContent) {
       if (!this.isInThinkingMode) {
         delta.content = this.createThinkingStartContent(
           existingContent,
-          reasoningContent,
+          reasoningContent ?? "",
         );
 
         this.isInThinkingMode = true;
@@ -212,6 +225,7 @@ class ReasoningProcessor {
 
       return;
     } else {
+      // * If there is no reasoning content but has <think>, we need to start thinking
       this.isInThinkingMode = true;
     }
   }
