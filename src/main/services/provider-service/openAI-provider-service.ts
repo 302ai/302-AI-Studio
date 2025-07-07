@@ -148,10 +148,13 @@ export class OpenAIProviderService extends BaseProviderService {
       const conversationText = messages
         .map((m) => `${m.role}: ${m.content}`)
         .join("\n");
-      const prompt = `请为以下对话生成一个简洁的标题，不超过10个字，不使用标点符号或其他特殊符号，标题语言应该匹配对话的语言：\n\n${conversationText}`;
+      const prompt = `You need to summarize the user's conversation into a title of no more than 10 words, with the title language matching the user's primary language, without using punctuation or other special symbols`;
       const result = await generateText({
         model: model,
-        messages: [{ role: "user", content: prompt }],
+        messages: [
+          { role: "system", content: prompt },
+          { role: "user", content: conversationText },
+        ],
       });
 
       return {
