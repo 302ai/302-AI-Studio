@@ -242,7 +242,7 @@
     "completed": "已完成"
   },
   "common": {
-    "copied-success": "已复制",
+    "copied-success": "复制成功",
     "copied-failed": "复制失败",
     "copy-to-clipboard": "复制"
   },

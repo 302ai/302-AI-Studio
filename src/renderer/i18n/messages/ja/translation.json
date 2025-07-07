@@ -215,7 +215,7 @@
     }
   },
   "common": {
-    "copied-success": "コピー",
+    "copied-success": "コピーに成功しました",
     "copied-failed": "コピーが失敗しました",
     "copy-to-clipboard": "コピー"
   },

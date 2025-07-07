@@ -52,6 +52,9 @@ export function AssistantMessage({
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
+  const { t: tCommon } = useTranslation("translation", {
+    keyPrefix: "common",
+  });
 
   const { createThread, selectedModelId } = useToolBar();
   const { setActiveTabId } = useActiveTab();
@@ -70,8 +73,10 @@ export function AssistantMessage({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       setContextMenuOpen(false);
+      toast.success(tCommon("copied-success"));
     } catch (error) {
       console.error("复制失败:", error);
+      toast.error(tCommon("copied-failed"));
     }
   };
 
@@ -82,9 +87,11 @@ export function AssistantMessage({
       if (selectedText) {
         await navigator.clipboard.writeText(selectedText);
         setContextMenuOpen(false);
+        toast.success(tCommon("copied-success"));
       }
     } catch (error) {
       console.error("复制选中内容失败:", error);
+      toast.error(tCommon("copied-failed"));
     }
   };
 

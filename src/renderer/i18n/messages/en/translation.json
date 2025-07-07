@@ -214,7 +214,7 @@
     }
   },
   "common": {
-    "copied-success": "Copied",
+    "copied-success": "Copied successfully",
     "copied-failed": "Copy failed",
     "copy-to-clipboard": "Copy"
   },
