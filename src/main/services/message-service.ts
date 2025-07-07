@@ -204,7 +204,10 @@ export class MessageService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async deleteAllMessages(threadIds?: string[]): Promise<void> {
+  async deleteAllMessages(
+    _event: Electron.IpcMainEvent,
+    threadIds?: string[],
+  ): Promise<void> {
     try {
       if (threadIds) {
         await Promise.all(
