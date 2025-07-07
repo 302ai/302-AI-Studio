@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import logger from "@shared/logger/renderer-logger";
 
 interface SvgArtifactProps {
   block: {
@@ -59,7 +60,7 @@ const SvgArtifact: React.FC<SvgArtifactProps> = ({
       containerRef.current.appendChild(svgElement);
       setError("");
     } catch (err) {
-      console.error("SVG rendering error:", err);
+      logger.error("SvgArtifact: SVG rendering error", { error: err });
       setError(err instanceof Error ? err.message : "Failed to render SVG");
     }
   }, [block.content, isPreview]);

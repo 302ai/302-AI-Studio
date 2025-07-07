@@ -12,7 +12,7 @@ import type {
   UpdateProviderData,
 } from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import type { SettingsService } from "../../settings-service";
 import type {
   StreamChatParams,
@@ -146,14 +146,13 @@ export class AI302ProviderService extends OpenAIProviderService {
           };
         }) || [];
 
-      Logger.info(
-        "Fetched 302.AI models successfully, the count is:",
-        formatedModels.length,
-      );
+      logger.info("Fetched 302.AI models successfully", {
+        count: formatedModels.length,
+      });
 
       return formatedModels;
     } catch (error) {
-      Logger.error("Failed to fetch 302.AI models:", error);
+      logger.error("Failed to fetch 302.AI models:", { error });
 
       if (error instanceof Error) {
         throw error;

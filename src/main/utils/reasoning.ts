@@ -1,6 +1,6 @@
 // import Logger from "electron-log";
 
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 
 interface SSEData {
   choices?: Array<{
@@ -111,7 +111,7 @@ class ReasoningProcessor {
       return line;
     }
 
-    Logger.info("line", line);
+    logger.info("line", { line });
 
     const jsonStr = line.substring(6); // * remove "data: "
 
@@ -132,7 +132,7 @@ class ReasoningProcessor {
 
   private isDoneMessage(jsonStr: string): boolean {
     if (jsonStr.trim() === "[DONE]") {
-      Logger.info("isDoneMessage,isDoneMessage,isDoneMessage,isDoneMessage");
+      logger.info("isDoneMessage,isDoneMessage,isDoneMessage,isDoneMessage");
     }
     return jsonStr.trim() === "[DONE]";
   }

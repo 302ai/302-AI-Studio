@@ -1,6 +1,7 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { initPreloadBridge } from "@main/bridge";
 import { contextBridge, webUtils } from "electron";
+import logger from "@shared/logger/main-logger";
 
 const api = {
   platform: process.platform,
@@ -18,7 +19,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("service", initPreloadBridge());
   } catch (error) {
-    console.error("Error exposing services:", error);
+    logger.error("Preload: Error exposing services", { error });
   }
 } else {
   // @ts-ignore (define in dts)

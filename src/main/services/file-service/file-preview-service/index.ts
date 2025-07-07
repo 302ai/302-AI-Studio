@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import { TYPES } from "@main/shared/types";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import {
   CommunicationWay,
@@ -33,7 +34,9 @@ export class FilePreviewService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error previewing file by path:", error);
+      logger.error("FilePreviewService: Error previewing file by path", {
+        error,
+      });
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",

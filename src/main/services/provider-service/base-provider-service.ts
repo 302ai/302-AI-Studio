@@ -8,7 +8,7 @@ import type {
   UpdateProviderData,
 } from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import {
   cleanupAbortController as cleanupAbortControllerForTab,
   createAbortController as createAbortControllerForTab,
@@ -65,16 +65,14 @@ export abstract class BaseProviderService {
       const models = await this.fetchProviderModels();
       const supportedModels = models.filter((model) => isSupportedModel(model));
       this.models = supportedModels;
-      Logger.debug(
-        "Fetch models successfully:",
-        this.provider.name,
-        "supportedModels count:",
-        supportedModels.length,
-      );
+      logger.debug("Fetch models successfully", {
+        providerName: this.provider.name,
+        supportedModelsCount: supportedModels.length,
+      });
 
       return supportedModels;
     } catch (error) {
-      Logger.error("Failed to fetch models:", error);
+      logger.error("Failed to fetch models:", { error });
       if (!this.models) {
         this.models = [];
       }

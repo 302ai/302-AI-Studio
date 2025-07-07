@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { BaseFileAdapter } from "./BaseFileAdapter";
+import logger from "@shared/logger/main-logger";
 
 export class ImageFileAdapter extends BaseFileAdapter {
   private maxFileSize: number;
@@ -34,7 +35,9 @@ export class ImageFileAdapter extends BaseFileAdapter {
         format: metadata.format,
       };
     } catch (error) {
-      console.error("Error extracting image metadata:", error);
+      logger.error("ImageFileAdapter: Error extracting image metadata", {
+        error,
+      });
       // 如果 sharp 失败，至少从文件扩展名获取格式
       this.imageMetadata.format = path
         .extname(this.filePath)

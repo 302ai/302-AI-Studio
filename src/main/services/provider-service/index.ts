@@ -16,7 +16,7 @@ import type {
   UpdateProviderData,
 } from "@shared/triplit/types";
 import type { LanguageModelUsage } from "ai";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
@@ -55,15 +55,20 @@ export class ProviderService {
       this.providerMap.set(provider.id, provider);
       if (provider.enabled) {
         try {
-          Logger.info(
-            `init provider: id=${provider.id} name=${provider.name}, type=${provider.apiType}`,
-          );
+          logger.info("init provider", {
+            providerId: provider.id,
+            providerName: provider.name,
+            apiType: provider.apiType,
+          });
           const providerInst = this.createProviderInst(provider);
           if (providerInst) {
             this.providerInstMap.set(provider.id, providerInst);
           }
         } catch (error) {
-          Logger.error(`Failed to init provider: ${provider.id}`, error);
+          logger.error("Failed to init provider", {
+            providerId: provider.id,
+            error,
+          });
         }
       }
     }
@@ -83,9 +88,10 @@ export class ProviderService {
 
   private handleProviderAdded(provider: Provider) {
     try {
-      Logger.info(
-        `Adding provider to cache: id=${provider.id} name=${provider.name}`,
-      );
+      logger.info("Adding provider to cache", {
+        providerId: provider.id,
+        providerName: provider.name,
+      });
 
       this.providerMap.set(provider.id, provider);
 
@@ -93,13 +99,20 @@ export class ProviderService {
         const providerInst = this.createProviderInst(provider);
         if (providerInst) {
           this.providerInstMap.set(provider.id, providerInst);
-          Logger.info(`Provider instance created and cached: ${provider.name}`);
+          logger.info("Provider instance created and cached", {
+            providerName: provider.name,
+          });
         }
       }
 
-      Logger.info(`Provider added to cache successfully: ${provider.name}`);
+      logger.info("Provider added to cache successfully", {
+        providerName: provider.name,
+      });
     } catch (error) {
-      Logger.error(`Failed to add provider to cache: ${provider.id}`, error);
+      logger.error("Failed to add provider to cache", {
+        providerId: provider.id,
+        error,
+      });
     }
   }
 
@@ -108,19 +121,20 @@ export class ProviderService {
       const provider = this.providerMap.get(providerId);
       const providerName = provider?.name || providerId;
 
-      Logger.info(
-        `Removing provider from cache: id=${providerId} name=${providerName}`,
-      );
+      logger.info("Removing provider from cache", {
+        providerId,
+        providerName,
+      });
 
       this.providerMap.delete(providerId);
       this.providerInstMap.delete(providerId);
 
-      Logger.info(`Provider removed from cache successfully: ${providerName}`);
+      logger.info("Provider removed from cache successfully", { providerName });
     } catch (error) {
-      Logger.error(
-        `Failed to remove provider from cache: ${providerId}`,
+      logger.error("Failed to remove provider from cache", {
+        providerId,
         error,
-      );
+      });
     }
   }
 
@@ -154,7 +168,7 @@ export class ProviderService {
         return new AI302ProviderService(provider, this.settingsService);
 
       default:
-        Logger.warn(`Unknown provider type: ${provider.apiType}`);
+        logger.warn("Unknown provider type", { apiType: provider.apiType });
         return undefined;
     }
   }
@@ -199,7 +213,8 @@ export class ProviderService {
 
       const { isOk, errorMsg } = await providerInst.checkApiKey();
 
-      Logger.debug("checkApiKey: ", provider.name, {
+      logger.debug("checkApiKey", {
+        providerName: provider.name,
         isOk,
         errorMsg,
       });
@@ -305,7 +320,7 @@ export class ProviderService {
         userMessageId: userMessageId,
       });
 
-      Logger.info(`Stream chat completed for thread ${threadId}`);
+      logger.info("Stream chat completed", { threadId });
 
       return {
         success: true,
@@ -319,7 +334,7 @@ export class ProviderService {
       }
 
       if (error instanceof Error && error.name === "AbortError") {
-        Logger.info(`Stream aborted for thread ${threadId}`);
+        logger.info("Stream aborted", { threadId });
 
         await this.chatService.updateMessage(assistantMessage.id, {
           status: "stop",
@@ -332,7 +347,7 @@ export class ProviderService {
         return { success: true };
       }
 
-      Logger.error(`Stream chat error for thread ${threadId}:`, error);
+      logger.error("Stream chat error", { threadId, error });
 
       await this.chatService.updateMessage(assistantMessage.id, {
         status: "error",
@@ -359,9 +374,7 @@ export class ProviderService {
   ): Promise<{ success: boolean }> {
     const { threadId } = params;
     const aborted = abortStream(threadId);
-    Logger.info(
-      `Stream chat stop requested for thread ${threadId}. Active stream aborted: ${aborted}`,
-    );
+    logger.info("Stream chat stop requested", { threadId, aborted });
     return { success: true };
   }
 
@@ -399,14 +412,14 @@ export class ProviderService {
         provider,
       });
 
-      Logger.info(`Generate text completed for provider ${provider.id}`);
+      logger.info("Generate text completed", { providerId: provider.id });
 
       return {
         success: true,
         text: result.text,
       };
     } catch (error) {
-      Logger.error(`Generate text error for provider ${provider.id}:`, error);
+      logger.error("Generate text error", { providerId: provider.id, error });
 
       return {
         success: false,

@@ -5,7 +5,7 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
@@ -56,7 +56,7 @@ export class ConfigDbService extends BaseDbService {
   async updateProvider(providerId: string, updateData: UpdateProviderData) {
     const existingProvider = await this.getProviderById(providerId);
     if (!existingProvider) {
-      Logger.error(`Provider with id ${providerId} not found, skipping update`);
+      logger.error("Provider not found, skipping update", { providerId });
       return;
     }
 
@@ -68,7 +68,7 @@ export class ConfigDbService extends BaseDbService {
   async updateProviderOrder(providerId: string, order: number) {
     const existingProvider = await this.getProviderById(providerId);
     if (!existingProvider) {
-      Logger.error(`Provider with id ${providerId} not found, skipping update`);
+      logger.error("Provider not found, skipping update", { providerId });
       return;
     }
 

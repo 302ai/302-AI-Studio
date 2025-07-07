@@ -1,5 +1,6 @@
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import logger from "@shared/logger/renderer-logger";
 
 interface HtmlPreviewProps {
   content: string;
@@ -102,7 +103,9 @@ export const HtmlPreview: React.FC<HtmlPreviewProps> = ({
 
           iframeDoc.head.appendChild(styleElement);
         } catch (error) {
-          console.warn("Failed to apply styles to iframe:", error);
+          logger.warn("HtmlArtifact: Failed to apply styles to iframe", {
+            error,
+          });
         }
       };
     }

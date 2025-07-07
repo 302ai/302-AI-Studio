@@ -5,7 +5,7 @@ import {
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
 import type { CreateTabData, Tab, UpdateTabData } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { TabDbService } from "./db-service/tab-db-service";
 
@@ -23,7 +23,7 @@ export class TabService {
       const newTab = await this.tabDbService.insertTab(tab);
       return newTab;
     } catch (error) {
-      Logger.error("TabService:insertTab error ---->", error);
+      logger.error("TabService:insertTab error", { error });
       throw error;
     }
   }
@@ -37,7 +37,7 @@ export class TabService {
       const currentActiveTabId = await this.tabDbService.deleteTab(tabId);
       return currentActiveTabId;
     } catch (error) {
-      Logger.error("TabService:deleteTab error ---->", error);
+      logger.error("TabService:deleteTab error", { error });
       throw error;
     }
   }
@@ -47,7 +47,7 @@ export class TabService {
     try {
       await this.tabDbService.deleteAllTabs();
     } catch (error) {
-      Logger.error("TabService:deleteAllTabs error ---->", error);
+      logger.error("TabService:deleteAllTabs error", { error });
       throw error;
     }
   }
@@ -61,7 +61,7 @@ export class TabService {
     try {
       await this.tabDbService.updateTab(tabId, updateData);
     } catch (error) {
-      Logger.error("TabService:updateTab error ---->", error);
+      logger.error("TabService:updateTab error", { error });
       throw error;
     }
   }
@@ -75,7 +75,7 @@ export class TabService {
       const tab = await this.tabDbService.getTab(tabId);
       return tab;
     } catch (error) {
-      Logger.error("TabService:getTab error ---->", error);
+      logger.error("TabService:getTab error", { error });
       throw error;
     }
   }
@@ -90,7 +90,7 @@ export class TabService {
     try {
       await this.tabDbService.moveTab(fromIndex, toIndex, tabs);
     } catch (error) {
-      Logger.error("TabService:moveTab error ---->", error);
+      logger.error("TabService:moveTab error", { error });
       throw error;
     }
   }
@@ -108,7 +108,7 @@ export class TabService {
         });
       }
     } catch (error) {
-      Logger.error("TabService:activateTab error ---->", error);
+      logger.error("TabService:activateTab error", { error });
       throw error;
     }
   }

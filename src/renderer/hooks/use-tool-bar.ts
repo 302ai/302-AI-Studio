@@ -10,6 +10,7 @@ import { useQuery, useQueryOne } from "@triplit/react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import logger from "@shared/logger/renderer-logger";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
@@ -294,7 +295,7 @@ export function useToolBar() {
         await attachmentService.insertAttachments(attachmentData);
       }
 
-      console.log("User message sent successfully:", userMessage);
+      logger.info("User message sent successfully", { userMessage });
 
       const conversationMessages = [
         ...existingMessages.map((msg) => ({

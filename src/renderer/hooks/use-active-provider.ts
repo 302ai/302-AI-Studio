@@ -1,5 +1,6 @@
 import { triplitClient } from "@renderer/client";
 import type { Provider } from "@shared/triplit/types";
+import logger from "@shared/logger/renderer-logger";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -32,7 +33,10 @@ export function useActiveProvider() {
   }, [activeProviderId, providers]);
 
   const setSelectedProvider = useCallback(async (provider: Provider | null) => {
-    console.log("Setting selected provider:", provider?.name || "none");
+    logger.debug("useActiveProvider: Setting selected provider", {
+      providerName: provider?.name || "none",
+      providerId: provider?.id || "",
+    });
     await uiService.updateActiveProviderId(provider?.id || "");
   }, []);
 

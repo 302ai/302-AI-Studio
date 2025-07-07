@@ -1,4 +1,4 @@
-import { Logger } from "@renderer/config/logger";
+import logger from "@shared/logger/renderer-logger";
 import { QueryClient } from "@tanstack/react-query";
 
 /**
@@ -43,7 +43,7 @@ queryClient.getQueryCache().subscribe((event) => {
   if (event?.type === "observerResultsUpdated") {
     const { query } = event;
     if (query.state.error) {
-      Logger.error("Query error:", {
+      logger.error("Query error:", {
         queryKey: query.queryKey,
         error: query.state.error,
       });
@@ -55,7 +55,7 @@ queryClient.getMutationCache().subscribe((event) => {
   if (event?.type === "updated") {
     const { mutation } = event;
     if (mutation.state.error) {
-      Logger.error("Mutation error:", {
+      logger.error("Mutation error:", {
         mutationKey: mutation.options.mutationKey,
         error: mutation.state.error,
       });

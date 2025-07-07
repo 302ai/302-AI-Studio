@@ -2,6 +2,7 @@ import * as fs from "node:fs";
 import path from "node:path";
 import { detectMimeType } from "../mime";
 import type { FileMetaData } from "../type";
+import logger from "@shared/logger/main-logger";
 
 export abstract class BaseFileAdapter {
   filePath: string;
@@ -11,10 +12,6 @@ export abstract class BaseFileAdapter {
   constructor(filePath: string) {
     this.filePath = filePath;
   }
-
-
-
-
 
   protected async extractBasicInfo(): Promise<{
     fileSize: number;
@@ -53,7 +50,7 @@ export abstract class BaseFileAdapter {
           fileModified,
         };
       } catch (error) {
-        console.error("Error processing file:", error);
+        logger.error("BaseFileAdapter: Error processing file", { error });
         return null;
       }
     }

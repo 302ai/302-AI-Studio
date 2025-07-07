@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileTypeFromFile } from "file-type";
 import * as mime from "mime-types";
+import logger from "@shared/logger/main-logger";
 import {
   AudioFileAdapter,
   CodeFileAdapter,
@@ -126,10 +127,10 @@ export const detectMimeType = async (filePath: string): Promise<string> => {
   try {
     // 1. Try file-type for binary detection
     const fileTypeResult = await fileTypeFromFile(filePath);
-    console.log(
-      `[getMimeType] fileTypeFromFile result for ${path.basename(filePath)}:`,
-      fileTypeResult,
-    );
+    logger.debug("MimeDetection: fileTypeFromFile result", {
+      fileName: path.basename(filePath),
+      result: fileTypeResult,
+    });
     if (fileTypeResult) {
       // Special case: Correct potential misidentification for .ts/.tsx
       // file-type might identify them based on magic numbers if they exist,
@@ -139,57 +140,63 @@ export const detectMimeType = async (filePath: string): Promise<string> => {
       if (ext === ".ts" || ext === ".tsx") {
         const mimeTypeFromExt = mime.lookup(filePath);
         if (mimeTypeFromExt === "application/typescript") {
-          console.log(
-            "Prioritizing mime.lookup for .ts/.tsx:",
-            mimeTypeFromExt,
-          );
+          logger.debug("MimeDetection: Prioritizing mime.lookup for .ts/.tsx", {
+            mimeType: mimeTypeFromExt,
+          });
           return mimeTypeFromExt;
         }
       }
 
-      console.log("Detected by file-type:", fileTypeResult.mime);
+      logger.debug("MimeDetection: Detected by file-type", {
+        mimeType: fileTypeResult.mime,
+      });
       return fileTypeResult.mime;
     }
 
     // 2. Fallback to mime.lookup for extension-based detection
     const mimeType = mime.lookup(filePath);
-    console.log(
-      `[getMimeType] mime.lookup result for ${path.basename(filePath)}:`,
+    logger.debug("MimeDetection: mime.lookup result", {
+      fileName: path.basename(filePath),
       mimeType,
-    );
+    });
     if (mimeType) {
-      console.log("Detected by mime.lookup:", mimeType);
+      logger.debug("MimeDetection: Detected by mime.lookup", { mimeType });
       return mimeType;
     }
 
     // 3. If neither works, try the text heuristic
-    console.log(
-      `[getMimeType] Trying text heuristic for ${path.basename(filePath)}`,
-    );
+    logger.debug("MimeDetection: Trying text heuristic", {
+      fileName: path.basename(filePath),
+    });
     const isText = await isLikelyTextFile(filePath);
-    console.log(
-      `[getMimeType] isLikelyTextFile result for ${path.basename(filePath)}: ${isText}`,
-    );
+    logger.debug("MimeDetection: isLikelyTextFile result", {
+      fileName: path.basename(filePath),
+      isText,
+    });
     return isText ? "text/plain" : "application/octet-stream";
   } catch (error) {
-    console.error(
-      `[getMimeType] Error before text check for ${path.basename(filePath)}:`,
+    logger.error("MimeDetection: Error before text check", {
+      fileName: path.basename(filePath),
       error,
-    );
+    });
     // If file-type or mime.lookup caused an error, still try basic text check
     // or fall back to octet-stream directly depending on desired robustness.
     // For now, let's try the text check even on error.
     try {
-      console.log(
-        `[getMimeType] Trying text heuristic for ${path.basename(filePath)} after error`,
-      );
+      logger.debug("MimeDetection: Trying text heuristic after error", {
+        fileName: path.basename(filePath),
+      });
       const isText = await isLikelyTextFile(filePath);
-      console.log(
-        `[getMimeType] isLikelyTextFile result for ${path.basename(filePath)} after error: ${isText}`,
-      );
+      logger.debug("MimeDetection: isLikelyTextFile result after error", {
+        fileName: path.basename(filePath),
+        isText,
+      });
       return isText ? "text/plain" : "application/octet-stream";
     } catch (textCheckError) {
-      console.error(`Error during text check for ${filePath}:`, textCheckError);
+      logger.error("MimeDetection: Error during text check", {
+        filePath,
+        error: textCheckError,
+      });
       return "application/octet-stream"; // Final fallback on error
     }
   }
@@ -202,17 +209,22 @@ export const isLikelyTextFile = async (
 ): Promise<boolean> => {
   let fileHandle: fs.FileHandle | undefined;
   const baseName = path.basename(filePath);
-  console.log(`[isLikelyTextFile] Checking ${baseName}...`);
+  logger.debug("TextFileDetection: Starting file check", {
+    fileName: baseName,
+  });
   try {
     fileHandle = await fs.open(filePath, "r");
     const buffer = Buffer.alloc(bytesToRead);
     const { bytesRead } = await fileHandle.read(buffer, 0, bytesToRead, 0);
     await fileHandle.close(); // Close the file handle promptly
-    console.log(`[isLikelyTextFile] Read ${bytesRead} bytes from ${baseName}.`);
+    logger.debug("TextFileDetection: Read bytes from file", {
+      fileName: baseName,
+      bytesRead,
+    });
 
     if (bytesRead === 0) {
       // Empty file, could be considered text or not, default to not-text
-      console.log(`[isLikelyTextFile] ${baseName} is empty.`);
+      logger.debug("TextFileDetection: File is empty", { fileName: baseName });
       return false;
     }
 
@@ -220,9 +232,10 @@ export const isLikelyTextFile = async (
 
     // Heuristic: Check for null bytes - common in binary, rare in text
     const hasNullByte = content.includes(0);
-    console.log(
-      `[isLikelyTextFile] ${baseName} contains null byte: ${hasNullByte}`,
-    );
+    logger.debug("TextFileDetection: Null byte check", {
+      fileName: baseName,
+      hasNullByte,
+    });
     if (hasNullByte) {
       // Found null byte, likely binary
       return false;
@@ -249,27 +262,32 @@ export const isLikelyTextFile = async (
     }
 
     const nonTextRatio = bytesRead > 0 ? nonTextChars / bytesRead : 0;
-    console.log(
-      `[isLikelyTextFile] ${baseName} non-text char count: ${nonTextChars}, ratio: ${nonTextRatio.toFixed(3)}`,
-    );
+    logger.debug("TextFileDetection: Non-text character analysis", {
+      fileName: baseName,
+      nonTextChars,
+      ratio: nonTextRatio.toFixed(3),
+    });
 
     // If more than, say, 10% of characters are suspicious control characters (excluding tab/newline/cr)
     // it's more likely binary.
     if (nonTextRatio > 0.1) {
-      console.log(
-        `[isLikelyTextFile] ${baseName} determined as BINARY due to high non-text ratio.`,
-      );
+      logger.debug("TextFileDetection: Determined as BINARY", {
+        fileName: baseName,
+        reason: "high non-text ratio",
+      });
       return false;
     }
 
     // If it passes the checks, assume it's likely text
-    console.log(`[isLikelyTextFile] ${baseName} determined as TEXT.`);
+    logger.debug("TextFileDetection: Determined as TEXT", {
+      fileName: baseName,
+    });
     return true;
   } catch (error) {
-    console.error(
-      `[isLikelyTextFile] Failed to read file ${baseName} for text check:`,
+    logger.error("TextFileDetection: Failed to read file for text check", {
+      fileName: baseName,
       error,
-    );
+    });
     if (fileHandle) {
       await fileHandle.close(); // Ensure closure even on error
     }

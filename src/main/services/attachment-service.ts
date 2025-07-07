@@ -9,7 +9,7 @@ import type {
   CreateAttachmentData,
   UpdateAttachmentData,
 } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { AttachmentDbService } from "./db-service/attachment-db-service";
 
@@ -46,7 +46,7 @@ export class AttachmentService {
     try {
       await this.attachmentDbService.insertAttachments(attachments);
     } catch (error) {
-      Logger.error("AttachmentService: insertAttachments error ---->", error);
+      logger.error("AttachmentService: insertAttachments error", { error });
       throw error;
     }
   }
@@ -60,7 +60,7 @@ export class AttachmentService {
     try {
       await this.attachmentDbService.updateAttachment(attachmentId, updateData);
     } catch (error) {
-      Logger.error("AttachmentService: updateAttachment error ---->", error);
+      logger.error("AttachmentService: updateAttachment error", { error });
       throw error;
     }
   }
@@ -75,10 +75,9 @@ export class AttachmentService {
         await this.attachmentDbService.getAttachmentsByMessageId(messageId);
       return attachments;
     } catch (error) {
-      Logger.error(
-        "AttachmentService: getAttachmentsByMessageId error ---->",
+      logger.error("AttachmentService: getAttachmentsByMessageId error", {
         error,
-      );
+      });
       throw error;
     }
   }
@@ -91,10 +90,9 @@ export class AttachmentService {
     try {
       await this.attachmentDbService.deleteAttachmentsByMessageId(messageId);
     } catch (error) {
-      Logger.error(
-        "AttachmentService: deleteAttachmentsByMessageId error ---->",
+      logger.error("AttachmentService: deleteAttachmentsByMessageId error", {
         error,
-      );
+      });
       throw error;
     }
   }

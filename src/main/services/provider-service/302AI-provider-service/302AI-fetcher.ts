@@ -3,7 +3,7 @@ import {
   interceptSSEResponse,
   ReasoningProcessor,
 } from "@main/utils/reasoning";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 
 export function ai302Fetcher(
   enableReason: boolean = false,
@@ -38,7 +38,7 @@ export function ai302Fetcher(
           body: JSON.stringify(bodyData),
         };
       } catch (error) {
-        Logger.error("Failed to parse request body:", error);
+        logger.error("Failed to parse request body:", { error });
       }
     }
 

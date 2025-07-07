@@ -1,6 +1,6 @@
 import type { AttachmentService } from "@main/services/attachment-service";
 import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { FilePresenter } from "../services/file-service/file-parse-service";
 import { container } from "../shared/bindings";
 import { TYPES } from "../shared/types";
@@ -61,7 +61,7 @@ export async function convertToModelMessage(
           fileContent: att.fileContent || undefined,
         }));
       } catch (error) {
-        Logger.warn("Failed to get attachments from database:", error);
+        logger.warn("Failed to get attachments from database", { error });
         attachments = [];
       }
     }
@@ -118,7 +118,7 @@ export async function convertToModelMessage(
               text: `${attachment.name}\n${parsedContent}`,
             });
           } catch (error) {
-            Logger.error("Failed to parse file:", error);
+            logger.error("Failed to parse file", { error });
 
             // Add error message as text
             contentParts.push({
@@ -127,7 +127,7 @@ export async function convertToModelMessage(
             });
           }
         } else {
-          Logger.warn("Skipping attachment due to missing data");
+          logger.warn("Skipping attachment due to missing data");
         }
       }
 
@@ -147,7 +147,7 @@ export async function convertToModelMessage(
             }
           }
         } catch (error) {
-          Logger.error("Failed to update attachments in database:", error);
+          logger.error("Failed to update attachments in database", { error });
         }
       }
 

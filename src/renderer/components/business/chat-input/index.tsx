@@ -7,6 +7,7 @@ import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Message } from "@shared/triplit/types";
+import logger from "@shared/logger/renderer-logger";
 import { Pencil, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -71,7 +72,7 @@ export function ChatInput({ className }: ChatInputProps) {
       // Send message with stored values
       await sendMessage(currentInput, currentAttachments, editMessageId ?? "");
     } catch (error) {
-      console.error("Failed to send message:", error);
+      logger.error("ChatInput: Failed to send message", { error });
       toast.error(t("send-failed"));
       // Restore input on error
       setInput(currentInput);
@@ -141,7 +142,9 @@ export function ChatInput({ className }: ChatInputProps) {
         // 直接设置附件状态，不保存到tab（因为这是编辑模式）
         setAttachmentsDirectly(loadedAttachments);
       } catch (error) {
-        console.error("Failed to load attachments from message:", error);
+        logger.error("ChatInput: Failed to load attachments from message", {
+          error,
+        });
         await clearAttachments();
       }
     },

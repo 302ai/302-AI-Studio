@@ -17,7 +17,7 @@ import {
   streamText,
   type ToolSet,
 } from "ai";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import {
   BaseProviderService,
   type StreamChatParams,
@@ -92,14 +92,13 @@ export class OpenAIProviderService extends BaseProviderService {
           };
         }) || [];
 
-      Logger.info(
-        "Fetched OpenAI models successfully, the count is:",
-        formatedModels.length,
-      );
+      logger.info("Fetched OpenAI models successfully, the count is:", {
+        count: formatedModels.length,
+      });
 
       return formatedModels;
     } catch (error) {
-      Logger.error("Failed to fetch OpenAI models:", error);
+      logger.error("Failed to fetch OpenAI models:", { error });
 
       if (error instanceof Error) {
         throw error;
@@ -118,7 +117,7 @@ export class OpenAIProviderService extends BaseProviderService {
     try {
       const model = this.openai(originModel.name);
 
-      Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
+      logger.info("Starting stream chat", { tabId, threadId });
 
       const result = streamText({
         model: model,
@@ -132,7 +131,7 @@ export class OpenAIProviderService extends BaseProviderService {
 
       return result;
     } catch (error) {
-      Logger.error("Failed to start stream chat:", error);
+      logger.error("Failed to start stream chat:", { error });
       throw error;
     }
   }
@@ -161,7 +160,7 @@ export class OpenAIProviderService extends BaseProviderService {
         text: result.text,
       };
     } catch (error) {
-      Logger.error("Failed to generate text:", error);
+      logger.error("Failed to generate text:", { error });
       throw error;
     }
   }

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { TYPES } from "@main/shared/types";
 import { app } from "electron";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { injectable } from "inversify";
 import { nanoid } from "nanoid";
 import { approximateTokenSize } from "tokenx";
@@ -44,7 +44,11 @@ export class FileParseService implements IFilePresenter {
     this.userDataPath = app.getPath("userData");
     this.tempDir = path.join(this.userDataPath, "temp");
     // Ensure temp directory exists
-    fs.mkdir(this.tempDir, { recursive: true }).catch(console.error);
+    fs.mkdir(this.tempDir, { recursive: true }).catch((error) =>
+      logger.error("FileParseService: Failed to create temp directory", {
+        error,
+      }),
+    );
   }
 
   // ========== IPC Service Methods ==========
@@ -58,7 +62,7 @@ export class FileParseService implements IFilePresenter {
     attachment: AttachmentForParsing,
   ): Promise<string> {
     try {
-      Logger.info("Starting file parsing for:", {
+      logger.info("Starting file parsing for:", {
         fileName: attachment.name,
       });
 
@@ -71,11 +75,11 @@ export class FileParseService implements IFilePresenter {
       // Use FilePresenter to prepare and parse the file
       const messageFile = await this.prepareFile(tempFilePath, attachment.type);
 
-      Logger.info("File parsed successfully using local adapters");
+      logger.info("File parsed successfully using local adapters");
 
       return messageFile.content;
     } catch (error) {
-      Logger.error("File parsing failed:", error);
+      logger.error("File parsing failed:", { error });
       throw new Error(
         `Failed to parse file ${attachment.name}: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -122,7 +126,10 @@ export class FileParseService implements IFilePresenter {
       throw new Error(`Could not determine MIME type for file: ${filePath}`);
     }
 
-    console.log(`Using MIME type: ${mimeType} for file: ${filePath}`);
+    logger.debug("FileParseService: Using MIME type for file", {
+      mimeType,
+      filePath,
+    });
 
     const adapterMap = getMimeTypeAdapterMap();
     const AdapterConstructor = this.findAdapterForMimeType(
@@ -140,13 +147,11 @@ export class FileParseService implements IFilePresenter {
     return new AdapterConstructor(filePath, this.maxFileSize);
   }
 
-
-
   async prepareFile(absPath: string, typeInfo?: string): Promise<MessageFile> {
     const fullPath = path.join(absPath);
     try {
       const adapter = await this.createFileAdapter(fullPath, typeInfo);
-      console.log("adapter", adapter);
+      logger.debug("FileParseService: Created file adapter", { adapter });
       if (adapter) {
         await adapter.processFile();
         const content = (await adapter.getLLMContent()) ?? "";
@@ -174,7 +179,10 @@ export class FileParseService implements IFilePresenter {
       }
     } catch (error) {
       // Clean up temp file in case of error
-      console.error(error);
+      logger.error("FileParseService: Failed to prepare file", {
+        error,
+        fullPath,
+      });
       throw new Error(`Can not read file: ${fullPath}`);
     }
   }
@@ -244,8 +252,6 @@ export class FileParseService implements IFilePresenter {
 
     return tempPath;
   }
-
-
 }
 
 function calculateImageTokens(adapter: ImageFileAdapter): number {
