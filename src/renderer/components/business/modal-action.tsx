@@ -20,6 +20,7 @@ interface ModalActionProps {
     action: () => void;
     body?: React.ReactNode;
     disabled?: boolean;
+    isPending?: boolean;
   };
   dangerActions?: string[];
 }
@@ -52,6 +53,7 @@ export function ModalAction({
           className="min-w-24"
           size="small"
           isDisabled={actionType.disabled}
+          isPending={actionType.isPending}
           onPress={actionType.action}
         >
           {actionType.confirmText ?? t("confirm")}

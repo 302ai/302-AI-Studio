@@ -117,6 +117,7 @@ export function ProviderList() {
 
   const [ready, setReady] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const modelCounts = useMemo(() => {
     if (!allModels || !allProviders?.length) {
@@ -166,25 +167,33 @@ export function ProviderList() {
             />
           ),
           confirmText: t("modal-action.add-provider-confirm"),
-          disabled: !isApiKeyValidated,
+          disabled: !isApiKeyValidated || isSubmitting,
+          isPending: isSubmitting,
           action: async () => {
-            if (providerCfg) {
-              const { name, baseUrl, apiKey, apiType, custom } = providerCfg;
-              const is302Provider = domainsOf302.some((domain) =>
-                baseUrl?.includes(domain),
-              );
-              const newApiType = is302Provider ? "302ai" : apiType;
-              const provider: CreateProviderData = {
-                name,
-                baseUrl,
-                apiKey,
-                apiType: newApiType,
-                custom: custom ?? false,
-                enabled: true,
-              };
+            if (providerCfg && !isSubmitting) {
+              setIsSubmitting(true);
+              try {
+                const { name, baseUrl, apiKey, apiType, custom } = providerCfg;
+                const is302Provider = domainsOf302.some((domain) =>
+                  baseUrl?.includes(domain),
+                );
+                const newApiType = is302Provider ? "302ai" : apiType;
+                const provider: CreateProviderData = {
+                  name,
+                  baseUrl,
+                  apiKey,
+                  apiType: newApiType,
+                  custom: custom ?? false,
+                  enabled: true,
+                };
 
-              await handleAddProvider(provider);
-              handleCloseModal();
+                await handleAddProvider(provider);
+                handleCloseModal();
+              } catch (error) {
+                console.error("Failed to add provider:", error);
+              } finally {
+                setIsSubmitting(false);
+              }
             }
           },
         };
@@ -204,19 +213,27 @@ export function ProviderList() {
               onProviderCfgSet={(providerCfg) => setProviderCfg(providerCfg)}
             />
           ),
-          disabled: !isApiKeyValidated,
+          disabled: !isApiKeyValidated || isSubmitting,
+          isPending: isSubmitting,
           action: async () => {
-            if (providerCfg) {
-              const is302Provider = domainsOf302.some((domain) =>
-                providerCfg?.baseUrl?.includes(domain),
-              );
-              const newApiType = is302Provider ? "302ai" : providerCfg.apiType;
+            if (providerCfg && !isSubmitting) {
+              setIsSubmitting(true);
+              try {
+                const is302Provider = domainsOf302.some((domain) =>
+                  providerCfg?.baseUrl?.includes(domain),
+                );
+                const newApiType = is302Provider ? "302ai" : providerCfg.apiType;
 
-              await handleUpdateProvider({
-                ...providerCfg,
-                apiType: newApiType,
-              });
-              handleCloseModal();
+                await handleUpdateProvider({
+                  ...providerCfg,
+                  apiType: newApiType,
+                });
+                handleCloseModal();
+              } catch (error) {
+                console.error("Failed to update provider:", error);
+              } finally {
+                setIsSubmitting(false);
+              }
             }
           },
         };
@@ -232,12 +249,21 @@ export function ProviderList() {
             t("modal-action.delete-description-3"),
           ],
           confirmText: t("modal-action.delete-confirm"),
+          disabled: isSubmitting,
+          isPending: isSubmitting,
           action: async () => {
-            if (action.provider) {
-              await handleDelete(action.provider);
+            if (action.provider && !isSubmitting) {
+              setIsSubmitting(true);
+              try {
+                await handleDelete(action.provider);
+                setSelectedProvider(null);
+                handleCloseModal();
+              } catch (error) {
+                console.error("Failed to delete provider:", error);
+              } finally {
+                setIsSubmitting(false);
+              }
             }
-            setSelectedProvider(null);
-            handleCloseModal();
           },
         };
       default:
@@ -274,6 +300,7 @@ export function ProviderList() {
   const handleCloseModal = () => {
     setIsApiKeyValidated(false);
     setProviderCfg(null);
+    setIsSubmitting(false);
     closeModal();
   };
 
