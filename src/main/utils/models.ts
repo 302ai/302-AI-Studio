@@ -13,7 +13,7 @@ export function isSupportedModel(model: CreateModelData): boolean {
 export const MODEL_LIST_CONFIGS = {
   anthropic: {
     functionCall: ["claude"],
-    reasoning: ["thinking"],
+    reasoning: ["thinking", "-3-7", "3.7", "-4"],
     vision: ["claude"],
   },
   deepseek: {

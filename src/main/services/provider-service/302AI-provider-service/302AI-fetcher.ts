@@ -9,6 +9,7 @@ export function ai302Fetcher(
   enableReason: boolean = false,
   webSearchConfig: WebSearchConfig = { enabled: false, service: "search1api" },
   enableVison: boolean = false,
+  isClaude: boolean = false,
 ): typeof fetch {
   return async (url, options) => {
     let modifiedOptions = options;
@@ -19,6 +20,13 @@ export function ai302Fetcher(
 
         bodyData["file-parse"] = true;
         bodyData["parse-service"] = "jina";
+
+        if (isClaude) {
+          bodyData.thinking = {
+            type: "enabled",
+            budget_tokens: 16000,
+          };
+        }
 
         if (enableVison) {
           // biome-ignore lint/complexity/useLiteralKeys: <ignore>

@@ -5,7 +5,7 @@ import {
   type ChatMessage,
   convertMessagesToModelMessages,
 } from "@main/utils/message-converter";
-import { parseModels } from "@main/utils/models";
+import { detectModelProvider, parseModels } from "@main/utils/models";
 import type {
   CreateModelData,
   Provider,
@@ -62,7 +62,7 @@ export class AI302ProviderService extends OpenAIProviderService {
     this.openai = createOpenAI({
       apiKey: updateData.apiKey,
       baseURL: updateData.baseUrl,
-      fetch: ai302Fetcher(enableReason, webSearchConfig),
+      fetch: ai302Fetcher(enableReason, webSearchConfig, false, false),
     });
   }
 
@@ -106,12 +106,14 @@ export class AI302ProviderService extends OpenAIProviderService {
       }
     }
 
+    // * Enable reasoning for non-reasoning models
     const canReason = !model.capabilities.has("reasoning") && enableReason;
+    const isClaude = detectModelProvider(model.name) === "anthropic";
 
     this.openai = createOpenAI({
       apiKey: this.provider.apiKey,
       baseURL: this.provider.baseUrl,
-      fetch: ai302Fetcher(canReason, webSearchConfig, enableVision),
+      fetch: ai302Fetcher(canReason, webSearchConfig, enableVision, isClaude),
     });
 
     return await super.startStreamChat(
