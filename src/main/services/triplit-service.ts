@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 import fs from "node:fs";
 import path, { join } from "node:path";
 import { isDev } from "@main/constant";
@@ -9,10 +10,10 @@ import {
 import { TYPES } from "@main/shared/types";
 import { initTriplitClient } from "@main/triplit/client";
 import { extractErrorMessage } from "@main/utils/error-utils";
+import logger from "@shared/logger/main-logger";
 import { schema } from "@shared/triplit/schema";
 import { createServer, createTriplitStorageProvider } from "@triplit/server";
 import { app } from "electron";
-import logger from "@shared/logger/main-logger";
 import { injectable } from "inversify";
 import portfinder from "portfinder";
 

@@ -1,7 +1,8 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
+import logger from "@shared/logger/main-logger";
 import { schema } from "@shared/triplit/schema";
 import { TriplitClient } from "@triplit/client";
-import { Logger, LogHandler, LogRecord } from "@triplit/logger";
-import logger from "@shared/logger/main-logger";
+import { Logger, type LogHandler, type LogRecord } from "@triplit/logger";
 
 // Custom LogHandler for triplit client using our logger system
 class TriplitClientLogHandler implements LogHandler {
