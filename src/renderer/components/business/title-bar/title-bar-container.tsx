@@ -66,7 +66,7 @@ export function TitlebarRight({
     <div
       className={cn(
         "flex h-[var(--title-bar-height)] items-center justify-end",
-        isWindows || isLinux ? "pr-[140px]" : "pr-3",
+        isWindows ? "pr-[140px]" : isLinux ? "pr-[100px]" : "pr-3",
         className,
       )}
       {...props}
