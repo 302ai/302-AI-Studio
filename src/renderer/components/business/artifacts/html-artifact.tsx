@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import logger from "@shared/logger/renderer-logger";
 
 interface HtmlPreviewProps {
