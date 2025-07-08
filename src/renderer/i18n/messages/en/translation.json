@@ -67,7 +67,11 @@
         "no-models-description": "The model list is empty...",
         "current": "Current",
         "collected": "Favorites",
-        "search-placeholder": "Search..."
+        "search-placeholder": "Search...",
+        "fetch-models": "Fetch Models",
+        "model-name": "Model Name",
+        "model-capabilities": "Capabilities",
+        "actions": "Actions"
       },
       "model-provider": {
         "add-provider": "Add Model",
@@ -98,7 +102,14 @@
           "verification-required": "Please verify the API Key first before adding the provider",
           "verification-required-notice": "💡 Notice: API verification is required before adding or saving provider configuration.",
           "verification-hint": "Please click the verify button to confirm API Key availability",
-          "get-api-key": "Click here to get API Key"
+          "get-api-key": "Click here to get API Key",
+          "api-forward": "API requests will be sent to",
+          "interface-type": "Interface Type",
+          "interface-type-placeholder": "Select interface type",
+          "configure": "Configure",
+          "icon": "Icon",
+          "name": "Name",
+          "name-placeholder": "Please enter provider name"
         },
         "delete": "Delete",
         "description": " models",

@@ -2,10 +2,10 @@ import { triplitClient } from "@renderer/client";
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
 import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
+import { Globe, Image } from "lucide-react";
 import { memo } from "react";
 import { areEqual } from "react-window";
 import { ActionGroup } from "../action-group";
-import { ModelIcon } from "../model-icon";
 
 export const RowList = memo(function RowList({
   index,
@@ -19,12 +19,9 @@ export const RowList = memo(function RowList({
     providersMap: Record<string, Provider>;
   };
 }) {
-  const { models, providersMap } = data;
+  const { models } = data;
   const item = models[index];
   const isLast = index === models.length - 1;
-
-  // 直接从传入的 providersMap 中获取 provider
-  const provider = providersMap[item.providerId];
 
   const handleUpdateModel = async (updateModelData: UpdateModelData) => {
     await triplitClient.update("models", item.id, updateModelData);
@@ -40,6 +37,8 @@ export const RowList = memo(function RowList({
     handleUpdateModel({ collected: !item.collected });
   };
 
+  const modelCapabilities = Array.from(item?.capabilities || []);
+
   return (
     <div
       style={style}
@@ -48,33 +47,47 @@ export const RowList = memo(function RowList({
         !isLast ? "border-border border-b" : "",
       )}
     >
-      <div className="grid grid-cols-[48px_minmax(0,1fr)_160px_64px] items-center">
-        <div className="flex justify-center">
+      <div className="grid h-full grid-cols-[minmax(0,1fr)_160px_64px]">
+        <div className="flex h-full items-center gap-3 outline-hidden">
           <Checkbox
             className="cursor-pointer"
             isSelected={item.enabled}
             onChange={handleCheckboxChange}
           />
-        </div>
-
-        <div className="px-4 py-2.5 align-middle outline-hidden">
           <div className="truncate" title={item.name}>
             {item.name}
           </div>
         </div>
 
-        <div className="px-4 py-2.5 align-middle outline-hidden">
-          <div className="flex items-center gap-2">
-            <ModelIcon modelName={provider?.name ?? ""} />
-            <span className="truncate" title={provider?.name}>
-              {provider?.name}
-            </span>
-          </div>
+        <div className="flex h-full items-center gap-2 outline-hidden">
+          {modelCapabilities.map((capability) => {
+            switch (capability) {
+              case "reasoning":
+                return (
+                  <div
+                    key={capability}
+                    className="flex size-6 items-center justify-center rounded-sm bg-accent dark:bg-primary/10"
+                  >
+                    <Globe className="h-4 w-4 text-primary" />
+                  </div>
+                );
+              case "vision":
+                return (
+                  <div
+                    key={capability}
+                    className="flex size-6 items-center justify-center rounded-sm bg-success/15 dark:bg-success/10"
+                  >
+                    <Image className="h-4 w-4 text-success" />
+                  </div>
+                );
+              default:
+                return null;
+            }
+          })}
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex h-full items-center justify-center">
           <ActionGroup
-            className="my-auto"
             // onEdit={handleEdit}
             // onDelete={handleDelete}
             onStar={handleStar}

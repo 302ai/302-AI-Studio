@@ -28,12 +28,13 @@ export function useProviderList() {
   };
 
   const handleUpdateProvider = async (updatedProvider: Provider) => {
-    const { id, name, baseUrl, apiKey, apiType } = updatedProvider;
+    const { id, name, baseUrl, apiKey, apiType, avatar } = updatedProvider;
     await configService.updateProvider(id, {
       name,
       baseUrl,
       apiKey,
       apiType,
+      avatar,
     });
     const models = await providerService.fetchModels(updatedProvider);
     await configService.updateProviderModels(id, models);

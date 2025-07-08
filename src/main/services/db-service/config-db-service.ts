@@ -1,4 +1,5 @@
 import { triplitClient } from "@main/triplit/client";
+import { DEFAULT_PROVIDERS } from "@shared/providers";
 import type {
   CreateModelData,
   CreateProviderData,
@@ -11,8 +12,29 @@ import { BaseDbService } from "./base-db-service";
 
 @injectable()
 export class ConfigDbService extends BaseDbService {
+  private providersRecord: Provider[] = [];
+
   constructor() {
     super("providers");
+    this.initConfigDbService();
+  }
+
+  private async initConfigDbService() {
+    const query = triplitClient.query("providers");
+    const providers = await triplitClient.fetch(query);
+    this.providersRecord = providers;
+    this.initProviders();
+  }
+
+  private async initProviders() {
+    for (const provider of DEFAULT_PROVIDERS) {
+      const existingProvider = this.providersRecord.find(
+        (p) => p.name === provider.name,
+      );
+      if (!existingProvider) {
+        await this.insertProvider(provider);
+      }
+    }
   }
 
   async insertProvider(provider: CreateProviderData) {

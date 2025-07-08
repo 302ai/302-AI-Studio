@@ -1,6 +1,6 @@
-import { DEFAULT_PROVIDERS } from "@renderer/config/providers";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
 import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
+import { DEFAULT_PROVIDERS } from "@shared/providers";
 import type { Provider } from "@shared/triplit/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

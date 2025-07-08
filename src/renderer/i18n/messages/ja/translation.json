@@ -68,7 +68,11 @@
         "no-models-description": "モデルリストは空です...",
         "current": "現在",
         "collected": "お気に入り",
-        "search-placeholder": "検索..."
+        "search-placeholder": "検索...",
+        "fetch-models": "モデルを取得",
+        "model-name": "モデル名",
+        "model-capabilities": "モデル機能",
+        "actions": "操作"
       },
       "model-provider": {
         "add-provider": "モデルを追加",
@@ -99,7 +103,14 @@
           "verification-required": "プロバイダーを追加する前に、まずAPIキーを確認してください",
           "verification-required-notice": "💡 通知：プロバイダー設定を追加または保存する前に、API認証が必要です。",
           "verification-hint": "APIキーの可用性を確認するには、検証ボタンをクリックしてください",
-          "get-api-key": "APIキーを取得するには、ここをクリックしてください"
+          "get-api-key": "APIキーを取得するには、ここをクリックしてください",
+          "api-forward": "APIリクエストは次に送信されます",
+          "interface-type": "インターフェースタイプ",
+          "interface-type-placeholder": "インターフェースタイプを選択",
+          "configure": "設定",
+          "icon": "アイコン",
+          "name": "名前",
+          "name-placeholder": "プロバイダー名を入力してください"
         },
         "delete": "削除",
         "description": "モデル",

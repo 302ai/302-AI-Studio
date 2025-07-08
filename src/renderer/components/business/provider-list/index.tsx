@@ -9,12 +9,11 @@ import darkEmpty from "@renderer/assets/images/empty-dark.svg?url";
 import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
-import logger from "@shared/logger/renderer-logger";
-
 import {
   type ModalAction,
   useProviderList,
 } from "@renderer/hooks/use-provider-list";
+import logger from "@shared/logger/renderer-logger";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import debounce from "lodash-es/debounce";
@@ -38,6 +37,41 @@ import { ProviderCard } from "./provider-card";
 
 const domainsOf302 = ["302.cn", "302.ai"];
 
+const { configService } = window.service;
+
+// const defaultProviders: Provider[] = [
+//   {
+//     id: "RyzA7JoXJAOnn60SdId4w",
+//     name: "OpenAI",
+//     apiType: "openai",
+//     apiKey: "",
+//     baseUrl: "https://api.openai.com",
+//     enabled: true,
+//     custom: false,
+//     order: 0,
+//   },
+//   {
+//     id: "RyzA7JoXJAOnn60SdIddw",
+//     name: "Anthropic",
+//     apiType: "anthropic",
+//     apiKey: "",
+//     baseUrl: "https://api.anthropic.com",
+//     enabled: true,
+//     custom: false,
+//     order: 0,
+//   },
+//   {
+//     id: "RyzA7JoXJAOnn60SdIddw2",
+//     name: "Gemini",
+//     apiType: "gemini",
+//     apiKey: "",
+//     baseUrl: "https://api.gemini.com",
+//     enabled: true,
+//     custom: false,
+//     order: 0,
+//   },
+// ];
+
 const ListRow = React.memo(function ListRow({
   index,
   style,
@@ -60,10 +94,10 @@ const ListRow = React.memo(function ListRow({
     );
   }, 100);
 
-  const handleEdit = () => {
-    logger.debug("handleEdit", { provider });
-    setState({ type: "edit", provider });
-  };
+  // const handleEdit = () => {
+  //   logger.debug("handleEdit", { provider });
+  //   setState({ type: "edit", provider });
+  // };
 
   const handleDelete = () => {
     setState({ type: "delete", provider });
@@ -79,7 +113,7 @@ const ListRow = React.memo(function ListRow({
           isSelected={selectedProvider?.id === provider.id}
           modelCount={modelCounts[provider.id] || 0}
           actionGroup={
-            <ActionGroup onEdit={handleEdit} onDelete={handleDelete} />
+            <ActionGroup onEdit={undefined} onDelete={handleDelete} />
           }
           onClick={handleProviderSelect}
         />
@@ -311,11 +345,21 @@ export function ProviderList() {
     index: number;
     style: React.CSSProperties;
     data: Provider[];
-  }) => <ListRow {...props} setState={setState} modelCounts={modelCounts} />;
+  }) => {
+    // const newData = [...defaultProviders, ...props.data];
+    return (
+      <ListRow
+        {...props}
+        // data={newData}
+        setState={setState}
+        modelCounts={modelCounts}
+      />
+    );
+  };
 
   const updateHeight = useCallback(() => {
     if (listContainerRef.current) {
-      const height = listContainerRef.current.clientHeight - 8;
+      const height = listContainerRef.current.clientHeight - 70;
       setListHeight(height);
     }
   }, []);
@@ -348,23 +392,39 @@ export function ProviderList() {
 
   const loading = !ready || isPending;
 
+  const onClick = async () => {
+    // 先往provider列表插入该custom provider
+    const res = await configService.insertProvider({
+      name: "Custom Provider",
+      apiType: "custom",
+      apiKey: "",
+      baseUrl: "",
+      enabled: true,
+      custom: true,
+    });
+
+    setSelectedProvider(res);
+  };
+
   return (
     <>
-      <div className="flex h-full flex-col">
+      <div className="flex h-full w-full flex-col px-4 pt-[18px] ">
         <div className="flex justify-between">
           <div>{t("label")}</div>
           {providers.length > 0 ? (
             <Button
-              className="h-8 w-20 shrink-0"
+              className="h-7 w-20 shrink-0"
               intent="primary"
-              onClick={() => setState({ type: "add" })}
+              // onClick={() => setState({ type: "add" })}
+              onClick={onClick}
+              size="extra-small"
             >
               {t("add")}
             </Button>
           ) : null}
         </div>
 
-        <div ref={listContainerRef} className="mt-2 flex-1">
+        <div ref={listContainerRef} className="mt-2 flex-1 ">
           {loading ? (
             <div
               className="flex items-center justify-center"

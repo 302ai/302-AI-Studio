@@ -1,4 +1,6 @@
 import { triplitClient } from "@renderer/client";
+import { Button } from "@renderer/components/ui/button";
+import { Loader } from "@renderer/components/ui/loader";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -16,10 +18,17 @@ import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { SearchField } from "../../ui/search-field";
 import { Fetching } from "../fetching";
-import { ModelFilter } from "./model-filter";
 import { RowList } from "./row-list";
 
-export function ModelList() {
+interface ModelListProps {
+  onFetchModels?: () => void;
+  isFetchingModels?: boolean;
+}
+
+export function ModelList({
+  onFetchModels,
+  isFetchingModels = false,
+}: ModelListProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-list",
   });
@@ -44,7 +53,7 @@ export function ModelList() {
 
   const [containerHeight, setContainerHeight] = useState(window.innerHeight);
 
-  const [tabKey, setTabKey] = useState<React.Key>("current");
+  const [tabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
 
   // 创建 providers 映射表，方便快速查找
@@ -142,6 +151,13 @@ export function ModelList() {
     }
   }, [providersFetching, modelsFetching]);
 
+  // 当模型列表变化时，重新计算容器高度
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
+  useEffect(() => {
+    updateHeight();
+    // return () => clearTimeout(timer);
+  }, [filteredModels.length, updateHeight]);
+
   const loading = !ready || isPending;
 
   if (allModels.length === 0) {
@@ -150,19 +166,32 @@ export function ModelList() {
 
   return (
     <>
-      <div>{t("label")}</div>
-
       <div className="flex items-center justify-between">
-        <ModelFilter onTabChange={setTabKey} />
+        {/* <ModelFilter onTabChange={setTabKey} /> */}
+        <div className="flex gap-2">
+          <Button
+            size="extra-small"
+            onClick={onFetchModels}
+            isDisabled={isFetchingModels || !onFetchModels}
+          >
+            {isFetchingModels && <Loader variant="spin" size="small" />}
+            {t("fetch-models")}
+          </Button>
+          {/* <Button size="extra-small" intent="outline">
+            添加模型
+          </Button> */}
+        </div>
         <SearchField
           value={searchQuery}
           onChange={setSearchQuery}
           placeholder={t("search-placeholder")}
+          className="!h-[40px] !w-[206px]"
+          fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
         />
       </div>
       <div
         ref={setContainerRef}
-        className="flex h-full flex-col overflow-hidden rounded-xl border border-border"
+        className="flex h-full flex-col overflow-hidden rounded-xl border-border"
       >
         {loading ? (
           <div
@@ -172,12 +201,30 @@ export function ModelList() {
             <Fetching />
           </div>
         ) : (
+          // 表头
           <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
+            <div className="!bg-muted grid h-10 grid-cols-[minmax(0,1fr)_180px_55px] text-muted-fg">
+              <div className="flex h-full items-center outline-hidden">
+                <div className="truncate">{t("model-name")}</div>
+              </div>
+              {/*
+              <div className="flex h-full items-center outline-hidden">
+                <div className="truncate">模型类型</div>
+              </div> */}
+
+              <div className="flex h-full items-center outline-hidden">
+                <div className="truncate">{t("model-capabilities")}</div>
+              </div>
+
+              <div className="flex h-full items-center outline-hidden">
+                <div className="truncate">{t("actions")}</div>
+              </div>
+            </div>
             {filteredModels.length > 0 ? (
               <List
-                height={containerHeight}
+                height={containerHeight - 50}
                 itemCount={filteredModels.length}
-                itemSize={40}
+                itemSize={50}
                 itemData={listData}
                 overscanCount={10}
                 width="100%"
