@@ -14,6 +14,7 @@ import { useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { type ListItem, ModelRowList } from "./model-row-list";
+import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 
@@ -92,7 +93,7 @@ export const ModelSelect = ({
         await setActiveTabId(newTab.id);
       }
     } catch (error) {
-      console.error(error);
+      logger.error("Error opening model settings", { error });
     }
   }, [setActiveTabId, tabs, t]);
 

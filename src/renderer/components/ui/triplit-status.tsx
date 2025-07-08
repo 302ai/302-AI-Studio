@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import logger from "@shared/logger/renderer-logger";
 
 interface ServerStatus {
   isRunning: boolean;
@@ -19,7 +20,7 @@ export function TriplitStatus() {
         await window.service.triplitService.getServerStatus();
       setStatus(serverStatus);
     } catch (error) {
-      console.error("Failed to get server status:", error);
+      logger.error("Failed to get server status", { error });
       setStatus(null);
     }
   };
@@ -28,12 +29,12 @@ export function TriplitStatus() {
     setLoading(true);
     try {
       const result = await window.service.triplitService.restartServer();
-      console.log("Restart result:", result);
+      logger.debug("Restart result", { result });
       if (result.success) {
         await checkStatus();
       }
     } catch (error) {
-      console.error("Failed to restart server:", error);
+      logger.error("Failed to restart server", { error });
     } finally {
       setLoading(false);
     }
