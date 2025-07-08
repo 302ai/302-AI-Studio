@@ -1,4 +1,4 @@
-import { isMac, isWindows } from "@renderer/config/constant";
+import { isLinux, isMac, isWindows } from "@renderer/config/constant";
 import { cn } from "@renderer/lib/utils";
 import type { HTMLAttributes, PropsWithChildren } from "react";
 
@@ -66,7 +66,7 @@ export function TitlebarRight({
     <div
       className={cn(
         "flex h-[var(--title-bar-height)] items-center justify-end",
-        isWindows ? "pr-[140px]" : "pr-3",
+        isWindows || isLinux ? "pr-[140px]" : "pr-3",
         className,
       )}
       {...props}

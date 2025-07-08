@@ -6,7 +6,7 @@ import windowStateKeeper from "electron-window-state";
 import icon from "../../resources/build/icons/302ai.png?asset";
 import iconWin from "../../resources/build/icons/win-logo.ico?asset";
 import { titleBarOverlayDark, titleBarOverlayLight } from "../config";
-import { isDev, isMac, isWin } from "../constant";
+import { isDev, isLinux, isMac, isWin } from "../constant";
 
 export async function MainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -30,14 +30,22 @@ export async function MainWindow() {
     minHeight: WINDOW_SIZE.MIN_HEIGHT,
     autoHideMenuBar: true,
     transparent: isMac,
+    frame: isLinux ? false : undefined,
     icon: isWin ? iconFileWin : iconFile,
     visualEffectState: "active",
-    titleBarStyle: isWin ? "hidden" : "hiddenInset",
-    titleBarOverlay: shouldUseDarkColors
-      ? titleBarOverlayDark
-      : titleBarOverlayLight,
+    titleBarStyle: isMac ? "hiddenInset" : "hidden",
+    titleBarOverlay: !isMac
+      ? shouldUseDarkColors
+        ? titleBarOverlayDark
+        : titleBarOverlayLight
+      : undefined,
     backgroundColor: shouldUseDarkColors ? "#181818" : "#FFFFFF",
     trafficLightPosition: isMac ? { x: 12, y: 12 } : undefined,
+    ...(isLinux && {
+      thickFrame: false,
+      resizable: true,
+      skipTaskbar: false,
+    }),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,

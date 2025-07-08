@@ -1,6 +1,6 @@
 import { titleBarOverlayDark, titleBarOverlayLight } from "@main/config";
 import { BrowserWindow, nativeTheme } from "electron";
-import { isWin } from "../constant";
+import { isLinux, isWin } from "../constant";
 import { ServiceRegister } from "../shared/reflect";
 import { TYPES } from "../shared/types";
 import { EventNames, emitter } from "./event-service";
@@ -22,8 +22,8 @@ export class WindowService {
   }
 
   private updateTitleBarOverlay() {
-    // * setTitleBarOverlay is only available on Windows
-    if (!isWin) return;
+    // * setTitleBarOverlay is available on Windows and Linux
+    if (!isWin && !isLinux) return;
 
     BrowserWindow.getAllWindows().forEach((window) => {
       window.setTitleBarOverlay(
