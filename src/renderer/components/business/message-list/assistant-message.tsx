@@ -11,6 +11,7 @@ import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { useContentBlocks } from "@renderer/hooks/use-content-blocks";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { formatTimeAgo } from "@renderer/lib/utils";
+import logger from "@shared/logger/renderer-logger";
 import type { CreateMessageData, Message } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
 import { enUS, ja, zhCN } from "date-fns/locale";
@@ -23,7 +24,6 @@ import { ButtonWithTooltip } from "../button-with-tooltip";
 import { ModelIcon } from "../model-icon";
 import { EditMessageDialog } from "./edit-message-dialog";
 import { MessageAttachments } from "./message-attachments";
-import logger from "@shared/logger/renderer-logger";
 
 const localeMap = {
   zh: zhCN,
@@ -193,10 +193,7 @@ export function AssistantMessage({
         className="group flex flex-row gap-2"
         onContextMenu={handleContextMenu}
       >
-        <ModelIcon
-          className="size-6 bg-white"
-          modelName={provider?.name ?? ""}
-        />
+        <ModelIcon className="size-6" modelName={provider?.name ?? ""} />
 
         <div className="w-full min-w-0">
           <MessageAttachments messageId={message.id} className="mb-2" />
