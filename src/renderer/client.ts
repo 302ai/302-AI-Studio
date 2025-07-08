@@ -1,84 +1,12 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 import logger from "@shared/logger/renderer-logger";
 import { schema } from "@shared/triplit/schema";
+import { TriplitLogHandler } from "@shared/triplit/log-handler";
 import { TriplitClient } from "@triplit/client";
-import { Logger, type LogHandler, type LogRecord } from "@triplit/logger";
-
-// Custom LogHandler for triplit client using our logger system
-class TriplitClientLogHandler implements LogHandler {
-  log(record: LogRecord): void {
-    const { level, message, attributes, context } = record;
-
-    switch (level?.toLowerCase()) {
-      case "error":
-      case "fatal":
-        logger.error(message || "Triplit client error", {
-          context,
-          ...attributes,
-        });
-        break;
-      case "warn":
-        logger.warn(message || "Triplit client warning", {
-          context,
-          ...attributes,
-        });
-        break;
-      case "info":
-        logger.info(message || "Triplit client info", {
-          context,
-          ...attributes,
-        });
-        break;
-      case "debug":
-      case "trace":
-        logger.debug(message || "Triplit client debug", {
-          context,
-          ...attributes,
-        });
-        break;
-      default:
-        logger.info(message || "Triplit client log", {
-          level,
-          context,
-          ...attributes,
-        });
-    }
-  }
-
-  startSpan(
-    name: string,
-    context?: string,
-    attributes?: Record<string, any>,
-  ): any {
-    return { name, context, attributes, startTime: Date.now() };
-  }
-
-  endSpan(span: any): void {
-    if (span?.name) {
-      const duration = Date.now() - (span.startTime || Date.now());
-      logger.debug("Triplit client span completed", {
-        span: span.name,
-        duration: `${duration}ms`,
-        context: span.context,
-      });
-    }
-  }
-
-  recordMetric(
-    name: string,
-    value: number,
-    attributes?: Record<string, any>,
-  ): void {
-    logger.debug("Triplit client metric", {
-      metric: name,
-      value,
-      ...attributes,
-    });
-  }
-}
+import { Logger } from "@triplit/logger";
 
 // Create custom logger instance for triplit
-const triplitLogger = new Logger([new TriplitClientLogHandler()]);
+const triplitLogger = new Logger([new TriplitLogHandler(logger)]);
 
 export const triplitClient = new TriplitClient({
   storage: "memory",

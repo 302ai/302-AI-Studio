@@ -12,6 +12,7 @@ import { initTriplitClient } from "@main/triplit/client";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import logger from "@shared/logger/main-logger";
 import { schema } from "@shared/triplit/schema";
+import { TriplitLogHandler } from "@shared/triplit/log-handler";
 import { createServer, createTriplitStorageProvider } from "@triplit/server";
 import { app } from "electron";
 import { injectable } from "inversify";
@@ -40,61 +41,6 @@ const defaultTriplitConfig: TriplitServerConfig = {
 };
 
 type TriplitServer = ReturnType<Awaited<ReturnType<typeof createServer>>>;
-
-// Custom LogHandler for triplit using our logger system
-class TriplitLogHandler {
-  log(record: any): void {
-    const { level, message, ...context } = record;
-
-    switch (level?.toLowerCase()) {
-      case "error":
-        logger.error(message || "Triplit error", context);
-        break;
-      case "warn":
-      case "warning":
-        logger.warn(message || "Triplit warning", context);
-        break;
-      case "info":
-        logger.info(message || "Triplit info", context);
-        break;
-      case "debug":
-        logger.debug(message || "Triplit debug", context);
-        break;
-      default:
-        logger.info(message || "Triplit log", { level, ...context });
-    }
-  }
-
-  startSpan(
-    name: string,
-    context?: string,
-    attributes?: Record<string, any>,
-  ): any {
-    // For now, just return a simple span object
-    // Could be enhanced with actual tracing if needed
-    return { name, context, attributes, startTime: Date.now() };
-  }
-
-  endSpan(span: any): void {
-    // Log span completion if needed
-    if (span?.name) {
-      const duration = Date.now() - (span.startTime || Date.now());
-      logger.debug("Triplit span completed", {
-        span: span.name,
-        duration: `${duration}ms`,
-        context: span.context,
-      });
-    }
-  }
-
-  recordMetric(
-    name: string,
-    value: number,
-    attributes?: Record<string, any>,
-  ): void {
-    logger.debug("Triplit metric", { metric: name, value, ...attributes });
-  }
-}
 
 @ServiceRegister(TYPES.TriplitService)
 @injectable()
@@ -166,7 +112,7 @@ export class TriplitService {
     const startServer = await createServer({
       storage: sqliteKV,
       verboseLogs: false, // Disable default verbose logging
-      logHandler: new TriplitLogHandler(), // Use our custom log handler
+      logHandler: new TriplitLogHandler(logger), // Use our custom log handler
       dbOptions: {
         schema: {
           collections: schema,
