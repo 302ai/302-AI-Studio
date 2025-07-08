@@ -65,7 +65,7 @@ export const RowList = memo(function RowList({
 
         <div className="px-4 py-2.5 align-middle outline-hidden">
           <div className="flex items-center gap-2">
-            <ModelIcon modelName={provider?.name ?? ""} className="bg-white" />
+            <ModelIcon modelName={provider?.name ?? ""} />
             <span className="truncate" title={provider?.name}>
               {provider?.name}
             </span>

@@ -1,4 +1,3 @@
-import placeholder from "@renderer/assets/llm-icons/logo.png?url";
 import {
   ListBox,
   ListBoxItem,
@@ -13,6 +12,7 @@ import { SearchField } from "@renderer/components/ui/search-field";
 import { useThread } from "@renderer/hooks/use-thread";
 import { Autocomplete, useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
+import { ModelIcon } from "../model-icon";
 
 interface ThreadSearcherProps {
   isOpenSearcher: boolean;
@@ -68,10 +68,9 @@ export function ThreadSearcher({
                     className="flex w-full items-center gap-2 rounded-lg px-[9.2px] py-[5.2px] hover:bg-hover-primary"
                     onPointerDown={() => handleThreadClick(id)}
                   >
-                    <img
-                      src={placeholder}
-                      alt={title}
-                      className="h-4 w-4"
+                    <ModelIcon
+                      modelName="302"
+                      className="size-4 flex-shrink-0"
                     />
                     {title}
                   </div>

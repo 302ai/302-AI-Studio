@@ -39,6 +39,7 @@
     "@better-fetch/fetch": "^1.1.18",
     "@hello-pangea/dnd": "^18.0.1",
     "@intentui/icons": "^1.10.33",
+    "@lobehub/icons-static-svg": "^1.53.0",
     "@monaco-editor/react": "^4.7.0",
     "@triplit/client": "^1.0.40",
     "@triplit/react": "^1.0.40",

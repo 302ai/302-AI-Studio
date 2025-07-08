@@ -6,6 +6,7 @@ import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
 import { SearchField } from "@renderer/components/ui/search-field";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
+import logger from "@shared/logger/renderer-logger";
 import type { Model, Provider, Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { SearchX } from "lucide-react";
@@ -14,7 +15,6 @@ import { useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { type ListItem, ModelRowList } from "./model-row-list";
-import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 
@@ -267,10 +267,7 @@ export const ModelSelect = ({
         >
           {selectedModel ? (
             <>
-              <ModelIcon
-                modelName={selectedModel.name}
-                className="dark:bg-white"
-              />
+              <ModelIcon modelName={selectedModel.name} />
               <span className="truncate text-muted-fg group-hover:text-fg">
                 {selectedModel.name}
               </span>

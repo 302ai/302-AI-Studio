@@ -20,6 +20,7 @@ __metadata:
     "@electron/notarize": "patch:@electron/notarize@npm%3A3.0.1#~/.yarn/patches/@electron-notarize-npm-3.0.1-cc88e64e60.patch"
     "@hello-pangea/dnd": "npm:^18.0.1"
     "@intentui/icons": "npm:^1.10.33"
+    "@lobehub/icons-static-svg": "npm:^1.53.0"
     "@monaco-editor/react": "npm:^4.7.0"
     "@tailwindcss/postcss": "npm:^4.1.4"
     "@tailwindcss/vite": "npm:^4.1.4"
@@ -1796,6 +1797,13 @@ __metadata:
     "@jridgewell/resolve-uri": "npm:^3.1.0"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
   checksum: 10c0/fb547ba31658c4d74eb17e7389f4908bf7c44cef47acb4c5baa57289daf68e6fe53c639f41f751b3923aca67010501264f70e7b49978ad1f040294b22c37b333
+  languageName: node
+  linkType: hard
+
+"@lobehub/icons-static-svg@npm:^1.53.0":
+  version: 1.53.0
+  resolution: "@lobehub/icons-static-svg@npm:1.53.0"
+  checksum: 10c0/a8857ed229816cca2d5940fe36869aa77a61160adf53d307fd11239404686c7bd0fa69db050b079d9e517f8f9bf1ae95122812e008151dbd5daaf9389df648a0
   languageName: node
   linkType: hard
 

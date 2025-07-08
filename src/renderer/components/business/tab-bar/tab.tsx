@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
 import { Draggable } from "@hello-pangea/dnd";
-import placeholder from "@renderer/assets/llm-icons/logo.png?url";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -12,6 +11,7 @@ import { cn } from "@renderer/lib/utils";
 import { CopyX, Settings2, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
+import { ModelIcon } from "../model-icon";
 
 interface TabProps {
   id: string;
@@ -97,10 +97,9 @@ export function Tab({
                       type === "setting" ? (
                         <Settings2 className="h-4 w-4 flex-shrink-0" />
                       ) : (
-                        <img
-                          src={placeholder}
-                          alt="favicon"
-                          className="h-4 w-4 flex-shrink-0"
+                        <ModelIcon
+                          modelName="302"
+                          className="size-4 flex-shrink-0"
                         />
                       )
                     ) : (
@@ -123,9 +122,8 @@ export function Tab({
                         )}
                       />
                     ) : (
-                      <img
-                        src={placeholder}
-                        alt="favicon"
+                      <ModelIcon
+                        modelName="302"
                         className={cn(
                           "h-4 w-4 flex-shrink-0",
                           isCompressedTwo ? "mr-0" : "mr-2",
