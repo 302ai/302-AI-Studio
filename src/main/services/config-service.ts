@@ -11,7 +11,7 @@ import type {
 } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import { nativeTheme } from "electron";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import {
   CommunicationWay,
@@ -42,7 +42,7 @@ export class ConfigService {
     try {
       return this.settingsDbService.getLanguage();
     } catch (error) {
-      Logger.error("ConfigService:getAppLanguage error ---->", error);
+      logger.error("ConfigService:getAppLanguage error", { error });
       throw error;
     }
   }
@@ -52,7 +52,7 @@ export class ConfigService {
     try {
       return this.settingsDbService.setLanguage(language);
     } catch (error) {
-      Logger.error("ConfigService:setAppLanguage error ---->", error);
+      logger.error("ConfigService:setAppLanguage error", { error });
       throw error;
     }
   }
@@ -64,7 +64,7 @@ export class ConfigService {
       nativeTheme.themeSource = theme;
       sendToMain(EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE, null);
     } catch (error) {
-      Logger.error("ConfigService:setAppTheme error ---->", error);
+      logger.error("ConfigService:setAppTheme error", { error });
       throw error;
     }
   }
@@ -75,7 +75,7 @@ export class ConfigService {
       nativeTheme.themeSource = theme;
       sendToMain(EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE, null);
     } catch (error) {
-      Logger.error("ConfigService:updateAppTheme error ---->", error);
+      logger.error("ConfigService:updateAppTheme error", { error });
       throw error;
     }
   }
@@ -95,7 +95,7 @@ export class ConfigService {
       sendToMain(EventNames.PROVIDER_ADD, { provider: newProvider });
       return newProvider;
     } catch (error) {
-      Logger.error("ConfigService:insertProvider error ---->", error);
+      logger.error("ConfigService:insertProvider error", { error });
       throw error;
     }
   }
@@ -106,7 +106,7 @@ export class ConfigService {
       await this.configDbService.deleteProvider(providerId);
       sendToMain(EventNames.PROVIDER_DELETE, { providerId });
     } catch (error) {
-      Logger.error("ConfigService:deleteProvider error ---->", error);
+      logger.error("ConfigService:deleteProvider error", { error });
       throw error;
     }
   }
@@ -124,7 +124,7 @@ export class ConfigService {
         updateData,
       });
     } catch (error) {
-      Logger.error("ConfigService:updateProvider error ---->", error);
+      logger.error("ConfigService:updateProvider error", { error });
       throw error;
     }
   }
@@ -138,7 +138,7 @@ export class ConfigService {
     try {
       await this.configDbService.updateProviderOrder(providerId, order);
     } catch (error) {
-      Logger.error("ConfigService:updateProviderOrder error ---->", error);
+      logger.error("ConfigService:updateProviderOrder error", { error });
       throw error;
     }
   }
@@ -151,7 +151,7 @@ export class ConfigService {
     try {
       await this.configDbService.insertModels(models);
     } catch (error) {
-      Logger.error("ConfigService:insertModels error ---->", error);
+      logger.error("ConfigService:insertModels error", { error });
       throw error;
     }
   }
@@ -165,7 +165,7 @@ export class ConfigService {
     try {
       await this.configDbService.updateProviderModels(providerId, models);
     } catch (error) {
-      Logger.error("ConfigService:updateModels error ---->", error);
+      logger.error("ConfigService:updateModels error", { error });
       throw error;
     }
   }
@@ -178,7 +178,7 @@ export class ConfigService {
     try {
       await this.settingsDbService.setSearchService(searchService);
     } catch (error) {
-      Logger.error("ConfigService:setSearchService error ---->", error);
+      logger.error("ConfigService:setSearchService error", { error });
       throw error;
     }
   }

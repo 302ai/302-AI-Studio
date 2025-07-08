@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import pdfParse from "pdf-parse-new";
 import { BaseFileAdapter } from "./BaseFileAdapter";
+import logger from "@shared/logger/main-logger";
 
 export class PdfFileAdapter extends BaseFileAdapter {
   private fileContent: string | undefined;
@@ -74,7 +75,7 @@ export class PdfFileAdapter extends BaseFileAdapter {
           // 将每页内容添加到 pdfData 对象中
           this.pdfData.pageContents = pageTexts;
         } catch (error) {
-          console.error("Error parsing PDF:", error);
+          logger.error("PdfFileAdapter: Error parsing PDF", { error });
           return undefined;
         }
       }
@@ -182,8 +183,6 @@ export class PdfFileAdapter extends BaseFileAdapter {
     // Join paragraphs with double newlines
     return markdownParagraphs.filter((p) => p).join("\n\n");
   }
-
-
 
   async getContent(): Promise<string | undefined> {
     if (this.fileContent === undefined) {

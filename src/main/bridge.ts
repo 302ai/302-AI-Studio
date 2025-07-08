@@ -4,6 +4,7 @@ import { services } from "./services";
 import { container, initBindings } from "./shared/bindings";
 import { CommunicationWay, getMetadata } from "./shared/reflect";
 import { TYPES } from "./shared/types";
+import logger from "@shared/logger/main-logger";
 
 export function initMainBridge(): void {
   try {
@@ -12,7 +13,9 @@ export function initMainBridge(): void {
     services?.forEach((service) => {
       const metadata = getMetadata(service.name);
       if (!metadata) {
-        console.warn(`No metadata found for service: ${service.name}`);
+        logger.warn("MainBridge: No metadata found for service", {
+          serviceName: service.name,
+        });
         return;
       }
 
@@ -25,14 +28,18 @@ export function initMainBridge(): void {
       }
 
       if (!handlers) {
-        console.warn(`No handlers found for service: ${service.name}`);
+        logger.warn("MainBridge: No handlers found for service", {
+          serviceName: service.name,
+        });
         return;
       }
 
       if (container.isBound(serviceSymbol)) {
         const name = Symbol.keyFor(serviceSymbol);
         if (!name) {
-          console.error(`❌ Failed to get key of Symbol '${service.name}'`);
+          logger.error("MainBridge: Failed to get key of Symbol", {
+            serviceName: service.name,
+          });
           return;
         }
 
@@ -51,7 +58,9 @@ export function initMainBridge(): void {
           }
         });
       } else {
-        console.error(`❌ Failed to resolve service '${service.name}'`);
+        logger.error("MainBridge: Failed to resolve service", {
+          serviceName: service.name,
+        });
         return;
       }
     });
@@ -60,17 +69,17 @@ export function initMainBridge(): void {
       printContainerStatus();
     }
   } catch (error) {
-    console.error("❌ Failed to initialize main bridge:", error);
+    logger.error("MainBridge: Failed to initialize main bridge", { error });
     throw error;
   }
 }
 
 function printContainerStatus(): void {
-  console.log("📊 Inversify Container Status:");
+  logger.info("📊 Inversify Container Status:");
 
   Object.entries(TYPES).forEach(([name, symbol]) => {
     const isBound = container.isBound(symbol);
-    console.log(`  ${isBound ? "✅" : "❌"} ${name}: ${Symbol.keyFor(symbol)}`);
+    logger.info(`  ${isBound ? "✅" : "❌"} ${name}: ${Symbol.keyFor(symbol)}`);
   });
 }
 
@@ -82,7 +91,9 @@ export function initPreloadBridge(): { [key: string]: Function } {
     const metadata = getMetadata(service.name);
 
     if (!metadata) {
-      console.warn(`No metadata found for service: ${service.name}`);
+      logger.warn("PreloadBridge: No metadata found for service", {
+        serviceName: service.name,
+      });
       return;
     }
 
@@ -91,7 +102,9 @@ export function initPreloadBridge(): { [key: string]: Function } {
     const symbolName = Symbol.keyFor(serviceSymbol);
 
     if (!symbolName) {
-      console.error(`❌ Failed to get key of Symbol '${service.name}'`);
+      logger.error("PreloadBridge: Failed to get key of Symbol", {
+        serviceName: service.name,
+      });
       return;
     }
 
@@ -99,7 +112,9 @@ export function initPreloadBridge(): { [key: string]: Function } {
     const name = symbolName.charAt(0).toLowerCase() + symbolName.slice(1);
 
     if (!handlers || !name) {
-      console.warn(`No handlers found for service: ${service.name}`);
+      logger.warn("PreloadBridge: No handlers found for service", {
+        serviceName: service.name,
+      });
       return;
     }
 

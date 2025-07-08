@@ -3,6 +3,7 @@ import { initTriplitClient, triplitClient } from "./client";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { ThemeProvider } from "./context/theme-provider";
 import { Routes } from "./routes";
+import logger from "@shared/logger/renderer-logger";
 
 const { triplitService } = window.service;
 
@@ -14,7 +15,10 @@ export function App() {
       client.updateServerUrl(`http://localhost:${serverUrl}`);
       client.connect();
 
-      console.log("client (renderer process)", triplitClient.serverUrl);
+      logger.info("App: Client connected", {
+        serverUrl: triplitClient.serverUrl,
+        process: "renderer",
+      });
     };
 
     setupClient();

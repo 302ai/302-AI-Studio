@@ -5,7 +5,7 @@ import {
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
 import type { SearchService } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type {
   SettingsDbService,
@@ -37,7 +37,7 @@ export class SettingsService {
     try {
       await this.settingsDbService.setEnableWebSearch(enable);
     } catch (error) {
-      Logger.error("ConfigService:setEnableWebSearch error ---->", error);
+      logger.error("SettingsService:setEnableWebSearch error", { error });
       throw error;
     }
   }
@@ -47,7 +47,7 @@ export class SettingsService {
     try {
       await this.settingsDbService.setEnableReason(enable);
     } catch (error) {
-      Logger.error("ConfigService:setEnablleReason error ---->", error);
+      logger.error("SettingsService:setEnableReason error", { error });
       throw error;
     }
   }
@@ -60,7 +60,7 @@ export class SettingsService {
     try {
       await this.settingsDbService.setSearchService(searchService);
     } catch (error) {
-      Logger.error("SettingsService:setsearchService error ---->", error);
+      logger.error("SettingsService:setSearchService error", { error });
       throw error;
     }
   }
@@ -69,7 +69,7 @@ export class SettingsService {
     try {
       return await this.settingsDbService.getEnableReason();
     } catch (error) {
-      Logger.error("SettingsService:getEnableReason error ---->", error);
+      logger.error("SettingsService:getEnableReason error", { error });
       return false;
     }
   }
@@ -78,7 +78,7 @@ export class SettingsService {
     try {
       return await this.settingsDbService.getWebSearchConfig();
     } catch (error) {
-      Logger.error("SettingsService:getWebSearchConfig error ---->", error);
+      logger.error("SettingsService:getWebSearchConfig error", { error });
       return { enabled: false, service: "search1api" };
     }
   }
@@ -88,7 +88,7 @@ export class SettingsService {
     try {
       await this.settingsDbService.setSelectedModelId(modelId);
     } catch (error) {
-      Logger.error("SettingsService:updateSelectedModelId error ---->", error);
+      logger.error("SettingsService:updateSelectedModelId error", { error });
       throw error;
     }
   }
@@ -97,7 +97,7 @@ export class SettingsService {
     try {
       await this.settingsDbService.setSelectedModelId("");
     } catch (error) {
-      Logger.error("SettingsService:resetSelectedModelId error ---->", error);
+      logger.error("SettingsService:resetSelectedModelId error", { error });
       throw error;
     }
   }

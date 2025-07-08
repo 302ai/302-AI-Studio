@@ -9,7 +9,7 @@ import type {
   Message,
   UpdateMessageData,
 } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { MessageService } from "./message-service";
 
@@ -41,7 +41,7 @@ export class ChatService {
       });
       return newMessage;
     } catch (error) {
-      Logger.error("ChatService:createAssistantMessage error ---->", error);
+      logger.error("ChatService:createAssistantMessage error", { error });
       throw error;
     }
   }
@@ -53,7 +53,7 @@ export class ChatService {
     try {
       await this.messageService._updateMessage(messageId, updateData);
     } catch (error) {
-      Logger.error("ChatService:updateMessage error ---->", error);
+      logger.error("ChatService:updateMessage error", { error });
       throw error;
     }
   }
@@ -68,7 +68,7 @@ export class ChatService {
         await this.messageService._getMessagesByThreadId(threadId);
       return messages;
     } catch (error) {
-      Logger.error("ChatService:getMessagesByThreadId error ---->", error);
+      logger.error("ChatService:getMessagesByThreadId error", { error });
       throw error;
     }
   }

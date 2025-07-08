@@ -7,6 +7,7 @@ import type {
 } from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
+import logger from "@shared/logger/main-logger";
 
 @injectable()
 export class TabDbService extends BaseDbService {
@@ -128,7 +129,7 @@ export class TabDbService extends BaseDbService {
 
       await Promise.all(updatePromises);
     } catch (error) {
-      console.error("Failed to move tab:", error);
+      logger.error("TabDbService: Failed to move tab", { error });
       throw error;
     }
   }

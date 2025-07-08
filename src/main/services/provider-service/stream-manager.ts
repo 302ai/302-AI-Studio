@@ -1,4 +1,4 @@
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 
 // A map to hold AbortController instances for each stream.
 const streamAbortControllers = new Map<string, AbortController>();
@@ -43,11 +43,11 @@ export function abortStream(threadId: string): boolean {
   if (controller) {
     controller.abort();
     streamAbortControllers.delete(key);
-    Logger.info(`Stream generation stopped for tab: ${threadId}`);
+    logger.info("Stream generation stopped for tab", { threadId });
     return true;
   }
 
-  Logger.warn(`No active stream found for tab: ${threadId}`);
+  logger.warn("No active stream found for tab", { threadId });
   return false;
 }
 
@@ -59,19 +59,19 @@ export function abortAllStreams(): number {
   const activeStreams = streamAbortControllers.size;
 
   if (activeStreams > 0) {
-    Logger.info(`Aborting ${activeStreams} active streams...`);
+    logger.info("Aborting active streams", { activeStreams });
 
     for (const [threadId, controller] of streamAbortControllers.entries()) {
       try {
         controller.abort();
-        Logger.info(`Stream generation stopped for thread: ${threadId}`);
+        logger.info("Stream generation stopped for thread", { threadId });
       } catch (error) {
-        Logger.error(`Failed to abort stream for thread ${threadId}:`, error);
+        logger.error("Failed to abort stream for thread", { threadId, error });
       }
     }
 
     streamAbortControllers.clear();
-    Logger.info(`All ${activeStreams} streams have been aborted`);
+    logger.info("All streams have been aborted", { activeStreams });
   }
 
   return activeStreams;

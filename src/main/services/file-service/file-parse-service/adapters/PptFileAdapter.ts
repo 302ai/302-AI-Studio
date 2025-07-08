@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import { unzip } from "fflate";
 import { parseStringPromise } from "xml2js";
 import { BaseFileAdapter } from "./BaseFileAdapter";
+import logger from "@shared/logger/main-logger";
 
 // Define a type for XML content structure
 type XMLContent = {
@@ -122,7 +123,9 @@ export class PptFileAdapter extends BaseFileAdapter {
           this.fileContent = "No slides found in the presentation.";
         }
       } catch (error) {
-        console.error("Error extracting text from PowerPoint:", error);
+        logger.error("PptFileAdapter: Error extracting text from PowerPoint", {
+          error,
+        });
         this.fileContent = `Error processing PowerPoint file: ${(error as Error).message}`;
       }
     }
@@ -159,7 +162,10 @@ ${textLines.join("\n")}
 
       return fileDescription + slidesContent.join("\n");
     } catch (error) {
-      console.error("Error generating LLM content for PowerPoint:", error);
+      logger.error(
+        "PptFileAdapter: Error generating LLM content for PowerPoint",
+        { error },
+      );
       return `Error processing PowerPoint file: ${(error as Error).message}`;
     }
   }

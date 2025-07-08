@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import logger from "@shared/logger/renderer-logger";
 
 interface AttachmentItemProps {
   attachment: AttachmentFile;
@@ -43,7 +44,7 @@ export function AttachmentItem({ attachment, onRemove }: AttachmentItemProps) {
         }
       }
     } catch (error) {
-      console.error("Error calling preview service:", error);
+      logger.error("AttachmentItem: Error calling preview service", { error });
     }
   };
 

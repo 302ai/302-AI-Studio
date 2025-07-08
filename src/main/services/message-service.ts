@@ -9,7 +9,7 @@ import type {
   Message,
   UpdateMessageData,
 } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { MessageDbService } from "./db-service/message-db-service";
 import { EventNames, sendToThread } from "./event-service";
@@ -49,7 +49,7 @@ export class MessageService {
       const newMessage = await this.messageDbService.insertMessage(message);
       return newMessage;
     } catch (error) {
-      Logger.error("MessageService: insertMessage error ---->", error);
+      logger.error("MessageService: insertMessage error", { error });
       throw error;
     }
   }
@@ -63,7 +63,7 @@ export class MessageService {
     try {
       await this.messageDbService.updateMessage(messageId, updateData);
     } catch (error) {
-      Logger.error("MessageService: updateMessage error ---->", error);
+      logger.error("MessageService: updateMessage error", { error });
       throw error;
     }
   }
@@ -89,7 +89,7 @@ export class MessageService {
         },
       });
     } catch (error) {
-      Logger.error("MessageService: editMessage error ---->", error);
+      logger.error("MessageService: editMessage error", { error });
       throw error;
     }
   }
@@ -117,7 +117,7 @@ export class MessageService {
         });
       }
     } catch (error) {
-      Logger.error("MessageService: deleteMessage error ---->", error);
+      logger.error("MessageService: deleteMessage error", { error });
       throw error;
     }
   }
@@ -147,7 +147,7 @@ export class MessageService {
         });
       }
     } catch (error) {
-      Logger.error("MessageService: deleteMessagesByIds error ---->", error);
+      logger.error("MessageService: deleteMessagesByIds error", { error });
       throw error;
     }
   }
@@ -162,7 +162,7 @@ export class MessageService {
         await this.messageDbService.getMessagesByThreadId(threadId);
       return messages;
     } catch (error) {
-      Logger.error("MessageService: getMessagesByThreadId error ---->", error);
+      logger.error("MessageService: getMessagesByThreadId error", { error });
       throw error;
     }
   }
@@ -176,7 +176,7 @@ export class MessageService {
       const message = await this.messageDbService.getMessageById(messageId);
       return message;
     } catch (error) {
-      Logger.error("MessageService: getMessageById error ---->", error);
+      logger.error("MessageService: getMessageById error", { error });
       throw error;
     }
   }
@@ -195,10 +195,9 @@ export class MessageService {
         },
       });
     } catch (error) {
-      Logger.error(
-        "MessageService: deleteMessagesByThreadId error ---->",
+      logger.error("MessageService: deleteMessagesByThreadId error", {
         error,
-      );
+      });
       throw error;
     }
   }
@@ -219,7 +218,7 @@ export class MessageService {
         await this.messageDbService.deleteAllMessages();
       }
     } catch (error) {
-      Logger.error("MessageService: deleteAllMessages error ---->", error);
+      logger.error("MessageService: deleteAllMessages error", { error });
       throw error;
     }
   }
@@ -232,30 +231,30 @@ export class MessageService {
     try {
       await this.messageDbService.insertMessages(messages);
     } catch (error) {
-      Logger.error("MessageService: insertMessages error ---->", error);
+      logger.error("MessageService: insertMessages error", { error });
       throw error;
     }
   }
 
   async updatePendingMessagesToStop(): Promise<void> {
     try {
-      Logger.info(
+      logger.info(
         "MessageService: Starting to update pending messages to stop status",
       );
       const updatedCount =
         await this.messageDbService.updatePendingMessagesToStop();
       if (updatedCount > 0) {
-        Logger.info(
-          `MessageService: Successfully updated ${updatedCount} pending messages to stop status`,
+        logger.info(
+          "MessageService: Successfully updated pending messages to stop status",
+          { updatedCount },
         );
       } else {
-        Logger.info("MessageService: No pending messages found to update");
+        logger.info("MessageService: No pending messages found to update");
       }
     } catch (error) {
-      Logger.error(
-        "MessageService: updatePendingMessagesToStop error ---->",
+      logger.error("MessageService: updatePendingMessagesToStop error", {
         error,
-      );
+      });
       throw error;
     }
   }

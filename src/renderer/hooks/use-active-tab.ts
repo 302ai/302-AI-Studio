@@ -1,5 +1,6 @@
 import { triplitClient } from "@renderer/client";
 import type { Tab } from "@shared/triplit/types";
+import logger from "@shared/logger/renderer-logger";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -19,7 +20,9 @@ export function useActiveTab() {
   const activeTab = tabs?.find((t) => t.id === activeTabId);
 
   const setActiveTabId = useCallback(async (tabId: string) => {
-    console.log("Setting active tab ID with history:", tabId || "none");
+    logger.debug("useActiveTab: Setting active tab ID with history", {
+      tabId: tabId || "none",
+    });
     await uiService.updateActiveTabId(tabId);
     await uiService.updateActiveTabHistory(tabId);
   }, []);

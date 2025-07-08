@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 
 import { isSupportedModel } from "@main/utils/models";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateModelData,
   Model,
@@ -15,7 +16,7 @@ import {
   streamText,
   type ToolSet,
 } from "ai";
-import Logger from "electron-log";
+
 import {
   cleanupAbortController as cleanupAbortControllerForTab,
   createAbortController as createAbortControllerForTab,
@@ -72,16 +73,14 @@ export abstract class BaseProviderService {
       const models = await this.fetchProviderModels();
       const supportedModels = models.filter((model) => isSupportedModel(model));
       this.models = supportedModels;
-      Logger.debug(
-        "Fetch models successfully:",
-        this.provider.name,
-        "supportedModels count:",
-        supportedModels.length,
-      );
+      logger.debug("Fetch models successfully", {
+        providerName: this.provider.name,
+        supportedModelsCount: supportedModels.length,
+      });
 
       return supportedModels;
     } catch (error) {
-      Logger.error("Failed to fetch models:", error);
+      logger.error("Failed to fetch models:", { error });
       if (!this.models) {
         this.models = [];
       }
@@ -106,7 +105,7 @@ export abstract class BaseProviderService {
     const { tabId, threadId } = params;
 
     try {
-      Logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
+      logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
 
       const result = streamText({
         model: languageModel,
@@ -120,7 +119,7 @@ export abstract class BaseProviderService {
 
       return result;
     } catch (error) {
-      Logger.error("Failed to start stream chat:", error);
+      logger.error("Failed to start stream chat:", { error });
       throw error;
     }
   }

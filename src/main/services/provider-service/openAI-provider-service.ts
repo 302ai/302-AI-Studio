@@ -3,6 +3,7 @@ import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import { detectModelProvider, parseModels } from "@main/utils/models";
 import { createReasoningFetch } from "@main/utils/reasoning";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateModelData,
   Provider,
@@ -14,7 +15,6 @@ import {
   type StreamTextResult,
   type ToolSet,
 } from "ai";
-import Logger from "electron-log";
 import {
   BaseProviderService,
   type StreamChatParams,
@@ -89,14 +89,13 @@ export class OpenAIProviderService extends BaseProviderService {
           };
         }) || [];
 
-      Logger.info(
-        "Fetched OpenAI models successfully, the count is:",
-        formatedModels.length,
-      );
+      logger.info("Fetched OpenAI models successfully, the count is:", {
+        count: formatedModels.length,
+      });
 
       return formatedModels;
     } catch (error) {
-      Logger.error("Failed to fetch OpenAI models:", error);
+      logger.error("Failed to fetch OpenAI models:", { error });
 
       if (error instanceof Error) {
         throw error;
@@ -116,6 +115,10 @@ export class OpenAIProviderService extends BaseProviderService {
       const model = this.openai(originModel.name);
 
       const isClaude = detectModelProvider(originModel.name) === "anthropic";
+      logger.info("Starting stream chat", {
+        tabId: params.tabId,
+        threadId: params.threadId,
+      });
 
       if (isClaude) {
         this.openai = createOpenAI({
@@ -134,7 +137,7 @@ export class OpenAIProviderService extends BaseProviderService {
 
       return result;
     } catch (error) {
-      Logger.error("Failed to start stream chat:", error);
+      logger.error("Failed to start stream chat:", { error });
       throw error;
     }
   }
@@ -163,7 +166,7 @@ export class OpenAIProviderService extends BaseProviderService {
         text: result.text,
       };
     } catch (error) {
-      Logger.error("Failed to generate text:", error);
+      logger.error("Failed to generate text:", { error });
       throw error;
     }
   }

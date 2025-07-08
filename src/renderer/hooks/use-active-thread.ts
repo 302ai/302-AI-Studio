@@ -1,5 +1,6 @@
 import { triplitClient } from "@renderer/client";
 import type { Thread } from "@shared/triplit/types";
+import logger from "@shared/logger/renderer-logger";
 import { useQuery, useQueryOne } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -33,7 +34,9 @@ export function useActiveThread() {
   }, [activeThreadId, threads]);
 
   const setActiveThreadId = useCallback(async (threadId: string) => {
-    console.log("Setting active thread ID:", threadId || "none");
+    logger.debug("useActiveThread: Setting active thread ID", {
+      threadId: threadId || "none",
+    });
     await uiService.updateActiveThreadId(threadId || "");
   }, []);
 

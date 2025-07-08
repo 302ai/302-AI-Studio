@@ -1,6 +1,6 @@
 import { TYPES } from "@main/shared/types";
 import { shell } from "electron";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { injectable } from "inversify";
 import {
   CommunicationWay,
@@ -16,7 +16,7 @@ export class ShellService {
     try {
       await shell.openExternal(url);
     } catch (error) {
-      Logger.error("ShellService:openExternal error ---->", error);
+      logger.error("ShellService:openExternal error", { error });
       throw error;
     }
   }
@@ -30,7 +30,7 @@ export class ShellService {
       const result = await shell.openPath(path);
       return result;
     } catch (error) {
-      Logger.error("ShellService:openPath error ---->", error);
+      logger.error("ShellService:openPath error", { error });
       throw error;
     }
   }

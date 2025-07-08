@@ -4,7 +4,7 @@ import type {
   Thread,
   UpdateThreadData,
 } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import {
   CommunicationWay,
@@ -37,7 +37,7 @@ export class ThreadService {
         }
       }
     } catch (error) {
-      Logger.error("ThreadService:resetProviderId error ---->", error);
+      logger.error("ThreadService:resetProviderId error", { error });
       throw error;
     }
   }
@@ -60,7 +60,7 @@ export class ThreadService {
       const newThread = await this.threadDbService.insertThread(thread);
       return newThread;
     } catch (error) {
-      Logger.error("ThreadService:insertThread error ---->", error);
+      logger.error("ThreadService:insertThread error", { error });
       throw error;
     }
   }
@@ -73,7 +73,7 @@ export class ThreadService {
     try {
       await this.threadDbService.deleteThread(threadId);
     } catch (error) {
-      Logger.error("ThreadService:deleteThread error ---->", error);
+      logger.error("ThreadService:deleteThread error", { error });
       throw error;
     }
   }
@@ -87,7 +87,7 @@ export class ThreadService {
     try {
       await this.threadDbService.updateThread(threadId, updateData);
     } catch (error) {
-      Logger.error("ThreadService:updateThread error ---->", error);
+      logger.error("ThreadService:updateThread error", { error });
       throw error;
     }
   }
@@ -101,7 +101,7 @@ export class ThreadService {
       const thread = await this.threadDbService.getThreadById(threadId);
       return thread;
     } catch (error) {
-      Logger.error("ThreadService:getThreadById error ---->", error);
+      logger.error("ThreadService:getThreadById error", { error });
       throw error;
     }
   }
@@ -112,7 +112,7 @@ export class ThreadService {
       const threadIds = await this.threadDbService.deleteAllThreads();
       return threadIds;
     } catch (error) {
-      Logger.error("ThreadService:deleteAllThreads error ---->", error);
+      logger.error("ThreadService:deleteAllThreads error", { error });
       throw error;
     }
   }

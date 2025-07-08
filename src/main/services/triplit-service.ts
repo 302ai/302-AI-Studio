@@ -12,7 +12,7 @@ import { extractErrorMessage } from "@main/utils/error-utils";
 import { schema } from "@shared/triplit/schema";
 import { createServer, createTriplitStorageProvider } from "@triplit/server";
 import { app } from "electron";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { injectable } from "inversify";
 import portfinder from "portfinder";
 
@@ -40,6 +40,61 @@ const defaultTriplitConfig: TriplitServerConfig = {
 
 type TriplitServer = ReturnType<Awaited<ReturnType<typeof createServer>>>;
 
+// Custom LogHandler for triplit using our logger system
+class TriplitLogHandler {
+  log(record: any): void {
+    const { level, message, ...context } = record;
+
+    switch (level?.toLowerCase()) {
+      case "error":
+        logger.error(message || "Triplit error", context);
+        break;
+      case "warn":
+      case "warning":
+        logger.warn(message || "Triplit warning", context);
+        break;
+      case "info":
+        logger.info(message || "Triplit info", context);
+        break;
+      case "debug":
+        logger.debug(message || "Triplit debug", context);
+        break;
+      default:
+        logger.info(message || "Triplit log", { level, ...context });
+    }
+  }
+
+  startSpan(
+    name: string,
+    context?: string,
+    attributes?: Record<string, any>,
+  ): any {
+    // For now, just return a simple span object
+    // Could be enhanced with actual tracing if needed
+    return { name, context, attributes, startTime: Date.now() };
+  }
+
+  endSpan(span: any): void {
+    // Log span completion if needed
+    if (span?.name) {
+      const duration = Date.now() - (span.startTime || Date.now());
+      logger.debug("Triplit span completed", {
+        span: span.name,
+        duration: `${duration}ms`,
+        context: span.context,
+      });
+    }
+  }
+
+  recordMetric(
+    name: string,
+    value: number,
+    attributes?: Record<string, any>,
+  ): void {
+    logger.debug("Triplit metric", { metric: name, value, ...attributes });
+  }
+}
+
 @ServiceRegister(TYPES.TriplitService)
 @injectable()
 export class TriplitService {
@@ -53,16 +108,19 @@ export class TriplitService {
 
   async initialize() {
     try {
-      Logger.info("Starting Triplit server...");
+      logger.info("Starting Triplit server...");
       this.server = await this.startTriplitServer();
       this.isServerRunning = true;
-      Logger.info("Triplit server started successfully");
+      logger.info("Triplit server started successfully");
 
       const client = initTriplitClient();
       client.updateServerUrl(`http://localhost:${this.port}`);
       client.connect();
 
-      console.log("client (main process)", client.serverUrl);
+      logger.info("TriplitService: Client connected", {
+        serverUrl: client.serverUrl,
+        process: "main",
+      });
 
       app.on("before-quit", () => {
         this.cleanup();
@@ -72,14 +130,14 @@ export class TriplitService {
         this.cleanup();
       });
     } catch (error) {
-      Logger.error("Failed to start Triplit server:", error);
+      logger.error("Failed to start Triplit server:", { error });
       this.isServerRunning = false;
     }
   }
 
   private async startTriplitServer() {
     if (this.server) {
-      Logger.info("Triplit server is already running");
+      logger.info("Triplit server is already running");
       return this.server;
     }
 
@@ -88,25 +146,26 @@ export class TriplitService {
     if (config.localDatabaseUrl) {
       const dbFile = config.localDatabaseUrl;
       const dbDir = path.dirname(dbFile);
-      Logger.info("Database file:", dbFile);
-      Logger.info("Database directory:", dbDir);
+      logger.info("Database file:", { dbFile });
+      logger.info("Database directory:", { dbDir });
 
       if (!fs.existsSync(dbDir)) {
         fs.mkdirSync(dbDir, { recursive: true });
-        Logger.info("Database directory created successfully");
+        logger.info("Database directory created successfully");
       } else {
-        Logger.info("Database directory already exists");
+        logger.info("Database directory already exists");
       }
 
       process.env.LOCAL_DATABASE_URL = dbFile;
-      Logger.info("Setting LOCAL_DATABASE_URL to:", dbFile);
+      logger.info("Setting LOCAL_DATABASE_URL to:", { dbFile });
     }
 
     const sqliteKV = await createTriplitStorageProvider("sqlite");
 
     const startServer = await createServer({
       storage: sqliteKV,
-      verboseLogs: config.verboseLogs,
+      verboseLogs: false, // Disable default verbose logging
+      logHandler: new TriplitLogHandler(), // Use our custom log handler
       dbOptions: {
         schema: {
           collections: schema,
@@ -120,8 +179,8 @@ export class TriplitService {
 
     this.server = startServer(config.port);
 
-    Logger.info("Triplit server running on port", config.port);
-    Logger.info("Database location:", config.localDatabaseUrl);
+    logger.info("Triplit server running on port", { port: config.port });
+    logger.info("Database location:", { location: config.localDatabaseUrl });
 
     return this.server;
   }
@@ -133,15 +192,13 @@ export class TriplitService {
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
     const defaultDatabaseFile = path.join(defaultDatabaseDir, "db-v2.sqlite");
 
-    Logger.info("Default database file:", defaultDatabaseFile);
+    logger.info("Default database file:", { defaultDatabaseFile });
 
     this.port = await portfinder.getPortPromise();
 
     const config = {
       port: this.port,
-      verboseLogs: !!(
-        process.env.VERBOSE_LOGS || defaultTriplitConfig.verboseLogs
-      ),
+      verboseLogs: false, // Force disable verbose logs
       jwtSecret: process.env.JWT_SECRET || defaultTriplitConfig.jwtSecret,
       projectId: process.env.PROJECT_ID || defaultTriplitConfig.projectId,
       externalJwtSecret: process.env.EXTERNAL_JWT_SECRET,
@@ -150,7 +207,7 @@ export class TriplitService {
       localDatabaseUrl: process.env.LOCAL_DATABASE_URL || defaultDatabaseFile,
     };
 
-    Logger.info("Final Triplit config:", config);
+    logger.info("Final Triplit config:", { config });
     return config;
   }
 
@@ -175,7 +232,7 @@ export class TriplitService {
     _event: Electron.IpcMainEvent,
   ): Promise<{ success: boolean; message: string }> {
     try {
-      Logger.info("Restarting Triplit server...");
+      logger.info("Restarting Triplit server...");
 
       // 停止现有服务器
       if (this.server) {
@@ -186,10 +243,10 @@ export class TriplitService {
       this.server = await this.startTriplitServer();
       this.isServerRunning = true;
 
-      Logger.info("Triplit server restarted successfully");
+      logger.info("Triplit server restarted successfully");
       return { success: true, message: "Server restarted successfully" };
     } catch (error) {
-      Logger.error("Failed to restart Triplit server:", error);
+      logger.error("Failed to restart Triplit server:", { error });
       this.isServerRunning = false;
       const errorMessage = extractErrorMessage(error);
       return {
@@ -202,7 +259,7 @@ export class TriplitService {
   private stopTriplitServer() {
     if (this.server) {
       this.server.close(() => {
-        Logger.info("Triplit server stopped");
+        logger.info("Triplit server stopped");
         this.server = null;
         this.isServerRunning = false;
       });
@@ -211,7 +268,7 @@ export class TriplitService {
 
   private cleanup() {
     if (this.server) {
-      Logger.info("Stopping Triplit server...");
+      logger.info("Stopping Triplit server...");
       this.stopTriplitServer();
     }
   }

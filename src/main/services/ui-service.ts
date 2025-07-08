@@ -5,7 +5,7 @@ import {
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
 import type { Provider, Thread } from "@shared/triplit/types";
-import Logger from "electron-log";
+import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { UiDbService } from "./db-service/ui-db-service";
 
@@ -23,7 +23,7 @@ export class UiService {
     try {
       await this.uiDbService.updateActiveProviderId(providerId);
     } catch (error) {
-      Logger.error("UiService:updateActiveProviderId error ---->", error);
+      logger.error("UiService:updateActiveProviderId error", { error });
       throw error;
     }
   }
@@ -34,7 +34,7 @@ export class UiService {
       const activeProviderId = await this.uiDbService.getActiveProviderId();
       return activeProviderId;
     } catch (error) {
-      Logger.error("UiService:getActiveProviderId error ---->", error);
+      logger.error("UiService:getActiveProviderId error", { error });
       throw error;
     }
   }
@@ -44,7 +44,7 @@ export class UiService {
     try {
       await this.uiDbService.clearActiveProviderId();
     } catch (error) {
-      Logger.error("UiService:clearActiveProviderId error ---->", error);
+      logger.error("UiService:clearActiveProviderId error", { error });
       throw error;
     }
   }
@@ -56,7 +56,7 @@ export class UiService {
       const activeProvider = await this.uiDbService.getActiveProvider();
       return activeProvider;
     } catch (error) {
-      Logger.error("UiService:getActiveProvider error ---->", error);
+      logger.error("UiService:getActiveProvider error", { error });
       throw error;
     }
   }
@@ -70,7 +70,7 @@ export class UiService {
     try {
       await this.uiDbService.updateActiveThreadId(threadId);
     } catch (error) {
-      Logger.error("UiService:updateActiveThreadId error ---->", error);
+      logger.error("UiService:updateActiveThreadId error", { error });
       throw error;
     }
   }
@@ -81,7 +81,7 @@ export class UiService {
       const activeThreadId = await this.uiDbService.getActiveThreadId();
       return activeThreadId;
     } catch (error) {
-      Logger.error("UiService:getActiveThreadId error ---->", error);
+      logger.error("UiService:getActiveThreadId error", { error });
       throw error;
     }
   }
@@ -91,7 +91,7 @@ export class UiService {
     try {
       await this.uiDbService.clearActiveThreadId();
     } catch (error) {
-      Logger.error("UiService:clearActiveThreadId error ---->", error);
+      logger.error("UiService:clearActiveThreadId error", { error });
       throw error;
     }
   }
@@ -103,7 +103,7 @@ export class UiService {
       const activeThread = await this.uiDbService.getActiveThread();
       return activeThread;
     } catch (error) {
-      Logger.error("UiService:getActiveThread error ---->", error);
+      logger.error("UiService:getActiveThread error", { error });
       throw error;
     }
   }
@@ -115,7 +115,7 @@ export class UiService {
       const activeTabId = await this.uiDbService.getActiveTabId();
       return activeTabId;
     } catch (error) {
-      Logger.error("UiService:getActiveTabId error ---->", error);
+      logger.error("UiService:getActiveTabId error", { error });
       throw error;
     }
   }
@@ -125,7 +125,7 @@ export class UiService {
     try {
       await this.uiDbService.clearActiveTabId();
     } catch (error) {
-      Logger.error("UiService:clearActiveTabId error ---->", error);
+      logger.error("UiService:clearActiveTabId error", { error });
       throw error;
     }
   }
@@ -139,7 +139,7 @@ export class UiService {
     try {
       await this.uiDbService.updateActiveTabHistory(tabId);
     } catch (error) {
-      Logger.error("UiService:updateActiveTabHistory error ---->", error);
+      logger.error("UiService:updateActiveTabHistory error", { error });
       throw error;
     }
   }
@@ -152,7 +152,7 @@ export class UiService {
     try {
       await this.uiDbService.updateActiveTabId(tabId);
     } catch (error) {
-      Logger.error("UiService:updateActiveTabId error ---->", error);
+      logger.error("UiService:updateActiveTabId error", { error });
       throw error;
     }
   }

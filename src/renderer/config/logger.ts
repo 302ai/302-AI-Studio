@@ -1,21 +1,29 @@
-import chalk from "chalk";
-import log from "electron-log/renderer";
+import logger from "@shared/logger/renderer-logger";
 
-log.transports.console.level = "info";
+// Configure logging for renderer process
+// The new logger system handles colors and formatting automatically
 
-const levelStyles = {
-  info: { color: chalk.cyan, icon: "ℹ️" },
-  debug: { color: chalk.gray, icon: "🐛" },
-  warn: { color: chalk.yellow, icon: "⚠️" },
-  error: { color: chalk.red, icon: "❌" },
-  verbose: { color: chalk.magenta, icon: "🔍" },
+// Re-export the logger functions for compatibility
+export const log = {
+  info: (message: string, context?: Record<string, unknown>) => {
+    logger.info(message, context);
+  },
+  debug: (message: string, context?: Record<string, unknown>) => {
+    logger.debug(message, context);
+  },
+  warn: (message: string, context?: Record<string, unknown>) => {
+    logger.warn(message, context);
+  },
+  error: (message: string, context?: Record<string, unknown>) => {
+    logger.error(message, context);
+  },
+  verbose: (message: string, context?: Record<string, unknown>) => {
+    logger.debug(message, context); // Map verbose to debug
+  },
 };
 
-log.transports.console.format = (msg) => {
-  const style = levelStyles[msg.level] || { color: chalk.white, icon: "📄" };
-  const timestamp = chalk.dim(`[${new Date().toLocaleTimeString()}]`);
-  const level = style.color(`${style.icon} ${msg.level.toUpperCase()}`);
-  return [timestamp, level, ...msg.data];
-};
+// Set default logging level for renderer
+// This can be controlled via the main process
+logger.setLoggingEnabled(true);
 
-export const Logger = log;
+export default log;
