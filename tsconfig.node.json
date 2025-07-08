@@ -11,9 +11,7 @@
   ],
   "compilerOptions": {
     "composite": true,
-    "types": [
-      "electron-vite/node"
-    ],
+    "types": ["electron-vite/node"],
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -21,15 +19,9 @@
     "useDefineForClassFields": false,
     "baseUrl": ".",
     "paths": {
-      "@lib/*": [
-        "src/lib/*"
-      ],
-      "@main/*": [
-        "src/main/*"
-      ],
-      "@shared/*": [
-        "src/shared/*"
-      ],
+      "@lib/*": ["src/lib/*"],
+      "@main/*": ["src/main/*"],
+      "@shared/*": ["src/shared/*"]
     }
   }
 }

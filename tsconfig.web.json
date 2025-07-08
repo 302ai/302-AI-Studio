@@ -5,7 +5,7 @@
     "src/preload/*.d.ts",
     "src/shared/**/*",
     "src/lib/**/*",
-    "src/types/**/*",
+    "src/types/**/*"
   ],
   "compilerOptions": {
     "composite": true,
@@ -14,15 +14,9 @@
     "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
-      "@renderer/*": [
-        "src/renderer/*"
-      ],
-      "@shared/*": [
-        "src/shared/*"
-      ],
-      "@lib/*": [
-        "src/lib/*"
-      ],
+      "@renderer/*": ["src/renderer/*"],
+      "@shared/*": ["src/shared/*"],
+      "@lib/*": ["src/lib/*"]
     }
   }
 }

@@ -1,4 +1,5 @@
 import { TYPES } from "@main/shared/types";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateModelData,
   CreateProviderData,
@@ -11,7 +12,6 @@ import type {
 } from "@shared/triplit/types";
 import type { ModelProvider } from "@shared/types/provider";
 import { nativeTheme } from "electron";
-import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import {
   CommunicationWay,
