@@ -35,8 +35,8 @@ export async function makeAppSetup(createWindow: () => Promise<BrowserWindow>) {
   app.on("web-contents-created", (_, contents) =>
     contents.on(
       "will-navigate",
-      (event, _) => !ENVIRONMENT.IS_DEV && event.preventDefault()
-    )
+      (event, _) => !ENVIRONMENT.IS_DEV && event.preventDefault(),
+    ),
   );
 
   app.on("window-all-closed", () => !PLATFORM.IS_MAC && app.quit());

@@ -14,7 +14,7 @@
   "license": "AGPL-3.0",
   "scripts": {
     "start": "electron-vite preview",
-    "dev": "electron-vite dev --watch",
+    "dev": "electron-vite dev --watch --noSandbox",
     "build": "npm run prebuild && npm run typecheck",
     "build:original": "npm run typecheck && electron-builder",
     "build:check": "yarn typecheck",
