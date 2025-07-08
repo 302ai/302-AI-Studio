@@ -1,5 +1,6 @@
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useState } from "react";
+import logger from "@shared/logger/renderer-logger";
 
 const { configService, providerService } = window.service;
 
@@ -69,7 +70,7 @@ export function useProviderList() {
 
       await Promise.all(updatePromises);
     } catch (error) {
-      console.error("Failed to move provider:", error);
+      logger.error("Failed to move provider", { error });
     }
   };
 

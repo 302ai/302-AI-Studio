@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
+import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 
@@ -142,7 +143,7 @@ export function useAttachments() {
             files: JSON.stringify(filesData),
           });
         } catch (error) {
-          console.error("Failed to save files to tab:", error);
+          logger.error("Failed to save files to tab", { error });
         }
       }
     },
@@ -186,7 +187,7 @@ export function useAttachments() {
           setAttachments([]);
         }
       } catch (error) {
-        console.error("Failed to load files from tab:", error);
+        logger.error("Failed to load files from tab", { error });
         setAttachments([]);
       }
     } else {
@@ -208,7 +209,7 @@ export function useAttachments() {
           // 文件大小验证
           if (file.size > MAX_FILE_SIZE) {
             toast.error(t("file-too-large"));
-            console.warn(`File ${file.name} is too large (${file.size} bytes)`);
+            logger.warn(`File ${file.name} is too large (${file.size} bytes)`);
             return null;
           }
 
@@ -220,7 +221,7 @@ export function useAttachments() {
             file.type.startsWith("audio/");
 
           if (!isAllowed) {
-            console.warn(`File type ${file.type} is not allowed`);
+            logger.warn(`File type ${file.type} is not allowed`);
             return null;
           }
 
@@ -237,7 +238,7 @@ export function useAttachments() {
           try {
             attachment.filePath = window.api.webUtils.getPathForFile(file);
           } catch (error) {
-            console.warn(`Failed to get file path for ${file.name}:`, error);
+            logger.warn(`Failed to get file path for ${file.name}`, { error });
           }
 
           // 生成预览数据
@@ -250,10 +251,9 @@ export function useAttachments() {
               attachment.fileData = fileData;
             }
           } catch (error) {
-            console.error(
-              `Failed to generate preview/data for ${file.name}:`,
+            logger.error(`Failed to generate preview/data for ${file.name}`, {
               error,
-            );
+            });
           }
 
           return attachment;
@@ -271,9 +271,9 @@ export function useAttachments() {
       // 保存到 tab
       try {
         await saveFilesToTab(updatedAttachments);
-        console.log("✅ Saved to tab successfully");
+        logger.debug("✅ Saved to tab successfully");
       } catch (error) {
-        console.error("❌ Failed to save to tab:", error);
+        logger.error("❌ Failed to save to tab", { error });
       }
     },
     [attachments, saveFilesToTab, t],

@@ -1,6 +1,7 @@
 import Linkify from "linkify-react";
 
 const { shellService } = window.service;
+import logger from "@shared/logger/renderer-logger";
 
 interface LinkifiedTextProps {
   text: string;
@@ -8,7 +9,7 @@ interface LinkifiedTextProps {
 
 export function LinkifiedText({ text }: LinkifiedTextProps) {
   const handleLinkClick = (href: string) => {
-    console.log("Opening external link:", href);
+    logger.debug("Opening external link", { href });
     shellService.openExternal(href);
   };
 

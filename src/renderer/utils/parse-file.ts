@@ -1,4 +1,5 @@
 const { fileParseService, attachmentService } = window.service;
+import logger from "@shared/logger/renderer-logger";
 
 export async function parseAndUpdateAttachments(
   userMessageId: string,
@@ -47,11 +48,11 @@ export async function parseAndUpdateAttachments(
           });
         } catch (error) {
           // Continue with other attachments
-          console.error("Failed to parse file content:", error);
+          logger.error("Failed to parse file content", { error });
         }
       }
     }
   } catch (error) {
-    console.error("Failed to parse and update attachments:", error);
+    logger.error("Failed to parse and update attachments", { error });
   }
 }

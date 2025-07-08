@@ -1,6 +1,7 @@
 import debounce from "lodash-es/debounce";
 import { useCallback, useEffect, useState } from "react";
 import { useActiveTab } from "./use-active-tab";
+import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 
@@ -15,7 +16,7 @@ export function useTabInput() {
         try {
           await tabService.updateTab(tabId, { inputValue });
         } catch (error) {
-          console.error("Failed to update tab input value:", error);
+          logger.error("Failed to update tab input value", { error });
         }
       }
     }, 500), // 500ms防抖延迟
@@ -57,7 +58,7 @@ export function useTabInput() {
             setInput("");
           }
         } catch (error) {
-          console.error("Failed to load tab input value:", error);
+          logger.error("Failed to load tab input value", { error });
         }
       }
     };

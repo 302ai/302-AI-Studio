@@ -61,7 +61,7 @@ export function useToolBar() {
           providerId,
         });
       } catch (error) {
-        console.error("update thread error", error);
+        logger.error("update thread error", { error });
       }
     }
   };
@@ -82,7 +82,7 @@ export function useToolBar() {
 
       return thread;
     } catch (error) {
-      console.error("create thread error", error);
+      logger.error("create thread error", { error });
       toast.error(t("create-thread-error"));
       return null;
     }
@@ -116,7 +116,7 @@ export function useToolBar() {
 
       return result;
     } catch (error) {
-      console.error("Failed to start stream chat:", error);
+      logger.error("Failed to start stream chat", { error });
       throw error;
     }
   };
@@ -178,7 +178,7 @@ export function useToolBar() {
           }
 
           currentActiveThreadId = thread.id;
-          console.log("current active thread id: ", currentActiveThreadId);
+          logger.debug("current active thread id", { currentActiveThreadId });
         }
       }
 
@@ -260,7 +260,7 @@ export function useToolBar() {
             selectedModel,
           );
         } catch (streamError) {
-          console.error("Failed to start streaming chat:", streamError);
+          logger.error("Failed to start streaming chat", { streamError });
           toast.error(t("failed-to-generate-ai-response"));
           // Error handling is now done in the streaming hook
         }
@@ -339,12 +339,12 @@ export function useToolBar() {
           }
         }
       } catch (streamError) {
-        console.error("Failed to start streaming chat:", streamError);
+        logger.error("Failed to start streaming chat", { streamError });
         toast.error(t("failed-to-generate-ai-response"));
         // Error handling is now done in the streaming hook
       }
     } catch (error) {
-      console.error("Failed to send message:", error);
+      logger.error("Failed to send message", { error });
       throw error;
     }
   };
@@ -399,7 +399,7 @@ export function useToolBar() {
       try {
         await messageService.deleteMessage(msg.id, msg.threadId);
       } catch (error) {
-        console.error("Failed to delete message:", msg.id, error);
+        logger.error("Failed to delete message", { msgId: msg.id, error });
       }
     }
 
@@ -428,9 +428,9 @@ export function useToolBar() {
         provider,
         selectedModel, // Use model name for the API call
       );
-      console.log("Regenerate data", data);
+      logger.debug("Regenerate data", { data });
     } catch (streamError) {
-      console.error("Failed to regenerate streaming chat:", streamError);
+      logger.error("Failed to regenerate streaming chat", { streamError });
       toast.error(t("failed-to-generate-ai-response"));
     }
   };

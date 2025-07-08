@@ -23,6 +23,7 @@ import { ButtonWithTooltip } from "../button-with-tooltip";
 import { ModelIcon } from "../model-icon";
 import { EditMessageDialog } from "./edit-message-dialog";
 import { MessageAttachments } from "./message-attachments";
+import logger from "@shared/logger/renderer-logger";
 
 const localeMap = {
   zh: zhCN,
@@ -53,7 +54,6 @@ export function AssistantMessage({
     keyPrefix: "message",
   });
 
-
   const { createThread, selectedModelId } = useToolBar();
   const { setActiveTabId } = useActiveTab();
 
@@ -73,7 +73,7 @@ export function AssistantMessage({
       setContextMenuOpen(false);
       toast.success(t("copied-success"));
     } catch (error) {
-      console.error("复制失败:", error);
+      logger.error("复制失败", { error });
       toast.error(t("copied-failed"));
     }
   };
@@ -88,7 +88,7 @@ export function AssistantMessage({
         toast.success(t("copy-success"));
       }
     } catch (error) {
-      console.error("复制选中内容失败:", error);
+      logger.error("复制选中内容失败", { error });
       toast.error(t("copy-failed"));
     }
   };
@@ -121,7 +121,7 @@ export function AssistantMessage({
       });
 
       if (!thread) {
-        console.error("Failed to create thread");
+        logger.error("Failed to create thread");
         return;
       }
 
@@ -134,7 +134,7 @@ export function AssistantMessage({
       });
 
       if (!newTab) {
-        console.error("Failed to create new tab");
+        logger.error("Failed to create new tab");
         return;
       }
 
@@ -147,7 +147,7 @@ export function AssistantMessage({
       );
 
       if (currentMessageIndex === -1) {
-        console.warn("Current message not found in thread");
+        logger.warn("Current message not found in thread");
         await setActiveTabId(newTab.id);
         return;
       }
@@ -169,7 +169,7 @@ export function AssistantMessage({
 
       await setActiveTabId(newTab.id);
     } catch (error) {
-      console.error("Error creating new branch:", error);
+      logger.error("Error creating new branch:", { error });
       toast.error(t("context-menu.create-new-branch-error"));
     }
   };
@@ -180,7 +180,7 @@ export function AssistantMessage({
       setContextMenuOpen(false);
       toast.success(t("delete-success"));
     } catch (error) {
-      console.error("Error deleting message:", error);
+      logger.error("Error deleting message:", { error });
       toast.error(t("delete-error"));
     }
   };

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
+import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 
@@ -59,7 +60,7 @@ export function useTabBar() {
       await tabService.activateTab(id);
       emitter.emit(EventNames.TAB_SELECT, { tabId: id });
     } catch (error) {
-      console.error("Failed to activate tab:", error);
+      logger.error("Failed to activate tab", { error });
     }
   };
 
@@ -82,9 +83,9 @@ export function useTabBar() {
 
     try {
       await tabService.moveTab(fromIndex, toIndex, tabs);
-      console.log("Tab order updated successfully");
+      logger.debug("Tab order updated successfully");
     } catch (error) {
-      console.error("Failed to move tab:", error);
+      logger.error("Failed to move tab:", { error });
       setTabs(tabs);
     }
   };

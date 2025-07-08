@@ -2,6 +2,7 @@ import { parseAndUpdateAttachments } from "@renderer/utils/parse-file";
 import type { Message } from "@shared/triplit/types";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useActiveThread } from "./use-active-thread";
+import logger from "@shared/logger/renderer-logger";
 
 const { chatService, providerService } = window.service;
 const { ipcRenderer } = window.electron;
@@ -39,7 +40,7 @@ export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
         setMessages(messages);
         return messages;
       } catch (err) {
-        console.error("Failed to get messages: ", err);
+        logger.error("Failed to get messages", { err });
       }
 
       return [];
@@ -106,7 +107,7 @@ export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
         }
       } catch (err) {
         setStreaming(false);
-        console.error("Failed to get messages: ", err);
+        logger.error("Failed to get messages", { err });
       }
     },
     [activeThreadId, fetchMessages, handleAutoScroll],
@@ -185,7 +186,7 @@ export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
         threadId: activeThreadId,
       });
     } catch (err) {
-      console.error("Failed to stop stream chat: ", err);
+      logger.error("Failed to stop stream chat", { err });
     }
   }, [activeThreadId]);
 

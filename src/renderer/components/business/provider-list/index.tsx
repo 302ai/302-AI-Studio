@@ -9,6 +9,7 @@ import darkEmpty from "@renderer/assets/images/empty-dark.svg?url";
 import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
+import logger from "@shared/logger/renderer-logger";
 
 import {
   type ModalAction,
@@ -60,7 +61,7 @@ const ListRow = React.memo(function ListRow({
   }, 100);
 
   const handleEdit = () => {
-    console.log("handleEdit", provider);
+    logger.debug("handleEdit", { provider });
     setState({ type: "edit", provider });
   };
 
@@ -190,7 +191,7 @@ export function ProviderList() {
                 await handleAddProvider(provider);
                 handleCloseModal();
               } catch (error) {
-                console.error("Failed to add provider:", error);
+                logger.error("Failed to add provider", { error });
               } finally {
                 setIsSubmitting(false);
               }
@@ -222,7 +223,9 @@ export function ProviderList() {
                 const is302Provider = domainsOf302.some((domain) =>
                   providerCfg?.baseUrl?.includes(domain),
                 );
-                const newApiType = is302Provider ? "302ai" : providerCfg.apiType;
+                const newApiType = is302Provider
+                  ? "302ai"
+                  : providerCfg.apiType;
 
                 await handleUpdateProvider({
                   ...providerCfg,
@@ -230,7 +233,7 @@ export function ProviderList() {
                 });
                 handleCloseModal();
               } catch (error) {
-                console.error("Failed to update provider:", error);
+                logger.error("Failed to update provider", { error });
               } finally {
                 setIsSubmitting(false);
               }
@@ -259,7 +262,7 @@ export function ProviderList() {
                 setSelectedProvider(null);
                 handleCloseModal();
               } catch (error) {
-                console.error("Failed to delete provider:", error);
+                logger.error("Failed to delete provider", { error });
               } finally {
                 setIsSubmitting(false);
               }
@@ -290,9 +293,9 @@ export function ProviderList() {
 
     try {
       await moveProvider(fromIndex, toIndex, providers);
-      console.log("Provider order updated successfully");
+      logger.debug("Provider order updated successfully");
     } catch (error) {
-      console.error("Failed to move provider:", error);
+      logger.error("Failed to move provider", { error });
       setProviders(providers);
     }
   };

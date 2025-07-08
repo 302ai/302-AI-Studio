@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import logger from "@shared/logger/renderer-logger";
 
 interface MessageAttachmentsProps {
   messageId: string;
@@ -53,12 +54,14 @@ export function MessageAttachments({
           attachment.filePath,
         );
         if (!result.success) {
-          console.error("Failed to preview file by path:", result.error);
+          logger.error("Failed to preview file by path", {
+            error: result.error,
+          });
           toast.error(t(result.error || "file-preview-failed"));
         }
       }
     } catch (error) {
-      console.error("Error calling preview service:", error);
+      logger.error("Error calling preview service:", { error });
     }
   };
 

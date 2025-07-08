@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { ButtonWithTooltip } from "../button-with-tooltip";
 import { LinkifiedText } from "./linkified-text";
 import { MessageAttachments } from "./message-attachments";
+import logger from "@shared/logger/renderer-logger";
 
 interface UserMessageProps {
   message: Message;
@@ -51,7 +52,7 @@ export function UserMessage({ message }: UserMessageProps) {
       setContextMenuOpen(false);
       toast.success(tCommon("copied-success"));
     } catch (error) {
-      console.error("复制失败:", error);
+      logger.error("复制失败", { error });
       toast.error(tCommon("copied-failed"));
     }
   };
@@ -66,7 +67,7 @@ export function UserMessage({ message }: UserMessageProps) {
         toast.success(tCommon("copied-success"));
       }
     } catch (error) {
-      console.error("复制选中内容失败:", error);
+      logger.error("复制选中内容失败", { error });
       toast.error(tCommon("copied-failed"));
     }
   };
@@ -82,7 +83,7 @@ export function UserMessage({ message }: UserMessageProps) {
       setContextMenuOpen(false);
       toast.success(t("delete-success"));
     } catch (error) {
-      console.error("Error deleting message:", error);
+      logger.error("Error deleting message", { error });
       toast.error(t("delete-error"));
     }
   };

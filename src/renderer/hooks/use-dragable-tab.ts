@@ -1,6 +1,7 @@
 import { EventNames, emitter } from "@renderer/services/event-service";
 import { useCallback, useEffect, useRef } from "react";
 import { useActiveTab } from "./use-active-tab";
+import logger from "@shared/logger/renderer-logger";
 
 interface HookParams {
   id: string;
@@ -19,7 +20,7 @@ export function useDragableTab({ id }: HookParams) {
       const nextActiveTabId = await tabService.deleteTab(id);
       emitter.emit(EventNames.TAB_CLOSE, { tabId: id, nextActiveTabId });
     } catch (error) {
-      console.error("Error closing tab:", error);
+      logger.error("Error closing tab", { error });
     }
   }, [id]);
 
@@ -28,7 +29,7 @@ export function useDragableTab({ id }: HookParams) {
       await tabService.deleteAllTabs();
       emitter.emit(EventNames.TAB_CLOSE_ALL, null);
     } catch (error) {
-      console.error("Error closing all tabs:", error);
+      logger.error("Error closing all tabs", { error });
     }
   }, []);
 
@@ -61,7 +62,7 @@ export function useDragableTab({ id }: HookParams) {
             tabsToDelete.map((tab) => tabService.deleteTab(tab.id)),
           );
         } catch (error) {
-          console.error("Error deleting tabs:", error);
+          logger.error("Error deleting tabs", { error });
         }
       }
     };

@@ -12,6 +12,7 @@ import type { Message } from "@shared/triplit/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import logger from "@shared/logger/renderer-logger";
 
 interface EditMessageDialogProps {
   message: Message;
@@ -56,7 +57,7 @@ export function EditMessageDialog({
         t("edit-dialog.save-success") || "Message updated successfully",
       );
     } catch (error) {
-      console.error("Failed to update message:", error);
+      logger.error("Failed to update message", { error });
       toast.error(t("edit-dialog.save-error") || "Failed to update message");
     } finally {
       setIsSaving(false);
