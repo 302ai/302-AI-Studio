@@ -1,21 +1,30 @@
+import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
 import { Button } from "@renderer/components/ui/button";
 import { cn } from "@renderer/lib/utils";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ShortcutRecorderProps {
   value?: string[];
   onValueChange: (keys: string[]) => void;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
+  onRecordingChange?: (isRecording: boolean) => void;
 }
 
 export function ShortcutRecorder({
   value = [],
   onValueChange,
-  placeholder = "Click to set shortcut",
+  placeholder,
   className,
+  disabled = false,
+  onRecordingChange,
 }: ShortcutRecorderProps) {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings.shortcuts-settings.recorder",
+  });
   const [isRecording, setIsRecording] = useState(false);
   const [recordedKeys, setRecordedKeys] = useState<string[]>([]);
 
@@ -52,7 +61,8 @@ export function ShortcutRecorder({
     setIsRecording(false);
     onValueChange(recordedKeys);
     setRecordedKeys([]);
-  }, [isRecording, recordedKeys, onValueChange]);
+    onRecordingChange?.(false);
+  }, [isRecording, recordedKeys, onValueChange, onRecordingChange]);
 
   useEffect(() => {
     if (!isRecording) return;
@@ -67,12 +77,20 @@ export function ShortcutRecorder({
   }, [isRecording, handleKeyDown, handleKeyUp]);
 
   const startRecording = () => {
+    if (disabled) return;
     setIsRecording(true);
     setRecordedKeys([]);
+    onRecordingChange?.(true);
   };
 
   const handleReset = () => {
     onValueChange([]);
+  };
+
+  const handleCancel = () => {
+    setIsRecording(false);
+    setRecordedKeys([]);
+    onRecordingChange?.(false);
   };
 
   const formatKeys = (keys: string[]) => {
@@ -82,10 +100,10 @@ export function ShortcutRecorder({
   const displayValue = isRecording
     ? recordedKeys.length > 0
       ? formatKeys(recordedKeys)
-      : "Press keys..."
+      : t("press-keys")
     : value.length > 0
       ? formatKeys(value)
-      : placeholder;
+      : placeholder || t("placeholder");
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
@@ -93,28 +111,42 @@ export function ShortcutRecorder({
         type="button"
         onClick={startRecording}
         className={cn(
-          "flex h-9 w-[200px] rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",
-          "placeholder:text-muted-foreground",
+          "flex h-9 w-[200px] items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",
+          "placeholder:text-muted-fg",
           "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
           "disabled:cursor-not-allowed disabled:opacity-50",
           isRecording && "ring-1 ring-ring",
-          value.length === 0 && "text-muted-foreground",
+          value.length === 0 && "text-muted-fg",
+          disabled && "cursor-not-allowed opacity-50",
         )}
-        disabled={isRecording}
+        disabled={isRecording || disabled}
       >
         {displayValue}
       </button>
 
-      {value.length > 0 && !isRecording && (
-        <Button
-          type="button"
-          intent="outline"
-          size="small"
-          onClick={handleReset}
-          className="h-9 px-2"
-        >
-          <RotateCcw className="h-4 w-4" />
-        </Button>
+      {(value.length > 0 || isRecording) && (
+        isRecording ? (
+          <ButtonWithTooltip
+            type="button"
+            intent="outline"
+            size="small"
+            onClick={handleCancel}
+            className="h-9 px-2"
+            title={t("cancel")}
+          >
+            <X className="h-4 w-4" />
+          </ButtonWithTooltip>
+        ) : (
+          <Button
+            type="button"
+            intent="outline"
+            size="small"
+            onClick={handleReset}
+            className="h-9 px-2"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+        )
       )}
     </div>
   );

@@ -7,7 +7,7 @@ import {
 import { ShortcutRecorder } from "@renderer/components/ui/shortcut-recorder";
 import { useShortcuts } from "@renderer/hooks/use-shortcuts";
 import type { ShortcutAction } from "@shared/triplit/types";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ShortcutOption {
@@ -32,15 +32,6 @@ const SHORTCUT_MODES: Record<ShortcutAction, "preset" | "record"> = {
   "close-all-tabs": "record",
 };
 
-const getShortcutHints = (
-  t: (key: string) => string,
-): Record<ShortcutAction, string> => ({
-  "send-message": t("hints.send-message"),
-  "new-chat": t("hints.new-chat"),
-  "clear-messages": t("hints.clear-messages"),
-  "close-all-tabs": t("hints.close-all-tabs"),
-});
-
 const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
   "send-message": [
     { id: "enter", label: "Enter", keys: ["Enter"] },
@@ -61,6 +52,7 @@ export function ShortcutsSettings() {
     keyPrefix: "settings.shortcuts-settings",
   });
   const { initializeShortcuts, updateShortcut, shortcuts } = useShortcuts();
+  const [recordingAction, setRecordingAction] = useState<ShortcutAction | null>(null);
 
   useEffect(() => {
     initializeShortcuts();
@@ -97,7 +89,12 @@ export function ShortcutsSettings() {
       }
     }
 
-    const shortcutHints = getShortcutHints(t);
+    const shortcutHints: Record<ShortcutAction, string> = {
+      "send-message": t("hints.send-message"),
+      "new-chat": t("hints.new-chat"),
+      "clear-messages": t("hints.clear-messages"),
+      "close-all-tabs": t("hints.close-all-tabs"),
+    };
 
     return Object.entries(config).map(([action, shortcutConfig]) => ({
       id: action,
@@ -126,6 +123,10 @@ export function ShortcutsSettings() {
     keys: string[],
   ) => {
     await updateShortcut(action, keys);
+  };
+
+  const handleRecordingChange = (action: ShortcutAction, isRecording: boolean) => {
+    setRecordingAction(isRecording ? action : null);
   };
 
   return (
@@ -176,7 +177,10 @@ export function ShortcutsSettings() {
                 onValueChange={(keys) =>
                   handleRecordedShortcut(shortcut.action, keys)
                 }
-                placeholder="Click to set shortcut"
+                onRecordingChange={(isRecording) =>
+                  handleRecordingChange(shortcut.action, isRecording)
+                }
+                disabled={recordingAction !== null && recordingAction !== shortcut.action}
                 className="w-[240px]"
               />
             )}

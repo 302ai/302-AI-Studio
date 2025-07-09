@@ -150,6 +150,11 @@
       "description": {
         "title": "键盘快捷键说明",
         "content": "您可以自定义各种操作的键盘快捷键。某些操作仅在使用 302.AI 提供商模型时可用。"
+      },
+      "recorder": {
+        "placeholder": "点击设置快捷键",
+        "press-keys": "按下按键...",
+        "cancel": "取消"
       }
     }
   },

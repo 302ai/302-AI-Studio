@@ -149,6 +149,11 @@
       "description": {
         "title": "Keyboard Shortcuts Description",
         "content": "You can customize keyboard shortcuts for various actions. Only shortcuts from 302.AI Provider models are available for some actions."
+      },
+      "recorder": {
+        "placeholder": "Click to set shortcut",
+        "press-keys": "Press keys...",
+        "cancel": "Cancel"
       }
     }
   },
