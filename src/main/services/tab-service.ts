@@ -4,8 +4,8 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
-import type { CreateTabData, Tab, UpdateTabData } from "@shared/triplit/types";
 import logger from "@shared/logger/main-logger";
+import type { CreateTabData, Tab, UpdateTabData } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type { TabDbService } from "./db-service/tab-db-service";
 
@@ -100,6 +100,7 @@ export class TabService {
     _event: Electron.IpcMainEvent,
     tabId: string,
   ): Promise<void> {
+    //! TODO: Implement logic to handle tab activation
     try {
       const tab = await this.tabDbService.getTab(tabId);
       if (tab && tab.type === "setting") {

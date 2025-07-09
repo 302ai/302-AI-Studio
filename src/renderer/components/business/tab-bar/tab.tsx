@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/a11y/useSemanticElements: ignore seSemanticElements */
+/** biome-ignore-all lint/a11y/useSemanticElements: ignore semantic elements */
 import { Draggable } from "@hello-pangea/dnd";
 import {
   ContextMenu,
@@ -8,10 +8,9 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
-import { CopyX, Settings2, X } from "lucide-react";
+import { Settings2, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
-import { ModelIcon } from "../model-icon";
 
 interface TabProps {
   id: string;
@@ -34,7 +33,7 @@ export function Tab({
   type,
 }: TabProps) {
   const { t } = useTranslation();
-  const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
+  const { ref, handleTabClose } = useDragableTab({
     id,
     index,
   });
@@ -64,11 +63,13 @@ export function Tab({
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 className={cn(
-                  "relative mt-[1px] flex h-full select-none items-center rounded-full px-3",
+                  "relative mt-[1px] flex h-full select-none items-center rounded-[10px] px-3",
                   isCompressedThree
                     ? "justify-center px-0"
                     : "justify-between px-2",
-                  isActive ? "bg-bg" : "bg-transparent hover:bg-hover-primary",
+                  isActive
+                    ? "bg-accent text-accent-fg"
+                    : "hover:bg-hover hover:text-hover-fg",
                   snapshot.isDragging ? "opacity-50" : "opacity-100",
                 )}
                 onClick={onClick}
@@ -92,38 +93,25 @@ export function Tab({
                 }
               >
                 {isCompressedThree ? (
-                  <div className="relative flex items-center justify-center">
-                    {!isActive ? (
-                      type === "setting" ? (
-                        <Settings2 className="h-4 w-4 flex-shrink-0" />
-                      ) : (
-                        <ModelIcon
-                          modelName="302"
-                          className="size-4 flex-shrink-0"
-                        />
-                      )
+                  !isActive ? (
+                    type === "setting" ? (
+                      <Settings2 className="h-4 w-4 flex-shrink-0" />
                     ) : (
-                      <X
-                        className="absolute size-5 shrink-0 rounded-full p-1 hover:bg-hover-primary"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleTabClose();
-                        }}
-                      />
-                    )}
-                  </div>
+                      <span className="flex-1 truncate text-xs">{title}</span>
+                    )
+                  ) : (
+                    <X
+                      className="absolute size-5 shrink-0 rounded-[4px] p-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTabClose();
+                      }}
+                    />
+                  )
                 ) : (
                   <>
-                    {type === "setting" ? (
+                    {type === "setting" && (
                       <Settings2
-                        className={cn(
-                          "h-4 w-4 flex-shrink-0",
-                          isCompressedTwo ? "mr-0" : "mr-2",
-                        )}
-                      />
-                    ) : (
-                      <ModelIcon
-                        modelName="302"
                         className={cn(
                           "h-4 w-4 flex-shrink-0",
                           isCompressedTwo ? "mr-0" : "mr-2",
@@ -140,10 +128,8 @@ export function Tab({
                     </span>
                     <X
                       className={cn(
-                        "shrink-0 rounded-full p-1",
-                        isActive
-                          ? "hover:bg-hover-primary"
-                          : "hover:bg-hover-secondary",
+                        "shrink-0 rounded-[4px] p-1",
+                        isActive ? "hover:bg-accent-hover" : "hover:bg-hover-2",
                         isCompressedTwo ? "size-5" : "size-6",
                       )}
                       onClick={(e) => {
@@ -160,10 +146,6 @@ export function Tab({
             <ContextMenuItem onAction={handleTabClose}>
               <X className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close")}
-            </ContextMenuItem>
-            <ContextMenuItem onAction={handleTabCloseAll}>
-              <CopyX className="mr-2 h-4 w-4" />
-              {t("tab-bar.menu-item.close-all")}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>

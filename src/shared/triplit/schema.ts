@@ -5,6 +5,7 @@ import {
   modelsSchema,
   providersSchema,
   settingsSchema,
+  shortcutsSchema,
   tabsSchema,
   threadsSchema,
   uiSchema,
@@ -19,6 +20,7 @@ export const schema = S.Collections({
   attachments: attachmentsSchema,
   ui: uiSchema,
   settings: settingsSchema,
+  shortcuts: shortcutsSchema,
 });
 
 export type Schema = typeof schema;

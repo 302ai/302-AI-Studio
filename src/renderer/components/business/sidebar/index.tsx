@@ -62,7 +62,11 @@ export function AppSidebar(props: AppSidebarProps) {
             >
               {/* If there are no collected threads, the collected section will will also be displayed */}
               {collectedThreads.length === 0 && (
-                <SidebarDisclosure id="collected" key="collected">
+                <SidebarDisclosure
+                  className="px-4"
+                  id="collected"
+                  key="collected"
+                >
                   <SidebarDisclosureTrigger>
                     <SidebarLabel>
                       {t("sidebar.section.collected")}
@@ -72,7 +76,7 @@ export function AppSidebar(props: AppSidebarProps) {
               )}
 
               {groupedThreads.map(({ key, label, threads }) => (
-                <SidebarDisclosure id={key} key={key}>
+                <SidebarDisclosure className="px-4" id={key} key={key}>
                   <SidebarDisclosureTrigger>
                     <SidebarLabel>{label}</SidebarLabel>
                   </SidebarDisclosureTrigger>
@@ -81,7 +85,7 @@ export function AppSidebar(props: AppSidebarProps) {
                       const { id } = thread;
                       return (
                         <SidebarItem
-                          className="flex flex-1"
+                          className="flex h-[40px] flex-1 rounded-[10px]"
                           key={id}
                           isCurrent={id === activeThreadId}
                           onClick={() => handleClickThread(id)}

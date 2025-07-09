@@ -1,7 +1,7 @@
 import { EventNames, emitter } from "@renderer/services/event-service";
+import logger from "@shared/logger/renderer-logger";
 import { useCallback, useEffect, useRef } from "react";
 import { useActiveTab } from "./use-active-tab";
-import logger from "@shared/logger/renderer-logger";
 
 interface HookParams {
   id: string;
@@ -23,15 +23,6 @@ export function useDragableTab({ id }: HookParams) {
       logger.error("Error closing tab", { error });
     }
   }, [id]);
-
-  const handleTabCloseAll = useCallback(async () => {
-    try {
-      await tabService.deleteAllTabs();
-      emitter.emit(EventNames.TAB_CLOSE_ALL, null);
-    } catch (error) {
-      logger.error("Error closing all tabs", { error });
-    }
-  }, []);
 
   useEffect(() => {
     const handleThreadRename = async (event: {
@@ -81,7 +72,6 @@ export function useDragableTab({ id }: HookParams) {
   return {
     ref,
     handleTabClose,
-    handleTabCloseAll,
     onDragStart: () => {
       setActiveTabId(id);
     },
