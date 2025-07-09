@@ -1,0 +1,13 @@
+import { Schema as S } from "@triplit/client";
+
+export const shortcutsSchema = {
+  schema: S.Schema({
+    id: S.Id({ format: "nanoid" }),
+    action: S.String({
+      enum: ["send-message", "new-chat", "clear-messages", "close-all-tabs"],
+    }),
+    keys: S.Set(S.String()),
+    createdAt: S.Date({ default: S.Default.now() }),
+    updatedAt: S.Date({ default: S.Default.now() }),
+  }),
+};

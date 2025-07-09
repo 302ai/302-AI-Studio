@@ -131,6 +131,26 @@
     "tab-title": "設定",
     "tool-settings": {
       "name": "ツール設定"
+    },
+    "shortcuts-settings": {
+      "name": "ショートカット",
+      "title": "キーボードショートカット",
+      "actions": {
+        "send-message": "メッセージ送信",
+        "new-chat": "新しいチャット",
+        "clear-messages": "メッセージクリア",
+        "close-all-tabs": "すべてのタブを閉じる"
+      },
+      "hints": {
+        "send-message": "チャットでメッセージを送信する方法を選択",
+        "new-chat": "新しい会話を作成するショートカット",
+        "clear-messages": "現在のセッションのメッセージのみクリア、モデル設定などの内容は保持されます",
+        "close-all-tabs": "開いているすべてのタブを閉じる"
+      },
+      "description": {
+        "title": "キーボードショートカット説明",
+        "content": "様々なアクションのキーボードショートカットをカスタマイズできます。一部のアクションは302.AIプロバイダーモデルでのみ利用可能です。"
+      }
     }
   },
   "sidebar": {

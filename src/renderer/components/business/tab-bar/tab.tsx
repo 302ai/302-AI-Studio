@@ -7,6 +7,7 @@ import {
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
+import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
 import { cn } from "@renderer/lib/utils";
 import { CopyX, Settings2, X } from "lucide-react";
 import { motion } from "motion/react";
@@ -37,6 +38,8 @@ export function Tab({
     id,
     index,
   });
+
+  useKeyboardShortcuts("close-all-tabs", handleTabCloseAll, true);
 
   // * The three different compression states for the tab
   const isCompressedOne = width <= 100;

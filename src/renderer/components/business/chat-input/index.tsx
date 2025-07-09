@@ -6,8 +6,8 @@ import { useThread } from "@renderer/hooks/use-thread";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
-import type { Message } from "@shared/triplit/types";
 import logger from "@shared/logger/renderer-logger";
+import type { Message } from "@shared/triplit/types";
 import { Pencil, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -79,20 +79,6 @@ export function ChatInput({ className }: ChatInputProps) {
       // Note: attachments are already cleared, but that's probably fine for error cases
     } finally {
       setIsSending(false);
-    }
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.nativeEvent.isComposing
-    ) {
-      event.preventDefault();
-      if (!isSending && input.trim()) {
-        handleSendMessage();
-        setEditMessageId(null);
-      }
     }
   };
 
@@ -251,7 +237,6 @@ export function ChatInput({ className }: ChatInputProps) {
           resize="none"
           value={input}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
         />
 
         <ToolBar

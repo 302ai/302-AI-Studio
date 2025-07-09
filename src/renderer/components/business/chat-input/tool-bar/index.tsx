@@ -3,8 +3,10 @@ import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
 import { cn } from "@renderer/lib/utils";
 import { useQueryOne } from "@triplit/react";
+import { useCallback } from "react";
 import { ActionGroup } from "./action-group";
 import { ModelSelect } from "./model-select";
 
@@ -36,10 +38,13 @@ export function ToolBar({
   const { result: provider } = useQueryOne(triplitClient, providerQuery);
   const disabled = provider?.provider?.apiType !== "302ai";
 
-  const handleSendMessageClick = async () => {
+  const handleSendMessageClick = useCallback(async () => {
+    if (isDisabled) return;
     setEditMessageId(null);
     await onSendMessage();
-  };
+  }, [isDisabled, setEditMessageId, onSendMessage]);
+
+  useKeyboardShortcuts("send-message", handleSendMessageClick, !isDisabled);
 
   return (
     <div

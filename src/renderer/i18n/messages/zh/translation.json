@@ -131,6 +131,26 @@
     "tab-title": "设置",
     "tool-settings": {
       "name": "工具设置"
+    },
+    "shortcuts-settings": {
+      "name": "快捷键",
+      "title": "键盘快捷键",
+      "actions": {
+        "send-message": "发送消息",
+        "new-chat": "新建会话",
+        "clear-messages": "清空消息",
+        "close-all-tabs": "关闭所有标签页"
+      },
+      "hints": {
+        "send-message": "选择在聊天中发送消息的方式",
+        "new-chat": "创建新对话的快捷键",
+        "clear-messages": "仅清空当前会话的消息，模型设置等内容将会保留",
+        "close-all-tabs": "关闭所有打开的标签页"
+      },
+      "description": {
+        "title": "键盘快捷键说明",
+        "content": "您可以自定义各种操作的键盘快捷键。某些操作仅在使用 302.AI 提供商模型时可用。"
+      }
     }
   },
   "sidebar": {

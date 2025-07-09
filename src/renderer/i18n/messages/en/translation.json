@@ -130,6 +130,26 @@
     "tab-title": "Settings",
     "tool-settings": {
       "name": "Tool Settings"
+    },
+    "shortcuts-settings": {
+      "name": "Shortcuts",
+      "title": "Keyboard Shortcuts",
+      "actions": {
+        "send-message": "Send Message",
+        "new-chat": "New Chat",
+        "clear-messages": "Clear Messages",
+        "close-all-tabs": "Close All Tabs"
+      },
+      "hints": {
+        "send-message": "Choose how to send messages in chat",
+        "new-chat": "Shortcut to create a new conversation",
+        "clear-messages": "Only clear messages in current session, model settings and other content will be preserved",
+        "close-all-tabs": "Close all open tabs"
+      },
+      "description": {
+        "title": "Keyboard Shortcuts Description",
+        "content": "You can customize keyboard shortcuts for various actions. Only shortcuts from 302.AI Provider models are available for some actions."
+      }
     }
   },
   "sidebar": {

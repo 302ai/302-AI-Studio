@@ -5,6 +5,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AboutSettings } from "./about-settings";
 import { GeneralSettings } from "./general-settings";
 import { ModelSettings } from "./model-settings";
+import { ShortcutsSettings } from "./shortcuts-settings";
 
 export function SettingsPage() {
   const { t } = useTranslation("translation", {
@@ -24,6 +25,11 @@ export function SettingsPage() {
         name: "model-settings",
         path: "/settings/model-settings",
         label: t("model-settings.name"),
+      },
+      {
+        name: "shortcuts-settings",
+        path: "/settings/shortcuts-settings",
+        label: t("shortcuts-settings.name"),
       },
       {
         name: "about-settings",
@@ -86,6 +92,7 @@ export function SettingsPage() {
         <Routes>
           <Route path="/general-settings" element={<GeneralSettings />} />
           <Route path="/model-settings" element={<ModelSettings />} />
+          <Route path="/shortcuts-settings" element={<ShortcutsSettings />} />
           <Route path="/about-settings" element={<AboutSettings />} />
           {/* <Route path="/tool-settings" element={<ToolSettings />} />
           <Route path="/assistant-settings" element={<AssistantSettings />} /> */}
