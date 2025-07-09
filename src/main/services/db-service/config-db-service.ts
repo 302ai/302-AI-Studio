@@ -1,18 +1,48 @@
 import { triplitClient } from "@main/triplit/client";
+import logger from "@shared/logger/main-logger";
+import { DEFAULT_PROVIDERS } from "@shared/providers";
 import type {
   CreateModelData,
   CreateProviderData,
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import logger from "@shared/logger/main-logger";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
 @injectable()
 export class ConfigDbService extends BaseDbService {
+  private providersRecord: Provider[] = [];
+  private initializationPromise: Promise<void>;
+
   constructor() {
     super("providers");
+    this.initializationPromise = this.initConfigDbService();
+  }
+
+  private async initConfigDbService() {
+    try {
+      const query = triplitClient.query("providers");
+      const providers = await triplitClient.fetch(query);
+      this.providersRecord = providers;
+      await this.initProviders();
+    } catch (error) {
+      logger.error("ConfigDbService 初始化失败", { error });
+      throw error;
+    }
+  }
+
+  private async initProviders() {
+    for (const provider of DEFAULT_PROVIDERS) {
+      const existingProvider = this.providersRecord.find(
+        (p) => p.name === provider.name && provider.custom === false,
+      );
+      if (!existingProvider) {
+        // biome-ignore lint/correctness/noUnusedVariables: <ingore>
+        const { id, ...rest } = provider;
+        await this.insertProvider(rest);
+      }
+    }
   }
 
   async insertProvider(provider: CreateProviderData) {
@@ -78,6 +108,8 @@ export class ConfigDbService extends BaseDbService {
   }
 
   async getProviders(): Promise<Provider[]> {
+    await this.initializationPromise;
+
     const query = triplitClient.query("providers").Order("order", "ASC");
     const providers = await triplitClient.fetch(query);
     return providers;

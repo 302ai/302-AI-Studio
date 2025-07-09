@@ -4,6 +4,7 @@ export const providersSchema = {
   schema: S.Schema({
     id: S.Id({ format: "nanoid" }),
     name: S.String(),
+    avatar: S.String({ nullable: true }),
     apiType: S.String(),
     apiKey: S.String(),
     baseUrl: S.String(),

@@ -21,6 +21,7 @@ interface SearchFieldProps extends SearchFieldPrimitiveProps {
   description?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
   isPending?: boolean;
+  fieldGroupClassName?: string;
 }
 
 const SearchField = ({
@@ -30,6 +31,7 @@ const SearchField = ({
   description,
   errorMessage,
   isPending,
+  fieldGroupClassName,
   ...props
 }: SearchFieldProps) => {
   return (
@@ -38,13 +40,13 @@ const SearchField = ({
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "group/search-field flex flex-col gap-y-1"
+        "group/search-field flex flex-col gap-y-1",
       )}
     >
       {!props.children ? (
         <>
           {label && <Label>{label}</Label>}
-          <FieldGroup>
+          <FieldGroup className={fieldGroupClassName}>
             {isPending ? <Loader variant="spin" /> : <IconSearch />}
             <Input placeholder={placeholder ?? "Search..."} />
 

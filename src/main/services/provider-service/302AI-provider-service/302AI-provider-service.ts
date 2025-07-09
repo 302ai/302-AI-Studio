@@ -6,13 +6,13 @@ import {
   convertMessagesToModelMessages,
 } from "@main/utils/message-converter";
 import { detectModelProvider, parseModels } from "@main/utils/models";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateModelData,
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
 import type { StreamTextResult, ToolSet } from "ai";
-import logger from "@shared/logger/main-logger";
 import type { SettingsService } from "../../settings-service";
 import type {
   StreamChatParams,

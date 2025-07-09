@@ -6,7 +6,7 @@ export interface ModelProvider {
   apiKey: string;
   baseUrl: string;
   enabled: boolean;
-  custom?: boolean;
+  custom: boolean;
   websites?: {
     official: string;
     apiKey: string;

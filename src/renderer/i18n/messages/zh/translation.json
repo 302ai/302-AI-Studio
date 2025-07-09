@@ -68,7 +68,11 @@
         "no-models-description": "模型列表为空...",
         "current": "当前",
         "collected": "收藏",
-        "search-placeholder": "搜索..."
+        "search-placeholder": "搜索...",
+        "fetch-models": "获取模型",
+        "model-name": "模型名称",
+        "model-capabilities": "模型能力",
+        "actions": "操作"
       },
       "model-provider": {
         "add-provider": "添加模型",
@@ -99,7 +103,14 @@
           "verification-required": "请先验证 API Key 才可添加提供商",
           "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
           "verification-hint": "请点击验证按钮确认 API Key 可用性",
-          "get-api-key": "点击此处获取API Key"
+          "get-api-key": "点击此处获取API Key",
+          "api-forward":"接口将会请求至",
+          "interface-type": "接口类型",
+          "interface-type-placeholder": "选择接口类型",
+          "configure": "配置",
+          "icon": "图标",
+          "name": "名称",
+          "name-placeholder": "请输入Provider名称"
         },
         "delete": "删除",
         "description": "个模型",

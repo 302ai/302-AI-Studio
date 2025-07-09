@@ -5,9 +5,9 @@ import {
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import { DEFAULT_PROVIDERS } from "@renderer/config/providers";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
 import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
+import { DEFAULT_PROVIDERS } from "@shared/providers";
 import type { Provider } from "@shared/triplit/types";
 import { LayoutDashboard } from "lucide-react";
 import { nanoid } from "nanoid";

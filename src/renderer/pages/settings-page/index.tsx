@@ -65,7 +65,7 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="flex h-full flex-row gap-x-6 p-2 pr-6">
+    <div className=" flex h-full flex-row ">
       <Tabs
         className="w-auto min-w-[var(--setting-tab-list-width)] justify-end rounded-xl bg-setting-tab-list"
         orientation="vertical"
@@ -88,7 +88,7 @@ export function SettingsPage() {
         </div>
       </Tabs>
 
-      <div className="mt-4 flex-1">
+      <div className=" flex-1">
         <Routes>
           <Route path="/general-settings" element={<GeneralSettings />} />
           <Route path="/model-settings" element={<ModelSettings />} />

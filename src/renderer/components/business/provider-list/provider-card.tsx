@@ -6,10 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@renderer/components/ui/card";
+
 import { cn } from "@renderer/lib/utils";
 import type { Provider } from "@shared/triplit/types";
 import { useTranslation } from "react-i18next";
-import { ModelIcon } from "../model-icon";
+import { ProviderIcon } from "../provider-icon";
 
 interface ProviderCardProps {
   provided: DraggableProvided;
@@ -52,9 +53,9 @@ export function ProviderCard({
   return (
     <div
       className={cn(
-        "group flex h-[60px] flex-row items-center justify-between rounded-xl border bg-bg py-4 hover:bg-hover-primary",
+        "group flex h-[56px] flex-row items-center justify-between rounded-xl bg-bg py-4 hover:bg-hover-primary",
         isDragging && "bg-hover-primary opacity-50",
-        isSelected && "border-primary",
+        isSelected && "bg-accent dark:bg-primary/10",
       )}
       ref={provided.innerRef}
       {...provided.draggableProps}
@@ -71,7 +72,11 @@ export function ProviderCard({
       aria-label={provider.name}
     >
       <CardHeader className="flex items-center gap-3 pl-4">
-        <ModelIcon modelName={provider.name ?? ""} className="size-8" />
+        <ProviderIcon
+          provider={provider}
+          className="size-8 bg-white dark:bg-gray-800"
+        />
+        {/* <ModelIcon modelName={provider.name ?? ""} className="size-8" /> */}
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">{provider.name}</CardTitle>
           <CardDescription className="text-xs">
