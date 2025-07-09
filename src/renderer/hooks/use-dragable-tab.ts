@@ -1,7 +1,7 @@
 import { EventNames, emitter } from "@renderer/services/event-service";
+import logger from "@shared/logger/renderer-logger";
 import { useCallback, useEffect, useRef } from "react";
 import { useActiveTab } from "./use-active-tab";
-import logger from "@shared/logger/renderer-logger";
 
 interface HookParams {
   id: string;
