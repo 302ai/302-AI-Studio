@@ -172,9 +172,8 @@ export function TabBar() {
               />
               <Tooltip>
                 <TooltipTrigger
-                  className="size-6 flex-shrink-0 self-center"
+                  className="size-6 flex-shrink-0 self-center rounded-[4px]"
                   intent="plain"
-                  shape="circle"
                   size="square-petite"
                   style={noDragRegion}
                   onClick={() => {
