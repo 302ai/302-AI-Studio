@@ -255,7 +255,7 @@ export function ModelList({
           onChange={setSearchQuery}
           placeholder={t("search-placeholder")}
           className="!h-[40px] !w-[206px]"
-          fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted focus-within:!ring-4 focus-within:!ring-ring/20 group-invalid:focus-within:!ring-danger/20"
+          fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
         />
       </div>
       <div

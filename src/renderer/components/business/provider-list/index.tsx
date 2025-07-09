@@ -446,6 +446,7 @@ export function ProviderList() {
                 <Button
                   className="w-36 shrink-0"
                   intent="primary"
+                  size="extra-small"
                   onClick={() => setState({ type: "add" })}
                 >
                   {/* <Plus className="size-4" /> */}
