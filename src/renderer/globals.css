@@ -98,7 +98,7 @@
     --accent-hover: #e6d9f7;
 
     --muted: oklch(0.97 0.001 106.424);
-    --muted-fg: oklch(0.51 0 0);
+    --muted-fg: #AAAAAA;
 
     --hover: #F1F1F1;
     --hover-fg: #000000;
@@ -165,7 +165,7 @@
     --accent-hover: #503a6c;
 
     --muted: oklch(0.216 0.006 56.043);
-    --muted-fg: oklch(0.709 0.01 56.259);
+    --muted-fg: #5C5C5C;
 
     --hover: #2D2D2D;
     --hover-fg: #E6E6E6;

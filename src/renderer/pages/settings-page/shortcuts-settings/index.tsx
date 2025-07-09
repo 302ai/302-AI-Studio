@@ -182,9 +182,7 @@ export function ShortcutsSettings() {
             )}
 
             {shortcut.hint && (
-              <p className="mt-1 text-muted-foreground text-xs">
-                {shortcut.hint}
-              </p>
+              <p className="mt-1 text-muted-fg text-xs">{shortcut.hint}</p>
             )}
           </div>
         ))}

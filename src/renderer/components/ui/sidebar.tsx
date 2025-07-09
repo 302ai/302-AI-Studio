@@ -677,7 +677,7 @@ const SidebarDisclosurePanel = (
   return (
     <DisclosurePanel
       data-sidebar-disclosure-panel="true"
-      className="col-span-full grid grid-cols-[auto_1fr] gap-y-0.5"
+      className="col-span-full grid grid-cols-[auto_1fr] gap-y-1"
       {...props}
     />
   );
