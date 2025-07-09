@@ -51,7 +51,7 @@ export function ModelList({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
+  const [containerHeight, setContainerHeight] = useState(300);
 
   const [tabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
@@ -107,12 +107,23 @@ export function ModelList({
     [filteredModels, providersMap],
   );
 
+  // 优化后的高度计算函数
   const updateHeight = useCallback(() => {
     if (!containerRef.current) return;
+
+    // 直接获取容器在视口中的位置
     const rect = containerRef.current.getBoundingClientRect();
-    const availableHeight = window.innerHeight - rect.top - 8;
-    setContainerHeight(availableHeight);
-  }, []);
+
+    // 计算可用高度：视口高度 - 容器顶部位置 - 底部间距
+    const availableHeight = window.innerHeight - rect.top - 16;
+
+    // 确保最小高度
+    const newHeight = Math.max(availableHeight, 300);
+
+    if (Math.abs(containerHeight - newHeight) > 5) {
+      setContainerHeight(newHeight);
+    }
+  }, [containerHeight]);
 
   // 使用 callback ref 确保在 DOM 挂载时立即计算高度
   const setContainerRef = useCallback((node: HTMLDivElement | null) => {
@@ -131,17 +142,33 @@ export function ModelList({
   }, [updateHeight]);
 
   useEffect(() => {
-    window.addEventListener("resize", updateHeight);
+    // 初始计算
+    updateHeight();
 
-    const ro = new ResizeObserver(updateHeight);
+    // 只监听窗口大小变化
+    const handleResize = () => requestAnimationFrame(updateHeight);
+    window.addEventListener("resize", handleResize);
 
-    if (containerRef.current) ro.observe(containerRef.current);
+    // 使用单个 ResizeObserver
+    const resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(updateHeight);
+    });
 
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    // 清理函数
     return () => {
-      window.removeEventListener("resize", updateHeight);
-      ro.disconnect();
+      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
     };
   }, [updateHeight]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
+  useEffect(() => {
+    requestAnimationFrame(updateHeight);
+  }, [filteredModels.length, updateHeight]);
 
   useEffect(() => {
     if (!providersFetching && !modelsFetching) {
@@ -152,17 +179,57 @@ export function ModelList({
   }, [providersFetching, modelsFetching]);
 
   // 当模型列表变化时，重新计算容器高度
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
-  useEffect(() => {
-    updateHeight();
-    // return () => clearTimeout(timer);
-  }, [filteredModels.length, updateHeight]);
+  // useEffect(() => {
+  //   // 延迟执行以确保列表渲染完成
+  //   const timer = setTimeout(updateHeight, 100);
+  //   return () => clearTimeout(timer);
+  // }, [filteredModels.length, updateHeight]);
+
+  // 监听应用状态变化，确保在各种情况下都能正确更新高度
+  // useEffect(() => {
+  //   // 监听页面可见性变化
+  //   const handleVisibilityChange = () => {
+  //     if (!document.hidden) {
+  //       // 页面变为可见时重新计算高度
+  //       requestAnimationFrame(updateHeight);
+  //     }
+  //   };
+
+  //   // 监听焦点变化
+  //   const handleFocus = () => {
+  //     requestAnimationFrame(updateHeight);
+  //   };
+
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
+  //   window.addEventListener("focus", handleFocus);
+
+  //   // 定期检查高度（作为兜底机制）
+  //   const intervalId = setInterval(() => {
+  //     if (containerRef.current) {
+  //       updateHeight();
+  //     }
+  //   }, 5000); // 每5秒检查一次
+
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //     window.removeEventListener("focus", handleFocus);
+  //     clearInterval(intervalId);
+  //   };
+  // }, [updateHeight]);
 
   const loading = !ready || isPending;
 
-  if (allModels.length === 0) {
-    return null;
-  }
+  // 检查当前选中的provider是否有baseUrl和apiKey
+  const isProviderConfigValid = useMemo(() => {
+    if (!selectedProvider) return false;
+    return !!(
+      selectedProvider.baseUrl?.trim() && selectedProvider.apiKey?.trim()
+    );
+  }, [selectedProvider]);
+
+  // if (allModels.length === 0) {
+  //   return null;
+  // }
 
   return (
     <>
@@ -172,7 +239,9 @@ export function ModelList({
           <Button
             size="extra-small"
             onClick={onFetchModels}
-            isDisabled={isFetchingModels || !onFetchModels}
+            isDisabled={
+              isFetchingModels || !onFetchModels || !isProviderConfigValid
+            }
           >
             {isFetchingModels && <Loader variant="spin" size="small" />}
             {t("fetch-models")}
@@ -186,12 +255,12 @@ export function ModelList({
           onChange={setSearchQuery}
           placeholder={t("search-placeholder")}
           className="!h-[40px] !w-[206px]"
-          fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
+          fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted focus-within:!ring-4 focus-within:!ring-ring/20 group-invalid:focus-within:!ring-danger/20"
         />
       </div>
       <div
         ref={setContainerRef}
-        className="flex h-full flex-col overflow-hidden rounded-xl border-border"
+        className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-xl border-border"
       >
         {loading ? (
           <div
@@ -202,9 +271,9 @@ export function ModelList({
           </div>
         ) : (
           // 表头
-          <div className="w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
+          <div className=" w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
             <div className="!bg-muted grid h-10 grid-cols-[minmax(0,1fr)_180px_55px] text-muted-fg">
-              <div className="flex h-full items-center outline-hidden">
+              <div className="flex h-full items-center pl-4 outline-hidden">
                 <div className="truncate">{t("model-name")}</div>
               </div>
               {/*

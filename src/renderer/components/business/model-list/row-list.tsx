@@ -48,7 +48,7 @@ export const RowList = memo(function RowList({
       )}
     >
       <div className="grid h-full grid-cols-[minmax(0,1fr)_160px_64px]">
-        <div className="flex h-full items-center gap-3 outline-hidden">
+        <div className="flex h-full items-center gap-3 pl-4 outline-hidden">
           <Checkbox
             className="cursor-pointer"
             isSelected={item.enabled}

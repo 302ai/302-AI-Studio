@@ -9,6 +9,7 @@ import {
   type ChatMessage,
   convertMessagesToModelMessages,
 } from "@main/utils/message-converter";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateModelData,
   Message,
@@ -16,7 +17,6 @@ import type {
   UpdateProviderData,
 } from "@shared/triplit/types";
 import type { LanguageModelUsage } from "ai";
-import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
@@ -175,9 +175,11 @@ export class ProviderService {
 
   private getProviderInst(providerId: string): BaseProviderService {
     let providerInst = this.providerInstMap.get(providerId);
+
     if (!providerInst) {
       const provider = this.getProviderById(providerId);
       providerInst = this.createProviderInst(provider);
+
       if (!providerInst) {
         throw new Error(`Failed to create provider instance: ${providerId}`);
       }

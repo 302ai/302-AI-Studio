@@ -1,4 +1,5 @@
 import { triplitClient } from "@main/triplit/client";
+import logger from "@shared/logger/main-logger";
 import { DEFAULT_PROVIDERS } from "@shared/providers";
 import type {
   CreateModelData,
@@ -6,33 +7,40 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import logger from "@shared/logger/main-logger";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
 @injectable()
 export class ConfigDbService extends BaseDbService {
   private providersRecord: Provider[] = [];
+  private initializationPromise: Promise<void>;
 
   constructor() {
     super("providers");
-    this.initConfigDbService();
+    this.initializationPromise = this.initConfigDbService();
   }
 
   private async initConfigDbService() {
-    const query = triplitClient.query("providers");
-    const providers = await triplitClient.fetch(query);
-    this.providersRecord = providers;
-    this.initProviders();
+    try {
+      const query = triplitClient.query("providers");
+      const providers = await triplitClient.fetch(query);
+      this.providersRecord = providers;
+      await this.initProviders();
+    } catch (error) {
+      logger.error("ConfigDbService 初始化失败", { error });
+      throw error;
+    }
   }
 
   private async initProviders() {
     for (const provider of DEFAULT_PROVIDERS) {
       const existingProvider = this.providersRecord.find(
-        (p) => p.name === provider.name,
+        (p) => p.name === provider.name && provider.custom === false,
       );
       if (!existingProvider) {
-        await this.insertProvider(provider);
+        // biome-ignore lint/correctness/noUnusedVariables: <ingore>
+        const { id, ...rest } = provider;
+        await this.insertProvider(rest);
       }
     }
   }
@@ -100,6 +108,8 @@ export class ConfigDbService extends BaseDbService {
   }
 
   async getProviders(): Promise<Provider[]> {
+    await this.initializationPromise;
+
     const query = triplitClient.query("providers").Order("order", "ASC");
     const providers = await triplitClient.fetch(query);
     return providers;

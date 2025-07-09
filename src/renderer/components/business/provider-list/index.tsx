@@ -39,66 +39,30 @@ const domainsOf302 = ["302.cn", "302.ai"];
 
 const { configService } = window.service;
 
-// const defaultProviders: Provider[] = [
-//   {
-//     id: "RyzA7JoXJAOnn60SdId4w",
-//     name: "OpenAI",
-//     apiType: "openai",
-//     apiKey: "",
-//     baseUrl: "https://api.openai.com",
-//     enabled: true,
-//     custom: false,
-//     order: 0,
-//   },
-//   {
-//     id: "RyzA7JoXJAOnn60SdIddw",
-//     name: "Anthropic",
-//     apiType: "anthropic",
-//     apiKey: "",
-//     baseUrl: "https://api.anthropic.com",
-//     enabled: true,
-//     custom: false,
-//     order: 0,
-//   },
-//   {
-//     id: "RyzA7JoXJAOnn60SdIddw2",
-//     name: "Gemini",
-//     apiType: "gemini",
-//     apiKey: "",
-//     baseUrl: "https://api.gemini.com",
-//     enabled: true,
-//     custom: false,
-//     order: 0,
-//   },
-// ];
-
 const ListRow = React.memo(function ListRow({
   index,
   style,
   data,
   setState,
   modelCounts,
+  selectedProvider,
 }: {
   index: number;
   style: React.CSSProperties;
   data: Provider[];
   setState: (state: ModalAction) => void;
   modelCounts: Record<string, number>;
+  selectedProvider: Provider | null;
+  onProviderSelect: (provider: Provider) => void;
 }) {
   const provider = data[index];
-  const { selectedProvider, setSelectedProvider } = useActiveProvider();
+  const { setSelectedProvider } = useActiveProvider();
 
   const handleProviderSelect = debounce(async () => {
     await setSelectedProvider(
       selectedProvider?.id === provider.id ? null : provider,
     );
   }, 100);
-
-  // const handleEdit = () => {
-  //   logger.debug("handleEdit", { provider });
-  //   setState({ type: "edit", provider });
-  // };
-
   const handleDelete = () => {
     setState({ type: "delete", provider });
   };
@@ -353,6 +317,8 @@ export function ProviderList() {
         // data={newData}
         setState={setState}
         modelCounts={modelCounts}
+        selectedProvider={selectedProvider}
+        onProviderSelect={setSelectedProvider}
       />
     );
   };
@@ -396,7 +362,7 @@ export function ProviderList() {
     // 先往provider列表插入该custom provider
     const res = await configService.insertProvider({
       name: "Custom Provider",
-      apiType: "custom",
+      apiType: "openai",
       apiKey: "",
       baseUrl: "",
       enabled: true,

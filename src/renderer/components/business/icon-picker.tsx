@@ -78,7 +78,7 @@ export function IconPicker({ value, onChange, className }: IconPickerProps) {
         <button
           type="button"
           className={cn(
-            "flex size-[40px] items-center justify-center rounded-lg bg-gray-200 transition-colors hover:bg-gray-300",
+            "flex size-[40px] items-center justify-center rounded-lg bg-muted transition-colors hover:bg-muted/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
             className,
           )}
           onClick={() => setIsOpen(!isOpen)}
@@ -90,7 +90,7 @@ export function IconPicker({ value, onChange, className }: IconPickerProps) {
               className="size-6"
             />
           ) : (
-            <span className="text-gray-500 text-xs">
+            <span className="text-muted-fg text-xs">
               <FileImage />
             </span>
           )}
@@ -110,8 +110,9 @@ export function IconPicker({ value, onChange, className }: IconPickerProps) {
                 key={iconItem.key}
                 onClick={() => handleIconSelect(iconItem.key)}
                 className={cn(
-                  "flex flex-col items-center rounded p-2 transition-colors hover:bg-gray-100",
-                  value === iconItem.key && "bg-blue-100 text-blue-700",
+                  "flex flex-col items-center rounded p-2 text-muted-fg transition-colors hover:bg-muted/50 hover:text-fg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                  value === iconItem.key &&
+                    "bg-primary/10 text-primary ring-2 ring-primary/20",
                 )}
                 title={iconItem.name}
               >
