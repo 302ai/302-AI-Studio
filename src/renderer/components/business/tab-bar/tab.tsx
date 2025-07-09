@@ -68,7 +68,9 @@ export function Tab({
                   isCompressedThree
                     ? "justify-center px-0"
                     : "justify-between px-2",
-                  isActive ? "bg-bg" : "bg-transparent hover:bg-hover-primary",
+                  isActive
+                    ? "bg-accent text-accent-fg"
+                    : "hover:bg-hover hover:text-hover-fg",
                   snapshot.isDragging ? "opacity-50" : "opacity-100",
                 )}
                 onClick={onClick}

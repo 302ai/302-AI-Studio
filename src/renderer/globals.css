@@ -46,6 +46,12 @@
   --color-muted: var(--muted);
   --color-muted-fg: var(--muted-fg);
 
+  --color-selected: var(--selected);
+  --color-selected-fg: var(--selected-fg);
+
+  --color-hover: var(--hover);
+  --color-hover-fg: var(--hover-fg);
+
   --color-overlay: var(--overlay);
   --color-overlay-fg: var(--overlay-fg);
 
@@ -72,11 +78,11 @@
 
 @layer base {
   :root {
-    --bg: rgba(255, 255, 255, 1);
-    --fg: rgba(51, 51, 51, 1);
+    --bg: #FFFFFF;
+    --fg: #333333;
 
-    --primary: rgba(142, 71, 240, 1);
-    --primary-fg: rgba(255, 255, 255, 1);
+    --primary: #8E47F0;
+    --primary-fg: #FFFFFF;
 
     --secondary: oklch(0.923 0.003 48.717);
     --secondary-fg: rgba(102, 102, 102, 1);
@@ -84,11 +90,14 @@
     --overlay: oklch(1 0 0);
     --overlay-fg: oklch(0.147 0.004 49.25);
 
-    --accent: rgba(243, 242, 255, 1);
-    --accent-fg: rgba(142, 71, 240, 1);
+    --accent: #F3F2FF;
+    --accent-fg: #8450E8;
 
     --muted: oklch(0.97 0.001 106.424);
     --muted-fg: oklch(0.51 0 0);
+
+    --hover: #F1F1F1;
+    --hover-fg: #000000;
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
@@ -137,20 +146,23 @@
   }
 
   .dark {
-    --bg: oklch(0.097 0.004 49.25);
-    --fg: oklch(0.985 0.001 106.423);
+    --bg: #121212;
+    --fg: #E6E6E6;
 
-    --primary: rgba(142, 71, 240, 1);
-    --primary-fg: oklch(1 0 0);
+    --primary: #8E47F0;
+    --primary-fg: #FFFFFF;
 
-    --secondary: oklch(0.238 0.007 34.298);
-    --secondary-fg: oklch(0.985 0.001 106.423);
+    --secondary: #2D2D2D;
+    --secondary-fg: #E6E6E6;
 
-    --accent: rgba(142, 71, 240, 1);
-    --accent-fg: oklch(1 0 0);
+    --accent: #49306A;
+    --accent-fg: #E6E6E6;
 
     --muted: oklch(0.216 0.006 56.043);
     --muted-fg: oklch(0.709 0.01 56.259);
+
+    --hover: #2D2D2D;
+    --hover-fg: #E6E6E6;
 
     --overlay: oklch(0.176 0.006 56.043);
     --overlay-fg: oklch(0.985 0.001 106.423);
