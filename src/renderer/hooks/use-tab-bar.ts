@@ -1,5 +1,6 @@
 import type { DropResult } from "@hello-pangea/dnd";
 import { triplitClient } from "@renderer/client";
+import logger from "@shared/logger/renderer-logger";
 import type { Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useEffect, useState } from "react";
@@ -8,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
-import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 
@@ -26,11 +26,9 @@ export function useTabBar() {
 
   const handleAddNewTab = async (type: "thread" | "setting") => {
     if (type === "setting") {
-      // Check if a setting tab already exists
       const existingSettingTab = tabs.find((tab) => tab.type === "setting");
 
       if (existingSettingTab) {
-        // Activate the existing setting tab
         const promises = [
           setActiveTabId(existingSettingTab.id),
           setActiveThreadId(""),
@@ -107,6 +105,7 @@ export function useTabBar() {
    * * This effect is used to navigate to the active tab
    */
   useEffect(() => {
+    console.log("Active tab changed", { activeTab });
     if (activeTab) {
       navigate(activeTab?.path || "/");
     }

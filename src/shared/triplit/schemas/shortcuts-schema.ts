@@ -4,7 +4,7 @@ export const shortcutsSchema = {
   schema: S.Schema({
     id: S.Id({ format: "nanoid" }),
     action: S.String({
-      enum: ["send-message", "new-chat", "clear-messages", "close-all-tabs"],
+      enum: ["send-message", "new-chat", "clear-messages", "close-current-tab", "close-other-tabs", "delete-current-thread", "open-settings", "toggle-sidebar"],
     }),
     keys: S.Set(S.String()),
     createdAt: S.Date({ default: S.Default.now() }),

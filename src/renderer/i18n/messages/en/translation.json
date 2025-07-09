@@ -138,13 +138,21 @@
         "send-message": "Send Message",
         "new-chat": "New Chat",
         "clear-messages": "Clear Messages",
-        "close-all-tabs": "Close All Tabs"
+        "close-current-tab": "Close Current Tab",
+        "close-other-tabs": "Close Other Tabs",
+        "delete-current-thread": "Delete Current Thread",
+        "open-settings": "Open Settings",
+        "toggle-sidebar": "Toggle Sidebar"
       },
       "hints": {
         "send-message": "Choose how to send messages in chat",
         "new-chat": "Shortcut to create a new conversation",
         "clear-messages": "Only clear messages in current session, model settings and other content will be preserved",
-        "close-all-tabs": "Close all open tabs"
+        "close-current-tab": "Close the currently active tab",
+        "close-other-tabs": "Close all tabs except the current one",
+        "delete-current-thread": "Delete the current conversation thread",
+        "open-settings": "Open the settings page",
+        "toggle-sidebar": "Show or hide the sidebar"
       },
       "description": {
         "title": "Keyboard Shortcuts Description",

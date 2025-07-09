@@ -139,13 +139,21 @@
         "send-message": "メッセージ送信",
         "new-chat": "新しいチャット",
         "clear-messages": "メッセージクリア",
-        "close-all-tabs": "すべてのタブを閉じる"
+        "close-current-tab": "現在のタブを閉じる",
+        "close-other-tabs": "他のタブを閉じる",
+        "delete-current-thread": "現在のスレッドを削除",
+        "open-settings": "設定を開く",
+        "toggle-sidebar": "サイドバー切り替え"
       },
       "hints": {
         "send-message": "チャットでメッセージを送信する方法を選択",
         "new-chat": "新しい会話を作成するショートカット",
         "clear-messages": "現在のセッションのメッセージのみクリア、モデル設定などの内容は保持されます",
-        "close-all-tabs": "開いているすべてのタブを閉じる"
+        "close-current-tab": "現在アクティブなタブを閉じる",
+        "close-other-tabs": "現在のタブ以外のすべてのタブを閉じる",
+        "delete-current-thread": "現在の会話スレッドを削除",
+        "open-settings": "設定ページを開く",
+        "toggle-sidebar": "サイドバーを表示/非表示"
       },
       "description": {
         "title": "キーボードショートカット説明",

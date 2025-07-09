@@ -29,7 +29,11 @@ const SHORTCUT_MODES: Record<ShortcutAction, "preset" | "record"> = {
   "send-message": "preset",
   "new-chat": "preset",
   "clear-messages": "record",
-  "close-all-tabs": "record",
+  "close-current-tab": "record",
+  "close-other-tabs": "record",
+  "delete-current-thread": "record",
+  "open-settings": "record",
+  "toggle-sidebar": "record",
 };
 
 const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
@@ -44,7 +48,11 @@ const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
   ],
   "new-chat": [{ id: "cmd-n", label: "Cmd+N/Ctrl+N", keys: ["Cmd", "N"] }],
   "clear-messages": [],
-  "close-all-tabs": [],
+  "close-current-tab": [],
+  "close-other-tabs": [],
+  "delete-current-thread": [],
+  "open-settings": [],
+  "toggle-sidebar": [],
 };
 
 export function ShortcutsSettings() {
@@ -52,7 +60,9 @@ export function ShortcutsSettings() {
     keyPrefix: "settings.shortcuts-settings",
   });
   const { initializeShortcuts, updateShortcut, shortcuts } = useShortcuts();
-  const [recordingAction, setRecordingAction] = useState<ShortcutAction | null>(null);
+  const [recordingAction, setRecordingAction] = useState<ShortcutAction | null>(
+    null,
+  );
 
   useEffect(() => {
     initializeShortcuts();
@@ -66,7 +76,11 @@ export function ShortcutsSettings() {
       "send-message": { keys: ["Enter"] },
       "new-chat": { keys: ["Cmd", "N"] },
       "clear-messages": { keys: [] },
-      "close-all-tabs": { keys: [] },
+      "close-current-tab": { keys: ["Cmd", "Shift", "W"] },
+      "close-other-tabs": { keys: ["Cmd", "W"] },
+      "delete-current-thread": { keys: ["Cmd", "Backspace"] },
+      "open-settings": { keys: ["Cmd", ","] },
+      "toggle-sidebar": { keys: ["Cmd", "B"] },
     };
 
     const sortedShortcuts = shortcutsArray.sort((a, b) => {
@@ -93,7 +107,11 @@ export function ShortcutsSettings() {
       "send-message": t("hints.send-message"),
       "new-chat": t("hints.new-chat"),
       "clear-messages": t("hints.clear-messages"),
-      "close-all-tabs": t("hints.close-all-tabs"),
+      "close-current-tab": t("hints.close-current-tab"),
+      "close-other-tabs": t("hints.close-other-tabs"),
+      "delete-current-thread": t("hints.delete-current-thread"),
+      "open-settings": t("hints.open-settings"),
+      "toggle-sidebar": t("hints.toggle-sidebar"),
     };
 
     return Object.entries(config).map(([action, shortcutConfig]) => ({
@@ -125,71 +143,81 @@ export function ShortcutsSettings() {
     await updateShortcut(action, keys);
   };
 
-  const handleRecordingChange = (action: ShortcutAction, isRecording: boolean) => {
+  const handleRecordingChange = (
+    action: ShortcutAction,
+    isRecording: boolean,
+  ) => {
     setRecordingAction(isRecording ? action : null);
   };
 
   return (
-    <div className="flex h-full flex-col gap-4">
-      <div className="space-y-6">
-        {shortcutSettings.map((shortcut) => (
-          <div key={shortcut.id} className="flex flex-col gap-2">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-3">
-                <span className="font-medium text-sm">
-                  {t(`actions.${shortcut.action}`)}
-                </span>
+    <div className="flex h-full flex-col gap-4 overflow-hidden">
+      <div className="flex flex-1 justify-center overflow-y-auto pr-2">
+        <div className="w-full max-w-md space-y-6">
+          {shortcutSettings.map((shortcut) => (
+            <div key={shortcut.id} className="flex flex-col gap-2">
+              <div className="flex flex-col">
+                <div className="flex items-center gap-3">
+                  <span className="font-medium text-sm">
+                    {t(`actions.${shortcut.action}`)}
+                  </span>
+                </div>
               </div>
+
+              {shortcut.mode === "preset" ? (
+                <Select
+                  className="w-full"
+                  selectedKey={
+                    shortcut.options.find(
+                      (opt) =>
+                        JSON.stringify(opt.keys) ===
+                        JSON.stringify(shortcut.keys),
+                    )?.id
+                  }
+                  onSelectionChange={(optionId) =>
+                    handleShortcutChange(shortcut.action, optionId as string)
+                  }
+                >
+                  <SelectTrigger />
+                  <SelectList popoverClassName="min-w-md">
+                    {shortcut.options.map((option) => (
+                      <SelectOption
+                        key={option.id}
+                        id={option.id}
+                        className="flex cursor-pointer justify-between"
+                      >
+                        <div className="flex w-full items-center justify-between">
+                          <span>{option.label}</span>
+                        </div>
+                      </SelectOption>
+                    ))}
+                  </SelectList>
+                </Select>
+              ) : (
+                <ShortcutRecorder
+                  value={shortcut.keys}
+                  onValueChange={(keys) =>
+                    handleRecordedShortcut(shortcut.action, keys)
+                  }
+                  onRecordingChange={(isRecording) =>
+                    handleRecordingChange(shortcut.action, isRecording)
+                  }
+                  disabled={
+                    recordingAction !== null &&
+                    recordingAction !== shortcut.action
+                  }
+                  className="w-full"
+                />
+              )}
+
+              {shortcut.hint && (
+                <p className="mt-1 text-left text-muted-fg text-xs">
+                  {shortcut.hint}
+                </p>
+              )}
             </div>
-
-            {shortcut.mode === "preset" ? (
-              <Select
-                className="w-[240px]"
-                selectedKey={
-                  shortcut.options.find(
-                    (opt) =>
-                      JSON.stringify(opt.keys) ===
-                      JSON.stringify(shortcut.keys),
-                  )?.id
-                }
-                onSelectionChange={(optionId) =>
-                  handleShortcutChange(shortcut.action, optionId as string)
-                }
-              >
-                <SelectTrigger />
-                <SelectList popoverClassName="min-w-[240px]">
-                  {shortcut.options.map((option) => (
-                    <SelectOption
-                      key={option.id}
-                      id={option.id}
-                      className="flex cursor-pointer justify-between"
-                    >
-                      <div className="flex w-full items-center justify-between">
-                        <span>{option.label}</span>
-                      </div>
-                    </SelectOption>
-                  ))}
-                </SelectList>
-              </Select>
-            ) : (
-              <ShortcutRecorder
-                value={shortcut.keys}
-                onValueChange={(keys) =>
-                  handleRecordedShortcut(shortcut.action, keys)
-                }
-                onRecordingChange={(isRecording) =>
-                  handleRecordingChange(shortcut.action, isRecording)
-                }
-                disabled={recordingAction !== null && recordingAction !== shortcut.action}
-                className="w-[240px]"
-              />
-            )}
-
-            {shortcut.hint && (
-              <p className="mt-1 text-muted-fg text-xs">{shortcut.hint}</p>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

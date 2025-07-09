@@ -7,9 +7,8 @@ import {
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
-import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
 import { cn } from "@renderer/lib/utils";
-import { CopyX, X } from "lucide-react";
+import { X } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { ShrinkableTab } from "./shrinkable-tab";
@@ -35,13 +34,12 @@ export function Tab({
   type,
 }: TabProps) {
   const { t } = useTranslation();
-  const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
+  const { ref, handleTabClose } = useDragableTab({
     id,
     index,
   });
 
-  useKeyboardShortcuts("close-all-tabs", handleTabCloseAll, true);
-
+  // * The three different compression states for the tab
   const isShrinkedThree = width <= 50;
 
   return (
@@ -107,10 +105,6 @@ export function Tab({
             <ContextMenuItem onAction={handleTabClose}>
               <X className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close")}
-            </ContextMenuItem>
-            <ContextMenuItem onAction={handleTabCloseAll}>
-              <CopyX className="mr-2 h-4 w-4" />
-              {t("tab-bar.menu-item.close-all")}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>

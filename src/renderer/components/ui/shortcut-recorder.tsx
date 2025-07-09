@@ -111,7 +111,7 @@ export function ShortcutRecorder({
         type="button"
         onClick={startRecording}
         className={cn(
-          "flex h-9 w-[200px] items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",
+          "flex h-9 w-full items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",
           "placeholder:text-muted-fg",
           "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
           "disabled:cursor-not-allowed disabled:opacity-50",
@@ -124,8 +124,8 @@ export function ShortcutRecorder({
         {displayValue}
       </button>
 
-      {(value.length > 0 || isRecording) && (
-        isRecording ? (
+      {(value.length > 0 || isRecording) &&
+        (isRecording ? (
           <ButtonWithTooltip
             type="button"
             intent="outline"
@@ -146,8 +146,7 @@ export function ShortcutRecorder({
           >
             <RotateCcw className="h-4 w-4" />
           </Button>
-        )
-      )}
+        ))}
     </div>
   );
 }
