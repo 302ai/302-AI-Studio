@@ -6,14 +6,13 @@ import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 import { useKeyboardShortcuts } from "./use-keyboard-shortcuts";
 
-const { tabService, threadService } = window.service;
+const { tabService, threadService, uiService } = window.service;
 
 export function useGlobalShortcuts() {
   const { tabs, activeTabId } = useActiveTab();
   const { activeThreadId } = useActiveThread();
   const { toggleSidebar } = useSidebar();
 
-  // Close current tab handler
   const handleCloseCurrentTab = useCallback(async () => {
     if (!activeTabId) return;
 
@@ -28,22 +27,18 @@ export function useGlobalShortcuts() {
     }
   }, [activeTabId]);
 
-  // Close other tabs handler
   const handleCloseOtherTabs = useCallback(async () => {
     if (!activeTabId || tabs.length <= 1) return;
 
     try {
-      // Get all other tab IDs
       const otherTabIds = tabs
         .filter((tab) => tab.id !== activeTabId)
         .map((tab) => tab.id);
 
-      // Delete all other tabs
       await Promise.all(
         otherTabIds.map((tabId) => tabService.deleteTab(tabId)),
       );
 
-      // Emit events for each closed tab
       otherTabIds.forEach((tabId) => {
         emitter.emit(EventNames.TAB_CLOSE, {
           tabId,
@@ -55,7 +50,6 @@ export function useGlobalShortcuts() {
     }
   }, [activeTabId, tabs]);
 
-  // Delete current thread handler
   const handleDeleteCurrentThread = useCallback(async () => {
     if (!activeThreadId) return;
 
@@ -67,17 +61,14 @@ export function useGlobalShortcuts() {
     }
   }, [activeThreadId]);
 
-  // Open settings handler
   const handleOpenSettings = useCallback(async () => {
     try {
-      // Check if settings tab already exists
       const existingSettingTab = tabs.find((tab) => tab.type === "setting");
-      logger.debug("existing tab", { existingSettingTab });
 
       if (existingSettingTab) {
         await tabService.activateTab(existingSettingTab.id);
+        await uiService.updateActiveTabId(existingSettingTab.id);
       } else {
-        // Create new settings tab
         const newTab = await tabService.insertTab({
           type: "setting",
           title: "Settings",
@@ -86,18 +77,17 @@ export function useGlobalShortcuts() {
         });
 
         await tabService.activateTab(newTab.id);
+        await uiService.updateActiveTabId(newTab.id);
       }
     } catch (error) {
       logger.error("Error opening settings", { error });
     }
   }, [tabs]);
 
-  // Toggle sidebar handler
   const handleToggleSidebar = useCallback(() => {
     toggleSidebar();
   }, [toggleSidebar]);
 
-  // Register all shortcuts
   useKeyboardShortcuts("close-current-tab", handleCloseCurrentTab, true);
   useKeyboardShortcuts("close-other-tabs", handleCloseOtherTabs, true);
   useKeyboardShortcuts(
