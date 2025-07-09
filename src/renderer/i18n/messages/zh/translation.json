@@ -139,13 +139,21 @@
         "send-message": "发送消息",
         "new-chat": "新建会话",
         "clear-messages": "清空消息",
-        "close-all-tabs": "关闭所有标签页"
+        "close-current-tab": "关闭当前标签页",
+        "close-other-tabs": "关闭其他标签页",
+        "delete-current-thread": "删除当前会话",
+        "open-settings": "打开设置",
+        "toggle-sidebar": "切换侧边栏"
       },
       "hints": {
         "send-message": "选择在聊天中发送消息的方式",
         "new-chat": "创建新对话的快捷键",
         "clear-messages": "仅清空当前会话的消息，模型设置等内容将会保留",
-        "close-all-tabs": "关闭所有打开的标签页"
+        "close-current-tab": "关闭当前活动的标签页",
+        "close-other-tabs": "关闭除当前标签页外的所有标签页",
+        "delete-current-thread": "删除当前对话线程",
+        "open-settings": "打开设置页面",
+        "toggle-sidebar": "显示或隐藏侧边栏"
       },
       "description": {
         "title": "键盘快捷键说明",

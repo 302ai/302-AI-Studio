@@ -29,7 +29,11 @@ const SHORTCUT_MODES: Record<ShortcutAction, "preset" | "record"> = {
   "send-message": "preset",
   "new-chat": "preset",
   "clear-messages": "record",
-  "close-all-tabs": "record",
+  "close-current-tab": "record",
+  "close-other-tabs": "record",
+  "delete-current-thread": "record",
+  "open-settings": "record",
+  "toggle-sidebar": "record",
 };
 
 const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
@@ -44,7 +48,11 @@ const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
   ],
   "new-chat": [{ id: "cmd-n", label: "Cmd+N/Ctrl+N", keys: ["Cmd", "N"] }],
   "clear-messages": [],
-  "close-all-tabs": [],
+  "close-current-tab": [],
+  "close-other-tabs": [],
+  "delete-current-thread": [],
+  "open-settings": [],
+  "toggle-sidebar": [],
 };
 
 export function ShortcutsSettings() {
@@ -52,7 +60,9 @@ export function ShortcutsSettings() {
     keyPrefix: "settings.shortcuts-settings",
   });
   const { initializeShortcuts, updateShortcut, shortcuts } = useShortcuts();
-  const [recordingAction, setRecordingAction] = useState<ShortcutAction | null>(null);
+  const [recordingAction, setRecordingAction] = useState<ShortcutAction | null>(
+    null,
+  );
 
   useEffect(() => {
     initializeShortcuts();
@@ -66,7 +76,11 @@ export function ShortcutsSettings() {
       "send-message": { keys: ["Enter"] },
       "new-chat": { keys: ["Cmd", "N"] },
       "clear-messages": { keys: [] },
-      "close-all-tabs": { keys: [] },
+      "close-current-tab": { keys: ["Cmd", "Shift", "W"] },
+      "close-other-tabs": { keys: ["Cmd", "W"] },
+      "delete-current-thread": { keys: ["Cmd", "Backspace"] },
+      "open-settings": { keys: ["Cmd", ","] },
+      "toggle-sidebar": { keys: ["Cmd", "B"] },
     };
 
     const sortedShortcuts = shortcutsArray.sort((a, b) => {
@@ -93,7 +107,11 @@ export function ShortcutsSettings() {
       "send-message": t("hints.send-message"),
       "new-chat": t("hints.new-chat"),
       "clear-messages": t("hints.clear-messages"),
-      "close-all-tabs": t("hints.close-all-tabs"),
+      "close-current-tab": t("hints.close-current-tab"),
+      "close-other-tabs": t("hints.close-other-tabs"),
+      "delete-current-thread": t("hints.delete-current-thread"),
+      "open-settings": t("hints.open-settings"),
+      "toggle-sidebar": t("hints.toggle-sidebar"),
     };
 
     return Object.entries(config).map(([action, shortcutConfig]) => ({
@@ -125,7 +143,10 @@ export function ShortcutsSettings() {
     await updateShortcut(action, keys);
   };
 
-  const handleRecordingChange = (action: ShortcutAction, isRecording: boolean) => {
+  const handleRecordingChange = (
+    action: ShortcutAction,
+    isRecording: boolean,
+  ) => {
     setRecordingAction(isRecording ? action : null);
   };
 
@@ -180,7 +201,10 @@ export function ShortcutsSettings() {
                 onRecordingChange={(isRecording) =>
                   handleRecordingChange(shortcut.action, isRecording)
                 }
-                disabled={recordingAction !== null && recordingAction !== shortcut.action}
+                disabled={
+                  recordingAction !== null &&
+                  recordingAction !== shortcut.action
+                }
                 className="w-[240px]"
               />
             )}

@@ -49,4 +49,4 @@ export type UpdateSettingsData = Partial<Omit<Settings, "id">>;
 export type Shortcut = Entity<Schema, "shortcuts">;
 export type CreateShortcutData = Omit<Shortcut, "id" | "createdAt" | "updatedAt">;
 export type UpdateShortcutData = Partial<Omit<Shortcut, "id" | "createdAt" | "updatedAt">>;
-export type ShortcutAction = "send-message" | "new-chat" | "clear-messages" | "close-all-tabs";
+export type ShortcutAction = "send-message" | "new-chat" | "clear-messages" | "close-current-tab" | "close-other-tabs" | "delete-current-thread" | "open-settings" | "toggle-sidebar";

@@ -11,12 +11,22 @@ export interface ShortcutConfig {
   "send-message": ShortcutKeys;
   "new-chat": ShortcutKeys;
   "clear-messages": ShortcutKeys;
-  "close-all-tabs": ShortcutKeys;
+  "close-current-tab": ShortcutKeys;
+  "close-other-tabs": ShortcutKeys;
+  "delete-current-thread": ShortcutKeys;
+  "open-settings": ShortcutKeys;
+  "toggle-sidebar": ShortcutKeys;
 }
 
 const DEFAULT_SHORTCUTS: CreateShortcutData[] = [
   { action: "send-message", keys: new Set(["Enter"]) },
   { action: "new-chat", keys: new Set(["Cmd", "N"]) },
+  { action: "clear-messages", keys: new Set(["Cmd", "L"]) },
+  { action: "close-current-tab", keys: new Set(["Cmd", "Shift", "W"]) },
+  { action: "close-other-tabs", keys: new Set(["Cmd", "W"]) },
+  { action: "delete-current-thread", keys: new Set(["Cmd", "Backspace"]) },
+  { action: "open-settings", keys: new Set(["Cmd", ","]) },
+  { action: "toggle-sidebar", keys: new Set(["Cmd", "B"]) },
 ];
 
 export function useShortcuts() {
@@ -44,8 +54,12 @@ export function useShortcuts() {
     const config: ShortcutConfig = {
       "send-message": { keys: ["Enter"] },
       "new-chat": { keys: ["Cmd", "N"] },
-      "clear-messages": { keys: [] },
-      "close-all-tabs": { keys: [] },
+      "clear-messages": { keys: ["Cmd", "L"] },
+      "close-current-tab": { keys: ["Cmd", "Shift", "W"] },
+      "close-other-tabs": { keys: ["Cmd", "W"] },
+      "delete-current-thread": { keys: ["Cmd", "Backspace"] },
+      "open-settings": { keys: ["Cmd", ","] },
+      "toggle-sidebar": { keys: ["Cmd", "B"] },
     };
 
     const sortedShortcuts = shortcutsArray.sort((a, b) => {
