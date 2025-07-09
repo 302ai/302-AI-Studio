@@ -11,6 +11,8 @@ export class TriplitLogHandler implements LogHandler {
   log(record: LogRecord): void {
     const { level, message, attributes, context } = record;
 
+    return;
+    // biome-ignore lint/correctness/noUnreachable: <explanation>
     switch (level?.toLowerCase()) {
       case "error":
       case "fatal":
