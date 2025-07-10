@@ -4,8 +4,8 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
-import type { SearchService } from "@shared/triplit/types";
 import logger from "@shared/logger/main-logger";
+import type { SearchService } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type {
   SettingsDbService,
@@ -25,9 +25,6 @@ export class SettingsService {
 
   private setupEventListeners() {
     emitter.on(EventNames.PROVIDER_DELETE, () => {
-      this.resetSelectedModelId();
-    });
-    emitter.on(EventNames.PROVIDER_UPDATE, () => {
       this.resetSelectedModelId();
     });
   }
