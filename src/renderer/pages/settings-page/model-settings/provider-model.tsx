@@ -32,14 +32,12 @@ export function ProviderModel() {
   const [isSaving, setIsSaving] = useState(false);
   const [isFetchingModels, setIsFetchingModels] = useState(false);
 
-  // 用于标识是否正在从 selectedProvider 初始化状态，避免与实时保存冲突
   const isInitializing = useRef(false);
 
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider",
   });
 
-  // 当选中的provider变化时，更新本地状态
   useEffect(() => {
     isInitializing.current = true;
 
@@ -57,7 +55,6 @@ export function ProviderModel() {
       setAvatar("");
     }
 
-    // 使用 setTimeout 确保状态更新完成后再将 isInitializing 设为 false
     setTimeout(() => {
       isInitializing.current = false;
     }, 0);
@@ -93,32 +90,27 @@ export function ProviderModel() {
     [saveProvider],
   );
 
-  // 组件卸载时取消防抖函数
   useEffect(() => {
     return () => {
       debouncedSave.cancel();
     };
   }, [debouncedSave]);
 
-  // 处理名称变化
   const handleNameChange = (value: string) => {
     setName(value);
     debouncedSave({ name: value.trim() });
   };
 
-  // 处理Base URL变化
   const handleBaseUrlChange = (value: string) => {
     setBaseUrl(value);
     debouncedSave({ baseUrl: value.trim() });
   };
 
-  // 处理API Key变化
   const handleApiKeyChange = (value: string) => {
     setApiKey(value);
     debouncedSave({ apiKey: value.trim() });
   };
 
-  // 处理API类型变化
   const handleApiTypeChange = (key: Key | null) => {
     const value = key as string;
     if (value) {
@@ -128,16 +120,13 @@ export function ProviderModel() {
   };
 
   const handleGetApiKey = () => {
-    // 根据选中的provider打开对应的API Key获取页面
     const apiKeyUrl = selectedProvider?.websites?.apiKey || "https://302.ai";
     window.service?.shellService.openExternal(apiKeyUrl);
   };
 
-  // 处理图标选择
   const handleIconChange = async (iconKey: string) => {
     setAvatar(iconKey);
 
-    // 立即保存到数据库
     if (selectedProvider && !isInitializing.current) {
       try {
         await configService.updateProvider(selectedProvider.id, {
@@ -145,7 +134,6 @@ export function ProviderModel() {
         });
       } catch (error) {
         logger.error("handleIconChange failed", { error });
-        // 如果保存失败，回滚本地状态
         setAvatar(selectedProvider.avatar || "");
       }
     }
@@ -157,7 +145,6 @@ export function ProviderModel() {
     setIsFetchingModels(true);
 
     try {
-      // 构建当前的 provider 配置
       const currentProvider = {
         ...selectedProvider,
         name: name.trim(),
@@ -167,18 +154,15 @@ export function ProviderModel() {
         avatar: avatar,
       };
 
-      // 先验证 API key
       const { isOk, errorMsg } = await handleCheckKey(currentProvider);
 
       if (!isOk) {
-        toast.error(errorMsg || "API Key 验证失败");
+        toast.error(errorMsg);
         return;
       }
 
-      // 验证成功后获取模型列表
       const models = await providerService.fetchModels(currentProvider);
 
-      // 更新数据库中的模型
       await configService.updateProviderModels(selectedProvider.id, models);
       toast.success(t("model-check-success"));
     } catch (error) {
@@ -240,7 +224,7 @@ export function ProviderModel() {
             <TextField
               label="Base URL"
               value={baseUrl}
-              placeholder="请输入Base URL"
+              placeholder={t("add-provider-form.placeholder-3")}
               // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
               onChange={handleBaseUrlChange}
             />
@@ -256,11 +240,10 @@ export function ProviderModel() {
               type="password"
               isRevealable
               value={apiKey}
-              placeholder="请输入API Key"
+              placeholder={t("add-provider-form.placeholder-2")}
               // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
               onChange={handleApiKeyChange}
             />
-            {/* API Key 获取链接 */}
 
             {!selectedProvider.custom && (
               <Link
