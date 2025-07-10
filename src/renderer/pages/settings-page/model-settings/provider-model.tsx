@@ -177,9 +177,11 @@ export function ProviderModel() {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center gap-4 p-6">
         <div className="text-center">
-          <h2 className="mb-2 font-semibold text-fg text-lg">选择Provider</h2>
+          <h2 className="mb-2 font-semibold text-fg text-lg">
+            {t("select-provider")}
+          </h2>
           <p className="text-muted-fg text-sm">
-            请从左侧列表中选择一个Provider来配置其设置
+            {t("select-provider-description")}
           </p>
         </div>
       </div>

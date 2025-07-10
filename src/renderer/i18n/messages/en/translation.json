@@ -112,6 +112,8 @@
         "custom-provider": "Custom Provider",
         "add": "Add",
         "model-check-success": "Model verification succeeded",
+        "select-provider": "Select Provider",
+        "select-provider-description": "Please select a provider from the left list to configure its settings",
         "add-provider-form": {
           "check-key": "Verify",
           "custom-provider": "Custom Provider",

@@ -113,6 +113,8 @@
         "custom-provider": "カスタムプロバイダー",
         "add": "追加",
         "model-check-success": "モデル検証に成功しました",
+        "select-provider": "プロバイダーを選択",
+        "select-provider-description": "左のリストからプロバイダーを選択して設定を構成してください",
         "add-provider-form": {
           "check-key": "確認する",
           "custom-provider": "カスタムプロバイダー",
