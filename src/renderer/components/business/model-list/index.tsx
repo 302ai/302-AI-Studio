@@ -245,7 +245,7 @@ export function ModelList({
         ) : (
           // 表头
           <div className=" w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
-            <div className="!bg-muted mb-1 grid h-10 grid-cols-[minmax(0,1fr)_180px_55px] text-muted-fg">
+            <div className="!bg-muted mb-1 grid h-10 grid-cols-[minmax(0,1fr)_180px_70px] text-muted-fg">
               <div className="flex h-full items-center pl-4 outline-hidden">
                 <div className="truncate">{t("model-name")}</div>
               </div>
