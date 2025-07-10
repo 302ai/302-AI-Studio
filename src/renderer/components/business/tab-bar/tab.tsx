@@ -8,9 +8,10 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
-import { Settings2, X } from "lucide-react";
+import { X } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
+import { ShrinkableTab } from "./shrinkable-tab";
 
 interface TabProps {
   id: string;
@@ -39,9 +40,7 @@ export function Tab({
   });
 
   // * The three different compression states for the tab
-  const isCompressedOne = width <= 100;
-  const isCompressedTwo = width <= 80;
-  const isCompressedThree = width <= 50;
+  const isShrinkedThree = width <= 50;
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -63,10 +62,10 @@ export function Tab({
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 className={cn(
-                  "relative mt-[1px] flex h-full select-none items-center rounded-[10px] px-3",
-                  isCompressedThree
-                    ? "justify-center px-0"
-                    : "justify-between px-2",
+                  "relative mt-[1px] flex h-full select-none items-center rounded-[10px]",
+                  isShrinkedThree
+                    ? "justify-center px-1"
+                    : "justify-between px-3",
                   isActive
                     ? "bg-accent text-accent-fg"
                     : "hover:bg-hover hover:text-hover-fg",
@@ -92,53 +91,13 @@ export function Tab({
                   } as React.CSSProperties
                 }
               >
-                {isCompressedThree ? (
-                  !isActive ? (
-                    type === "setting" ? (
-                      <Settings2 className="h-4 w-4 flex-shrink-0" />
-                    ) : (
-                      <span className="flex-1 truncate text-xs">{title}</span>
-                    )
-                  ) : (
-                    <X
-                      className="absolute size-5 shrink-0 rounded-[4px] p-1"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleTabClose();
-                      }}
-                    />
-                  )
-                ) : (
-                  <>
-                    {type === "setting" && (
-                      <Settings2
-                        className={cn(
-                          "h-4 w-4 flex-shrink-0",
-                          isCompressedTwo ? "mr-0" : "mr-2",
-                        )}
-                      />
-                    )}
-                    <span
-                      className={cn(
-                        "truncate text-left text-xs",
-                        isCompressedOne ? "flex-shrink" : "flex-1",
-                      )}
-                    >
-                      {title}
-                    </span>
-                    <X
-                      className={cn(
-                        "shrink-0 rounded-[4px] p-1",
-                        isActive ? "hover:bg-accent-hover" : "hover:bg-hover-2",
-                        isCompressedTwo ? "size-5" : "size-6",
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleTabClose();
-                      }}
-                    />
-                  </>
-                )}
+                <ShrinkableTab
+                  title={title}
+                  isActive={isActive}
+                  width={width}
+                  type={type}
+                  handleTabClose={handleTabClose}
+                />
               </div>
             </ContextMenuTrigger>
           </motion.div>
