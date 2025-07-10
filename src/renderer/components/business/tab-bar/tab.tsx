@@ -8,7 +8,7 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
-import { X } from "lucide-react";
+import { CopyX, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { ShrinkableTab } from "./shrinkable-tab";
@@ -34,7 +34,7 @@ export function Tab({
   type,
 }: TabProps) {
   const { t } = useTranslation();
-  const { ref, handleTabClose } = useDragableTab({
+  const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
     id,
     index,
   });
@@ -105,6 +105,10 @@ export function Tab({
             <ContextMenuItem onAction={handleTabClose}>
               <X className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close")}
+            </ContextMenuItem>
+            <ContextMenuItem onAction={handleTabCloseAll}>
+              <CopyX className="mr-2 h-4 w-4" />
+              {t("tab-bar.menu-item.close-all")}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>

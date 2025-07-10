@@ -1,5 +1,6 @@
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
+import logger from "@shared/logger/renderer-logger";
 import {
   Eye,
   File,
@@ -13,7 +14,6 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import logger from "@shared/logger/renderer-logger";
 
 interface AttachmentItemProps {
   attachment: AttachmentFile;

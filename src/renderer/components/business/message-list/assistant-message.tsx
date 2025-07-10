@@ -1,11 +1,11 @@
 import { triplitClient } from "@renderer/client";
+import { PulseLoader } from "@renderer/components/business/loader-ldrs";
 import { ContentBlocks } from "@renderer/components/business/markdown/content-blocks";
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
 import {
   ContextMenuItem,
   ContextMenuSeparator,
 } from "@renderer/components/ui/context-menu";
-import { PulseLoader } from "@renderer/components/ui/loader-ldrs";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { useContentBlocks } from "@renderer/hooks/use-content-blocks";

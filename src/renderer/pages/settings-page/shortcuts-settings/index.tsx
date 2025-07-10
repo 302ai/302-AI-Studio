@@ -8,7 +8,7 @@ import {
 import { ShortcutRecorder } from "@renderer/components/ui/shortcut-recorder";
 import { useShortcuts } from "@renderer/hooks/use-shortcuts";
 import type { ShortcutAction } from "@shared/triplit/types";
-import { RefreshCw, Trash2 } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 

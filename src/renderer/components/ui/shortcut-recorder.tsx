@@ -1,5 +1,4 @@
 import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
-import { Button } from "@renderer/components/ui/button";
 import { cn } from "@renderer/lib/utils";
 import { Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
