@@ -1,5 +1,6 @@
 import { Tab, TabList, Tabs } from "@renderer/components/business/setting-tabs";
-import { useMemo } from "react";
+import { useSidebar } from "@renderer/components/ui/sidebar";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AboutSettings } from "./about-settings";
@@ -13,6 +14,8 @@ export function SettingsPage() {
   });
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { state, toggleSidebar } = useSidebar();
 
   const settingTabs = useMemo(
     () => [
@@ -63,6 +66,12 @@ export function SettingsPage() {
       navigate(tab.path);
     }
   };
+
+  useEffect(() => {
+    if (state === "expanded") {
+      toggleSidebar();
+    }
+  }, [state, toggleSidebar]);
 
   return (
     <div className=" flex h-full flex-row ">

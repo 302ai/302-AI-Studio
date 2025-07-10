@@ -7,18 +7,22 @@ interface LdrsLoaderProps {
   size?: number;
   speed?: number;
   color?: string;
+  stroke?: number;
 }
 
 export function LdrsLoader({
   type,
   size = 30,
-  speed = 0.9,
+  speed = 1,
+  stroke = 2,
   color = "currentColor",
 }: LdrsLoaderProps) {
   switch (type) {
     case "dot-pulse":
       return <DotPulse size={size} speed={speed} color={color} />;
     case "line-spinner":
-      return <LineSpinner size={size} speed={speed} color={color} />;
+      return (
+        <LineSpinner size={size} speed={speed} color={color} stroke={stroke} />
+      );
   }
 }

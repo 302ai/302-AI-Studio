@@ -10,6 +10,7 @@ export enum EventNames {
   THREAD_DELETE_ALL = "thread:delete-all",
   THREAD_SELECT = "thread:select",
   THREAD_ADD = "thread:add",
+  THREAD_STATUS_UPDATE = "thread:status-update",
 
   // * Tab events
   TAB_CLOSE = "tab:close",
@@ -60,6 +61,10 @@ type Events = {
   [EventNames.CODE_PREVIEW_CLOSE]: null;
   [EventNames.SHORTCUT_TRIGGERED]: {
     action: ShortcutAction;
+  };
+  [EventNames.THREAD_STATUS_UPDATE]: {
+    threadId: string;
+    status: "pending" | "success" | "error" | "stop";
   };
 };
 

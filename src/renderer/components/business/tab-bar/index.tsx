@@ -26,7 +26,6 @@ const { tabService } = window.service;
 
 export function TabBar() {
   const { t } = useTranslation();
-
   const {
     tabs,
     activeTabId,
@@ -130,7 +129,7 @@ export function TabBar() {
             }}
             {...provided.droppableProps}
           >
-            {tabs.map(({ id, title, type }, index) => (
+            {tabs.map(({ id, title, type, threadId }, index) => (
               <div key={id} className="flex items-center">
                 <Separator
                   orientation="vertical"
@@ -146,6 +145,7 @@ export function TabBar() {
 
                 <Tab
                   id={id}
+                  threadId={threadId ?? ""}
                   index={index}
                   title={type === "setting" ? t("settings.tab-title") : title}
                   isActive={id === activeTabId}
