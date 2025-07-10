@@ -59,9 +59,10 @@ const ListRow = React.memo(function ListRow({
   const { setSelectedProvider } = useActiveProvider();
 
   const handleProviderSelect = debounce(async () => {
-    await setSelectedProvider(
-      selectedProvider?.id === provider.id ? null : provider,
-    );
+    if (selectedProvider?.id === provider.id) {
+      return;
+    }
+    await setSelectedProvider(provider);
   }, 100);
   const handleDelete = () => {
     setState({ type: "delete", provider });
@@ -259,8 +260,18 @@ export function ProviderList() {
               setIsSubmitting(true);
               try {
                 await handleDelete(action.provider);
-                setSelectedProvider(null);
                 handleCloseModal();
+
+                if (selectedProvider?.id === action.provider?.id) {
+                  const newSelectedProvider = providers.find(
+                    (p) => p.id !== action.provider?.id,
+                  );
+                  if (newSelectedProvider) {
+                    setSelectedProvider(newSelectedProvider);
+                  } else {
+                    setSelectedProvider(null);
+                  }
+                }
               } catch (error) {
                 logger.error("Failed to delete provider", { error });
               } finally {
