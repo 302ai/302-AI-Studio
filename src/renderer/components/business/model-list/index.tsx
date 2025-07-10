@@ -233,7 +233,7 @@ export function ModelList({
       </div>
       <div
         ref={setContainerRef}
-        className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-xl border"
+        className="mb-4 flex h-full min-h-[300px] flex-col overflow-hidden rounded-xl border"
       >
         {loading ? (
           <div
@@ -243,7 +243,6 @@ export function ModelList({
             <Fetching />
           </div>
         ) : (
-          // 表头
           <div className=" w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
             <div className="!bg-muted mb-1 grid h-10 grid-cols-[minmax(0,1fr)_180px_70px] text-muted-fg">
               <div className="flex h-full items-center pl-4 outline-hidden">
@@ -291,10 +290,6 @@ export function ModelList({
       <AddModelModal
         isOpen={isAddModelModalOpen}
         onOpenChange={setIsAddModelModalOpen}
-        onModelAdded={() => {
-          // 模型添加成功后可以刷新列表或显示提示
-          console.log("Model added successfully");
-        }}
       />
     </>
   );
