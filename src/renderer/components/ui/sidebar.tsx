@@ -414,10 +414,10 @@ const sidebarItemStyles = tv({
       true: "flex not-has-data-[slot=icon]:hidden size-9 items-center justify-center gap-x-0 p-0 **:data-[slot=menu-trigger]:hidden",
     },
     isCurrent: {
-      true: "bg-accent text-fg hover:bg-accent hover:text-fg **:data-[slot=menu-trigger]:from-(--accent) **:data-[slot=icon]:text-fg [&_.text-muted-fg]:text-fg/80",
+      true: "bg-accent text-accent-fg hover:bg-accent hover:text-accent-fg **:data-[slot=menu-trigger]:from-(--accent) **:data-[slot=icon]:text-fg [&_.text-muted-fg]:text-fg/80",
     },
     isActive: {
-      true: "bg-hover-primary text-hover-primary-fg **:data-[slot=menu-trigger]:flex",
+      true: "bg-hover text-hover-fg **:data-[slot=menu-trigger]:flex",
     },
     isDisabled: {
       true: "cursor-default opacity-50",
@@ -617,7 +617,7 @@ const sidebarDisclosureTrigger = tv({
       true: "size-9 justify-center p-0",
     },
     isActive: {
-      true: "bg-(--accent) text-sidebar-fg",
+      true: "bg-hover text-fg",
     },
     isDisabled: {
       true: "cursor-default opacity-50",

@@ -67,7 +67,7 @@ export function AppSidebar(props: AppSidebarProps) {
                   id="collected"
                   key="collected"
                 >
-                  <SidebarDisclosureTrigger>
+                  <SidebarDisclosureTrigger className="h-[40px] rounded-[10px]">
                     <SidebarLabel>
                       {t("sidebar.section.collected")}
                     </SidebarLabel>
@@ -77,7 +77,7 @@ export function AppSidebar(props: AppSidebarProps) {
 
               {groupedThreads.map(({ key, label, threads }) => (
                 <SidebarDisclosure className="px-4" id={key} key={key}>
-                  <SidebarDisclosureTrigger>
+                  <SidebarDisclosureTrigger className="h-[40px] rounded-[10px]">
                     <SidebarLabel>{label}</SidebarLabel>
                   </SidebarDisclosureTrigger>
                   <SidebarDisclosurePanel>
