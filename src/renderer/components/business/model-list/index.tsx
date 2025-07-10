@@ -178,45 +178,6 @@ export function ModelList({
     }
   }, [providersFetching, modelsFetching]);
 
-  // 当模型列表变化时，重新计算容器高度
-  // useEffect(() => {
-  //   // 延迟执行以确保列表渲染完成
-  //   const timer = setTimeout(updateHeight, 100);
-  //   return () => clearTimeout(timer);
-  // }, [filteredModels.length, updateHeight]);
-
-  // 监听应用状态变化，确保在各种情况下都能正确更新高度
-  // useEffect(() => {
-  //   // 监听页面可见性变化
-  //   const handleVisibilityChange = () => {
-  //     if (!document.hidden) {
-  //       // 页面变为可见时重新计算高度
-  //       requestAnimationFrame(updateHeight);
-  //     }
-  //   };
-
-  //   // 监听焦点变化
-  //   const handleFocus = () => {
-  //     requestAnimationFrame(updateHeight);
-  //   };
-
-  //   document.addEventListener("visibilitychange", handleVisibilityChange);
-  //   window.addEventListener("focus", handleFocus);
-
-  //   // 定期检查高度（作为兜底机制）
-  //   const intervalId = setInterval(() => {
-  //     if (containerRef.current) {
-  //       updateHeight();
-  //     }
-  //   }, 5000); // 每5秒检查一次
-
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
-  //     window.removeEventListener("focus", handleFocus);
-  //     clearInterval(intervalId);
-  //   };
-  // }, [updateHeight]);
-
   const loading = !ready || isPending;
 
   // 检查当前选中的provider是否有baseUrl和apiKey
