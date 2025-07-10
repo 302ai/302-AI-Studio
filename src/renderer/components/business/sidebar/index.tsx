@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ThreadSearcher } from "../title-bar/thread-searcher";
 import { SearchButton } from "./search-button";
+import { SidebarController } from "./sidebar-controller";
 import { ThreadMenu } from "./thread-menu";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -35,6 +36,8 @@ export function AppSidebar(props: AppSidebarProps) {
   const { state } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
 
+  const isSidebarCollapsed = state === "collapsed";
+
   const handleSearchThread = () => {
     setIsOpen(!isOpen);
   };
@@ -44,8 +47,9 @@ export function AppSidebar(props: AppSidebarProps) {
       <div className="flex h-[calc(100vh-var(--title-bar-height))] w-full flex-1 flex-row">
         <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
           <SidebarContent className="max-h-[calc(100vh-var(--title-bar-height))] pb-2">
-            <div className="my-2 px-2.5">
+            <div className="my-2 flex flex-row items-center justify-between gap-x-3 pr-2.5 pl-4">
               <SearchButton onClick={handleSearchThread} />
+              {!isSidebarCollapsed && <SidebarController />}
             </div>
 
             {/* All Threads */}
