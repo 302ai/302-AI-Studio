@@ -15,7 +15,10 @@ export function Layout() {
     <main className="flex h-screen flex-col overflow-hidden">
       <Toast />
       <BasicTitleBar />
-      <div className="flex flex-1">
+      <div
+        className="flex flex-1"
+        style={{ height: "calc(100% - var(--title-bar-height))" }}
+      >
         {!isSettingsPage ? (
           <AppSidebar>
             <div className="size-full">
