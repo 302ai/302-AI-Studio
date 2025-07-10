@@ -7,115 +7,39 @@ import {
 } from "@renderer/components/ui/select";
 import { ShortcutRecorder } from "@renderer/components/ui/shortcut-recorder";
 import { useShortcuts } from "@renderer/hooks/use-shortcuts";
-import type { ShortcutAction } from "@shared/triplit/types";
-import { RefreshCw } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
 
-interface ShortcutOption {
-  id: string;
-  label: string;
-  keys: string[];
-}
+import {
+  DEFAULT_SHORTCUTS,
+  SHORTCUT_MODES,
+  SHORTCUT_OPTIONS,
+  type ShortcutOption,
+} from "@shared/constants";
+import type { ShortcutAction, ShortcutScope } from "@shared/triplit/types";
+import { RefreshCw } from "lucide-react";
+import { useMemo, useState } from "react";
+
+import { useTranslation } from "react-i18next";
 
 interface ShortcutSetting {
   id: string;
   action: ShortcutAction;
   keys: string[];
-  options: ShortcutOption[];
+  scope: ShortcutScope;
   mode: "preset" | "record";
+  options: ShortcutOption[];
   hint?: string;
 }
-
-const SHORTCUT_MODES: Record<ShortcutAction, "preset" | "record"> = {
-  "send-message": "preset",
-  "new-chat": "preset",
-  "clear-messages": "record",
-  "close-current-tab": "record",
-  "close-other-tabs": "record",
-  "delete-current-thread": "record",
-  "open-settings": "record",
-  "toggle-sidebar": "record",
-};
-
-const DEFAULT_SHORTCUTS: Record<ShortcutAction, string[]> = {
-  "send-message": ["Enter"],
-  "new-chat": ["Cmd", "N"],
-  "clear-messages": ["Cmd", "L"],
-  "close-current-tab": ["Cmd", "Shift", "W"],
-  "close-other-tabs": ["Cmd", "W"],
-  "delete-current-thread": ["Cmd", "Backspace"],
-  "open-settings": ["Cmd", ","],
-  "toggle-sidebar": ["Cmd", "B"],
-};
-
-const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
-  "send-message": [
-    { id: "enter", label: "Enter", keys: ["Enter"] },
-    { id: "shift-enter", label: "Shift+Enter", keys: ["Shift", "Enter"] },
-    {
-      id: "cmd-enter",
-      label: "Cmd+Enter/Ctrl+Enter",
-      keys: ["Cmd", "Enter"],
-    },
-  ],
-  "new-chat": [{ id: "cmd-n", label: "Cmd+N/Ctrl+N", keys: ["Cmd", "N"] }],
-  "clear-messages": [],
-  "close-current-tab": [],
-  "close-other-tabs": [],
-  "delete-current-thread": [],
-  "open-settings": [],
-  "toggle-sidebar": [],
-};
 
 export function ShortcutsSettings() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.shortcuts-settings",
   });
-  const { initializeShortcuts, updateShortcut, shortcuts } = useShortcuts();
+  const { updateShortcut, allShortcuts } = useShortcuts();
   const [recordingAction, setRecordingAction] = useState<ShortcutAction | null>(
     null,
   );
 
-  useEffect(() => {
-    initializeShortcuts();
-  }, [initializeShortcuts]);
-
   const shortcutSettings = useMemo((): ShortcutSetting[] => {
-    if (!shortcuts) return [];
-
-    const shortcutsArray = Array.from(shortcuts.values());
-    const config: Record<string, { keys: string[] }> = {
-      "send-message": { keys: ["Enter"] },
-      "new-chat": { keys: ["Cmd", "N"] },
-      "clear-messages": { keys: ["Cmd", "L"] },
-      "close-current-tab": { keys: ["Cmd", "Shift", "W"] },
-      "close-other-tabs": { keys: ["Cmd", "W"] },
-      "delete-current-thread": { keys: ["Cmd", "Backspace"] },
-      "open-settings": { keys: ["Cmd", ","] },
-      "toggle-sidebar": { keys: ["Cmd", "B"] },
-    };
-
-    const sortedShortcuts = shortcutsArray.sort((a, b) => {
-      const aTime = a.updatedAt?.getTime() || a.createdAt?.getTime() || 0;
-      const bTime = b.updatedAt?.getTime() || b.createdAt?.getTime() || 0;
-      return bTime - aTime;
-    });
-
-    const processedActions = new Set<string>();
-    for (const shortcut of sortedShortcuts) {
-      if (
-        shortcut.action &&
-        shortcut.keys &&
-        !processedActions.has(shortcut.action)
-      ) {
-        config[shortcut.action] = {
-          keys: Array.from(shortcut.keys),
-        };
-        processedActions.add(shortcut.action);
-      }
-    }
-
     const shortcutHints: Record<ShortcutAction, string> = {
       "send-message": t("hints.send-message"),
       "new-chat": t("hints.new-chat"),
@@ -127,15 +51,16 @@ export function ShortcutsSettings() {
       "toggle-sidebar": t("hints.toggle-sidebar"),
     };
 
-    return Object.entries(config).map(([action, shortcutConfig]) => ({
-      id: action,
-      action: action as ShortcutAction,
-      keys: shortcutConfig.keys,
-      options: SHORTCUT_OPTIONS[action as ShortcutAction] || [],
-      mode: SHORTCUT_MODES[action as ShortcutAction],
-      hint: shortcutHints[action as ShortcutAction],
+    return (allShortcuts || []).map((shortcut) => ({
+      id: shortcut.id,
+      action: shortcut.action,
+      keys: Array.from(shortcut.keys),
+      scope: shortcut.scope,
+      mode: SHORTCUT_MODES[shortcut.action],
+      options: SHORTCUT_OPTIONS[shortcut.action],
+      hint: shortcutHints[shortcut.action],
     }));
-  }, [shortcuts, t]);
+  }, [allShortcuts, t]);
 
   const handleShortcutChange = async (
     action: ShortcutAction,
@@ -143,7 +68,6 @@ export function ShortcutsSettings() {
   ) => {
     const options = SHORTCUT_OPTIONS[action];
     const selectedOption = options.find((opt) => opt.id === optionId);
-
     if (selectedOption) {
       await updateShortcut(action, selectedOption.keys);
     }
@@ -164,8 +88,8 @@ export function ShortcutsSettings() {
   };
 
   const handleResetShortcut = async (action: ShortcutAction) => {
-    const defaultKeys = DEFAULT_SHORTCUTS[action];
-    await updateShortcut(action, defaultKeys);
+    const defaultConfig = DEFAULT_SHORTCUTS[action];
+    await updateShortcut(action, defaultConfig.keys);
   };
 
   return (
@@ -181,7 +105,6 @@ export function ShortcutsSettings() {
                   </span>
                 </div>
               </div>
-
               <div className="flex items-center gap-2">
                 {shortcut.mode === "preset" ? (
                   <Select

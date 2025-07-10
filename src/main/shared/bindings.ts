@@ -5,6 +5,7 @@ import { AttachmentDbService } from "@main/services/db-service/attachment-db-ser
 import { ConfigDbService } from "@main/services/db-service/config-db-service";
 import { MessageDbService } from "@main/services/db-service/message-db-service";
 import { SettingsDbService } from "@main/services/db-service/settings-db-service";
+import { ShortcutsDbService } from "@main/services/db-service/shortcuts-db-service";
 import { TabDbService } from "@main/services/db-service/tab-db-service";
 import { ThreadDbService } from "@main/services/db-service/thread-db-service";
 import { UiDbService } from "@main/services/db-service/ui-db-service";
@@ -14,6 +15,7 @@ import { MessageService } from "@main/services/message-service";
 import { ProviderService } from "@main/services/provider-service";
 import { SettingsService } from "@main/services/settings-service";
 import { ShellService } from "@main/services/shell-service";
+import { ShortcutsService } from "@main/services/shortcuts-service";
 import { TabService } from "@main/services/tab-service";
 import { ThreadService } from "@main/services/thread-service";
 import { TriplitService } from "@main/services/triplit-service";
@@ -53,6 +55,10 @@ export function initBindings() {
   container
     .bind<SettingsDbService>(TYPES.SettingsDbService)
     .to(SettingsDbService)
+    .inSingletonScope();
+  container
+    .bind<ShortcutsDbService>(TYPES.ShortcutsDbService)
+    .to(ShortcutsDbService)
     .inSingletonScope();
 
   // * Business Services
@@ -108,5 +114,9 @@ export function initBindings() {
   container
     .bind<ShellService>(TYPES.ShellService)
     .to(ShellService)
+    .inSingletonScope();
+  container
+    .bind<ShortcutsService>(TYPES.ShortcutsService)
+    .to(ShortcutsService)
     .inSingletonScope();
 }

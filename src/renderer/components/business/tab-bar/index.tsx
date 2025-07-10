@@ -5,7 +5,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
-import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
 import { useTabBar } from "@renderer/hooks/use-tab-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
@@ -109,8 +108,6 @@ export function TabBar() {
 
     return () => unsub();
   }, [setActiveTabId, tabs]);
-
-  useKeyboardShortcuts("new-chat", () => handleAddNewTab("thread"), true);
 
   return (
     <DragDropContext

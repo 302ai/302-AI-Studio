@@ -7,6 +7,7 @@ import { MessageService } from "./message-service";
 import { ProviderService } from "./provider-service";
 import { SettingsService } from "./settings-service";
 import { ShellService } from "./shell-service";
+import { ShortcutsService } from "./shortcuts-service";
 import { TabService } from "./tab-service";
 import { ThreadService } from "./thread-service";
 import { TriplitService } from "./triplit-service";
@@ -25,6 +26,7 @@ export const services = [
   TabService,
   ChatService,
   ProviderService,
+  ShortcutsService,
   FileParseService,
   FilePreviewService,
   ShellService,

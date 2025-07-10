@@ -7,7 +7,6 @@ import {
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
 import { TextField } from "@renderer/components/ui/text-field";
-import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
 import {
   type MenuModelActionType,
   useThreadMenu,
@@ -63,8 +62,6 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
     handleCollectThread,
     handleDeleteAll,
   } = useThreadMenu(thread);
-
-  useKeyboardShortcuts("clear-messages", handleCleanMessages, true);
 
   const actionType = (action: MenuModelActionType | null) => {
     const initialsState = {

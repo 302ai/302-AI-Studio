@@ -177,6 +177,11 @@
         "cancel": "取消",
         "reset": "重置",
         "clear": "清空"
+      },
+      "scope": {
+        "label": "作用域",
+        "app": "应用内",
+        "global": "全局"
       }
     },
     "text": "设置"

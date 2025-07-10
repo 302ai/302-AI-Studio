@@ -176,6 +176,11 @@
         "cancel": "Cancel",
         "reset": "Reset",
         "clear": "Clear"
+      },
+      "scope": {
+        "label": "Scope",
+        "app": "App Only",
+        "global": "Global"
       }
     },
     "text": "Setting"

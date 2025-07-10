@@ -1,12 +1,12 @@
 import { AppSidebar } from "@renderer/components/business/sidebar";
 import { BasicTitleBar } from "@renderer/components/business/title-bar";
 import { Toast } from "@renderer/components/ui/toast";
-import { useGlobalShortcuts } from "@renderer/hooks/use-global-shortcuts";
+import { useShortcutsHandlers } from "@renderer/hooks/use-global-shortcuts";
 import { Outlet, useLocation } from "react-router-dom";
 
 export function Layout() {
-  // Initialize global shortcuts
-  useGlobalShortcuts();
+  // 初始化全局所有按键处理程序
+  useShortcutsHandlers();
 
   const location = useLocation();
   const isSettingsPage = location.pathname.startsWith("/settings");
