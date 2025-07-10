@@ -53,7 +53,7 @@ export function ProviderCard({
   return (
     <div
       className={cn(
-        "group flex h-[56px] flex-row items-center justify-between rounded-xl py-4 hover:bg-accent",
+        "group flex h-[56px] flex-row items-center justify-between rounded-xl py-4 hover:bg-hover",
         isDragging && "bg-hover-primary opacity-50 ",
         isSelected && "bg-accent text-accent-fg",
       )}

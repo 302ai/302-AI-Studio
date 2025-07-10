@@ -194,7 +194,7 @@ export function ModelList({
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between ">
         {/* <ModelFilter onTabChange={setTabKey} /> */}
         <div className="flex gap-2">
           <Button
@@ -224,7 +224,7 @@ export function ModelList({
       </div>
       <div
         ref={setContainerRef}
-        className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-xl border-border"
+        className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-xl border"
       >
         {loading ? (
           <div

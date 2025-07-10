@@ -377,7 +377,7 @@ export function ProviderList() {
   return (
     <>
       <div className="flex h-full w-full flex-col px-4 pt-[18px] ">
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <div>{t("label")}</div>
           {providers.length > 0 ? (
             <Button

@@ -203,10 +203,10 @@ export function ProviderModel() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-50px)] w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-2 ">
+    <div className="flex h-[calc(100vh-50px)] w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px] ">
       {/* 配置标题 */}
       <div className="flex flex-col gap-1">
-        <h2 className="font-semibold text-fg text-lg">
+        <h2 className=" text-fg ">
           {t("add-provider-form.configure")} {selectedProvider.name}
         </h2>
       </div>
