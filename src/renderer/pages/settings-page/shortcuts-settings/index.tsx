@@ -88,14 +88,14 @@ export function ShortcutsSettings() {
   };
 
   const handleResetShortcut = async (action: ShortcutAction) => {
-    const defaultConfig = DEFAULT_SHORTCUTS.find(s => s.action === action);
+    const defaultConfig = DEFAULT_SHORTCUTS.find((s) => s.action === action);
     if (defaultConfig) {
       await updateShortcut(action, Array.from(defaultConfig.keys));
     }
   };
 
   return (
-    <div className="flex h-full flex-col gap-4 overflow-hidden">
+    <div className="flex h-full flex-col gap-4 overflow-hidden py-[18px]">
       <div className="flex flex-1 justify-center overflow-y-auto pr-2">
         <div className="w-full max-w-md space-y-6">
           {shortcutSettings.map((shortcut) => (
