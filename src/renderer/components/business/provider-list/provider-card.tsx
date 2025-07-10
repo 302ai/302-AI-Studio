@@ -75,7 +75,9 @@ export function ProviderCard({
         <ProviderIcon provider={provider} className="size-8 " />
         {/* <ModelIcon modelName={provider.name ?? ""} className="size-8" /> */}
         <div className="flex flex-col gap-1 ">
-          <CardTitle className="text-sm ">{provider.name}</CardTitle>
+          <CardTitle className="text-card-title-text text-sm ">
+            {provider.name}
+          </CardTitle>
           <CardDescription className=" text-card-desc-text text-xs">
             {modelCount}
             {t("settings.model-settings.model-provider.description")}

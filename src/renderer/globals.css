@@ -74,6 +74,7 @@
   --color-setting-about-text: var(--setting-about-text);
 
   --color-card-desc-text: var(--card-desc-text);
+  --color-card-title-text: var(--card-title-text);
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -140,6 +141,7 @@
     --setting-about-text:#333333;
 
     --card-desc-text: #AAAAAA;
+    --card-title-text: #333333;
 
     --chart-1: oklch(0.541 0.281 293.009);
     --chart-2: oklch(0.702 0.183 293.541);
@@ -214,6 +216,7 @@
     --setting-about-text:#E6E6E6;
 
     --card-desc-text: #7A7A7A;
+    --card-title-text: #E6E6E6;
 
     --chart-1: oklch(0.491 0.27 292.581);
     --chart-2: oklch(0.606 0.25 292.717);
