@@ -1,10 +1,10 @@
-import { IconSidebar } from "@intentui/icons";
 import { useSidebar } from "@renderer/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function SidebarController() {
@@ -22,7 +22,11 @@ export function SidebarController() {
         size="square-petite"
         onClick={toggleSidebar}
       >
-        <IconSidebar style={{ height: "1.5rem", width: "1.5rem" }} />
+        {isSidebarCollapsed ? (
+          <PanelLeftOpen className="size-5" />
+        ) : (
+          <PanelLeftClose className="size-5" />
+        )}
       </TooltipTrigger>
       <TooltipContent>
         {isSidebarCollapsed

@@ -13,8 +13,8 @@ export function SearchButton({ onClick }: SearchButtonProps) {
 
   return (
     <Button
-      intent="outline"
-      className="flex w-full items-center justify-start text-muted-fg"
+      intent="plain"
+      className="flex w-full items-center justify-start bg-bg pressed:bg-hover text-muted-fg hover:bg-bg hover:text-sidebar-fg"
       onClick={onClick}
     >
       <Search className="h-4 w-4" />

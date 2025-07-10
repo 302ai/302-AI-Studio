@@ -177,7 +177,8 @@
         "reset": "Reset",
         "clear": "Clear"
       }
-    }
+    },
+    "text": "Setting"
   },
   "sidebar": {
     "close-sidebar": {

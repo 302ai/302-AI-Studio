@@ -178,7 +178,8 @@
         "reset": "リセット",
         "clear": "クリア"
       }
-    }
+    },
+    "text": "設定"
   },
   "sidebar": {
     "close-sidebar": {

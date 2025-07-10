@@ -125,8 +125,8 @@
     --hover-secondary: #f9f9f9;
     --hover-secondary-fg: rgba(102, 102, 102, 1);
 
-    --navbar: rgba(249, 249, 249, 1);
-    --navbar-fg: rgba(51, 51, 51, 1);
+    --navbar: #F9F9F9;
+    --navbar-fg:  #333333;
 
     --sidebar: #F9F9F9;
     --sidebar-fg: #333333;
@@ -195,8 +195,8 @@
     --hover-secondary:#383838;
     --hover-secondary-fg: oklch(0.985 0.001 106.423);
 
-    --navbar: #1f1f1f;
-    --navbar-fg: oklch(0.985 0.001 106.423);
+    --navbar: #1A1A1A;
+    --navbar-fg: #E6E6E6;
 
     --sidebar: #1A1A1A;
     --sidebar-fg: #E6E6E6;
