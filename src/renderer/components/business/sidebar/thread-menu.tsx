@@ -152,7 +152,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
   return (
     <>
       <ContextMenu>
-        <ContextMenuTrigger className="w-full cursor-pointer truncate px-2 py-1.5 text-left">
+        <ContextMenuTrigger className="w-full cursor-pointer truncate py-1.5 text-left">
           {thread.title}
         </ContextMenuTrigger>
         <ContextMenuContent aria-label={`Thread options for ${thread.title}`}>

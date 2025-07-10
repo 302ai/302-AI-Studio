@@ -128,8 +128,8 @@
     --navbar: rgba(249, 249, 249, 1);
     --navbar-fg: rgba(51, 51, 51, 1);
 
-    --sidebar: rgba(249, 249, 249, 1);
-    --sidebar-fg: rgba(51, 51, 51, 1);
+    --sidebar: #F9F9F9;
+    --sidebar-fg: #333333;
 
     --setting-tab-list: rgba(249, 249, 249, 1);
     --setting-tab-list-fg: rgba(51, 51, 51, 1);
@@ -198,8 +198,8 @@
     --navbar: #1f1f1f;
     --navbar-fg: oklch(0.985 0.001 106.423);
 
-    --sidebar: #1f1f1f;
-    --sidebar-fg: oklch(0.985 0.001 106.423);
+    --sidebar: #1A1A1A;
+    --sidebar-fg: #E6E6E6;
 
     --setting-tab-list: #1f1f1f;
     --setting-tab-list-fg: oklch(0.985 0.001 106.423);
@@ -230,13 +230,12 @@
   }
 
   * {
-    --title-bar-height: 40px;
+    --title-bar-height: 46px;
     --sidebar-width: 280px;
     --sidebar-width-dock: 95px;
     --sidebar-width-collapsed: 95px;
     --setting-tab-list-width: 148px;
     --chat-input-toolbar-height: 40px;
-    --chat-page-title-bar-height: 44px;
   }
 
   html {

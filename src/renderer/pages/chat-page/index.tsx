@@ -27,13 +27,13 @@ export function ChatPage() {
   return (
     <div
       className={cn(
-        "relative flex h-[calc(100%-var(--chat-page-title-bar-height))] w-full",
+        "relative flex h-full w-full",
         isArtifactOpen ? "" : "flex-1",
       )}
     >
       <div
         className={cn(
-          "flex h-full flex-col p-6 pt-0 pr-0 transition-all duration-300 ease-in-out ",
+          "flex h-full flex-col p-6 pr-0 transition-all duration-300 ease-in-out ",
           isArtifactOpen ? "flex-[0_0_60%]" : "flex-1",
         )}
       >
