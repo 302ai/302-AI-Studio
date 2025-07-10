@@ -11,6 +11,7 @@ import { TextField } from "@renderer/components/ui/text-field";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
 import logger from "@shared/logger/renderer-logger";
+import type { UpdateProviderData } from "@shared/triplit/types";
 import { debounce } from "lodash-es";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -62,15 +63,7 @@ export function ProviderModel() {
 
   // 防抖保存函数
   const saveProvider = useCallback(
-    async (
-      updates: Partial<{
-        name: string;
-        baseUrl: string;
-        apiKey: string;
-        apiType: string;
-        avatar: string;
-      }>,
-    ) => {
+    async (updates: UpdateProviderData) => {
       if (!selectedProvider || isInitializing.current || isSaving) return;
 
       setIsSaving(true);
