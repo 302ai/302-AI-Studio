@@ -20,6 +20,7 @@ export const shortcutsSchema = {
       enum: ["global", "app"],
       default: "app",
     }),
+    order: S.Number({ default: 0 }),
     createdAt: S.Date({ default: S.Default.now() }),
     updatedAt: S.Date({ default: S.Default.now() }),
   }),

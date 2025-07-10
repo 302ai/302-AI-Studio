@@ -21,9 +21,7 @@ export interface ShortcutConfig {
 const { shortcutsService } = window.service;
 
 export function useShortcuts() {
-  const shortcutsQuery = triplitClient
-    .query("shortcuts")
-    .Order("createdAt", "DESC");
+  const shortcutsQuery = triplitClient.query("shortcuts").Order("order", "ASC");
   const { results: allShortcuts } = useQuery(triplitClient, shortcutsQuery);
   const globalShortcuts = useMemo(() => {
     return allShortcuts?.filter((s) => s.scope === "global") || [];

@@ -88,8 +88,10 @@ export function ShortcutsSettings() {
   };
 
   const handleResetShortcut = async (action: ShortcutAction) => {
-    const defaultConfig = DEFAULT_SHORTCUTS[action];
-    await updateShortcut(action, defaultConfig.keys);
+    const defaultConfig = DEFAULT_SHORTCUTS.find(s => s.action === action);
+    if (defaultConfig) {
+      await updateShortcut(action, Array.from(defaultConfig.keys));
+    }
   };
 
   return (
