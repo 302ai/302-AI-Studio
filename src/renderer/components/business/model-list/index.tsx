@@ -237,8 +237,10 @@ export function ModelList({
         {/* <ModelFilter onTabChange={setTabKey} /> */}
         <div className="flex gap-2">
           <Button
-            size="extra-small"
+            size="small"
+            className="w-[110px]"
             onClick={onFetchModels}
+            intent="primary"
             isDisabled={
               isFetchingModels || !onFetchModels || !isProviderConfigValid
             }
@@ -246,6 +248,7 @@ export function ModelList({
             {isFetchingModels && <Loader variant="spin" size="small" />}
             {t("fetch-models")}
           </Button>
+
           {/* <Button size="extra-small" intent="outline">
             添加模型
           </Button> */}
@@ -255,7 +258,7 @@ export function ModelList({
           onChange={setSearchQuery}
           placeholder={t("search-placeholder")}
           className="!h-[40px] !w-[206px]"
-          fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
+          // fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
         />
       </div>
       <div

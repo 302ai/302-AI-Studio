@@ -77,6 +77,7 @@
       "model-provider": {
         "add-provider": "添加模型",
         "add": "添加",
+        "model-check-success": "模型校验成功",
         "add-provider-form": {
           "check-key": "验证",
           "custom-provider": "自定义提供商",
@@ -104,7 +105,7 @@
           "verification-required-notice": "💡 提示：必须先通过 API 验证才能添加或保存提供商配置。",
           "verification-hint": "请点击验证按钮确认 API Key 可用性",
           "get-api-key": "点击此处获取API Key",
-          "api-forward":"接口将会请求至",
+          "api-forward": "接口将会请求至",
           "interface-type": "接口类型",
           "interface-type-placeholder": "选择接口类型",
           "configure": "配置",

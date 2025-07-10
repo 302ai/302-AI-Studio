@@ -180,6 +180,7 @@ export function ProviderModel() {
 
       // 更新数据库中的模型
       await configService.updateProviderModels(selectedProvider.id, models);
+      toast.success(t("model-check-success"));
     } catch (error) {
       logger.error("Failed to fetch models:", { error });
     } finally {
@@ -228,7 +229,7 @@ export function ProviderModel() {
                 <TextField
                   value={name}
                   placeholder={t("add-provider-form.name-placeholder")}
-                  className="[&_[role=group]]:!bg-muted [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
+                  // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
                   onChange={handleNameChange}
                 />
               </div>
@@ -240,7 +241,7 @@ export function ProviderModel() {
               label="Base URL"
               value={baseUrl}
               placeholder="请输入Base URL"
-              className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
+              // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
               onChange={handleBaseUrlChange}
             />
             <span className="text-muted-fg text-xs">
@@ -256,7 +257,7 @@ export function ProviderModel() {
               isRevealable
               value={apiKey}
               placeholder="请输入API Key"
-              className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
+              // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
               onChange={handleApiKeyChange}
             />
             {/* API Key 获取链接 */}
@@ -280,7 +281,7 @@ export function ProviderModel() {
                 selectedKey={apiType || "openai"}
                 onSelectionChange={handleApiTypeChange}
               >
-                <SelectTrigger className="!bg-muted !border-none !shadow-none focus-within:!ring-1 focus-within:!ring-primary group-data-open:!ring-1 group-data-open:!ring-primary h-9 cursor-pointer rounded-xl text-secondary-fg" />
+                <SelectTrigger />
                 <SelectList placement="bottom start">
                   {API_TYPE_OPTIONS.map(({ key, label }) => (
                     <SelectOption

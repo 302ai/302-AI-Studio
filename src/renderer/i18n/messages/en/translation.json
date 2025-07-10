@@ -76,6 +76,7 @@
       "model-provider": {
         "add-provider": "Add Model",
         "add": "Add",
+        "model-check-success": "Model verification succeeded",
         "add-provider-form": {
           "check-key": "Verify",
           "custom-provider": "Custom Provider",
