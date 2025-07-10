@@ -77,7 +77,9 @@ const ListRow = React.memo(function ListRow({
           isSelected={selectedProvider?.id === provider.id}
           modelCount={modelCounts[provider.id] || 0}
           actionGroup={
-            <ActionGroup onEdit={undefined} onDelete={handleDelete} />
+            provider.custom ? (
+              <ActionGroup onEdit={undefined} onDelete={handleDelete} />
+            ) : null
           }
           onClick={handleProviderSelect}
         />
