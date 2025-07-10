@@ -1,6 +1,6 @@
 // ! This service is only used within the renderer process
 
-import type { Message, Thread } from "@shared/triplit/types";
+import type { Message, ShortcutAction, Thread } from "@shared/triplit/types";
 import mitt from "mitt";
 
 export enum EventNames {
@@ -10,6 +10,7 @@ export enum EventNames {
   THREAD_DELETE_ALL = "thread:delete-all",
   THREAD_SELECT = "thread:select",
   THREAD_ADD = "thread:add",
+  THREAD_STATUS_UPDATE = "thread:status-update",
 
   // * Tab events
   TAB_CLOSE = "tab:close",
@@ -22,6 +23,9 @@ export enum EventNames {
   // * Code preview events
   CODE_PREVIEW_OPEN = "code-preview:open",
   CODE_PREVIEW_CLOSE = "code-preview:close",
+
+  // * Shortcut events
+  SHORTCUT_TRIGGERED = "shortcut:triggered",
 }
 
 type Events = {
@@ -55,6 +59,13 @@ type Events = {
     language: string;
   };
   [EventNames.CODE_PREVIEW_CLOSE]: null;
+  [EventNames.SHORTCUT_TRIGGERED]: {
+    action: ShortcutAction;
+  };
+  [EventNames.THREAD_STATUS_UPDATE]: {
+    threadId: string;
+    status: "pending" | "success" | "error" | "stop";
+  };
 };
 
 const mittInstance = mitt<Events>();

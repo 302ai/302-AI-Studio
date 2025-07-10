@@ -11,8 +11,8 @@ import { TYPES } from "@main/shared/types";
 import { initTriplitClient } from "@main/triplit/client";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import logger from "@shared/logger/main-logger";
-import { schema } from "@shared/triplit/schema";
 import { TriplitLogHandler } from "@shared/triplit/log-handler";
+import { schema } from "@shared/triplit/schema";
 import { createServer, createTriplitStorageProvider } from "@triplit/server";
 import { app } from "electron";
 import { injectable } from "inversify";
@@ -137,7 +137,7 @@ export class TriplitService {
       ? join(__dirname, "../../../db")
       : app.getPath("userData");
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
-    const defaultDatabaseFile = path.join(defaultDatabaseDir, "db-v2.sqlite");
+    const defaultDatabaseFile = path.join(defaultDatabaseDir, "db-v3.sqlite");
 
     logger.info("Default database file:", { defaultDatabaseFile });
 

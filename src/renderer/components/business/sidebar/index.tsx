@@ -6,6 +6,7 @@ import {
   SidebarDisclosureGroup,
   SidebarDisclosurePanel,
   SidebarDisclosureTrigger,
+  SidebarFooter,
   SidebarInset,
   SidebarItem,
   SidebarLabel,
@@ -15,10 +16,11 @@ import { useThread } from "@renderer/hooks/use-thread";
 import { cn } from "@renderer/lib/utils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ThreadSearcher } from "../title-bar/thread-searcher";
 import { SearchButton } from "./search-button";
+import { SettingButton } from "./setting-button";
 import { SidebarController } from "./sidebar-controller";
 import { ThreadMenu } from "./thread-menu";
+import { ThreadSearcher } from "./thread-searcher";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   children: React.ReactNode;
@@ -44,17 +46,20 @@ export function AppSidebar(props: AppSidebarProps) {
 
   return (
     <>
-      <div className="flex h-[calc(100vh-var(--title-bar-height))] w-full flex-1 flex-row">
-        <Sidebar className="mt-[var(--title-bar-height)] bg-sidebar" {...props}>
-          <SidebarContent className="max-h-[calc(100vh-var(--title-bar-height))] pb-2">
-            <div className="my-2 flex flex-row items-center justify-between gap-x-3 pr-2.5 pl-4">
-              <SearchButton onClick={handleSearchThread} />
-              {!isSidebarCollapsed && <SidebarController />}
-            </div>
+      <div className="flex h-[calc(100vh-var(--title-bar-height)+1px)] w-full flex-1 flex-row">
+        <Sidebar
+          className="mt-[calc(var(--title-bar-height)+1px)] border-none bg-sidebar"
+          {...props}
+        >
+          <div className="my-2 flex flex-row items-center justify-between gap-x-3 pr-2.5 pl-4">
+            <SearchButton onClick={handleSearchThread} />
+            {!isSidebarCollapsed && <SidebarController />}
+          </div>
 
+          <SidebarContent className="max-h-[calc(100vh-var(--title-bar-height)-52px-76px-8px)] pb-2">
             {/* All Threads */}
             <SidebarDisclosureGroup
-              className="gap-y-0"
+              className="gap-y-2"
               defaultExpandedKeys={[
                 "collected",
                 "today",
@@ -66,12 +71,8 @@ export function AppSidebar(props: AppSidebarProps) {
             >
               {/* If there are no collected threads, the collected section will will also be displayed */}
               {collectedThreads.length === 0 && (
-                <SidebarDisclosure
-                  className="px-4"
-                  id="collected"
-                  key="collected"
-                >
-                  <SidebarDisclosureTrigger className="h-[40px] rounded-[10px]">
+                <SidebarDisclosure id="collected" key="collected">
+                  <SidebarDisclosureTrigger className="h-10 rounded-[10px] px-3">
                     <SidebarLabel>
                       {t("sidebar.section.collected")}
                     </SidebarLabel>
@@ -80,8 +81,8 @@ export function AppSidebar(props: AppSidebarProps) {
               )}
 
               {groupedThreads.map(({ key, label, threads }) => (
-                <SidebarDisclosure className="px-4" id={key} key={key}>
-                  <SidebarDisclosureTrigger className="h-[40px] rounded-[10px]">
+                <SidebarDisclosure id={key} key={key}>
+                  <SidebarDisclosureTrigger className="h-10 rounded-[10px] px-3">
                     <SidebarLabel>{label}</SidebarLabel>
                   </SidebarDisclosureTrigger>
                   <SidebarDisclosurePanel>
@@ -89,7 +90,7 @@ export function AppSidebar(props: AppSidebarProps) {
                       const { id } = thread;
                       return (
                         <SidebarItem
-                          className="flex h-[40px] flex-1 rounded-[10px]"
+                          className="flex h-10 flex-1 rounded-[10px] px-0 pr-2 pl-3"
                           key={id}
                           isCurrent={id === activeThreadId}
                           onClick={() => handleClickThread(id)}
@@ -103,6 +104,10 @@ export function AppSidebar(props: AppSidebarProps) {
               ))}
             </SidebarDisclosureGroup>
           </SidebarContent>
+
+          <SidebarFooter className="mt-0 h-[76px] px-4">
+            <SettingButton />
+          </SidebarFooter>
         </Sidebar>
 
         <SidebarInset

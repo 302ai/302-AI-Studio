@@ -4,6 +4,7 @@
 import type {
   Message,
   Provider,
+  ShortcutAction,
   UpdateProviderData,
 } from "@shared/triplit/types";
 import { BrowserWindow } from "electron";
@@ -27,6 +28,9 @@ export enum EventNames {
 
   // * Window Events
   WINDOW_TITLE_BAR_OVERLAY_UPDATE = "window:title-bar-overlay-update",
+
+  // * Shortcut Events
+  SHORTCUT_TRIGGERED = "shortcut:triggered",
 }
 
 type Events = {
@@ -55,6 +59,9 @@ type Events = {
     };
   };
   [EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE]: null;
+  [EventNames.SHORTCUT_TRIGGERED]: {
+    action: ShortcutAction;
+  };
 };
 
 const oriMittInstance = mitt<Events>();

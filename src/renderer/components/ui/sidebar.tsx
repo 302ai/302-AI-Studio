@@ -389,7 +389,7 @@ const SidebarSection = ({
       {...props}
     >
       {state !== "collapsed" && "title" in props && (
-        <Header className="group-data-[sidebar-collapsible=dock]/sidebar-container:-mt-8 mb-1 flex shrink-0 items-center rounded-md px-2.5 font-medium text-sidebar-fg/70 text-xs outline-none ring-sidebar-ring transition-[margin,opa] duration-200 ease-linear focus-visible:ring-2 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 group-data-[sidebar-collapsible=dock]/sidebar-container:opacity-0">
+        <Header className="group-data-[sidebar-collapsible=dock]/sidebar-container:-mt-8 mb-1 flex shrink-0 items-center rounded-md px-2.5 font-medium text-sidebar-fg/75 text-xs outline-none ring-sidebar-ring transition-[margin,opa] duration-200 ease-linear focus-visible:ring-2 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 group-data-[sidebar-collapsible=dock]/sidebar-container:opacity-0">
           {props.title}
         </Header>
       )}
@@ -599,7 +599,7 @@ const SidebarDisclosure = ({
       data-sidebar-disclosure="true"
       className={composeTailwindRenderProps(
         className,
-        twMerge(state === "expanded" ? "px-2.5" : "col-span-full"),
+        twMerge(state === "expanded" ? "px-4" : "col-span-full"),
       )}
       {...props}
     />
@@ -608,7 +608,7 @@ const SidebarDisclosure = ({
 
 const sidebarDisclosureTrigger = tv({
   base: [
-    "group relative flex w-full cursor-pointer items-center overflow-hidden rounded-lg px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] text-sidebar-fg/70 outline-hidden sm:text-sm/6",
+    "group relative flex w-full cursor-pointer items-center overflow-hidden rounded-lg px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] text-sidebar-fg/75 outline-hidden sm:text-sm/6",
     "in-data-[sidebar-intent=fleet]:rounded-none in-data-[sidebar-intent=fleet]:py-2 in-data-[sidebar-intent=fleet]:**:data-[slot=chevron]:hidden",
   ],
   variants: {

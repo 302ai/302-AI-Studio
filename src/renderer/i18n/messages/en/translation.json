@@ -211,8 +211,14 @@
         "cancel": "Cancel",
         "reset": "Reset",
         "clear": "Clear"
+      },
+      "scope": {
+        "label": "Scope",
+        "app": "App Only",
+        "global": "Global"
       }
-    }
+    },
+    "text": "Settings"
   },
   "sidebar": {
     "close-sidebar": {
@@ -338,7 +344,7 @@
   },
   "stop-generating": "Stop",
   "new-thread": {
-    "hello-world": "Tell me what you are thinking?"
+    "hello-world": "Tell me, what are you thinking about?"
   },
   "attachment": {
     "file-too-large": "File size cannot exceed 10MB"

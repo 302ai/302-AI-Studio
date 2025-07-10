@@ -7,7 +7,6 @@ import {
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
 import { TextField } from "@renderer/components/ui/text-field";
-import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
 import {
   type MenuModelActionType,
   useThreadMenu,
@@ -24,6 +23,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { ActionGroup } from "../action-group";
 import { ModalAction } from "../modal-action";
 
 interface ThreadMenuProps {
@@ -62,8 +62,6 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
     handleCollectThread,
     handleDeleteAll,
   } = useThreadMenu(thread);
-
-  useKeyboardShortcuts("clear-messages", handleCleanMessages, true);
 
   const actionType = (action: MenuModelActionType | null) => {
     const initialsState = {
@@ -152,8 +150,18 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
   return (
     <>
       <ContextMenu>
-        <ContextMenuTrigger className="w-full cursor-pointer truncate px-2 py-1.5 text-left">
-          {thread.title}
+        <ContextMenuTrigger
+          className="w-full cursor-pointer py-1.5 text-left"
+          title={thread.title}
+        >
+          <div className="flex flex-row items-center justify-between gap-x-2">
+            <span className="truncate ">{thread.title}</span>
+            <ActionGroup
+              actionClassName="size-6"
+              onStar={handleCollectThread}
+              stared={thread.collected}
+            />
+          </div>
         </ContextMenuTrigger>
         <ContextMenuContent aria-label={`Thread options for ${thread.title}`}>
           <ContextMenuItem onAction={() => setState("rename")}>

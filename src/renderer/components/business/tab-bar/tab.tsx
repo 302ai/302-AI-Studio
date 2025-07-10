@@ -8,13 +8,16 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
+import { EventNames, emitter } from "@renderer/services/event-service";
 import { CopyX, X } from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ShrinkableTab } from "./shrinkable-tab";
 
 interface TabProps {
   id: string;
+  threadId: string;
   index: number;
   title: string;
   isActive: boolean;
@@ -26,6 +29,7 @@ const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function Tab({
   id,
+  threadId,
   index,
   title,
   isActive,
@@ -39,8 +43,24 @@ export function Tab({
     index,
   });
 
+  const [status, setStatus] = useState<
+    "pending" | "success" | "error" | "stop"
+  >("success");
+
   // * The three different compression states for the tab
   const isShrinkedThree = width <= 50;
+
+  useEffect(() => {
+    const unsub = emitter.on(EventNames.THREAD_STATUS_UPDATE, (event) => {
+      if (event.threadId === threadId) {
+        setStatus(event.status);
+      }
+    });
+
+    return () => {
+      unsub();
+    };
+  }, [threadId]);
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -51,7 +71,7 @@ export function Tab({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="h-[80%]"
+            className="h-[74%]"
           >
             <ContextMenuTrigger className="size-full">
               <div
@@ -97,6 +117,7 @@ export function Tab({
                   width={width}
                   type={type}
                   handleTabClose={handleTabClose}
+                  status={status}
                 />
               </div>
             </ContextMenuTrigger>

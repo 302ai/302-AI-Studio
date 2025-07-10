@@ -1,7 +1,7 @@
+import logger from "@shared/logger/renderer-logger";
 import debounce from "lodash-es/debounce";
 import { useCallback, useEffect, useState } from "react";
 import { useActiveTab } from "./use-active-tab";
-import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 

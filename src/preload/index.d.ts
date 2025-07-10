@@ -12,6 +12,8 @@ import type {
   Message,
   Provider,
   SearchService,
+  ShortcutAction,
+  ShortcutScope,
   Tab,
   Theme,
   Thread,
@@ -196,6 +198,22 @@ declare global {
         setEnableReason: (enable: boolean) => Promise<void>;
         setsearchService: (searchService: SearchService) => Promise<void>;
         updateSelectedModelId: (modelId: string) => Promise<void>;
+      };
+      shortcutsService: {
+        initializeGlobalShortcuts: () => Promise<void>;
+        updateShortcut: (
+          action: ShortcutAction,
+          keys: string[],
+          scope?: ShortcutScope,
+        ) => Promise<void>;
+        getShortcuts: () => Promise<
+          Array<{
+            action: ShortcutAction;
+            keys: string[];
+            accelerator: string;
+            scope: ShortcutScope;
+          }>
+        >;
       };
       modelService: {
         insertModel: (

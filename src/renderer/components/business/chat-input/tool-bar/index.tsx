@@ -3,7 +3,7 @@ import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
-import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
+import { useGlobalShortcutHandler } from "@renderer/hooks/use-global-shortcut-handler";
 import { cn } from "@renderer/lib/utils";
 import { useQueryOne } from "@triplit/react";
 import { useCallback } from "react";
@@ -44,7 +44,14 @@ export function ToolBar({
     await onSendMessage();
   }, [isDisabled, setEditMessageId, onSendMessage]);
 
-  useKeyboardShortcuts("send-message", handleSendMessageClick, !isDisabled);
+  const handleSendMessageShortcut = useCallback(() => {
+    if (!isDisabled) {
+      handleSendMessageClick();
+    }
+  }, [isDisabled, handleSendMessageClick]);
+
+  //! TODO: 待迁移
+  useGlobalShortcutHandler("send-message", handleSendMessageShortcut);
 
   return (
     <div

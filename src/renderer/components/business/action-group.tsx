@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 
 interface ActionGroupProps {
   className?: string;
+  actionClassName?: string;
   size?: "medium" | "large" | "square-petite" | "extra-small" | "small";
   shape?: "square" | "circle";
   stared?: boolean;
@@ -20,6 +21,7 @@ interface ActionGroupProps {
 
 export function ActionGroup({
   className,
+  actionClassName,
   size = "square-petite",
   shape = "square",
   stared = false,
@@ -37,6 +39,7 @@ export function ActionGroup({
       {onStar && (
         <Tooltip>
           <TooltipTrigger
+            className={actionClassName}
             intent="plain"
             size={size}
             shape={shape}
@@ -59,6 +62,7 @@ export function ActionGroup({
       {onEdit && (
         <Tooltip>
           <TooltipTrigger
+            className={actionClassName}
             intent="plain"
             size={size}
             shape={shape}
@@ -76,6 +80,7 @@ export function ActionGroup({
       {onDelete && (
         <Tooltip>
           <TooltipTrigger
+            className={actionClassName}
             intent="plain"
             size={size}
             shape={shape}

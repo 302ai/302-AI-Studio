@@ -4,14 +4,16 @@ import logger from "@shared/logger/renderer-logger";
 import { useCallback } from "react";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
-import { useKeyboardShortcuts } from "./use-keyboard-shortcuts";
+import { useGlobalShortcutHandler } from "./use-global-shortcut-handler";
+import { useTabBar } from "./use-tab-bar";
 
-const { tabService, threadService, uiService } = window.service;
+const { tabService, threadService, uiService, messageService } = window.service;
 
-export function useGlobalShortcuts() {
+export function useShortcutsHandlers() {
   const { tabs, activeTabId } = useActiveTab();
   const { activeThreadId } = useActiveThread();
   const { toggleSidebar } = useSidebar();
+  const { handleAddNewTab } = useTabBar();
 
   const handleCloseCurrentTab = useCallback(async () => {
     if (!activeTabId) return;
@@ -64,39 +66,38 @@ export function useGlobalShortcuts() {
   const handleOpenSettings = useCallback(async () => {
     try {
       const existingSettingTab = tabs.find((tab) => tab.type === "setting");
-
       if (existingSettingTab) {
         await tabService.activateTab(existingSettingTab.id);
         await uiService.updateActiveTabId(existingSettingTab.id);
       } else {
-        const newTab = await tabService.insertTab({
-          type: "setting",
-          title: "Settings",
-          threadId: "",
-          path: "/settings/general-settings",
-        });
-
-        await tabService.activateTab(newTab.id);
-        await uiService.updateActiveTabId(newTab.id);
+        handleAddNewTab("setting");
       }
     } catch (error) {
       logger.error("Error opening settings", { error });
     }
-  }, [tabs]);
+  }, [tabs, handleAddNewTab]);
 
   const handleToggleSidebar = useCallback(() => {
     toggleSidebar();
   }, [toggleSidebar]);
 
-  useKeyboardShortcuts("close-current-tab", handleCloseCurrentTab, true);
-  useKeyboardShortcuts("close-other-tabs", handleCloseOtherTabs, true);
-  useKeyboardShortcuts(
-    "delete-current-thread",
-    handleDeleteCurrentThread,
-    true,
-  );
-  useKeyboardShortcuts("open-settings", handleOpenSettings, true);
-  useKeyboardShortcuts("toggle-sidebar", handleToggleSidebar, true);
+  const handleCleanMessages = useCallback(async () => {
+    if (!activeThreadId) return;
+    try {
+      await messageService.deleteMessagesByThreadId(activeThreadId);
+    } catch (error) {
+      logger.error("Error clearing messages", { error });
+    }
+  }, [activeThreadId]);
+
+  // Register global shortcut handlers
+  useGlobalShortcutHandler("close-current-tab", handleCloseCurrentTab);
+  useGlobalShortcutHandler("close-other-tabs", handleCloseOtherTabs);
+  useGlobalShortcutHandler("delete-current-thread", handleDeleteCurrentThread);
+  useGlobalShortcutHandler("open-settings", handleOpenSettings);
+  useGlobalShortcutHandler("toggle-sidebar", handleToggleSidebar);
+  useGlobalShortcutHandler("new-chat", () => handleAddNewTab("thread"));
+  useGlobalShortcutHandler("clear-messages", handleCleanMessages);
 
   return {
     handleCloseCurrentTab,
@@ -104,5 +105,6 @@ export function useGlobalShortcuts() {
     handleDeleteCurrentThread,
     handleOpenSettings,
     handleToggleSidebar,
+    handleCleanMessages,
   };
 }

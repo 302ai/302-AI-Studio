@@ -63,3 +63,4 @@ export type ShortcutAction =
   | "delete-current-thread"
   | "open-settings"
   | "toggle-sidebar";
+export type ShortcutScope = "global" | "app";

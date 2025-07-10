@@ -5,7 +5,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
-import { useKeyboardShortcuts } from "@renderer/hooks/use-keyboard-shortcuts";
 import { useTabBar } from "@renderer/hooks/use-tab-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
@@ -27,7 +26,6 @@ const { tabService } = window.service;
 
 export function TabBar() {
   const { t } = useTranslation();
-
   const {
     tabs,
     activeTabId,
@@ -110,8 +108,6 @@ export function TabBar() {
     return () => unsub();
   }, [setActiveTabId, tabs]);
 
-  useKeyboardShortcuts("new-chat", () => handleAddNewTab("thread"), true);
-
   return (
     <DragDropContext
       onDragStart={(start: DragStart) => {
@@ -133,7 +129,7 @@ export function TabBar() {
             }}
             {...provided.droppableProps}
           >
-            {tabs.map(({ id, title, type }, index) => (
+            {tabs.map(({ id, title, type, threadId }, index) => (
               <div key={id} className="flex items-center">
                 <Separator
                   orientation="vertical"
@@ -149,6 +145,7 @@ export function TabBar() {
 
                 <Tab
                   id={id}
+                  threadId={threadId ?? ""}
                   index={index}
                   title={type === "setting" ? t("settings.tab-title") : title}
                   isActive={id === activeTabId}

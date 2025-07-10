@@ -6,7 +6,7 @@ export function HomePageTitleBar() {
   const isSidebarCollapsed = state === "collapsed";
 
   return (
-    <div className="absolute top-0 left-0 z-10 flex flex-row items-center gap-x-2 p-2">
+    <div className="absolute top-0 left-0 z-10 flex flex-row items-center gap-x-2 p-3">
       {isSidebarCollapsed && <SidebarController />}
     </div>
   );
