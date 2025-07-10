@@ -31,6 +31,15 @@
         "title": "应用描述",
         "content": "302 AI Studio 是一个强大的AI聊天应用，为用户提供智能对话体验。支持多种AI模型，具备文件上传、联网搜索等功能，致力于为用户打造最佳的AI交互平台。"
       },
+      "help-center": {
+        "title": "帮助中心"
+      },
+      "terms-of-service": {
+        "title": "使用条款"
+      },
+      "privacy-policy": {
+        "title": "隐私政策"
+      },
       "website": {
         "title": "官方网站"
       },

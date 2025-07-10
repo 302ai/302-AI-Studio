@@ -41,6 +41,15 @@
       "license": {
         "title": "ライセンス",
         "content": "MIT License"
+      },
+      "help-center": {
+        "title": "ヘルプセンター"
+      },
+      "terms-of-service": {
+        "title": "利用規約"
+      },
+      "privacy-policy": {
+        "title": "プライバシーポリシー"
       }
     },
     "assistant-settings": {

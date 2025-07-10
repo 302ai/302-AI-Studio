@@ -40,6 +40,15 @@
       "license": {
         "title": "License",
         "content": "MIT License"
+      },
+      "help-center": {
+        "title": "Help Center"
+      },
+      "terms-of-service": {
+        "title": "Terms of Service"
+      },
+      "privacy-policy": {
+        "title": "Privacy Policy"
       }
     },
     "assistant-settings": {

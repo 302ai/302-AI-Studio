@@ -71,6 +71,7 @@
 
   --color-setting-tab-list: var(--setting-tab-list);
   --color-setting-tab-list-fg: var(--setting-tab-list-fg);
+  --color-setting-about-text: var(--setting-about-text);
 
   --color-card-desc-text: var(--card-desc-text);
 
@@ -136,6 +137,7 @@
 
     --setting-tab-list: rgba(249, 249, 249, 1);
     --setting-tab-list-fg: rgba(51, 51, 51, 1);
+    --setting-about-text:#333333;
 
     --card-desc-text: #AAAAAA;
 
@@ -209,6 +211,7 @@
 
     --setting-tab-list: #1f1f1f;
     --setting-tab-list-fg: oklch(0.985 0.001 106.423);
+    --setting-about-text:#E6E6E6;
 
     --card-desc-text: #7A7A7A;
 
@@ -217,6 +220,8 @@
     --chart-3: oklch(0.702 0.183 293.541);
     --chart-4: oklch(0.811 0.111 293.571);
     --chart-5: oklch(0.894 0.057 293.283);
+
+
   }
 }
 
