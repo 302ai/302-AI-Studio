@@ -361,9 +361,8 @@ export function ProviderList() {
   const loading = !ready || isPending;
 
   const onClick = async () => {
-    // 先往provider列表插入该custom provider
     const res = await configService.insertProvider({
-      name: "Custom Provider",
+      name: t("custom-provider"),
       apiType: "openai",
       apiKey: "",
       baseUrl: "",

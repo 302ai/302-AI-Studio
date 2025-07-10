@@ -30,7 +30,9 @@ export function ActionGroup({
   const { t } = useTranslation();
 
   return (
-    <CardAction className={cn("flex items-center gap-1", className)}>
+    <CardAction
+      className={cn("flex h-full items-center justify-center gap-1", className)}
+    >
       {/* Star */}
       {onStar && (
         <Tooltip>

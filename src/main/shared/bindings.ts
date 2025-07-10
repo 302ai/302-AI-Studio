@@ -4,6 +4,7 @@ import { ConfigService } from "@main/services/config-service";
 import { AttachmentDbService } from "@main/services/db-service/attachment-db-service";
 import { ConfigDbService } from "@main/services/db-service/config-db-service";
 import { MessageDbService } from "@main/services/db-service/message-db-service";
+import { ModelDbService } from "@main/services/db-service/model-db-service";
 import { SettingsDbService } from "@main/services/db-service/settings-db-service";
 import { TabDbService } from "@main/services/db-service/tab-db-service";
 import { ThreadDbService } from "@main/services/db-service/thread-db-service";
@@ -11,6 +12,7 @@ import { UiDbService } from "@main/services/db-service/ui-db-service";
 import { FileParseService } from "@main/services/file-service/file-parse-service";
 import { FilePreviewService } from "@main/services/file-service/file-preview-service";
 import { MessageService } from "@main/services/message-service";
+import { ModelService } from "@main/services/model-service";
 import { ProviderService } from "@main/services/provider-service";
 import { SettingsService } from "@main/services/settings-service";
 import { ShellService } from "@main/services/shell-service";
@@ -53,6 +55,10 @@ export function initBindings() {
   container
     .bind<SettingsDbService>(TYPES.SettingsDbService)
     .to(SettingsDbService)
+    .inSingletonScope();
+  container
+    .bind<ModelDbService>(TYPES.ModelDbService)
+    .to(ModelDbService)
     .inSingletonScope();
 
   // * Business Services
@@ -108,5 +114,9 @@ export function initBindings() {
   container
     .bind<ShellService>(TYPES.ShellService)
     .to(ShellService)
+    .inSingletonScope();
+  container
+    .bind<ModelService>(TYPES.ModelService)
+    .to(ModelService)
     .inSingletonScope();
 }

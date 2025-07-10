@@ -4,6 +4,7 @@ import { ConfigService } from "./config-service";
 import { FileParseService } from "./file-service/file-parse-service";
 import { FilePreviewService } from "./file-service/file-preview-service/index";
 import { MessageService } from "./message-service";
+import { ModelService } from "./model-service";
 import { ProviderService } from "./provider-service";
 import { SettingsService } from "./settings-service";
 import { ShellService } from "./shell-service";
@@ -28,4 +29,5 @@ export const services = [
   FileParseService,
   FilePreviewService,
   ShellService,
+  ModelService,
 ];

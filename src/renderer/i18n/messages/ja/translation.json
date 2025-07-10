@@ -70,12 +70,47 @@
         "collected": "お気に入り",
         "search-placeholder": "検索...",
         "fetch-models": "モデルを取得",
+        "add-model": "モデルを追加",
         "model-name": "モデル名",
         "model-capabilities": "モデル機能",
         "actions": "操作"
       },
+      "add-model-modal": {
+        "title": "モデルを追加",
+        "edit-title": "モデルを編集",
+        "model-id": {
+          "label": "モデルID",
+          "placeholder": "モデルIDを入力してください",
+          "description": "これはモデルの実際の名前で、実際のリクエストに使用されます",
+          "required-error": "モデルIDは空にできません"
+        },
+        "description": {
+          "label": "備考",
+          "placeholder": "備考を入力してください",
+          "description": "このモデルにより識別しやすい名前を設定できます。表示のみに使用されます"
+        },
+        "capabilities": {
+          "label": "機能",
+          "reasoning": "推論",
+          "vision": "画像理解"
+        },
+        "actions": {
+          "cancel": "キャンセル",
+          "save": "保存",
+          "add-success": "追加に成功しました",
+          "edit-success": "編集に成功しました",
+          "add-error-message": "追加に失敗しました",
+          "edit-error-message": "編集に失敗しました",
+          "delete-error-message": "削除に失敗しました",
+          "delete-success-message": "削除に成功しました",
+          "delete-title": "モデルを削除",
+          "delete-description": "このモデルを削除してもよろしいですか？",
+          "delete-confirm-text": "削除"
+        }
+      },
       "model-provider": {
         "add-provider": "モデルを追加",
+        "custom-provider": "カスタムプロバイダー",
         "add": "追加",
         "model-check-success": "モデル検証に成功しました",
         "add-provider-form": {

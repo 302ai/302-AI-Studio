@@ -69,12 +69,47 @@
         "collected": "Favorites",
         "search-placeholder": "Search...",
         "fetch-models": "Fetch Models",
+        "add-model": "Add Model",
         "model-name": "Model Name",
         "model-capabilities": "Capabilities",
         "actions": "Actions"
       },
+      "add-model-modal": {
+        "title": "Add Model",
+        "edit-title": "Edit Model",
+        "model-id": {
+          "label": "Model ID",
+          "placeholder": "Enter model ID",
+          "description": "This is the real name of the model, used for actual requests",
+          "required-error": "Model ID cannot be empty"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter description",
+          "description": "You can set a more recognizable name for this model, for display only"
+        },
+        "capabilities": {
+          "label": "Capabilities",
+          "reasoning": "Reasoning",
+          "vision": "Vision"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "save": "Save",
+          "add-success": "Add Success",
+          "edit-success": "Edit Success",
+          "add-error-message": "Add Error",
+          "edit-error-message": "Edit Error",
+          "delete-error-message": "Delete Error",
+          "delete-success-message": "Delete Success",
+          "delete-title": "Delete Model",
+          "delete-description": "Are you sure you want to delete this model?",
+          "delete-confirm-text": "Delete"
+        }
+      },
       "model-provider": {
         "add-provider": "Add Model",
+        "custom-provider": "Custom Provider",
         "add": "Add",
         "model-check-success": "Model verification succeeded",
         "add-provider-form": {

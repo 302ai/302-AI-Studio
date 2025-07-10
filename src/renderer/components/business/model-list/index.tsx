@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { SearchField } from "../../ui/search-field";
 import { Fetching } from "../fetching";
+import { AddModelModal } from "./add-model-modal";
 import { RowList } from "./row-list";
 
 interface ModelListProps {
@@ -55,6 +56,7 @@ export function ModelList({
 
   const [tabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddModelModalOpen, setIsAddModelModalOpen] = useState(false);
 
   // 创建 providers 映射表，方便快速查找
   const providersMap = useMemo(() => {
@@ -92,11 +94,13 @@ export function ModelList({
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       models = baseModels.filter((model) =>
-        model.name.toLowerCase().includes(query),
+        (model.remark || model.name).toLowerCase().includes(query),
       );
     }
 
-    return models.sort((a, b) => a.name.localeCompare(b.name));
+    return models.sort((a, b) =>
+      (a.remark || a.name).localeCompare(b.remark || b.name),
+    );
   }, [baseModels, searchQuery]);
 
   const listData = useMemo(
@@ -199,7 +203,6 @@ export function ModelList({
         <div className="flex gap-2">
           <Button
             size="small"
-            className="w-[110px]"
             onClick={onFetchModels}
             intent="primary"
             isDisabled={
@@ -210,9 +213,15 @@ export function ModelList({
             {t("fetch-models")}
           </Button>
 
-          {/* <Button size="extra-small" intent="outline">
-            添加模型
-          </Button> */}
+          <Button
+            size="small"
+            className="w-[110px]"
+            onClick={() => setIsAddModelModalOpen(true)}
+            intent="outline"
+            // isDisabled={!isProviderConfigValid}
+          >
+            {t("add-model")}
+          </Button>
         </div>
         <SearchField
           value={searchQuery}
@@ -236,7 +245,7 @@ export function ModelList({
         ) : (
           // 表头
           <div className=" w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
-            <div className="!bg-muted grid h-10 grid-cols-[minmax(0,1fr)_180px_55px] text-muted-fg">
+            <div className="!bg-muted mb-1 grid h-10 grid-cols-[minmax(0,1fr)_180px_55px] text-muted-fg">
               <div className="flex h-full items-center pl-4 outline-hidden">
                 <div className="truncate">{t("model-name")}</div>
               </div>
@@ -278,6 +287,15 @@ export function ModelList({
           </div>
         )}
       </div>
+
+      <AddModelModal
+        isOpen={isAddModelModalOpen}
+        onOpenChange={setIsAddModelModalOpen}
+        onModelAdded={() => {
+          // 模型添加成功后可以刷新列表或显示提示
+          console.log("Model added successfully");
+        }}
+      />
     </>
   );
 }

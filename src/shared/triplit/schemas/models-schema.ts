@@ -4,6 +4,7 @@ export const modelsSchema = {
   schema: S.Schema({
     id: S.Id({ format: "nanoid" }),
     name: S.String(),
+    remark: S.String({ default: "" }),
     providerId: S.String(),
     capabilities: S.Set(S.String()),
     custom: S.Boolean({ default: false }),

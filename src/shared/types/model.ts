@@ -5,4 +5,5 @@ export type Model = {
   custom: boolean;
   enabled: boolean;
   collected: boolean;
+  remark: string;
 };

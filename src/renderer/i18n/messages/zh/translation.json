@@ -70,12 +70,49 @@
         "collected": "收藏",
         "search-placeholder": "搜索...",
         "fetch-models": "获取模型",
+        "add-model": "添加模型",
         "model-name": "模型名称",
         "model-capabilities": "模型能力",
         "actions": "操作"
       },
+      "add-model-modal": {
+        "title": "添加模型",
+        "edit-title": "编辑模型",
+
+        "model-id": {
+          "label": "模型ID",
+          "placeholder": "请输入模型ID",
+          "description": "这是模型的真实名称，用于实际发起请求",
+          "required-error": "模型ID不能为空"
+        },
+        "description": {
+          "label": "备注",
+          "placeholder": "请输入备注",
+          "description": "你可以为这个模型设置一个更容易分辨的名字，仅用于展示"
+        },
+        "capabilities": {
+          "label": "能力",
+          "reasoning": "推理",
+          "vision": "图像理解"
+        },
+        "actions": {
+          "cancel": "取消",
+          "save": "保存",
+          "add-success": "添加成功",
+          "edit-success": "编辑成功",
+          "add-error-message": "添加失败",
+          "edit-error-message": "编辑失败",
+          "delete-error-message": "删除失败",
+          "delete-success-message": "删除成功",
+          "delete-title": "删除模型",
+          "delete-description": "确定要删除该模型吗？",
+          "delete-confirm-text": "删除"
+        }
+      },
+
       "model-provider": {
         "add-provider": "添加模型",
+        "custom-provider": "自定义提供商",
         "add": "添加",
         "model-check-success": "模型校验成功",
         "add-provider-form": {

@@ -1,11 +1,18 @@
 import { triplitClient } from "@renderer/client";
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
+import logger from "@shared/logger/renderer-logger";
 import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
 import { Globe, Image } from "lucide-react";
-import { memo } from "react";
+import { memo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { areEqual } from "react-window";
+import { toast } from "sonner";
 import { ActionGroup } from "../action-group";
+import { ModalAction } from "../modal-action";
+import { EditModelModal } from "./edit-model-modal";
+
+const { modelService } = window.service;
 
 export const RowList = memo(function RowList({
   index,
@@ -22,6 +29,15 @@ export const RowList = memo(function RowList({
   const { models } = data;
   const item = models[index];
   const isLast = index === models.length - 1;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings.model-settings.add-model-modal",
+  });
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingModel, setEditingModel] = useState<Model | null>(null);
+
+  const [deleteModalState, setDeleteModalState] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleUpdateModel = async (updateModelData: UpdateModelData) => {
     await triplitClient.update("models", item.id, updateModelData);
@@ -30,9 +46,33 @@ export const RowList = memo(function RowList({
   const handleCheckboxChange = () => {
     handleUpdateModel({ enabled: !item.enabled });
   };
-  // TODO: Support edit and delete functionality (in the future version)
-  // const handleEdit = () => {};
-  // const handleDelete = () => {};
+
+  const handleEdit = () => {
+    setEditingModel(item);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = () => {
+    setDeleteModalState("delete");
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!item || isDeleting) return;
+
+    setIsDeleting(true);
+    try {
+      // await triplitClient.delete("models", item.id);
+      await modelService.deleteModel(item.id);
+      toast.success(t("actions.delete-success-message"));
+      setDeleteModalState(null);
+    } catch (error) {
+      logger.error("Failed to delete model", { error });
+      toast.error(t("actions.delete-error-message"));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleStar = () => {
     handleUpdateModel({ collected: !item.collected });
   };
@@ -55,7 +95,7 @@ export const RowList = memo(function RowList({
             onChange={handleCheckboxChange}
           />
           <div className="truncate" title={item.name}>
-            {item.name}
+            {item.remark || item.name}
           </div>
         </div>
 
@@ -86,15 +126,35 @@ export const RowList = memo(function RowList({
           })}
         </div>
 
-        <div className="flex h-full items-center justify-center">
+        <div className="w-full flex-1 items-center justify-center">
           <ActionGroup
-            // onEdit={handleEdit}
-            // onDelete={handleDelete}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
             onStar={handleStar}
             stared={item.collected}
           />
         </div>
       </div>
+
+      <EditModelModal
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        model={editingModel}
+      />
+
+      <ModalAction
+        state={deleteModalState}
+        onOpenChange={() => setDeleteModalState(null)}
+        actionType={{
+          title: t("actions.delete-title"),
+          descriptions: [t("actions.delete-description")],
+          confirmText: t("actions.delete-confirm-text"),
+          disabled: isDeleting,
+          isPending: isDeleting,
+          action: handleConfirmDelete,
+        }}
+        dangerActions={["delete"]}
+      />
     </div>
   );
 }, areEqual);

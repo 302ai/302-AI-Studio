@@ -197,6 +197,17 @@ declare global {
         setsearchService: (searchService: SearchService) => Promise<void>;
         updateSelectedModelId: (modelId: string) => Promise<void>;
       };
+      modelService: {
+        insertModel: (
+          providerId: string,
+          model: CreateModelData,
+        ) => Promise<Model>;
+        updateModel: (
+          modelId: string,
+          updateData: UpdateModelData,
+        ) => Promise<Model>;
+        deleteModel: (modelId: string) => Promise<void>;
+      };
     };
   }
 }

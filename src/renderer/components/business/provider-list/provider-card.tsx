@@ -53,9 +53,9 @@ export function ProviderCard({
   return (
     <div
       className={cn(
-        "group flex h-[56px] flex-row items-center justify-between rounded-xl py-4 hover:bg-hover",
+        "group flex h-[56px] flex-row items-center justify-between rounded-xl py-4 hover:bg-hover-primary",
         isDragging && "bg-hover-primary opacity-50 ",
-        isSelected && "bg-accent text-accent-fg",
+        isSelected && "bg-accent text-accent-fg hover:bg-accent",
       )}
       ref={provided.innerRef}
       {...provided.draggableProps}
@@ -75,8 +75,8 @@ export function ProviderCard({
         <ProviderIcon provider={provider} className="size-8 " />
         {/* <ModelIcon modelName={provider.name ?? ""} className="size-8" /> */}
         <div className="flex flex-col gap-1 ">
-          <CardTitle className="text-sm">{provider.name}</CardTitle>
-          <CardDescription className="text-xs">
+          <CardTitle className="text-sm ">{provider.name}</CardTitle>
+          <CardDescription className=" text-card-desc-text text-xs">
             {modelCount}
             {t("settings.model-settings.model-provider.description")}
           </CardDescription>

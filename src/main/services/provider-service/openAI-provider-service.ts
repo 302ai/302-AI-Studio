@@ -81,6 +81,7 @@ export class OpenAIProviderService extends BaseProviderService {
           const capabilities = parseModels(model.id);
           return {
             name: model.id.trim(),
+            remark: model.id.trim(),
             providerId: this.provider.id,
             custom: false,
             enabled: true,
@@ -89,9 +90,12 @@ export class OpenAIProviderService extends BaseProviderService {
           };
         }) || [];
 
-      logger.info("Fetched OpenAI models successfully, the count is:", {
-        count: formatedModels.length,
-      });
+      logger.info(
+        "Fetched OpenAI models successfully1231231233333333333333, the count is:",
+        {
+          count: formatedModels.length,
+        },
+      );
 
       return formatedModels;
     } catch (error) {

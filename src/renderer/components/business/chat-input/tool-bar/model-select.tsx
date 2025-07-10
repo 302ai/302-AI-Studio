@@ -167,7 +167,9 @@ export const ModelSelect = ({
     });
 
     const filteredModels = hasSearch
-      ? allModels.filter(({ model }) => contains(model.name, query))
+      ? allModels.filter(({ model }) =>
+          contains(model.remark || model.name, query),
+        )
       : allModels;
 
     const collectedModels = filteredModels
@@ -184,6 +186,7 @@ export const ModelSelect = ({
         name: t("collected"),
         providerId: "collected",
         model: {} as Model,
+        remark: "",
       });
 
       collectedModels.forEach(({ model, providerId }) => {
@@ -193,6 +196,7 @@ export const ModelSelect = ({
           name: model.name,
           providerId,
           model,
+          remark: model.remark || model.name,
         });
       });
     }
@@ -209,6 +213,7 @@ export const ModelSelect = ({
           name: group.name,
           providerId: group.id,
           model: {} as Model,
+          remark: group.name,
         });
 
         groupNonCollectedModels
@@ -220,6 +225,7 @@ export const ModelSelect = ({
               name: model.name,
               providerId: group.id,
               model,
+              remark: model.remark || model.name,
             });
           });
       }
@@ -269,7 +275,7 @@ export const ModelSelect = ({
             <>
               <ModelIcon modelName={selectedModel.name} />
               <span className="truncate text-muted-fg group-hover:text-fg">
-                {selectedModel.name}
+                {selectedModel.remark || selectedModel.name}
               </span>
             </>
           ) : (

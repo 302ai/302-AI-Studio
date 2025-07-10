@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore useSemanticElements */
 import { ModelIcon } from "@renderer/components/business/model-icon";
-import type { Model } from "@shared/types/model";
+import type { Model } from "@shared/triplit/types";
 import { CheckIcon } from "lucide-react";
 import { memo } from "react";
 import { areEqual } from "react-window";
@@ -11,6 +11,7 @@ export interface ListItem {
   name: string;
   providerId: string;
   model: Model;
+  remark: string;
 }
 
 export const ModelRowList = memo(function ModelRowList({
@@ -41,7 +42,7 @@ export const ModelRowList = memo(function ModelRowList({
   }
 
   const isSelected = selectedModelId === item.model.id;
-
+  console.log("item.model", item.model);
   return (
     <div
       style={style}
@@ -62,7 +63,7 @@ export const ModelRowList = memo(function ModelRowList({
           className="size-4 flex-shrink-0"
         />
         <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap">
-          {item.name}
+          {item.model.remark || item.model.name}
         </span>
         {isSelected && <CheckIcon className="size-4 flex-shrink-0" />}
       </div>

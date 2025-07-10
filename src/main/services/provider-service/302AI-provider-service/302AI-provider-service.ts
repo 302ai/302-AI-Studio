@@ -138,6 +138,7 @@ export class AI302ProviderService extends OpenAIProviderService {
           const capabilities = parseModels(model.id);
           return {
             name: model.id.trim(),
+            remark: model.id.trim(),
             providerId: this.provider.id,
             custom: false,
             enabled: true,
@@ -149,10 +150,6 @@ export class AI302ProviderService extends OpenAIProviderService {
             ),
           };
         }) || [];
-
-      logger.info("Fetched 302.AI models successfully", {
-        count: formatedModels.length,
-      });
 
       return formatedModels;
     } catch (error) {
