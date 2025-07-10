@@ -173,7 +173,9 @@
       "recorder": {
         "placeholder": "Click to set shortcut",
         "press-keys": "Press keys...",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "reset": "Reset",
+        "clear": "Clear"
       }
     }
   },

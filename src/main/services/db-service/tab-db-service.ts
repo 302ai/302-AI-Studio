@@ -1,4 +1,5 @@
 import { triplitClient } from "@main/triplit/client";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateTabData,
   Tab,
@@ -7,7 +8,6 @@ import type {
 } from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
-import logger from "@shared/logger/main-logger";
 
 @injectable()
 export class TabDbService extends BaseDbService {

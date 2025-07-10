@@ -1,3 +1,4 @@
+import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
 import {
   Select,
   SelectList,
@@ -7,6 +8,7 @@ import {
 import { ShortcutRecorder } from "@renderer/components/ui/shortcut-recorder";
 import { useShortcuts } from "@renderer/hooks/use-shortcuts";
 import type { ShortcutAction } from "@shared/triplit/types";
+import { RefreshCw } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +36,17 @@ const SHORTCUT_MODES: Record<ShortcutAction, "preset" | "record"> = {
   "delete-current-thread": "record",
   "open-settings": "record",
   "toggle-sidebar": "record",
+};
+
+const DEFAULT_SHORTCUTS: Record<ShortcutAction, string[]> = {
+  "send-message": ["Enter"],
+  "new-chat": ["Cmd", "N"],
+  "clear-messages": ["Cmd", "L"],
+  "close-current-tab": ["Cmd", "Shift", "W"],
+  "close-other-tabs": ["Cmd", "W"],
+  "delete-current-thread": ["Cmd", "Backspace"],
+  "open-settings": ["Cmd", ","],
+  "toggle-sidebar": ["Cmd", "B"],
 };
 
 const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
@@ -75,7 +88,7 @@ export function ShortcutsSettings() {
     const config: Record<string, { keys: string[] }> = {
       "send-message": { keys: ["Enter"] },
       "new-chat": { keys: ["Cmd", "N"] },
-      "clear-messages": { keys: [] },
+      "clear-messages": { keys: ["Cmd", "L"] },
       "close-current-tab": { keys: ["Cmd", "Shift", "W"] },
       "close-other-tabs": { keys: ["Cmd", "W"] },
       "delete-current-thread": { keys: ["Cmd", "Backspace"] },
@@ -150,6 +163,11 @@ export function ShortcutsSettings() {
     setRecordingAction(isRecording ? action : null);
   };
 
+  const handleResetShortcut = async (action: ShortcutAction) => {
+    const defaultKeys = DEFAULT_SHORTCUTS[action];
+    await updateShortcut(action, defaultKeys);
+  };
+
   return (
     <div className="flex h-full flex-col gap-4 overflow-hidden">
       <div className="flex flex-1 justify-center overflow-y-auto pr-2">
@@ -164,51 +182,64 @@ export function ShortcutsSettings() {
                 </div>
               </div>
 
-              {shortcut.mode === "preset" ? (
-                <Select
-                  className="w-full"
-                  selectedKey={
-                    shortcut.options.find(
-                      (opt) =>
-                        JSON.stringify(opt.keys) ===
-                        JSON.stringify(shortcut.keys),
-                    )?.id
-                  }
-                  onSelectionChange={(optionId) =>
-                    handleShortcutChange(shortcut.action, optionId as string)
-                  }
+              <div className="flex items-center gap-2">
+                {shortcut.mode === "preset" ? (
+                  <Select
+                    className="flex-1"
+                    selectedKey={
+                      shortcut.options.find(
+                        (opt) =>
+                          JSON.stringify(opt.keys) ===
+                          JSON.stringify(shortcut.keys),
+                      )?.id
+                    }
+                    onSelectionChange={(optionId) =>
+                      handleShortcutChange(shortcut.action, optionId as string)
+                    }
+                  >
+                    <SelectTrigger />
+                    <SelectList popoverClassName="min-w-md">
+                      {shortcut.options.map((option) => (
+                        <SelectOption
+                          key={option.id}
+                          id={option.id}
+                          className="flex cursor-pointer justify-between"
+                        >
+                          <div className="flex w-full items-center justify-between">
+                            <span>{option.label}</span>
+                          </div>
+                        </SelectOption>
+                      ))}
+                    </SelectList>
+                  </Select>
+                ) : (
+                  <ShortcutRecorder
+                    value={shortcut.keys}
+                    onValueChange={(keys) =>
+                      handleRecordedShortcut(shortcut.action, keys)
+                    }
+                    onRecordingChange={(isRecording) =>
+                      handleRecordingChange(shortcut.action, isRecording)
+                    }
+                    disabled={
+                      recordingAction !== null &&
+                      recordingAction !== shortcut.action
+                    }
+                    className="flex-1"
+                  />
+                )}
+
+                <ButtonWithTooltip
+                  type="button"
+                  intent="outline"
+                  size="small"
+                  onClick={() => handleResetShortcut(shortcut.action)}
+                  className="h-9 px-2"
+                  title={t("recorder.reset")}
                 >
-                  <SelectTrigger />
-                  <SelectList popoverClassName="min-w-md">
-                    {shortcut.options.map((option) => (
-                      <SelectOption
-                        key={option.id}
-                        id={option.id}
-                        className="flex cursor-pointer justify-between"
-                      >
-                        <div className="flex w-full items-center justify-between">
-                          <span>{option.label}</span>
-                        </div>
-                      </SelectOption>
-                    ))}
-                  </SelectList>
-                </Select>
-              ) : (
-                <ShortcutRecorder
-                  value={shortcut.keys}
-                  onValueChange={(keys) =>
-                    handleRecordedShortcut(shortcut.action, keys)
-                  }
-                  onRecordingChange={(isRecording) =>
-                    handleRecordingChange(shortcut.action, isRecording)
-                  }
-                  disabled={
-                    recordingAction !== null &&
-                    recordingAction !== shortcut.action
-                  }
-                  className="w-full"
-                />
-              )}
+                  <RefreshCw className="h-4 w-4" />
+                </ButtonWithTooltip>
+              </div>
 
               {shortcut.hint && (
                 <p className="mt-1 text-left text-muted-fg text-xs">

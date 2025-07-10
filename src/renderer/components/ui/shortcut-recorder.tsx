@@ -1,7 +1,6 @@
 import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
-import { Button } from "@renderer/components/ui/button";
 import { cn } from "@renderer/lib/utils";
-import { RotateCcw, X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -137,15 +136,16 @@ export function ShortcutRecorder({
             <X className="h-4 w-4" />
           </ButtonWithTooltip>
         ) : (
-          <Button
+          <ButtonWithTooltip
             type="button"
             intent="outline"
             size="small"
             onClick={handleReset}
             className="h-9 px-2"
+            title={t("clear")}
           >
-            <RotateCcw className="h-4 w-4" />
-          </Button>
+            <Trash2 className="h-4 w-4" />
+          </ButtonWithTooltip>
         ))}
     </div>
   );
