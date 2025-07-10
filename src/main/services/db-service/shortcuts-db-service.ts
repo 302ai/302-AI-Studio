@@ -49,14 +49,28 @@ export class ShortcutsDbService extends BaseDbService {
         .Where("action", "=", action);
       const existingShortcuts = await triplitClient.fetch(query);
 
-      for (const shortcut of existingShortcuts) {
-        await triplitClient.delete("shortcuts", shortcut.id);
+      if (existingShortcuts.length === 0) {
+        await triplitClient.insert("shortcuts", {
+          order: 0,
+          action,
+          keys: new Set(keys),
+          scope,
+        });
+        return;
       }
+      const [first, ...duplicates] = existingShortcuts;
 
-      await triplitClient.insert("shortcuts", {
-        action,
-        keys: new Set(keys),
-        scope,
+      await triplitClient.transact(async (tx) => {
+        await tx.update("shortcuts", first.id, async (shortcut) => {
+          shortcut.keys = new Set(keys);
+          shortcut.scope = scope;
+        });
+
+        if (duplicates.length > 0) {
+          await Promise.all(
+            duplicates.map((shortcut) => tx.delete("shortcuts", shortcut.id)),
+          );
+        }
       });
     } catch (error) {
       logger.error("ShortcutsDbService:updateShortcut error", {

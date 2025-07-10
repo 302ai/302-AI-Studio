@@ -32,7 +32,10 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "prepare": "husky",
     "commit": "git-cz",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "postinstall": "husky",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.0-alpha.8",
