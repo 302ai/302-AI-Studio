@@ -1,8 +1,7 @@
 import { triplitClient } from "@renderer/client";
-import logger from "@shared/logger/renderer-logger";
 import type { ShortcutAction, ShortcutScope } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo } from "react";
 
 export interface ShortcutKeys {
   keys: string[];

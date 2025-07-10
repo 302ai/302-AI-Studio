@@ -1,5 +1,5 @@
 import { triplitClient } from "@renderer/client";
-import { PulseLoader } from "@renderer/components/business/loader-ldrs";
+import { LdrsLoader } from "@renderer/components/business/ldrs-loader";
 import { ContentBlocks } from "@renderer/components/business/markdown/content-blocks";
 import { MarkdownRenderer } from "@renderer/components/business/markdown/markdown-renderer";
 import {
@@ -218,7 +218,7 @@ export function AssistantMessage({
             <div className="mt-2 flex items-center gap-2 text-muted-fg text-sm">
               <div className="flex items-center gap-x-4">
                 {t("thinking")}
-                <PulseLoader />
+                <LdrsLoader type="dot-pulse" />
               </div>
             </div>
           )}

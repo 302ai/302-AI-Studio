@@ -310,7 +310,7 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "告诉我你在思考些什么？"
+    "hello-world": "告诉我，你在思考些什么？"
   },
   "attachment": {
     "file-too-large": "文件大小不能超过10MB"

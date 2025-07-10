@@ -310,7 +310,7 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "何を考えているのか教えてください?"
+    "hello-world": "教えてください、あなたは何を考えていますか？"
   },
   "attachment": {
     "file-too-large": "ファイルサイズは10MBを超えることはできません"
