@@ -36,6 +36,8 @@ export function useTabBar() {
         ];
         await Promise.all(promises);
 
+        emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
+
         return;
       }
     }
@@ -50,6 +52,8 @@ export function useTabBar() {
     });
     const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
     await Promise.all(promises);
+
+    emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
   };
 
   const activateTabId = async (id: string) => {

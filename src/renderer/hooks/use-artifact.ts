@@ -12,9 +12,6 @@ export function useArtifact() {
       emitter.on(EventNames.CODE_PREVIEW_CLOSE, () => {
         setIsArtifactOpen(false);
       }),
-      emitter.on(EventNames.TAB_CLOSE_ALL, () => {
-        setIsArtifactOpen(false);
-      }),
     ];
 
     return () => {
