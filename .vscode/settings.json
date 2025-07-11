@@ -35,4 +35,9 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+  "i18n-ally.extract.ignoredByFiles": {
+    "src\\renderer\\pages\\settings-page\\about-settings\\index.tsx": [
+      "Discord"
+    ]
+  },
 }
