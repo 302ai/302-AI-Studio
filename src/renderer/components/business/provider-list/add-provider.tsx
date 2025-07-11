@@ -81,6 +81,7 @@ export function AddProvider({
       baseUrl: finalBaseUrl,
       enabled: false,
       custom: isCustomProvider,
+      status: "pending",
       order: 0,
     };
 

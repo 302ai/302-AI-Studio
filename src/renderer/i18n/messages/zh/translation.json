@@ -124,6 +124,7 @@
         "custom-provider": "自定义提供商",
         "add": "添加",
         "model-check-success": "模型校验成功",
+        "model-check-failed": "模型校验失败",
         "select-provider": "选择Provider",
         "select-provider-description": " 请从左侧列表中选择一个Provider来配置其设置",
         "add-provider-form": {
@@ -163,6 +164,8 @@
         },
         "delete": "删除",
         "description": "个模型",
+        "not-configured": "尚未配置",
+        "provider-error": "供应商错误",
         "edit": "编辑",
         "label": "模型提供商",
         "modal-action": {

@@ -83,6 +83,31 @@ export function ProviderModel() {
       setIsSaving(true);
       try {
         await configService.updateProvider(selectedProvider.id, updates);
+        if (selectedProvider.status === "error") return;
+        if (!selectedProvider.custom) {
+          if (updates.apiKey === "" || updates.baseUrl === "") {
+            await configService.updateProvider(selectedProvider.id, {
+              status: "pending",
+            });
+          } else {
+            await configService.updateProvider(selectedProvider.id, {
+              status: "success",
+            });
+          }
+        }
+
+        if (selectedProvider.custom) {
+          if (!updates.baseUrl) {
+            await configService.updateProvider(selectedProvider.id, {
+              status: "pending",
+            });
+            return;
+          } else {
+            await configService.updateProvider(selectedProvider.id, {
+              status: "success",
+            });
+          }
+        }
       } catch (error) {
         logger.error("Failed to save provider:", { error });
       } finally {
@@ -113,9 +138,16 @@ export function ProviderModel() {
 
   const updateFormField = useCallback(
     (field: keyof ProviderFormData, value: string) => {
-      setFormData((prev) => ({ ...prev, [field]: value }));
+      const updatedFormData = { ...formData, [field]: value };
+      setFormData(updatedFormData);
 
-      const updates: UpdateProviderData = { [field]: value.trim() };
+      const updates: UpdateProviderData = {
+        name: updatedFormData.name.trim(),
+        baseUrl: updatedFormData.baseUrl.trim(),
+        apiKey: updatedFormData.apiKey.trim(),
+        apiType: updatedFormData.apiType,
+        avatar: updatedFormData.avatar,
+      };
 
       if (field === "name" && !selectedProvider?.custom) {
         return;
@@ -123,7 +155,7 @@ export function ProviderModel() {
 
       debouncedSave(updates);
     },
-    [selectedProvider?.custom, debouncedSave],
+    [formData, selectedProvider?.custom, debouncedSave],
   );
 
   const handleFieldChange = useCallback(
@@ -187,14 +219,25 @@ export function ProviderModel() {
 
       if (!isOk) {
         toast.error(errorMsg);
+        await configService.updateProvider(selectedProvider.id, {
+          status: "error",
+        });
         return;
       }
 
       const models = await providerService.fetchModels(currentProvider);
       await configService.updateProviderModels(selectedProvider.id, models);
+      await configService.updateProvider(selectedProvider.id, {
+        status: "success",
+      });
+
       toast.success(t("model-check-success"));
     } catch (error) {
       logger.error("Failed to fetch models:", { error });
+      toast.error(t("model-check-failed"));
+      await configService.updateProvider(selectedProvider.id, {
+        status: "error",
+      });
     } finally {
       setIsFetchingModels(false);
     }

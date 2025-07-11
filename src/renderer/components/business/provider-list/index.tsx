@@ -187,6 +187,7 @@ export function ProviderList() {
                   apiType: newApiType,
                   custom: custom ?? false,
                   enabled: true,
+                  status: "pending",
                 };
 
                 await handleAddProvider(provider);
@@ -379,6 +380,7 @@ export function ProviderList() {
       baseUrl: "",
       enabled: true,
       custom: true,
+      status: "pending",
     });
 
     setSelectedProvider(res);
