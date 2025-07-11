@@ -71,10 +71,10 @@ export function AssistantMessage({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       setContextMenuOpen(false);
-      toast.success(t("copied-success"));
+      toast.success(t("copy-success"));
     } catch (error) {
       logger.error("复制失败", { error });
-      toast.error(t("copied-failed"));
+      toast.error(t("copy-failed"));
     }
   };
 

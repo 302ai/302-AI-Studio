@@ -3,7 +3,7 @@ import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
 import logger from "@shared/logger/renderer-logger";
 import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
-import { Globe, Image } from "lucide-react";
+import { Image, Lightbulb } from "lucide-react";
 import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual } from "react-window";
@@ -87,7 +87,7 @@ export const RowList = memo(function RowList({
         !isLast ? "border-border border-b" : "",
       )}
     >
-      <div className="grid h-full grid-cols-[minmax(0,1fr)_160px_64px]">
+      <div className="grid h-full grid-cols-[minmax(0,1fr)_170px_50px]">
         <div className="flex h-full items-center gap-3 pl-4 outline-hidden">
           <Checkbox
             className="cursor-pointer"
@@ -108,7 +108,7 @@ export const RowList = memo(function RowList({
                     key={capability}
                     className="flex size-6 items-center justify-center rounded-sm bg-accent dark:bg-primary/10"
                   >
-                    <Globe className="h-4 w-4 text-primary" />
+                    <Lightbulb className="h-4 w-4 text-primary" />
                   </div>
                 );
               case "vision":

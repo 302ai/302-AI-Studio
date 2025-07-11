@@ -31,9 +31,6 @@ export function UserMessage({ message }: UserMessageProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
-  const { t: tCommon } = useTranslation("translation", {
-    keyPrefix: "common",
-  });
 
   const onEdit = () => {
     emitter.emit(EventNames.MESSAGE_EDIT, message);
@@ -49,10 +46,10 @@ export function UserMessage({ message }: UserMessageProps) {
     try {
       await navigator.clipboard.writeText(message.content);
       setContextMenuOpen(false);
-      toast.success(tCommon("copied-success"));
+      toast.success(t("copy-success"));
     } catch (error) {
-      logger.error("复制失败", { error });
-      toast.error(tCommon("copied-failed"));
+      logger.error("copy failed", { error });
+      toast.error(t("copy-failed"));
     }
   };
 
@@ -63,11 +60,11 @@ export function UserMessage({ message }: UserMessageProps) {
       if (selectedText) {
         await navigator.clipboard.writeText(selectedText);
         setContextMenuOpen(false);
-        toast.success(tCommon("copied-success"));
+        toast.success(t("copy-success"));
       }
     } catch (error) {
-      logger.error("复制选中内容失败", { error });
-      toast.error(tCommon("copied-failed"));
+      logger.error("select copy failed", { error });
+      toast.error(t("copy-failed"));
     }
   };
 
