@@ -104,7 +104,6 @@
 
     --muted: oklch(0.97 0.001 106.424);
     --muted-fg: #AAAAAA;
-    --muted-2:#F9F9F9;
 
     --hover: #F1F1F1;
     --hover-fg: #000000;
@@ -137,9 +136,8 @@
     --sidebar: #F9F9F9;
     --sidebar-fg: #333333;
 
-    --setting-tab-list: rgba(249, 249, 249, 1);
-    --setting-tab-list-fg: rgba(51, 51, 51, 1);
-    --setting-about-text:#333333;
+    --setting-tab-list: #F9F9F9;
+    --setting-tab-list-fg: #333333;
 
     --card-desc-text: #AAAAAA;
     --card-title-text: #333333;
@@ -177,7 +175,6 @@
 
     --muted: oklch(0.216 0.006 56.043);
     --muted-fg: #5C5C5C;
-    --muted-2:#7A7A7A;
 
     --hover: #2D2D2D;
     --hover-fg: #E6E6E6;
@@ -213,9 +210,8 @@
     --sidebar: #1A1A1A;
     --sidebar-fg: #E6E6E6;
 
-    --setting-tab-list: #1f1f1f;
-    --setting-tab-list-fg: oklch(0.985 0.001 106.423);
-    --setting-about-text:#E6E6E6;
+    --setting-tab-list: #1A1A1A;
+    --setting-tab-list-fg: #E6E6E6;
 
     --card-desc-text: #7A7A7A;
     --card-title-text: #E6E6E6;

@@ -1,9 +1,10 @@
-import { DotPulse, LineSpinner } from "ldrs/react";
+import { DotPulse, LineSpinner, Waveform } from "ldrs/react";
 import "ldrs/react/DotPulse.css";
 import "ldrs/react/LineSpinner.css";
+import "ldrs/react/Waveform.css";
 
 interface LdrsLoaderProps {
-  type: "dot-pulse" | "line-spinner";
+  type: "dot-pulse" | "line-spinner" | "waveform";
   size?: number;
   speed?: number;
   color?: string;
@@ -24,5 +25,7 @@ export function LdrsLoader({
       return (
         <LineSpinner size={size} speed={speed} color={color} stroke={stroke} />
       );
+    case "waveform":
+      return <Waveform size={size} speed={speed} color={color} />;
   }
 }

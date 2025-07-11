@@ -163,7 +163,7 @@ export function TabBar() {
               <Separator
                 orientation="vertical"
                 className={cn(
-                  "mx-1 h-[20px] w-[1px]",
+                  "mx-1 h-[20px] w-[2px]",
                   tabs.length === 0 ? "opacity-0" : "opacity-100",
                 )}
               />

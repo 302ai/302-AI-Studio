@@ -1,10 +1,9 @@
-import { Waveform } from "ldrs/react";
-import "ldrs/react/Waveform.css";
+import { LdrsLoader } from "./ldrs-loader";
 
 export function Fetching() {
   return (
     <div className="flex size-full items-center justify-center text-muted-fg">
-      <Waveform color="currentColor" />
+      <LdrsLoader type="waveform" />
     </div>
   );
 }

@@ -193,7 +193,7 @@
       "name": "Tool Settings"
     },
     "shortcuts-settings": {
-      "name": "Shortcuts",
+      "name": "Shortcuts Settings",
       "title": "Keyboard Shortcuts",
       "actions": {
         "send-message": "Send Message",

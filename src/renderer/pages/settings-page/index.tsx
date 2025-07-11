@@ -97,7 +97,7 @@ export function SettingsPage() {
         </div>
       </Tabs>
 
-      <div className=" flex-1">
+      <div className="flex-1">
         <Routes>
           <Route path="/general-settings" element={<GeneralSettings />} />
           <Route path="/model-settings" element={<ModelSettings />} />

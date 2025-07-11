@@ -87,7 +87,6 @@
       "add-model-modal": {
         "title": "添加模型",
         "edit-title": "编辑模型",
-
         "model-id": {
           "label": "模型ID",
           "placeholder": "请输入模型ID",
@@ -118,7 +117,6 @@
           "delete-confirm-text": "删除"
         }
       },
-
       "model-provider": {
         "add-provider": "添加模型",
         "custom-provider": "自定义提供商",
@@ -196,7 +194,7 @@
       "name": "工具设置"
     },
     "shortcuts-settings": {
-      "name": "快捷键",
+      "name": "快捷键设置",
       "title": "键盘快捷键",
       "actions": {
         "send-message": "发送消息",

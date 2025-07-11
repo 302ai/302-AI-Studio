@@ -109,7 +109,6 @@ export function useTabBar() {
    * * This effect is used to navigate to the active tab
    */
   useEffect(() => {
-    console.log("Active tab changed", { activeTab });
     if (activeTab) {
       navigate(activeTab?.path || "/");
     }

@@ -15,7 +15,7 @@ export function ThemeSwitcher() {
 
   const settingsQuery = triplitClient.query("settings");
   const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
-  const theme = settingsResult?.theme ?? "system";
+  const theme = settingsResult?.theme ?? "";
 
   const [thumbStyle, setThumbStyle] = useState({});
 

@@ -38,10 +38,7 @@ export function LanguageSelector() {
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
       >
-        <SelectTrigger
-          className="h-9 cursor-pointer rounded-xl text-secondary-fg"
-          // prefix={<Earth className="mr-1 size-4" />}
-        />
+        <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
         <SelectList popoverClassName="min-w-[240px]" items={langs}>
           {({ key, prefix, nativeName }) => (
             <SelectOption

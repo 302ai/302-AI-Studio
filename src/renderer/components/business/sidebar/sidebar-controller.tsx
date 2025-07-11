@@ -28,7 +28,7 @@ export function SidebarController() {
           <PanelLeftClose className="size-5" />
         )}
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent placement="bottom">
         {isSidebarCollapsed
           ? t("open-sidebar.tooltip")
           : t("close-sidebar.tooltip")}
