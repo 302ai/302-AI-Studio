@@ -1,6 +1,7 @@
 import Linkify from "linkify-react";
 
 const { shellService } = window.service;
+
 import logger from "@shared/logger/renderer-logger";
 
 interface LinkifiedTextProps {

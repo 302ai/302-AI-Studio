@@ -18,7 +18,7 @@ export const COMPONENTS = {
   }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
     <a
       href={href}
-      className="cursor-pointer underline-offset-2 hover:underline"
+      className="cursor-pointer text-primary underline-offset-2 hover:underline"
       onClick={(e) => {
         e.preventDefault();
         if (href) {
