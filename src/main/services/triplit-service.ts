@@ -137,7 +137,10 @@ export class TriplitService {
       ? join(__dirname, "../../../db")
       : app.getPath("userData");
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
-    const defaultDatabaseFile = path.join(defaultDatabaseDir, "db-v3.sqlite");
+    const defaultDatabaseFile = path.join(
+      defaultDatabaseDir,
+      "db-25.28.0.sqlite",
+    );
 
     logger.info("Default database file:", { defaultDatabaseFile });
 
