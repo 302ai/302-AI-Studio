@@ -47,11 +47,29 @@ export function ProviderModel() {
   const { handleCheckKey } = useProviderList();
   const [formData, setFormData] = useState<ProviderFormData>(DEFAULT_FORM_DATA);
   const [isSaving, setIsSaving] = useState(false);
-  const [isFetchingModels, setIsFetchingModels] = useState(false);
+  const [fetchingModelsState, setFetchingModelsState] = useState<
+    Record<string, boolean>
+  >({});
 
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider",
   });
+
+  const currentProviderFetching = useMemo(() => {
+    return selectedProvider?.id
+      ? fetchingModelsState[selectedProvider.id] || false
+      : false;
+  }, [selectedProvider?.id, fetchingModelsState]);
+
+  const setProviderFetching = useCallback(
+    (providerId: string, isFetching: boolean) => {
+      setFetchingModelsState((prev) => ({
+        ...prev,
+        [providerId]: isFetching,
+      }));
+    },
+    [],
+  );
 
   const getProvider = useCallback(async (id?: string) => {
     if (!id) return;
@@ -203,7 +221,7 @@ export function ProviderModel() {
   const handleFetchModels = useCallback(async () => {
     if (!selectedProvider) return;
 
-    setIsFetchingModels(true);
+    setProviderFetching(selectedProvider.id, true);
 
     try {
       const currentProvider = {
@@ -239,9 +257,9 @@ export function ProviderModel() {
         status: "error",
       });
     } finally {
-      setIsFetchingModels(false);
+      setProviderFetching(selectedProvider.id, false);
     }
-  }, [selectedProvider, formData, handleCheckKey, t]);
+  }, [selectedProvider, formData, handleCheckKey, t, setProviderFetching]);
 
   if (!selectedProvider) {
     return (
@@ -357,7 +375,7 @@ export function ProviderModel() {
 
         <ModelList
           onFetchModels={handleFetchModels}
-          isFetchingModels={isFetchingModels}
+          isFetchingModels={currentProviderFetching}
           isFormValid={isCurrentFormValid}
         />
       </div>
