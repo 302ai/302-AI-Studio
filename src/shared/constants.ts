@@ -46,7 +46,7 @@ export const DEFAULT_SHORTCUTS: CreateShortcutData[] = [
     order: 6,
     action: "open-settings",
     keys: new Set(["Cmd", ","]),
-    scope: "global",
+    scope: "app",
   },
   {
     order: 7,
