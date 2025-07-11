@@ -1,4 +1,5 @@
 import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
+import { formatShortcutKeys } from "@renderer/config/constant";
 import { cn } from "@renderer/lib/utils";
 import { Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -93,7 +94,7 @@ export function ShortcutRecorder({
   };
 
   const formatKeys = (keys: string[]) => {
-    return keys.join(" + ");
+    return formatShortcutKeys(keys);
   };
 
   const displayValue = isRecording

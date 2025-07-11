@@ -17,7 +17,7 @@ export const WINDOW_SIZE = {
 
 export const DEFAULT_SHORTCUTS: CreateShortcutData[] = [
   { order: 0, action: "send-message", keys: new Set(["Enter"]), scope: "app" },
-  { order: 1, action: "new-chat", keys: new Set(["Cmd", "N"]), scope: "app" },
+  { order: 1, action: "new-chat", keys: new Set(["Cmd", "T"]), scope: "app" },
   {
     order: 2,
     action: "clear-messages",
@@ -27,26 +27,26 @@ export const DEFAULT_SHORTCUTS: CreateShortcutData[] = [
   {
     order: 3,
     action: "close-current-tab",
-    keys: new Set(["Cmd", "Shift", "W"]),
+    keys: new Set(["Cmd", "W"]),
     scope: "app",
   },
   {
     order: 4,
     action: "close-other-tabs",
-    keys: new Set(["Cmd", "W"]),
+    keys: new Set(["Cmd", "Shift", "W"]),
     scope: "app",
   },
   {
     order: 5,
     action: "delete-current-thread",
-    keys: new Set(["Cmd", "Backspace"]),
+    keys: new Set([]),
     scope: "app",
   },
   {
     order: 6,
     action: "open-settings",
     keys: new Set(["Cmd", ","]),
-    scope: "global",
+    scope: "app",
   },
   {
     order: 7,
@@ -79,7 +79,7 @@ export const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
     { id: "shift-enter", label: "Shift+Enter", keys: ["Shift", "Enter"] },
     {
       id: "cmd-enter",
-      label: "Cmd+Enter/Ctrl+Enter",
+      label: "Cmd+Enter",
       keys: ["Cmd", "Enter"],
     },
   ],
