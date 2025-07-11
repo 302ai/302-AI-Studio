@@ -6,6 +6,7 @@ import {
   SelectTrigger,
 } from "@renderer/components/ui/select";
 import { ShortcutRecorder } from "@renderer/components/ui/shortcut-recorder";
+import { formatShortcutLabel } from "@renderer/config/constant";
 import { useShortcuts } from "@renderer/hooks/use-shortcuts";
 
 import {
@@ -38,6 +39,20 @@ export function ShortcutsSettings() {
   const [recordingAction, setRecordingAction] = useState<ShortcutAction | null>(
     null,
   );
+
+  const getSelectedOptionId = (
+    shortcut: ShortcutSetting,
+  ): string | undefined => {
+    const currentKeys = shortcut.keys;
+    const matchingOption = shortcut.options.find((opt) => {
+      const optionKeysStr = opt.keys.slice().sort().join(",");
+      const currentKeysStr = currentKeys.slice().sort().join(",");
+
+      return optionKeysStr === currentKeysStr;
+    });
+
+    return matchingOption?.id;
+  };
 
   const shortcutSettings = useMemo((): ShortcutSetting[] => {
     const shortcutHints: Record<ShortcutAction, string> = {
@@ -111,13 +126,7 @@ export function ShortcutsSettings() {
                 {shortcut.mode === "preset" ? (
                   <Select
                     className="flex-1"
-                    selectedKey={
-                      shortcut.options.find(
-                        (opt) =>
-                          JSON.stringify(opt.keys) ===
-                          JSON.stringify(shortcut.keys),
-                      )?.id
-                    }
+                    selectedKey={getSelectedOptionId(shortcut)}
                     onSelectionChange={(optionId) =>
                       handleShortcutChange(shortcut.action, optionId as string)
                     }
@@ -131,7 +140,7 @@ export function ShortcutsSettings() {
                           className="flex cursor-pointer justify-between"
                         >
                           <div className="flex w-full items-center justify-between">
-                            <span>{option.label}</span>
+                            <span>{formatShortcutLabel(option.keys)}</span>
                           </div>
                         </SelectOption>
                       ))}
