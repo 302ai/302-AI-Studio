@@ -210,7 +210,7 @@ export function AssistantMessage({
           />
           {/* Main content display */}
           {cleanContent && (
-            <div className="overflow-wrap-anywhere w-full break-words break-all">
+            <div className="overflow-wrap-anywhere w-full break-words break-all text-fg">
               <MarkdownRenderer>{cleanContent}</MarkdownRenderer>
             </div>
           )}

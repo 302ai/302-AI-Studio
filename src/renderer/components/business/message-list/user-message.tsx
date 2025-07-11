@@ -4,16 +4,15 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { MenuContent } from "@renderer/components/ui/menu";
 import { EventNames, emitter } from "@renderer/services/event-service";
+import logger from "@shared/logger/renderer-logger";
 import type { Message } from "@shared/triplit/types";
 import { Pencil } from "lucide-react";
-
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ButtonWithTooltip } from "../button-with-tooltip";
 import { LinkifiedText } from "./linkified-text";
 import { MessageAttachments } from "./message-attachments";
-import logger from "@shared/logger/renderer-logger";
 
 interface UserMessageProps {
   message: Message;
@@ -101,7 +100,7 @@ export function UserMessage({ message }: UserMessageProps) {
             <MessageAttachments messageId={message.id} className="mb-2" />
 
             {message.content && (
-              <div className="overflow-wrap-anywhere w-full break-words break-all">
+              <div className="overflow-wrap-anywhere w-full break-words break-all text-accent-fg">
                 <LinkifiedText text={message.content} />
               </div>
             )}
