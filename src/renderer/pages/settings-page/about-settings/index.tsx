@@ -1,6 +1,6 @@
-import Discord from "@renderer/assets/discord.svg";
-import Github from "@renderer/assets/github.svg";
-import Twitter from "@renderer/assets/twitter.svg";
+import Discord from "@renderer/assets/images/discord.svg?url";
+import Github from "@renderer/assets/images/github.svg?url";
+import Twitter from "@renderer/assets/images/twitter.svg?url";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Link } from "@renderer/components/ui/link";
 import { Separator } from "@renderer/components/ui/separator";

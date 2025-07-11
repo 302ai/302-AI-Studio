@@ -276,7 +276,7 @@ export function ModelList({
                 {RowList}
               </List>
             ) : (
-              <div className="flex h-full items-center justify-center text-muted-fg">
+              <div className="-translate-y-10 flex h-full items-center justify-center text-muted-fg">
                 <div className="flex flex-col items-center gap-2">
                   <PackageOpen className="size-9" />
                   <p>{t("no-models-description")}</p>
