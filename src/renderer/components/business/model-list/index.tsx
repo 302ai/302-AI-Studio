@@ -193,7 +193,7 @@ export function ModelList({
 
           <Button
             size="small"
-            className="w-[110px]"
+            // className="w-[110px]"
             onClick={() => setIsAddModelModalOpen(true)}
             intent="outline"
           >
