@@ -24,11 +24,13 @@ import { RowList } from "./row-list";
 interface ModelListProps {
   onFetchModels?: () => void;
   isFetchingModels?: boolean;
+  isFormValid?: boolean;
 }
 
 export function ModelList({
   onFetchModels,
   isFetchingModels = false,
+  isFormValid = false,
 }: ModelListProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-list",
@@ -73,7 +75,6 @@ export function ModelList({
 
   const collected = tabKey === "collected";
 
-  // * Get base models based on selected provider and tab
   const baseModels = useMemo(() => {
     if (!allModels) {
       return [];
@@ -106,12 +107,11 @@ export function ModelList({
   const listData = useMemo(
     () => ({
       models: filteredModels,
-      providersMap, // 将 providers 映射表传递给子组件
+      providersMap,
     }),
     [filteredModels, providersMap],
   );
 
-  // 优化后的高度计算函数
   const updateHeight = useCallback(() => {
     if (!containerRef.current) return;
 
@@ -121,7 +121,6 @@ export function ModelList({
     // 计算可用高度：视口高度 - 容器顶部位置 - 底部间距
     const availableHeight = window.innerHeight - rect.top - 16;
 
-    // 确保最小高度
     const newHeight = Math.max(availableHeight, 300);
 
     if (Math.abs(containerHeight - newHeight) > 5) {
@@ -129,11 +128,9 @@ export function ModelList({
     }
   }, [containerHeight]);
 
-  // 使用 callback ref 确保在 DOM 挂载时立即计算高度
   const setContainerRef = useCallback((node: HTMLDivElement | null) => {
     containerRef.current = node;
     if (node) {
-      // DOM 挂载后立即计算高度
       const rect = node.getBoundingClientRect();
       const availableHeight = window.innerHeight - rect.top - 8;
       setContainerHeight(availableHeight);
@@ -141,19 +138,15 @@ export function ModelList({
   }, []);
 
   useLayoutEffect(() => {
-    // 由于使用了 callback ref，这里只需要在依赖变化时更新高度
     updateHeight();
   }, [updateHeight]);
 
   useEffect(() => {
-    // 初始计算
     updateHeight();
 
-    // 只监听窗口大小变化
     const handleResize = () => requestAnimationFrame(updateHeight);
     window.addEventListener("resize", handleResize);
 
-    // 使用单个 ResizeObserver
     const resizeObserver = new ResizeObserver(() => {
       requestAnimationFrame(updateHeight);
     });
@@ -162,7 +155,6 @@ export function ModelList({
       resizeObserver.observe(containerRef.current);
     }
 
-    // 清理函数
     return () => {
       window.removeEventListener("resize", handleResize);
       resizeObserver.disconnect();
@@ -184,18 +176,6 @@ export function ModelList({
 
   const loading = !ready || isPending;
 
-  // 检查当前选中的provider是否有baseUrl和apiKey
-  const isProviderConfigValid = useMemo(() => {
-    if (!selectedProvider) return false;
-    return !!(
-      selectedProvider.baseUrl?.trim() && selectedProvider.apiKey?.trim()
-    );
-  }, [selectedProvider]);
-
-  // if (allModels.length === 0) {
-  //   return null;
-  // }
-
   return (
     <>
       <div className="flex items-center justify-between ">
@@ -205,9 +185,7 @@ export function ModelList({
             size="small"
             onClick={onFetchModels}
             intent="primary"
-            isDisabled={
-              isFetchingModels || !onFetchModels || !isProviderConfigValid
-            }
+            isDisabled={isFetchingModels || !onFetchModels || !isFormValid}
           >
             {isFetchingModels && <Loader variant="spin" size="small" />}
             {t("fetch-models")}
@@ -218,7 +196,6 @@ export function ModelList({
             className="w-[110px]"
             onClick={() => setIsAddModelModalOpen(true)}
             intent="outline"
-            // isDisabled={!isProviderConfigValid}
           >
             {t("add-model")}
           </Button>
@@ -248,7 +225,7 @@ export function ModelList({
               <div className="flex h-full items-center pl-4 outline-hidden">
                 <div className="truncate">{t("model-name")}</div>
               </div>
-              {/*
+              {/* TODO: add model type
               <div className="flex h-full items-center outline-hidden">
                 <div className="truncate">模型类型</div>
               </div> */}
