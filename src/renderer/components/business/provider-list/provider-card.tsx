@@ -9,6 +9,7 @@ import {
 
 import { cn } from "@renderer/lib/utils";
 import type { Provider } from "@shared/triplit/types";
+import { TriangleAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ProviderIcon } from "../provider-icon";
 
@@ -79,8 +80,16 @@ export function ProviderCard({
             {provider.name}
           </CardTitle>
           <CardDescription className=" text-card-desc-text text-xs">
-            {modelCount}
-            {t("settings.model-settings.model-provider.description")}
+            {provider.status === "success" ? (
+              `${modelCount}${t("settings.model-settings.model-provider.description")}`
+            ) : provider.status === "pending" ? (
+              t("settings.model-settings.model-provider.not-configured")
+            ) : (
+              <div className="flex items-center gap-x-1 text-card-desc-error">
+                <TriangleAlert size={14} className="" />
+                {t("settings.model-settings.model-provider.provider-error")}
+              </div>
+            )}
           </CardDescription>
         </div>
       </CardHeader>

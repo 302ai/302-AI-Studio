@@ -121,6 +121,7 @@
         "custom-provider": "Custom Provider",
         "add": "Add",
         "model-check-success": "Model verification succeeded",
+        "model-check-failed": "Model verification failed",
         "select-provider": "Select Provider",
         "select-provider-description": "Please select a provider from the left list to configure its settings",
         "add-provider-form": {
@@ -160,6 +161,8 @@
         },
         "delete": "Delete",
         "description": " models",
+        "not-configured": "Not configured",
+        "provider-error": "Provider error",
         "edit": "Edit",
         "label": "Model Provider",
         "modal-action": {

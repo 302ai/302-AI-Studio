@@ -122,6 +122,7 @@
         "custom-provider": "カスタムプロバイダー",
         "add": "追加",
         "model-check-success": "モデル検証に成功しました",
+        "model-check-failed": "モデル検証に失敗しました",
         "select-provider": "プロバイダーを選択",
         "select-provider-description": "左のリストからプロバイダーを選択して設定を構成してください",
         "add-provider-form": {
@@ -161,6 +162,8 @@
         },
         "delete": "削除",
         "description": "モデル",
+        "not-configured": "未設定",
+        "provider-error": "プロバイダーエラー",
         "edit": "編集",
         "label": "モデルプロバイダー",
         "modal-action": {

@@ -9,6 +9,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     baseUrl: "https://api.302.ai/v1",
     enabled: true,
     custom: false,
+    status: "pending",
     websites: {
       official: "https://302.ai/",
       apiKey: "https://dash.302.ai/apis/list",
@@ -180,6 +181,7 @@ export const DEFAULT_PROVIDERS: ModelProvider[] = [
     baseUrl: "https://api.openai.com/v1",
     enabled: true,
     custom: false,
+    status: "pending",
     websites: {
       official: "https://openai.com/",
       apiKey: "https://platform.openai.com/api-keys",
