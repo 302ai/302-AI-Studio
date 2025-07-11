@@ -1,3 +1,4 @@
+import { triplitClient } from "@renderer/client";
 import { IconPicker } from "@renderer/components/business/icon-picker";
 import { ModelList } from "@renderer/components/business/model-list";
 import { Link } from "@renderer/components/ui/link";
@@ -13,7 +14,7 @@ import { useProviderList } from "@renderer/hooks/use-provider-list";
 import logger from "@shared/logger/renderer-logger";
 import type { UpdateProviderData } from "@shared/triplit/types";
 import { debounce } from "lodash-es";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -25,66 +26,59 @@ const API_TYPE_OPTIONS = [
   // { key: "302ai", label: "302.AI" },
 ];
 
+interface ProviderFormData {
+  name: string;
+  baseUrl: string;
+  apiKey: string;
+  apiType: string;
+  avatar: string;
+}
+
+const DEFAULT_FORM_DATA: ProviderFormData = {
+  name: "",
+  baseUrl: "",
+  apiKey: "",
+  apiType: "openai",
+  avatar: "",
+};
+
 export function ProviderModel() {
   const { selectedProvider } = useActiveProvider();
   const { handleCheckKey } = useProviderList();
-  const [name, setName] = useState("");
-  const [baseUrl, setBaseUrl] = useState("");
-  const [apiKey, setApiKey] = useState("");
-  const [apiType, setApiType] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [formData, setFormData] = useState<ProviderFormData>(DEFAULT_FORM_DATA);
   const [isSaving, setIsSaving] = useState(false);
   const [isFetchingModels, setIsFetchingModels] = useState(false);
-
-  const isInitializing = useRef(false);
 
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider",
   });
 
-  useEffect(() => {
-    isInitializing.current = true;
+  const getProvider = useCallback(async (id?: string) => {
+    if (!id) return;
 
-    if (selectedProvider) {
-      setIsFetchingModels(false);
-      setName(selectedProvider.name || "");
-      setBaseUrl(selectedProvider.baseUrl || "");
-      setApiKey(selectedProvider.apiKey || "");
-      setApiType(selectedProvider.apiType || "openai");
-      setAvatar(selectedProvider.avatar || "");
+    try {
+      const providerQuery = triplitClient
+        .query("providers")
+        .Where("id", "=", id);
+      const res = await triplitClient.fetchOne(providerQuery);
 
-      latestValues.current = {
-        name: selectedProvider.name || "",
-        baseUrl: selectedProvider.baseUrl || "",
-        apiKey: selectedProvider.apiKey || "",
-        apiType: selectedProvider.apiType || "openai",
-      };
-    } else {
-      setName("");
-      setBaseUrl("");
-      setApiKey("");
-      setApiType("openai");
-      setAvatar("");
-      setIsSaving(false);
-      setIsFetchingModels(false);
-
-      latestValues.current = {
-        name: "",
-        baseUrl: "",
-        apiKey: "",
-        apiType: "openai",
-      };
+      if (res) {
+        setFormData({
+          name: res.name || "",
+          baseUrl: res.baseUrl || "",
+          apiKey: res.apiKey || "",
+          apiType: res.apiType || "openai",
+          avatar: res.avatar || "",
+        });
+      }
+    } catch (error) {
+      logger.error("Failed to fetch provider:", { error });
     }
+  }, []);
 
-    setTimeout(() => {
-      isInitializing.current = false;
-    }, 0);
-  }, [selectedProvider]);
-
-  // 防抖保存函数
   const saveProvider = useCallback(
     async (updates: UpdateProviderData) => {
-      if (!selectedProvider || isInitializing.current || isSaving) return;
+      if (!selectedProvider || isSaving) return;
 
       setIsSaving(true);
       try {
@@ -99,7 +93,7 @@ export function ProviderModel() {
   );
 
   const debouncedSave = useMemo(
-    () => debounce(saveProvider, 500),
+    () => debounce(saveProvider, 50),
     [saveProvider],
   );
 
@@ -108,87 +102,73 @@ export function ProviderModel() {
       debouncedSave.cancel();
     };
   }, [debouncedSave]);
-  const latestValues = useRef({
-    name: "",
-    baseUrl: "",
-    apiKey: "",
-    apiType: "openai",
-  });
-
-  const debouncedSaveAll = useMemo(
-    () =>
-      debounce(() => {
-        const updates: UpdateProviderData = {};
-        const current = latestValues.current;
-
-        if (current.name !== undefined && selectedProvider?.custom) {
-          updates.name = current.name.trim();
-        }
-        if (current.baseUrl !== undefined)
-          updates.baseUrl = current.baseUrl.trim();
-        if (current.apiKey !== undefined)
-          updates.apiKey = current.apiKey.trim();
-        if (current.apiType !== undefined) updates.apiType = current.apiType;
-
-        saveProvider(updates);
-      }, 500),
-    [saveProvider, selectedProvider],
-  );
 
   useEffect(() => {
-    return () => {
-      debouncedSaveAll.cancel();
-    };
-  }, [debouncedSaveAll]);
-
-  const handleNameChange = (value: string) => {
-    setName(value);
-    latestValues.current.name = value;
-    debouncedSaveAll();
-  };
-
-  const handleBaseUrlChange = (value: string) => {
-    setBaseUrl(value);
-    latestValues.current.baseUrl = value;
-    debouncedSaveAll();
-  };
-
-  const handleApiKeyChange = (value: string) => {
-    setApiKey(value);
-    latestValues.current.apiKey = value;
-    debouncedSaveAll();
-  };
-
-  const handleApiTypeChange = (key: Key | null) => {
-    const value = key as string;
-    if (value) {
-      setApiType(value);
-      latestValues.current.apiType = value;
-      debouncedSaveAll();
+    if (selectedProvider?.id) {
+      getProvider(selectedProvider.id);
+    } else {
+      setFormData(DEFAULT_FORM_DATA);
     }
-  };
+  }, [selectedProvider?.id, getProvider]);
 
-  const handleGetApiKey = () => {
+  const updateFormField = useCallback(
+    (field: keyof ProviderFormData, value: string) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+
+      const updates: UpdateProviderData = { [field]: value.trim() };
+
+      if (field === "name" && !selectedProvider?.custom) {
+        return;
+      }
+
+      debouncedSave(updates);
+    },
+    [selectedProvider?.custom, debouncedSave],
+  );
+
+  const handleFieldChange = useCallback(
+    (field: keyof ProviderFormData) => {
+      return (value: string | Key | null) => {
+        if (value !== null) {
+          updateFormField(field, value as string);
+        }
+      };
+    },
+    [updateFormField],
+  );
+
+  const handleIconChange = useCallback(
+    async (iconKey: string) => {
+      setFormData((prev) => ({ ...prev, avatar: iconKey }));
+
+      if (selectedProvider) {
+        try {
+          await configService.updateProvider(selectedProvider.id, {
+            avatar: iconKey,
+          });
+        } catch (error) {
+          logger.error("handleIconChange failed", { error });
+          setFormData((prev) => ({
+            ...prev,
+            avatar: selectedProvider.avatar || "",
+          }));
+        }
+      }
+    },
+    [selectedProvider],
+  );
+
+  const handleGetApiKey = useCallback(() => {
     const apiKeyUrl = selectedProvider?.websites?.apiKey || "https://302.ai";
     window.service?.shellService.openExternal(apiKeyUrl);
-  };
+  }, [selectedProvider]);
 
-  const handleIconChange = async (iconKey: string) => {
-    setAvatar(iconKey);
+  const isCurrentFormValid = useMemo(() => {
+    if (!selectedProvider) return false;
+    return !!(formData.baseUrl?.trim() && formData.apiKey?.trim());
+  }, [selectedProvider, formData.baseUrl, formData.apiKey]);
 
-    if (selectedProvider && !isInitializing.current) {
-      try {
-        await configService.updateProvider(selectedProvider.id, {
-          avatar: iconKey,
-        });
-      } catch (error) {
-        logger.error("handleIconChange failed", { error });
-        setAvatar(selectedProvider.avatar || "");
-      }
-    }
-  };
-
-  const handleFetchModels = async () => {
+  const handleFetchModels = useCallback(async () => {
     if (!selectedProvider) return;
 
     setIsFetchingModels(true);
@@ -196,11 +176,11 @@ export function ProviderModel() {
     try {
       const currentProvider = {
         ...selectedProvider,
-        name: name.trim(),
-        baseUrl: baseUrl.trim(),
-        apiKey: apiKey.trim(),
+        ...formData,
+        name: formData.name.trim(),
+        baseUrl: formData.baseUrl.trim(),
+        apiKey: formData.apiKey.trim(),
         apiType: "openai",
-        avatar: avatar,
       };
 
       const { isOk, errorMsg } = await handleCheckKey(currentProvider);
@@ -211,7 +191,6 @@ export function ProviderModel() {
       }
 
       const models = await providerService.fetchModels(currentProvider);
-
       await configService.updateProviderModels(selectedProvider.id, models);
       toast.success(t("model-check-success"));
     } catch (error) {
@@ -219,9 +198,8 @@ export function ProviderModel() {
     } finally {
       setIsFetchingModels(false);
     }
-  };
+  }, [selectedProvider, formData, handleCheckKey, t]);
 
-  // 如果没有选中provider，显示提示信息
   if (!selectedProvider) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center gap-4 p-6">
@@ -238,10 +216,10 @@ export function ProviderModel() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-50px)] w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px] ">
+    <div className="flex h-[calc(100vh-50px)] w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px]">
       {/* 配置标题 */}
       <div className="flex flex-col gap-1">
-        <h2 className=" text-fg ">
+        <h2 className="text-fg">
           {t("add-provider-form.configure")} {selectedProvider.name}
         </h2>
       </div>
@@ -255,32 +233,34 @@ export function ProviderModel() {
                 <span className="font-medium text-fg text-sm">
                   {t("add-provider-form.icon")}
                 </span>
-                <IconPicker value={avatar} onChange={handleIconChange} />
+                <IconPicker
+                  value={formData.avatar}
+                  onChange={handleIconChange}
+                />
               </div>
               <div className="flex flex-1 flex-col gap-2">
                 <span className="font-medium text-fg text-sm">
                   {t("add-provider-form.name")}
                 </span>
                 <TextField
-                  value={name}
+                  value={formData.name}
                   placeholder={t("add-provider-form.name-placeholder")}
-                  // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
-                  onChange={handleNameChange}
+                  onChange={handleFieldChange("name")}
                 />
               </div>
             </div>
           )}
+
           {/* Base URL 字段 */}
           <div className="flex flex-col gap-y-2">
             <TextField
               label="Base URL"
-              value={baseUrl}
+              value={formData.baseUrl}
               placeholder={t("add-provider-form.placeholder-3")}
-              // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
-              onChange={handleBaseUrlChange}
+              onChange={handleFieldChange("baseUrl")}
             />
             <span className="text-muted-fg text-xs">
-              {`${t("add-provider-form.api-forward")}：${baseUrl ?? ""}/chat/completions`}
+              {`${t("add-provider-form.api-forward")}：${formData.baseUrl || ""}/chat/completions`}
             </span>
           </div>
 
@@ -290,10 +270,9 @@ export function ProviderModel() {
               label="API Key"
               type="password"
               isRevealable
-              value={apiKey}
+              value={formData.apiKey}
               placeholder={t("add-provider-form.placeholder-2")}
-              // className="[&_[role=group]]:!bg-muted [&_[role=group]]:!rounded-xl [&_[role=group]]:!border-none [&_[role=group]]:!shadow-none [&_[role=group]]:focus-within:!ring-1 [&_[role=group]]:focus-within:!ring-primary w-full"
-              onChange={handleApiKeyChange}
+              onChange={handleFieldChange("apiKey")}
             />
 
             {!selectedProvider.custom && (
@@ -312,8 +291,8 @@ export function ProviderModel() {
               <Select
                 label={t("add-provider-form.interface-type")}
                 placeholder={t("add-provider-form.interface-type-placeholder")}
-                selectedKey={apiType || "openai"}
-                onSelectionChange={handleApiTypeChange}
+                selectedKey={formData.apiType || "openai"}
+                onSelectionChange={handleFieldChange("apiType")}
               >
                 <SelectTrigger />
                 <SelectList placement="bottom start">
@@ -332,9 +311,11 @@ export function ProviderModel() {
             </div>
           )}
         </div>
+
         <ModelList
           onFetchModels={handleFetchModels}
           isFetchingModels={isFetchingModels}
+          isFormValid={isCurrentFormValid}
         />
       </div>
     </div>

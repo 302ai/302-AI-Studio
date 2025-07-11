@@ -1,11 +1,11 @@
+import Discord from "@renderer/assets/icons/discord.svg?url";
+import Github from "@renderer/assets/icons/github.svg?url";
+import Twitter from "@renderer/assets/icons/twitter.svg?url";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Link } from "@renderer/components/ui/link";
 import { Separator } from "@renderer/components/ui/separator";
 import { useTranslation } from "react-i18next";
 import packageJson from "../../../../../package.json";
-import Discord from "../../../../../src/resources/public/Discord.svg";
-import Github from "../../../../../src/resources/public/Github.svg";
-import Twitter from "../../../../../src/resources/public/twitter.svg";
 
 const socialMedia = [
   {
