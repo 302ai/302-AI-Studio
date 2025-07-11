@@ -29,6 +29,15 @@ export class SettingsService {
     });
   }
 
+  async _setSearchService(searchService: SearchService) {
+    try {
+      await this.settingsDbService.setSearchService(searchService);
+    } catch (error) {
+      logger.error("SettingsService:setSearchService error", { error });
+      throw error;
+    }
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setEnableWebSearch(_event: Electron.IpcMainEvent, enable: boolean) {
     try {
@@ -95,6 +104,33 @@ export class SettingsService {
       await this.settingsDbService.setSelectedModelId("");
     } catch (error) {
       logger.error("SettingsService:resetSelectedModelId error", { error });
+      throw error;
+    }
+  }
+
+  async getLanguage(): Promise<"zh" | "en" | "ja"> {
+    try {
+      return await this.settingsDbService.getLanguage();
+    } catch (error) {
+      logger.error("SettingsService:getLanguage error", { error });
+      return "zh";
+    }
+  }
+
+  async setLanguage(language: "zh" | "en" | "ja"): Promise<void> {
+    try {
+      await this.settingsDbService.setLanguage(language);
+    } catch (error) {
+      logger.error("SettingsService:setLanguage error", { error });
+      throw error;
+    }
+  }
+
+  async setTheme(theme: "light" | "dark" | "system"): Promise<void> {
+    try {
+      await this.settingsDbService.setTheme(theme);
+    } catch (error) {
+      logger.error("SettingsService:setTheme error", { error });
       throw error;
     }
   }

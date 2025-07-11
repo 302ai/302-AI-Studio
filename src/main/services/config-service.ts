@@ -19,8 +19,8 @@ import {
   ServiceRegister,
 } from "../shared/reflect";
 import type { ConfigDbService } from "./db-service/config-db-service";
-import type { SettingsDbService } from "./db-service/settings-db-service";
 import { EventNames, sendToMain } from "./event-service";
+import type { SettingsService } from "./settings-service";
 
 export interface ModelSettingData {
   modelProviders: ModelProvider[];
@@ -33,14 +33,14 @@ export interface ModelSettingData {
 export class ConfigService {
   constructor(
     @inject(TYPES.ConfigDbService) private configDbService: ConfigDbService,
-    @inject(TYPES.SettingsDbService)
-    private settingsDbService: SettingsDbService,
+    @inject(TYPES.SettingsService)
+    private settingsService: SettingsService,
   ) {}
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getAppLanguage(_event: Electron.IpcMainEvent): Promise<Language> {
     try {
-      return this.settingsDbService.getLanguage();
+      return this.settingsService.getLanguage();
     } catch (error) {
       logger.error("ConfigService:getAppLanguage error", { error });
       throw error;
@@ -50,7 +50,7 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setAppLanguage(_event: Electron.IpcMainEvent, language: Language) {
     try {
-      return this.settingsDbService.setLanguage(language);
+      return this.settingsService.setLanguage(language);
     } catch (error) {
       logger.error("ConfigService:setAppLanguage error", { error });
       throw error;
@@ -60,7 +60,7 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setAppTheme(_event: Electron.IpcMainEvent, theme: Theme) {
     try {
-      await this.settingsDbService.setTheme(theme);
+      await this.settingsService.setTheme(theme);
       nativeTheme.themeSource = theme;
       sendToMain(EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE, null);
     } catch (error) {
@@ -176,7 +176,7 @@ export class ConfigService {
     searchService: SearchService,
   ) {
     try {
-      await this.settingsDbService.setSearchService(searchService);
+      await this.settingsService._setSearchService(searchService);
     } catch (error) {
       logger.error("ConfigService:setSearchService error", { error });
       throw error;
