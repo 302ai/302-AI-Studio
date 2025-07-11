@@ -20,7 +20,10 @@ import { toast } from "sonner";
 
 const { configService, providerService } = window.service;
 
-const API_TYPE_OPTIONS = [{ key: "openai", label: "OpenAI" }];
+const API_TYPE_OPTIONS = [
+  { key: "openai", label: "OpenAI" },
+  // { key: "302ai", label: "302.AI" },
+];
 
 export function ProviderModel() {
   const { selectedProvider } = useActiveProvider();
@@ -43,17 +46,34 @@ export function ProviderModel() {
     isInitializing.current = true;
 
     if (selectedProvider) {
+      setIsFetchingModels(false);
       setName(selectedProvider.name || "");
       setBaseUrl(selectedProvider.baseUrl || "");
       setApiKey(selectedProvider.apiKey || "");
       setApiType(selectedProvider.apiType || "openai");
       setAvatar(selectedProvider.avatar || "");
+
+      latestValues.current = {
+        name: selectedProvider.name || "",
+        baseUrl: selectedProvider.baseUrl || "",
+        apiKey: selectedProvider.apiKey || "",
+        apiType: selectedProvider.apiType || "openai",
+      };
     } else {
       setName("");
       setBaseUrl("");
       setApiKey("");
-      setApiType("openai"); // 默认设置为openai
+      setApiType("openai");
       setAvatar("");
+      setIsSaving(false);
+      setIsFetchingModels(false);
+
+      latestValues.current = {
+        name: "",
+        baseUrl: "",
+        apiKey: "",
+        apiType: "openai",
+      };
     }
 
     setTimeout(() => {
@@ -88,27 +108,63 @@ export function ProviderModel() {
       debouncedSave.cancel();
     };
   }, [debouncedSave]);
+  const latestValues = useRef({
+    name: "",
+    baseUrl: "",
+    apiKey: "",
+    apiType: "openai",
+  });
+
+  const debouncedSaveAll = useMemo(
+    () =>
+      debounce(() => {
+        const updates: UpdateProviderData = {};
+        const current = latestValues.current;
+
+        if (current.name !== undefined && selectedProvider?.custom) {
+          updates.name = current.name.trim();
+        }
+        if (current.baseUrl !== undefined)
+          updates.baseUrl = current.baseUrl.trim();
+        if (current.apiKey !== undefined)
+          updates.apiKey = current.apiKey.trim();
+        if (current.apiType !== undefined) updates.apiType = current.apiType;
+
+        saveProvider(updates);
+      }, 500),
+    [saveProvider, selectedProvider],
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedSaveAll.cancel();
+    };
+  }, [debouncedSaveAll]);
 
   const handleNameChange = (value: string) => {
     setName(value);
-    debouncedSave({ name: value.trim() });
+    latestValues.current.name = value;
+    debouncedSaveAll();
   };
 
   const handleBaseUrlChange = (value: string) => {
     setBaseUrl(value);
-    debouncedSave({ baseUrl: value.trim() });
+    latestValues.current.baseUrl = value;
+    debouncedSaveAll();
   };
 
   const handleApiKeyChange = (value: string) => {
     setApiKey(value);
-    debouncedSave({ apiKey: value.trim() });
+    latestValues.current.apiKey = value;
+    debouncedSaveAll();
   };
 
   const handleApiTypeChange = (key: Key | null) => {
     const value = key as string;
     if (value) {
       setApiType(value);
-      debouncedSave({ apiType: value });
+      latestValues.current.apiType = value;
+      debouncedSaveAll();
     }
   };
 
