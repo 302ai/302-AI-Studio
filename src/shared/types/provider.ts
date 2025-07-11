@@ -7,6 +7,7 @@ export interface ModelProvider {
   baseUrl: string;
   enabled: boolean;
   custom: boolean;
+  status: "success" | "pending" | "error";
   websites?: {
     official: string;
     apiKey: string;

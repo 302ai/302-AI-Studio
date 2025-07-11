@@ -11,6 +11,10 @@ export const providersSchema = {
     enabled: S.Boolean({ default: true }),
     custom: S.Boolean({ default: false }),
     order: S.Number({ default: 0 }),
+    status: S.String({
+      enum: ["success", "pending", "error"],
+      default: "pending",
+    }),
     websites: S.Optional(
       S.Record({
         official: S.String(),
