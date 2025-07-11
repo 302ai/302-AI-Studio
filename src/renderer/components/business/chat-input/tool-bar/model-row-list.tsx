@@ -42,7 +42,7 @@ export const ModelRowList = memo(function ModelRowList({
   }
 
   const isSelected = selectedModelId === item.model.id;
-  console.log("item.model", item.model);
+
   return (
     <div
       style={style}

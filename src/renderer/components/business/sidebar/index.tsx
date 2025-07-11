@@ -95,7 +95,10 @@ export function AppSidebar(props: AppSidebarProps) {
                           isCurrent={id === activeThreadId}
                           onClick={() => handleClickThread(id)}
                         >
-                          <ThreadMenu thread={thread} />
+                          <ThreadMenu
+                            thread={thread}
+                            activeThreadId={activeThreadId ?? ""}
+                          />
                         </SidebarItem>
                       );
                     })}

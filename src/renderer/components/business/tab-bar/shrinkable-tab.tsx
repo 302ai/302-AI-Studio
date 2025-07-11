@@ -7,7 +7,7 @@ interface ShrinkableTabProps {
   isActive: boolean;
   width: number;
   type: "thread" | "setting";
-  status: "pending" | "success" | "error" | "stop";
+  streaming: boolean;
   handleTabClose: () => void;
 }
 
@@ -16,7 +16,7 @@ export function ShrinkableTab({
   isActive,
   width,
   type,
-  status,
+  streaming,
   handleTabClose,
 }: ShrinkableTabProps) {
   // * The three different compression states for the tab
@@ -24,13 +24,11 @@ export function ShrinkableTab({
   const isShrinkedTwo = width <= 80;
   const isShrinkedThree = width <= 50;
 
-  const isStreaming = status === "pending";
-
   if (isShrinkedThree) {
     return !isActive ? (
       type === "setting" ? (
         <Settings2 className="h-4 w-4 flex-shrink-0" />
-      ) : isStreaming ? (
+      ) : streaming ? (
         <LdrsLoader type="line-spinner" size={16} stroke={1} />
       ) : (
         <span className="flex-1 truncate text-xs">{title}</span>
@@ -70,9 +68,7 @@ export function ShrinkableTab({
         </>
       ) : (
         <div className="flex flex-row items-center justify-start gap-x-2 overflow-hidden">
-          {isStreaming && (
-            <LdrsLoader type="line-spinner" size={16} stroke={1} />
-          )}
+          {streaming && <LdrsLoader type="line-spinner" size={16} stroke={1} />}
           <span
             className={cn(
               "truncate text-xs",

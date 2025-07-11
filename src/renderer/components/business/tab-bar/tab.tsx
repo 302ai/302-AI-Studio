@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore semantic elements */
 import { Draggable } from "@hello-pangea/dnd";
+import { triplitClient } from "@renderer/client";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -8,10 +9,9 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
-import { EventNames, emitter } from "@renderer/services/event-service";
+import { useQueryOne } from "@triplit/react";
 import { CopyX, X } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ShrinkableTab } from "./shrinkable-tab";
 
@@ -43,24 +43,20 @@ export function Tab({
     index,
   });
 
-  const [status, setStatus] = useState<
-    "pending" | "success" | "error" | "stop"
-  >("success");
+  const threadStatusQuery = triplitClient
+    .query("threads")
+    .Id(threadId)
+    .Include("messages");
+  const { result: thread } = useQueryOne(triplitClient, threadStatusQuery);
+
+  const latestAssistantMessage = thread?.messages
+    .filter((message) => message.role === "assistant")
+    .sort((a, b) => b.orderSeq - a.orderSeq)[0];
+
+  const isStreaming = latestAssistantMessage?.status === "pending";
 
   // * The three different compression states for the tab
   const isShrinkedThree = width <= 50;
-
-  useEffect(() => {
-    const unsub = emitter.on(EventNames.THREAD_STATUS_UPDATE, (event) => {
-      if (event.threadId === threadId) {
-        setStatus(event.status);
-      }
-    });
-
-    return () => {
-      unsub();
-    };
-  }, [threadId]);
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -117,7 +113,7 @@ export function Tab({
                   width={width}
                   type={type}
                   handleTabClose={handleTabClose}
-                  status={status}
+                  streaming={isStreaming}
                 />
               </div>
             </ContextMenuTrigger>

@@ -1,4 +1,3 @@
-import { EventNames, emitter } from "@renderer/services/event-service";
 import { parseAndUpdateAttachments } from "@renderer/utils/parse-file";
 import logger from "@shared/logger/renderer-logger";
 import type { Message } from "@shared/triplit/types";
@@ -59,11 +58,6 @@ export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
         userMessageId?: string;
       },
     ) => {
-      emitter.emit(EventNames.THREAD_STATUS_UPDATE, {
-        threadId: data.threadId,
-        status: data.status,
-      });
-
       try {
         if (data.threadId !== activeThreadId) return;
 

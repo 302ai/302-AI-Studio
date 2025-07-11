@@ -12,6 +12,7 @@ import {
   useThreadMenu,
 } from "@renderer/hooks/use-thread-menu";
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
+import { cn } from "@renderer/lib/utils";
 import type { Thread } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import {
@@ -28,11 +29,12 @@ import { ModalAction } from "../modal-action";
 
 interface ThreadMenuProps {
   thread: Thread;
+  activeThreadId: string;
 }
 const { messageService, providerService, threadService, tabService } =
   window.service;
 
-export function ThreadMenu({ thread }: ThreadMenuProps) {
+export function ThreadMenu({ thread, activeThreadId }: ThreadMenuProps) {
   const { t } = useTranslation();
   const providersQuery = triplitClient.query("providers");
   const { results: providers } = useQuery(triplitClient, providersQuery);
@@ -151,18 +153,23 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
     <>
       <ContextMenu>
         <ContextMenuTrigger
-          className="w-full cursor-pointer py-1.5 text-left"
+          className="relative w-full cursor-pointer truncate py-1.5 pr-7 text-left"
           title={thread.title}
         >
-          <div className="flex flex-row items-center justify-between gap-x-2">
-            <span className="truncate ">{thread.title}</span>
-            <ActionGroup
-              actionClassName="size-6"
-              onStar={handleCollectThread}
-              stared={thread.collected}
-            />
-          </div>
+          {thread.title}
         </ContextMenuTrigger>
+
+        <ActionGroup
+          actionClassName={cn(
+            "absolute right-3 size-6",
+            activeThreadId === thread.id
+              ? "hover:bg-accent-hover"
+              : "hover:bg-hover-2",
+          )}
+          onStar={handleCollectThread}
+          stared={thread.collected}
+        />
+
         <ContextMenuContent aria-label={`Thread options for ${thread.title}`}>
           <ContextMenuItem onAction={() => setState("rename")}>
             <Pencil className="mr-2 h-4 w-4" />
