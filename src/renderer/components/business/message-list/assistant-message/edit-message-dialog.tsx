@@ -8,11 +8,11 @@ import {
   ModalTitle,
 } from "@renderer/components/ui/modal";
 import { Textarea } from "@renderer/components/ui/textarea";
+import logger from "@shared/logger/renderer-logger";
 import type { Message } from "@shared/triplit/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import logger from "@shared/logger/renderer-logger";
 
 interface EditMessageDialogProps {
   message: Message;

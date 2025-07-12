@@ -342,7 +342,7 @@
       "save-success": "Message updated successfully",
       "save-error": "Failed to update message"
     },
-    "generate-failed": "Generate failed",
+    "generate-failed": "Generation failed, please try again...",
     "delete-success": "Message deleted successfully",
     "delete-error": "Failed to delete message",
     "context-menu": {

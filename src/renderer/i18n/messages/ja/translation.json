@@ -343,7 +343,7 @@
       "save-success": "メッセージが正常に更新されました",
       "save-error": "メッセージの更新に失敗しました"
     },
-    "generate-failed": "生成に失敗しました",
+    "generate-failed": "世代が失敗しました、もう一度やり直してください...",
     "delete-success": "メッセージが正常に削除されました",
     "delete-error": "メッセージの削除に失敗しました",
     "context-menu": {

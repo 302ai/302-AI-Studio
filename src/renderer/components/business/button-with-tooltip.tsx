@@ -1,32 +1,50 @@
-import { Button, type ButtonProps } from "@renderer/components/ui/button";
-import { Tooltip, TooltipContent } from "@renderer/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@renderer/components/ui/tooltip";
+import { cn } from "@renderer/lib/utils";
+import type { ButtonProps } from "../ui/button";
 
 interface ButtonWithTooltipProps extends ButtonProps {
+  className?: string;
   title: string;
   tooltipPlacement?: "top" | "bottom" | "left" | "right";
   tooltipDelay?: number;
   showArrow?: boolean;
+  children: React.ReactNode;
 }
 
-const ButtonWithTooltip = ({
+export function ButtonWithTooltip({
+  className,
   title,
-  tooltipPlacement = "top",
-  tooltipDelay = 10,
-  showArrow = false,
+  tooltipPlacement,
+  tooltipDelay,
+  showArrow,
+  children,
   ...buttonProps
-}: ButtonWithTooltipProps) => {
+}: ButtonWithTooltipProps) {
+  const {
+    intent = "plain",
+    size = "square-petite",
+    shape = "square",
+    ...rest
+  } = buttonProps;
+
   return (
     <Tooltip delay={tooltipDelay}>
-      <Button {...buttonProps} />
-      <TooltipContent
-        placement={tooltipPlacement}
-        showArrow={showArrow}
+      <TooltipTrigger
+        className={cn("size-8", className)}
+        intent={intent}
+        shape={shape}
+        size={size}
+        {...rest}
       >
+        {children}
+      </TooltipTrigger>
+      <TooltipContent placement={tooltipPlacement} showArrow={showArrow}>
         {title}
       </TooltipContent>
     </Tooltip>
   );
-};
-
-export type { ButtonWithTooltipProps };
-export { ButtonWithTooltip };
+}

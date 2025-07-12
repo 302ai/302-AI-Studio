@@ -331,7 +331,7 @@
       "save-success": "消息更新成功",
       "save-error": "消息更新失败"
     },
-    "generate-failed": "生成失败",
+    "generate-failed": "生成失败，请重新尝试...",
     "delete-success": "消息删除成功",
     "delete-error": "消息删除失败",
     "context-menu": {

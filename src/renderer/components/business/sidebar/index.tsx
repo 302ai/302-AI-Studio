@@ -13,7 +13,6 @@ import {
   useSidebar,
 } from "@renderer/components/ui/sidebar";
 import { useThread } from "@renderer/hooks/use-thread";
-import { cn } from "@renderer/lib/utils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SearchButton } from "./search-button";
@@ -113,14 +112,7 @@ export function AppSidebar(props: AppSidebarProps) {
           </SidebarFooter>
         </Sidebar>
 
-        <SidebarInset
-          className={cn(
-            "min-h-full",
-            state === "expanded" && "max-w-[calc(100vw-var(--sidebar-width))]",
-          )}
-        >
-          {props.children}
-        </SidebarInset>
+        <SidebarInset>{props.children}</SidebarInset>
       </div>
 
       <ThreadSearcher

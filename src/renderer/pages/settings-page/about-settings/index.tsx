@@ -70,17 +70,16 @@ export function AboutSettings() {
             </span>
           </div>
         </div>
-        <div className="flex flex-col text-center">
-          <p className="mx-auto line-clamp-2 max-w-xl text-muted-fg text-sm leading-relaxed">
-            {t("description.content")}
-            <Link
-              onClick={() => handleLinkClick(homepage)}
-              className=" inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
-            >
-              {homepage}
-            </Link>
-          </p>
-        </div>
+
+        <p className="mx-auto line-clamp-2 max-w-xl text-center text-muted-fg text-sm leading-relaxed">
+          {t("description.content")}
+          <Link
+            onClick={() => handleLinkClick(homepage)}
+            className=" inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
+          >
+            {homepage}
+          </Link>
+        </p>
       </div>
 
       <div className="flex items-center gap-4">

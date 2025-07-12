@@ -139,7 +139,7 @@ export class TriplitService {
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
     const defaultDatabaseFile = path.join(
       defaultDatabaseDir,
-      "db-25.28.1.sqlite",
+      "db-25.28.5.sqlite",
     );
 
     logger.info("Default database file:", { defaultDatabaseFile });

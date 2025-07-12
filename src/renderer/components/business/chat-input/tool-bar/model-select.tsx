@@ -1,11 +1,10 @@
-/** biome-ignore-all lint/a11y/useKeyWithClickEvents: ignore */
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: ignore */
 import { IconChevronLgDown } from "@intentui/icons";
 import { triplitClient } from "@renderer/client";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
 import { SearchField } from "@renderer/components/ui/search-field";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
+import { cn } from "@renderer/lib/utils";
 import logger from "@shared/logger/renderer-logger";
 import type { Model, Provider, Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
@@ -253,21 +252,21 @@ export const ModelSelect = ({
   }, [selectedModelId, groupedModels]);
 
   return (
-    <div className="relative flex w-fit min-w-[130px] justify-end">
+    <div className="relative flex h-full w-fit min-w-[130px] justify-end">
       {hasNoProviders ? (
         <Button
-          className="group hover:!bg-transparent flex cursor-pointer items-center transition-colors"
+          className="group flex items-center hover:bg-transparent"
           onClick={handleOpenModelSettings}
           intent="plain"
         >
-          <span className="truncate text-[#494454] text-sm underline dark:text-[#FFFFFF]">
+          <span className="truncate text-muted-fg text-sm underline">
             {t("model-select")}
           </span>
         </Button>
       ) : (
         <Button
           ref={triggerRef}
-          className="group flex items-center gap-2 px-1 [--btn-overlay:theme(--color-hover-transparent)]"
+          className="group flex h-9 items-center gap-2 pressed:bg-transparent px-1 hover:bg-transparent"
           onClick={handleToggleOpen}
           intent="plain"
         >
@@ -284,9 +283,7 @@ export const ModelSelect = ({
             </span>
           )}
           <IconChevronLgDown
-            className={`size-4 shrink-0 transition-transform ${
-              isOpen ? "rotate-180" : ""
-            }`}
+            className={cn("size-4", isOpen ? "" : "rotate-180")}
           />
         </Button>
       )}
@@ -332,7 +329,17 @@ export const ModelSelect = ({
 
       {/* Click outside to close */}
       {isOpen && !hasNoProviders && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setIsOpen(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+        />
       )}
     </div>
   );

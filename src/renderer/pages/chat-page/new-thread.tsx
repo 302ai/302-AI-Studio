@@ -21,7 +21,7 @@ export function NewThread() {
           duration: 0.3,
           ease: "easeInOut",
         }}
-        className="w-full max-w-[800px]"
+        className="mx-auto w-full max-w-[720px]"
       >
         <ChatInput />
       </motion.div>

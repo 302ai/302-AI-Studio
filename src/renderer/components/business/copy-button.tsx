@@ -6,9 +6,19 @@ import { ButtonWithTooltip } from "./button-with-tooltip";
 
 interface CopyButtonProps {
   content: string;
+  tooltipPlacement?: "top" | "bottom" | "left" | "right";
+  tooltipDelay?: number;
+  showArrow?: boolean;
+  className?: string;
 }
 
-export function CopyButton({ content }: CopyButtonProps) {
+export function CopyButton({
+  content,
+  className,
+  tooltipPlacement,
+  tooltipDelay,
+  showArrow,
+}: CopyButtonProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "common",
   });
@@ -19,9 +29,11 @@ export function CopyButton({ content }: CopyButtonProps) {
   return (
     <ButtonWithTooltip
       type="button"
-      intent="secondary"
-      shape="square"
-      className="relative size-8"
+      intent="plain"
+      tooltipPlacement={tooltipPlacement}
+      tooltipDelay={tooltipDelay}
+      showArrow={showArrow}
+      className={cn("relative size-8", className)}
       onClick={handleCopy}
       title={t("copy-to-clipboard")}
     >

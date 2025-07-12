@@ -1,5 +1,6 @@
 import { triplitClient } from "@renderer/client";
 import type { AttachmentFile } from "@renderer/hooks/use-attachments";
+import logger from "@shared/logger/renderer-logger";
 import type {
   CreateThreadData,
   Model,
@@ -10,7 +11,6 @@ import { useQuery, useQueryOne } from "@triplit/react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import logger from "@shared/logger/renderer-logger";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
 
@@ -221,6 +221,9 @@ export function useToolBar() {
             orderSeq: messageToEdit.orderSeq,
             tokenCount: content.length,
             status: "success",
+            modelId: selectedModelId,
+            modelName: selectedModel.name,
+            providerId: provider.id,
           });
 
           if (attachments && attachments.length > 0) {
@@ -278,6 +281,9 @@ export function useToolBar() {
         orderSeq: nextOrderSeq,
         tokenCount: content.length,
         status: "success",
+        modelId: selectedModelId,
+        modelName: selectedModel.name,
+        providerId: provider.id,
       });
 
       if (attachments && attachments.length > 0) {

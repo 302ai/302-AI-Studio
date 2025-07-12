@@ -249,8 +249,8 @@
     --sidebar-width: 280px;
     --sidebar-width-dock: 95px;
     --sidebar-width-collapsed: 95px;
-    --setting-tab-list-width: 148px;
-    --chat-input-toolbar-height: 40px;
+    --setting-tab-list-width: 170px;
+    --chat-input-toolbar-height: 36px;
   }
 
   html {
