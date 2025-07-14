@@ -1,6 +1,5 @@
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { TextField } from "@renderer/components/ui/text-field";
-import { Textarea } from "@renderer/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 
 export interface ModelFormData {
@@ -21,7 +20,11 @@ interface ModelFormProps {
   };
 }
 
-export function ModelForm({ data, onChange, validationErrors = {} }: ModelFormProps) {
+export function ModelForm({
+  data,
+  onChange,
+  validationErrors = {},
+}: ModelFormProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.add-model-modal",
   });
@@ -34,7 +37,9 @@ export function ModelForm({ data, onChange, validationErrors = {} }: ModelFormPr
     onChange({ ...data, description });
   };
 
-  const handleCapabilityChange = (capability: keyof typeof data.capabilities) => {
+  const handleCapabilityChange = (
+    capability: keyof typeof data.capabilities,
+  ) => {
     onChange({
       ...data,
       capabilities: {
@@ -56,7 +61,7 @@ export function ModelForm({ data, onChange, validationErrors = {} }: ModelFormPr
         isRequired
       />
 
-      <Textarea
+      <TextField
         label={t("description.label")}
         placeholder={t("description.placeholder")}
         description={t("description.description")}
