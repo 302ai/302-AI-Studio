@@ -28,7 +28,6 @@ import React, {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
-import { ActionGroup } from "../action-group";
 import { Fetching } from "../fetching";
 import { ModalAction as ModalActionComponent } from "../modal-action";
 import { AddProvider } from "./add-provider";
@@ -77,12 +76,13 @@ const ListRow = React.memo(function ListRow({
           provider={provider}
           isSelected={selectedProvider?.id === provider.id}
           modelCount={modelCounts[provider.id] || 0}
-          actionGroup={
-            provider.custom ? (
-              <ActionGroup onEdit={undefined} onDelete={handleDelete} />
-            ) : null
-          }
+          // actionGroup={
+          //   provider.custom ? (
+          //     <ActionGroup onEdit={undefined} onDelete={handleDelete} />
+          //   ) : null
+          // }
           onClick={handleProviderSelect}
+          onDelete={handleDelete}
         />
       )}
     </Draggable>
@@ -426,9 +426,9 @@ export function ProviderList() {
                       isSelected={selectedProvider?.id === provider.id}
                       provider={provider}
                       modelCount={modelCounts[provider.id] || 0}
-                      actionGroup={
-                        <ActionGroup onEdit={() => {}} onDelete={() => {}} />
-                      }
+                      // actionGroup={
+                      //   <ActionGroup onEdit={() => {}} onDelete={() => {}} />
+                      // }
                     />
                   );
                 }}
