@@ -60,14 +60,17 @@
         "label": "语言"
       },
       "name": "通用",
-      "search-provider": {
-        "label": "搜索提供商"
-      },
       "theme": {
         "dark": "深色",
         "label": "主题",
         "light": "浅色",
         "system": "系统"
+      },
+      "version-update": {
+        "label": "版本更新"
+      },
+      "switch": {
+        "label": "自动更新"
       }
     },
     "icon-tooltip": "打开设置",

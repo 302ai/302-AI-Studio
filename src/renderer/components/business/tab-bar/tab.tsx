@@ -1,12 +1,7 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore semantic elements */
 import { Draggable } from "@hello-pangea/dnd";
 import { triplitClient } from "@renderer/client";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@renderer/components/ui/context-menu";
+import { ContextMenu } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
 import { useQueryOne } from "@triplit/react";
@@ -69,7 +64,7 @@ export function Tab({
             transition={{ duration: 0.5 }}
             className="h-[74%]"
           >
-            <ContextMenuTrigger className="size-full">
+            <ContextMenu.Trigger className="size-full">
               <div
                 ref={(node) => {
                   ref.current = node;
@@ -116,18 +111,18 @@ export function Tab({
                   streaming={isStreaming}
                 />
               </div>
-            </ContextMenuTrigger>
+            </ContextMenu.Trigger>
           </motion.div>
-          <ContextMenuContent aria-label={`Tab options for ${title}`}>
-            <ContextMenuItem onAction={handleTabClose}>
+          <ContextMenu.Content aria-label={`Tab options for ${title}`}>
+            <ContextMenu.Item onAction={handleTabClose}>
               <X className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close")}
-            </ContextMenuItem>
-            <ContextMenuItem onAction={handleTabCloseAll}>
+            </ContextMenu.Item>
+            <ContextMenu.Item onAction={handleTabCloseAll}>
               <CopyX className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close-all")}
-            </ContextMenuItem>
-          </ContextMenuContent>
+            </ContextMenu.Item>
+          </ContextMenu.Content>
         </ContextMenu>
       )}
     </Draggable>

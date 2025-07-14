@@ -1,8 +1,5 @@
-import {
-  ContextMenuItem,
-  ContextMenuSeparator,
-} from "@renderer/components/ui/context-menu";
-import { MenuContent } from "@renderer/components/ui/menu";
+import { ContextMenu } from "@renderer/components/ui/context-menu";
+import { Menu } from "@renderer/components/ui/menu";
 import { useTranslation } from "react-i18next";
 
 interface MessageContextMenuAction {
@@ -37,43 +34,45 @@ export function MessageContextMenu({
   const { t } = useTranslation("translation", { keyPrefix: "message" });
 
   return (
-    <MenuContent
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      triggerRef={containerRef}
-      shouldFlip={false}
+    <Menu.Content
+      popover={{
+        isOpen,
+        onOpenChange,
+        triggerRef: containerRef,
+        shouldFlip: false,
+        offset:
+          position.y -
+          (containerRef.current?.getBoundingClientRect().bottom || 0),
+        crossOffset:
+          position.x -
+          (containerRef.current?.getBoundingClientRect().left || 0),
+      }}
       placement="bottom left"
-      offset={
-        position.y - (containerRef.current?.getBoundingClientRect().bottom || 0)
-      }
-      crossOffset={
-        position.x - (containerRef.current?.getBoundingClientRect().left || 0)
-      }
       onClose={() => onOpenChange(false)}
       aria-label="Message options"
     >
-      <ContextMenuItem onAction={onCopy}>{t("copy")}</ContextMenuItem>
+      <ContextMenu.Item onAction={onCopy}>{t("copy")}</ContextMenu.Item>
       {hasSelectedText && (
-        <ContextMenuItem onAction={onCopySelected}>
+        <ContextMenu.Item onAction={onCopySelected}>
           {t("context-menu.copy-selected")}
-        </ContextMenuItem>
+        </ContextMenu.Item>
       )}
 
-      <ContextMenuSeparator />
+      <ContextMenu.Separator />
 
       {actions.map((action) => {
         if (action.condition === false) return null;
 
         return (
-          <ContextMenuItem
+          <ContextMenu.Item
             key={action.key}
             onAction={action.onAction}
             isDanger={action.isDanger}
           >
             {action.label}
-          </ContextMenuItem>
+          </ContextMenu.Item>
         );
       })}
-    </MenuContent>
+    </Menu.Content>
   );
 }

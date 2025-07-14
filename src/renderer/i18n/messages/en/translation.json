@@ -64,6 +64,12 @@
         "label": "Theme",
         "light": "Light",
         "system": "System"
+      },
+      "version-update": {
+        "label": "Version Update"
+      },
+      "switch": {
+        "label": "Automatic Update"
       }
     },
     "icon-tooltip": "Open Settings",

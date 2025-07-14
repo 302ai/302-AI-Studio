@@ -1,11 +1,8 @@
 import { triplitClient } from "@renderer/client";
-import {
-  Select,
-  SelectList,
-  SelectOption,
-  SelectTrigger,
-} from "@renderer/components/ui/select";
+import { Label } from "@renderer/components/ui/field";
+import { Select } from "@renderer/components/ui/select";
 import langs from "@renderer/i18n/langs";
+import { cn } from "@renderer/lib/utils";
 import type { Language } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
 import type { Key } from "react-aria-components";
@@ -30,19 +27,24 @@ export function LanguageSelector() {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div>{t("settings.general-settings.language.label")}</div>
+    <div className="mx-auto flex flex-col gap-2">
+      <Label className="text-label-fg">
+        {t("settings.general-settings.language.label")}
+      </Label>
       <Select
-        className="w-[240px]"
+        className="w-[398px]"
         selectedKey={currentLang.key}
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
       >
-        <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
-        <SelectList popoverClassName="min-w-[240px]" items={langs}>
+        <Select.Trigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
+        <Select.List popover={{ className: "min-w-[398px]" }} items={langs}>
           {({ key, prefix, nativeName }) => (
-            <SelectOption
-              className="flex cursor-pointer justify-between"
+            <Select.Option
+              className={cn(
+                "flex cursor-pointer justify-between",
+                "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+              )}
               key={key}
               id={key}
               textValue={nativeName}
@@ -51,9 +53,9 @@ export function LanguageSelector() {
                 <span className="text-base">{prefix}</span>
                 <span>{nativeName}</span>
               </span>
-            </SelectOption>
+            </Select.Option>
           )}
-        </SelectList>
+        </Select.List>
       </Select>
     </div>
   );

@@ -1,11 +1,5 @@
 import { triplitClient } from "@renderer/client";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuTrigger,
-} from "@renderer/components/ui/context-menu";
+import { ContextMenu } from "@renderer/components/ui/context-menu";
 import { TextField } from "@renderer/components/ui/text-field";
 import {
   type MenuModelActionType,
@@ -152,12 +146,12 @@ export function ThreadMenu({ thread, activeThreadId }: ThreadMenuProps) {
   return (
     <>
       <ContextMenu>
-        <ContextMenuTrigger
+        <ContextMenu.Trigger
           className="relative w-full cursor-pointer truncate py-1.5 pr-7 text-left"
           title={thread.title}
         >
           {thread.title}
-        </ContextMenuTrigger>
+        </ContextMenu.Trigger>
 
         <ActionGroup
           actionClassName={cn(
@@ -170,12 +164,12 @@ export function ThreadMenu({ thread, activeThreadId }: ThreadMenuProps) {
           stared={thread.collected}
         />
 
-        <ContextMenuContent aria-label={`Thread options for ${thread.title}`}>
-          <ContextMenuItem onAction={() => setState("rename")}>
+        <ContextMenu.Content aria-label={`Thread options for ${thread.title}`}>
+          <ContextMenu.Item onAction={() => setState("rename")}>
             <Pencil className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.rename")}
-          </ContextMenuItem>
-          <ContextMenuItem
+          </ContextMenu.Item>
+          <ContextMenu.Item
             onAction={handleGenerateTitle}
             isDisabled={!selectedModelId || messages?.length === 0}
             className={
@@ -186,30 +180,30 @@ export function ThreadMenu({ thread, activeThreadId }: ThreadMenuProps) {
           >
             <FileText className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.generate-title")}
-          </ContextMenuItem>
-          <ContextMenuItem onAction={() => setState("clean-messages")}>
+          </ContextMenu.Item>
+          <ContextMenu.Item onAction={() => setState("clean-messages")}>
             <Eraser className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.clean-messages")}
-          </ContextMenuItem>
-          <ContextMenuItem onAction={handleCollectThread}>
+          </ContextMenu.Item>
+          <ContextMenu.Item onAction={handleCollectThread}>
             <Package className="mr-2 h-4 w-4" />
             {thread.collected
               ? t("sidebar.menu-item.uncollect-thread")
               : t("sidebar.menu-item.collect-thread")}
-          </ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem isDanger={true} onAction={() => setState("delete")}>
+          </ContextMenu.Item>
+          <ContextMenu.Separator />
+          <ContextMenu.Item isDanger={true} onAction={() => setState("delete")}>
             <Trash2 className="mr-2 h-4 w-4" />
             {t("sidebar.menu-item.delete")}
-          </ContextMenuItem>
-          <ContextMenuItem
+          </ContextMenu.Item>
+          <ContextMenu.Item
             isDanger={true}
             onAction={() => setState("delete-all")}
           >
             <FolderX className="mr-2 h-4 w-4 stroke-2" />
             {t("sidebar.menu-item.delete-all")}
-          </ContextMenuItem>
-        </ContextMenuContent>
+          </ContextMenu.Item>
+        </ContextMenu.Content>
       </ContextMenu>
 
       <ModalAction
