@@ -266,7 +266,7 @@ export const ModelSelect = ({
       ) : (
         <Button
           ref={triggerRef}
-          className="group flex h-9 items-center gap-2 pressed:bg-transparent px-1 hover:bg-transparent"
+          className="group flex h-9 max-w-[400px] items-center gap-2 pressed:bg-transparent px-1 hover:bg-transparent"
           onClick={handleToggleOpen}
           intent="plain"
         >
