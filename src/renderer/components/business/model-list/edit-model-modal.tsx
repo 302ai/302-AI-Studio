@@ -1,5 +1,4 @@
 import { Button } from "@renderer/components/ui/button";
-import { Checkbox } from "@renderer/components/ui/checkbox";
 import {
   Modal,
   ModalBody,
@@ -10,13 +9,12 @@ import {
   ModalTitle,
 } from "@renderer/components/ui/modal";
 
-import { TextField } from "@renderer/components/ui/text-field";
-import { Textarea } from "@renderer/components/ui/textarea";
 import logger from "@shared/logger/renderer-logger";
 import type { Model, UpdateModelData } from "@shared/triplit/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { ModelForm, type ModelFormData } from "./model-form";
 
 interface EditModelModalProps {
   isOpen: boolean;
@@ -36,37 +34,32 @@ export function EditModelModal({
     keyPrefix: "settings.model-settings.add-model-modal",
   });
 
-  const [modelName, setModelName] = useState("");
-  const [remark, setRemark] = useState("");
+  const [formData, setFormData] = useState<ModelFormData>({
+    name: "",
+    description: "",
+    capabilities: {
+      reasoning: false,
+      vision: false,
+      function_call: false,
+    },
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [capabilities, setCapabilities] = useState({
-    reasoning: false,
-    vision: false,
-    function_call: false,
-  });
-
-  const handleCapabilityChange = (capability: keyof typeof capabilities) => {
-    setCapabilities((prev) => ({
-      ...prev,
-      [capability]: !prev[capability],
-    }));
-  };
-
   const [validationErrors, setValidationErrors] = useState<{
-    modelName?: string;
+    name?: string;
   }>({});
 
   useEffect(() => {
     if (model && isOpen) {
-      setModelName(model.name);
-      setRemark(model.remark || "");
-
       const modelCapabilities = Array.from(model.capabilities || []);
-      setCapabilities({
-        reasoning: modelCapabilities.includes("reasoning"),
-        vision: modelCapabilities.includes("vision"),
-        function_call: modelCapabilities.includes("function_call"),
+      setFormData({
+        name: model.name,
+        description: model.remark || "",
+        capabilities: {
+          reasoning: modelCapabilities.includes("reasoning"),
+          vision: modelCapabilities.includes("vision"),
+          function_call: modelCapabilities.includes("function_call"),
+        },
       });
 
       setValidationErrors({});
@@ -80,14 +73,14 @@ export function EditModelModal({
 
     setIsSubmitting(true);
     try {
-      const capabilityArray = Object.entries(capabilities)
+      const capabilityArray = Object.entries(formData.capabilities)
         .filter(([_, enabled]) => enabled)
         .map(([capability]) => capability);
 
       const updateData: UpdateModelData = {
-        name: modelName.trim(),
+        name: formData.name.trim(),
         capabilities: new Set(capabilityArray),
-        remark: remark.trim(),
+        remark: formData.description.trim(),
       };
 
       // await triplitClient.update("models", model.id, updateData);
@@ -107,12 +100,14 @@ export function EditModelModal({
   };
 
   const resetForm = () => {
-    setModelName("");
-    setRemark("");
-    setCapabilities({
-      reasoning: false,
-      vision: false,
-      function_call: false,
+    setFormData({
+      name: "",
+      description: "",
+      capabilities: {
+        reasoning: false,
+        vision: false,
+        function_call: false,
+      },
     });
     setValidationErrors({});
   };
@@ -130,49 +125,19 @@ export function EditModelModal({
         <ModalHeader>
           <ModalTitle>{t("edit-title")}</ModalTitle>
         </ModalHeader>
-        <ModalBody className="space-y-4 px-6 py-4">
-          <TextField
-            label={t("model-id.label")}
-            placeholder={t("model-id.placeholder")}
-            description={t("model-id.description")}
-            value={modelName}
-            onChange={setModelName}
-            errorMessage={validationErrors.modelName}
-            isRequired
+        <ModalBody className="px-6 py-4">
+          <ModelForm
+            data={formData}
+            onChange={setFormData}
+            validationErrors={validationErrors}
           />
-
-          <Textarea
-            label={t("description.label")}
-            placeholder={t("description.placeholder")}
-            description={t("description.description")}
-            value={remark}
-            onChange={setRemark}
-          />
-
-          <div className="space-y-4">
-            <div className="font-medium text-sm">{t("capabilities.label")}</div>
-            <div className="flex flex-wrap gap-4">
-              <Checkbox
-                isSelected={capabilities.reasoning}
-                onChange={() => handleCapabilityChange("reasoning")}
-              >
-                {t("capabilities.reasoning")}
-              </Checkbox>
-              <Checkbox
-                isSelected={capabilities.vision}
-                onChange={() => handleCapabilityChange("vision")}
-              >
-                {t("capabilities.vision")}
-              </Checkbox>
-            </div>
-          </div>
         </ModalBody>
         <ModalFooter>
           <ModalClose>{t("actions.cancel")}</ModalClose>
           <Button
             intent="primary"
             onPress={handleSubmit}
-            isDisabled={!modelName.trim() || !model || isSubmitting}
+            isDisabled={!formData.name.trim() || !model || isSubmitting}
             isPending={isSubmitting}
           >
             {t("actions.save")}
