@@ -72,11 +72,11 @@ export function ProviderCard({
       tabIndex={0}
       aria-label={provider.name}
     >
-      <CardHeader className="flex items-center gap-3 pl-4">
+      <CardHeader className="flex min-w-0 items-center gap-3 pl-4">
         <ProviderIcon provider={provider} className="size-8 " />
         {/* <ModelIcon modelName={provider.name ?? ""} className="size-8" /> */}
-        <div className="flex flex-col gap-1 ">
-          <CardTitle className="text-card-title-text text-sm ">
+        <div className="flex min-w-0 flex-col gap-1">
+          <CardTitle className="truncate text-card-title-text text-sm">
             {provider.name}
           </CardTitle>
           <CardDescription className=" text-card-desc-text text-xs">
