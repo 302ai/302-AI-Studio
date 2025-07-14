@@ -3,7 +3,7 @@
   "name": "302AIStudio",
   "productName": "302 AI Studio",
   "description": "302 AI Studio",
-  "version": "25.28.5",
+  "version": "25.29.0",
   "main": "./node_modules/.dev/main/index.js",
   "homepage": "https://302.ai",
   "resources": "src/resources",
