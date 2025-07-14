@@ -82,32 +82,29 @@ export function ProviderModel() {
 
       setIsSaving(true);
       try {
-        await configService.updateProvider(selectedProvider.id, updates);
-        if (selectedProvider.status === "error") return;
+        if (selectedProvider.status === "error") {
+          await configService.updateProvider(selectedProvider.id, updates);
+          return;
+        }
+
+        let newStatus: "pending" | "success" = "success";
+
         if (!selectedProvider.custom) {
           if (updates.apiKey === "" || updates.baseUrl === "") {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "pending",
-            });
-          } else {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "success",
-            });
+            newStatus = "pending";
+          }
+        } else {
+          if (!updates.baseUrl) {
+            newStatus = "pending";
           }
         }
 
-        if (selectedProvider.custom) {
-          if (!updates.baseUrl) {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "pending",
-            });
-            return;
-          } else {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "success",
-            });
-          }
-        }
+        const newData = {
+          ...updates,
+          status: newStatus,
+        };
+
+        await configService.updateProvider(selectedProvider.id, newData);
       } catch (error) {
         logger.error("Failed to save provider:", { error });
       } finally {
@@ -226,10 +223,12 @@ export function ProviderModel() {
       }
 
       const models = await providerService.fetchModels(currentProvider);
-      await configService.updateProviderModels(selectedProvider.id, models);
-      await configService.updateProvider(selectedProvider.id, {
-        status: "success",
-      });
+      await Promise.all([
+        configService.updateProviderModels(selectedProvider.id, models),
+        configService.updateProvider(selectedProvider.id, {
+          status: "success",
+        }),
+      ]);
 
       toast.success(t("model-check-success"));
     } catch (error) {
