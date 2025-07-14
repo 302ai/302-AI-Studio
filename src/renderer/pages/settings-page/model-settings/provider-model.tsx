@@ -277,7 +277,7 @@ export function ProviderModel() {
     <div className="flex h-[calc(100vh-50px)] w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px]">
       {/* 配置标题 */}
       <div className="flex flex-col gap-1">
-        <h2 className="text-fg">
+        <h2 className="max-w-full whitespace-normal break-all text-fg leading-tight">
           {t("add-provider-form.configure")} {selectedProvider.name}
         </h2>
       </div>
