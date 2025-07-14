@@ -38,7 +38,7 @@ export type UpdateAttachmentData = Partial<Omit<Attachment, "id">>;
 export type Ui = Entity<Schema, "ui">;
 export type Theme = "light" | "dark" | "system";
 export type Language = "zh" | "en" | "ja";
-export type SearchService = "search1api" | "tavily" | "exa" | "bochaai";
+export type SearchServices = "search1api" | "tavily" | "exa" | "bochaai";
 
 // * Settings
 export type Settings = Entity<Schema, "settings">;

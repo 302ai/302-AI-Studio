@@ -1,9 +1,9 @@
-import { SearchProvider } from "./search-provider";
+import { SearchService } from "./search-service";
 
 export function PreferenceSettings() {
   return (
-    <div className="mx-auto flex h-full w-full flex-col gap-y-[18px] py-5">
-      <SearchProvider />
+    <div className="flex size-full flex-col gap-y-[18px] py-5">
+      <SearchService />
     </div>
   );
 }

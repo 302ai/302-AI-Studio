@@ -235,7 +235,10 @@
     },
     "text": "設定",
     "preference-settings": {
-      "name": "好み"
+      "name": "好み",
+      "search-provider": {
+        "label": "デフォルトの検索サービス"
+      }
     }
   },
   "sidebar": {

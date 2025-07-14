@@ -1,10 +1,10 @@
 import { triplitClient } from "@main/triplit/client";
-import type { SearchService, Settings } from "@shared/triplit/types";
+import type { SearchServices, Settings } from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 export interface WebSearchConfig {
   enabled: boolean;
-  service?: SearchService;
+  service?: SearchServices;
 }
 @injectable()
 export class SettingsDbService extends BaseDbService {
@@ -85,7 +85,7 @@ export class SettingsDbService extends BaseDbService {
     );
   }
 
-  async setSearchService(searchService: SearchService) {
+  async setSearchService(searchService: SearchServices) {
     if (!this.settingsRecord) return;
     await triplitClient.update(
       "settings",

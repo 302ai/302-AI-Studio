@@ -235,7 +235,10 @@
     },
     "text": "设置",
     "preference-settings": {
-      "name": "偏爱"
+      "name": "偏爱",
+      "search-provider": {
+        "label": "默认搜索服务"
+      }
     }
   },
   "sidebar": {

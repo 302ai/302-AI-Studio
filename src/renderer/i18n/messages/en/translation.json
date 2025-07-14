@@ -59,9 +59,6 @@
         "label": "Language"
       },
       "name": "General",
-      "search-provider": {
-        "label": "Search Provider"
-      },
       "theme": {
         "dark": "Dark",
         "label": "Theme",
@@ -234,7 +231,10 @@
     },
     "text": "Settings",
     "preference-settings": {
-      "name": "Preferences"
+      "name": "Preferences",
+      "search-provider": {
+        "label": "Default Search Service"
+      }
     }
   },
   "sidebar": {

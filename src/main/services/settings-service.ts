@@ -5,7 +5,7 @@ import {
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
 import logger from "@shared/logger/main-logger";
-import type { SearchService } from "@shared/triplit/types";
+import type { SearchServices } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type {
   SettingsDbService,
@@ -29,7 +29,7 @@ export class SettingsService {
     });
   }
 
-  async _setSearchService(searchService: SearchService) {
+  async _setSearchService(searchService: SearchServices) {
     try {
       await this.settingsDbService.setSearchService(searchService);
     } catch (error) {
@@ -61,7 +61,7 @@ export class SettingsService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setSearchService(
     _event: Electron.IpcMainEvent,
-    searchService: SearchService,
+    searchService: SearchServices,
   ) {
     try {
       await this.settingsDbService.setSearchService(searchService);

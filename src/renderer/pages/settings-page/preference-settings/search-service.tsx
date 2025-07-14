@@ -6,9 +6,8 @@ import {
   SelectOption,
   SelectTrigger,
 } from "@renderer/components/ui/select";
-import type { SearchService } from "@shared/triplit/types";
+import type { SearchServices } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
-import { Search } from "lucide-react";
 import type { Key } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 
@@ -21,42 +20,39 @@ const searchServices = [
   { key: "bochaai", label: "bochaai" },
 ];
 
-export function SearchProvider() {
-  const { t } = useTranslation();
+export function SearchService() {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "settings.preference-settings",
+  });
 
   const settingsQuery = triplitClient.query("settings");
   const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
   const currentsearchService = settingsResult?.searchService ?? "search1api";
 
-  const handlesearchServiceChange = async (key: Key | null) => {
-    await configService.setSearchService(key as SearchService);
+  const handleSearchServiceChange = async (key: Key | null) => {
+    await configService.setSearchService(key as SearchServices);
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <Label className="text-label-fg">
-        {t("settings.general-settings.search-provider.label")}
-      </Label>
+    <div className="mx-auto flex flex-col gap-2">
+      <Label className="text-label-fg">{t("search-provider.label")}</Label>
       <Select
-        className="w-[240px]"
+        className="w-[398px]"
         selectedKey={currentsearchService}
-        onSelectionChange={handlesearchServiceChange}
+        onSelectionChange={handleSearchServiceChange}
         aria-label="Select search provider"
       >
-        <SelectTrigger
-          className="h-9 cursor-pointer rounded-xl text-secondary-fg"
-          prefix={<Search className="mr-1 size-4" />}
-        />
-        <SelectList popoverClassName="min-w-[240px]" items={searchServices}>
-          {(provider) => (
+        <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
+        <SelectList popoverClassName="min-w-[398px]" items={searchServices}>
+          {({ key, label }) => (
             <SelectOption
               className="flex cursor-pointer justify-between"
-              key={provider.key}
-              id={provider.key}
-              textValue={provider.label}
+              key={key}
+              id={key}
+              textValue={label}
             >
               <span className="flex items-center gap-2">
-                <span className="text-base">{provider.label}</span>
+                <span className="text-base">{label}</span>
               </span>
             </SelectOption>
           )}
