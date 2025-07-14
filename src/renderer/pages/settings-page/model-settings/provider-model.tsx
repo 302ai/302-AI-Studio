@@ -299,6 +299,7 @@ export function ProviderModel() {
                   value={formData.name}
                   placeholder={t("add-provider-form.name-placeholder")}
                   onChange={handleFieldChange("name")}
+                  maxLength={100}
                 />
               </div>
             </div>
