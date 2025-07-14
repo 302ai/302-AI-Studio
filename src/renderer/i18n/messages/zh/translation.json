@@ -59,7 +59,7 @@
       "language": {
         "label": "语言"
       },
-      "name": "通用设置",
+      "name": "通用",
       "search-provider": {
         "label": "搜索提供商"
       },
@@ -186,7 +186,7 @@
         },
         "star": "收藏"
       },
-      "name": "模型设置",
+      "name": "模型",
       "loading": "加载中..."
     },
     "tab-title": "设置",
@@ -194,7 +194,7 @@
       "name": "工具设置"
     },
     "shortcuts-settings": {
-      "name": "快捷键设置",
+      "name": "快捷键",
       "title": "键盘快捷键",
       "actions": {
         "send-message": "发送消息",
@@ -233,7 +233,10 @@
         "global": "全局"
       }
     },
-    "text": "设置"
+    "text": "设置",
+    "preference-settings": {
+      "name": "偏爱"
+    }
   },
   "sidebar": {
     "close-sidebar": {

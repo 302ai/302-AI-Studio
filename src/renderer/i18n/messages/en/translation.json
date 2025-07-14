@@ -58,7 +58,7 @@
       "language": {
         "label": "Language"
       },
-      "name": "General Settings",
+      "name": "General",
       "search-provider": {
         "label": "Search Provider"
       },
@@ -185,7 +185,7 @@
         },
         "star": "Collect"
       },
-      "name": "Model Settings",
+      "name": "Model",
       "loading": "Loading..."
     },
     "tab-title": "Settings",
@@ -193,7 +193,7 @@
       "name": "Tool Settings"
     },
     "shortcuts-settings": {
-      "name": "Shortcuts Settings",
+      "name": "Shortcuts",
       "title": "Keyboard Shortcuts",
       "actions": {
         "send-message": "Send Message",
@@ -232,7 +232,10 @@
         "global": "Global"
       }
     },
-    "text": "Settings"
+    "text": "Settings",
+    "preference-settings": {
+      "name": "Preferences"
+    }
   },
   "sidebar": {
     "close-sidebar": {

@@ -59,7 +59,7 @@
       "language": {
         "label": "言語"
       },
-      "name": "一般設定",
+      "name": "一般",
       "search-provider": {
         "label": "検索プロバイダー"
       },
@@ -186,7 +186,7 @@
         },
         "star": "集める"
       },
-      "name": "モデル設定",
+      "name": "モデル",
       "loading": "読み込み..."
     },
     "tab-title": "設定",
@@ -194,7 +194,7 @@
       "name": "ツール設定"
     },
     "shortcuts-settings": {
-      "name": "ショートカットキー設定",
+      "name": "ショートカットキー",
       "title": "キーボードショートカット",
       "actions": {
         "send-message": "メッセージ送信",
@@ -233,7 +233,10 @@
         "global": "グローバル"
       }
     },
-    "text": "設定"
+    "text": "設定",
+    "preference-settings": {
+      "name": "好み"
+    }
   },
   "sidebar": {
     "close-sidebar": {

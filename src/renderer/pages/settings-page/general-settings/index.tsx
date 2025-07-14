@@ -1,5 +1,4 @@
 import { LanguageSelector } from "./language";
-import { SearchProvider } from "./search-provider";
 import { ThemeSwitcher } from "./theme";
 
 export function GeneralSettings() {
@@ -8,8 +7,6 @@ export function GeneralSettings() {
       <LanguageSelector />
 
       <ThemeSwitcher />
-
-      <SearchProvider />
     </div>
   );
 }

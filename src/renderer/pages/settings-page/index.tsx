@@ -6,6 +6,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AboutSettings } from "./about-settings";
 import { GeneralSettings } from "./general-settings";
 import { ModelSettings } from "./model-settings";
+import { PreferenceSettings } from "./preference-settings";
 import { ShortcutsSettings } from "./shortcuts-settings";
 
 export function SettingsPage() {
@@ -25,6 +26,11 @@ export function SettingsPage() {
         label: t("general-settings.name"),
       },
       {
+        name: "preference-settings",
+        path: "/settings/preference-settings",
+        label: t("preference-settings.name"),
+      },
+      {
         name: "model-settings",
         path: "/settings/model-settings",
         label: t("model-settings.name"),
@@ -39,16 +45,6 @@ export function SettingsPage() {
         path: "/settings/about-settings",
         label: t("about-settings.name"),
       },
-      // {
-      //   name: "tool-settings",
-      //   path: "/settings/tool-settings",
-      //   label: t("tool-settings.name"),
-      // },
-      // {
-      //   name: "assistant-settings",
-      //   path: "/settings/assistant-settings",
-      //   label: t("assistant-settings.name"),
-      // },
     ],
     [t],
   );
@@ -74,7 +70,7 @@ export function SettingsPage() {
   }, [state, toggleSidebar]);
 
   return (
-    <div className=" flex h-full flex-row ">
+    <div className="flex h-full flex-row">
       <Tabs
         className="w-auto min-w-[var(--setting-tab-list-width)] justify-end rounded-xl bg-setting-tab-list"
         orientation="vertical"
@@ -100,11 +96,10 @@ export function SettingsPage() {
       <div className="flex-1">
         <Routes>
           <Route path="/general-settings" element={<GeneralSettings />} />
+          <Route path="/preference-settings" element={<PreferenceSettings />} />
           <Route path="/model-settings" element={<ModelSettings />} />
           <Route path="/shortcuts-settings" element={<ShortcutsSettings />} />
           <Route path="/about-settings" element={<AboutSettings />} />
-          {/* <Route path="/tool-settings" element={<ToolSettings />} />
-          <Route path="/assistant-settings" element={<AssistantSettings />} /> */}
         </Routes>
       </div>
     </div>

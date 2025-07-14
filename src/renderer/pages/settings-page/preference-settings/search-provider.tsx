@@ -1,4 +1,5 @@
 import { triplitClient } from "@renderer/client";
+import { Label } from "@renderer/components/ui/field";
 import {
   Select,
   SelectList,
@@ -33,7 +34,9 @@ export function SearchProvider() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div>{t("settings.general-settings.search-provider.label")}</div>
+      <Label className="text-label-fg">
+        {t("settings.general-settings.search-provider.label")}
+      </Label>
       <Select
         className="w-[240px]"
         selectedKey={currentsearchService}
