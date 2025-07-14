@@ -1,13 +1,9 @@
 import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
-import {
-  Select,
-  SelectList,
-  SelectOption,
-  SelectTrigger,
-} from "@renderer/components/ui/select";
+import { Select } from "@renderer/components/ui/select";
 import { ShortcutRecorder } from "@renderer/components/ui/shortcut-recorder";
 import { formatShortcutLabel } from "@renderer/config/constant";
 import { useShortcuts } from "@renderer/hooks/use-shortcuts";
+import { cn } from "@renderer/lib/utils";
 
 import {
   DEFAULT_SHORTCUTS,
@@ -131,20 +127,23 @@ export function ShortcutsSettings() {
                       handleShortcutChange(shortcut.action, optionId as string)
                     }
                   >
-                    <SelectTrigger />
-                    <SelectList popoverClassName="min-w-md">
+                    <Select.Trigger />
+                    <Select.List popover={{ className: "min-w-md" }}>
                       {shortcut.options.map((option) => (
-                        <SelectOption
+                        <Select.Option
                           key={option.id}
                           id={option.id}
-                          className="flex cursor-pointer justify-between"
+                          className={cn(
+                            "flex cursor-pointer justify-between",
+                            "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+                          )}
                         >
                           <div className="flex w-full items-center justify-between">
                             <span>{formatShortcutLabel(option.keys)}</span>
                           </div>
-                        </SelectOption>
+                        </Select.Option>
                       ))}
-                    </SelectList>
+                    </Select.List>
                   </Select>
                 ) : (
                   <ShortcutRecorder

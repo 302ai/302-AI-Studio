@@ -1,5 +1,3 @@
-"use client";
-
 import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import type {
   FieldErrorProps as FieldErrorPrimitiveProps,

@@ -1,11 +1,7 @@
 import { triplitClient } from "@renderer/client";
 import { Label } from "@renderer/components/ui/field";
-import {
-  Select,
-  SelectList,
-  SelectOption,
-  SelectTrigger,
-} from "@renderer/components/ui/select";
+import { Select } from "@renderer/components/ui/select";
+import { cn } from "@renderer/lib/utils";
 import type { SearchServices } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
 import type { Key } from "react-aria-components";
@@ -42,11 +38,17 @@ export function SearchService() {
         onSelectionChange={handleSearchServiceChange}
         aria-label="Select search provider"
       >
-        <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
-        <SelectList popoverClassName="min-w-[398px]" items={searchServices}>
+        <Select.Trigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
+        <Select.List
+          popover={{ className: "min-w-[398px]" }}
+          items={searchServices}
+        >
           {({ key, label }) => (
-            <SelectOption
-              className="flex cursor-pointer justify-between"
+            <Select.Option
+              className={cn(
+                "flex cursor-pointer justify-between",
+                "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+              )}
               key={key}
               id={key}
               textValue={label}
@@ -54,9 +56,9 @@ export function SearchService() {
               <span className="flex items-center gap-2">
                 <span className="text-base">{label}</span>
               </span>
-            </SelectOption>
+            </Select.Option>
           )}
-        </SelectList>
+        </Select.List>
       </Select>
     </div>
   );

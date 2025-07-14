@@ -1,148 +1,85 @@
+import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import type {
-  DialogProps,
   DialogTriggerProps,
-  ModalOverlayProps,
   PopoverProps as PopoverPrimitiveProps,
 } from "react-aria-components";
 import {
-  composeRenderProps,
-  DialogTrigger,
+  DialogTrigger as DialogTriggerPrimitive,
   OverlayArrow,
-  PopoverContext,
   Popover as PopoverPrimitive,
-  useSlottedContext,
 } from "react-aria-components";
-import { twMerge } from "tailwind-merge";
-import { tv } from "tailwind-variants";
-import type {
-  DialogBodyProps,
-  DialogFooterProps,
-  DialogHeaderProps,
-  DialogTitleProps,
+import {
+  DialogBody,
+  DialogClose,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "./dialog";
-import { Dialog } from "./dialog";
 
 type PopoverProps = DialogTriggerProps;
 const Popover = (props: PopoverProps) => {
-  return <DialogTrigger {...props} />;
+  return <DialogTriggerPrimitive {...props} />;
 };
 
-const PopoverTitle = ({ level = 2, className, ...props }: DialogTitleProps) => (
-  <Dialog.Title
-    className={twMerge(
-      "sm:leading-none",
-      level === 2 && "sm:text-lg",
-      className
-    )}
-    {...props}
-  />
-);
+const PopoverTitle = DialogTitle;
+const PopoverHeader = DialogHeader;
+const PopoverBody = DialogBody;
+const PopoverFooter = DialogFooter;
 
-const PopoverHeader = ({ className, ...props }: DialogHeaderProps) => (
-  <Dialog.Header className={twMerge("sm:p-4", className)} {...props} />
-);
-
-const PopoverFooter = ({ className, ...props }: DialogFooterProps) => (
-  <Dialog.Footer className={twMerge("sm:p-4", className)} {...props} />
-);
-
-const PopoverBody = ({ className, ref, ...props }: DialogBodyProps) => (
-  <Dialog.Body
-    ref={ref}
-    className={twMerge("sm:px-4 sm:pt-0", className)}
-    {...props}
-  />
-);
-
-const content = tv({
-  base: [
-    "peer/popover-content max-w-xs rounded-xl border bg-overlay bg-clip-padding text-overlay-fg shadow-xs transition-transform [scrollbar-width:thin] sm:max-w-3xl sm:text-sm dark:backdrop-saturate-200 forced-colors:bg-[Canvas] [&::-webkit-scrollbar]:size-0.5",
-  ],
-  variants: {
-    isPicker: {
-      true: "max-h-72 min-w-(--trigger-width) overflow-y-auto",
-      false: "min-w-80",
-    },
-    isMenu: {
-      true: "",
-    },
-    isEntering: {
-      true: [
-        "fade-in animate-in duration-150 ease-out",
-        "data-[placement=left]:slide-in-from-right-1 data-[placement=right]:slide-in-from-left-1 data-[placement=top]:slide-in-from-bottom-1 data-[placement=bottom]:slide-in-from-top-1",
-      ],
-    },
-    isExiting: {
-      true: [
-        "fade-out animate-out duration-100 ease-in",
-        "data-[placement=left]:slide-out-to-right-1 data-[placement=right]:slide-out-to-left-1 data-[placement=top]:slide-out-to-bottom-1 data-[placement=bottom]:slide-out-to-top-1",
-      ],
-    },
-  },
-});
-
-interface PopoverContentProps
-  extends Omit<PopoverPrimitiveProps, "children" | "className">,
-    Omit<ModalOverlayProps, "className">,
-    Pick<DialogProps, "aria-label" | "aria-labelledby"> {
-  children: React.ReactNode;
+interface PopoverContentProps extends PopoverPrimitiveProps {
   showArrow?: boolean;
-  style?: React.CSSProperties;
-  respectScreen?: boolean;
-  className?: string | ((values: { defaultClassName?: string }) => string);
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 const PopoverContent = ({
-  respectScreen = true,
   children,
-  showArrow = true,
+  showArrow = false,
   className,
+  ref,
   ...props
 }: PopoverContentProps) => {
-  const popoverContext = useSlottedContext(PopoverContext);
-  const isSubmenuTrigger = popoverContext?.trigger === "SubmenuTrigger";
-  const isComboBoxTrigger = popoverContext?.trigger === "ComboBox";
-  const offset = showArrow ? 12 : 8;
-  const effectiveOffset = isSubmenuTrigger ? offset - 5 : offset;
+  const offset = props.offset ?? (showArrow ? 12 : 8);
   return (
     <PopoverPrimitive
-      offset={effectiveOffset}
-      className={composeRenderProps(className, (className, renderProps) =>
-        content({
-          ...renderProps,
-          className,
-        })
-      )}
+      ref={ref}
+      offset={offset}
+      className={composeTailwindRenderProps(className, [
+        "group/popover min-w-(--trigger-width) max-w-xs rounded-xl border bg-overlay text-overlay-fg shadow-xs outline-hidden transition-transform [--gutter:--spacing(6)] sm:text-sm dark:backdrop-saturate-200 **:[[role=dialog]]:[--gutter:--spacing(4)]",
+        "entering:fade-in entering:animate-in",
+        "exiting:fade-out exiting:animate-out",
+        "placement-left:entering:slide-in-from-right-1 placement-right:entering:slide-in-from-left-1 placement-top:entering:slide-in-from-bottom-1 placement-bottom:entering:slide-in-from-top-1",
+        "placement-left:exiting:slide-out-to-right-1 placement-right:exiting:slide-out-to-left-1 placement-top:exiting:slide-out-to-bottom-1 placement-bottom:exiting:slide-out-to-top-1",
+        "forced-colors:bg-[Canvas]",
+      ])}
       {...props}
     >
-      {showArrow && (
-        <OverlayArrow className="group">
-          <svg
-            role="presentation"
-            aria-hidden="true"
-            width={12}
-            height={12}
-            viewBox="0 0 12 12"
-            className="group-data-[placement=left]:-rotate-90 block fill-overlay stroke-border group-data-[placement=bottom]:rotate-180 group-data-[placement=right]:rotate-90 forced-colors:fill-[Canvas] forced-colors:stroke-[ButtonBorder]"
-          >
-            <path d="M0 0 L6 6 L12 0" />
-          </svg>
-        </OverlayArrow>
-      )}
-      {!isComboBoxTrigger ? (
-        <Dialog role="dialog" aria-label={props["aria-label"] ?? "List item"}>
-          {children}
-        </Dialog>
-      ) : (
-        children
+      {(values) => (
+        <>
+          {showArrow && (
+            <OverlayArrow className="group">
+              {/** biome-ignore lint/a11y/noSvgWithoutTitle: ignore title */}
+              <svg
+                width={12}
+                height={12}
+                viewBox="0 0 12 12"
+                className="group-placement-left:-rotate-90 block fill-overlay stroke-border group-placement-bottom:rotate-180 group-placement-right:rotate-90 forced-colors:fill-[Canvas] forced-colors:stroke-[ButtonBorder]"
+              >
+                <path d="M0 0 L6 6 L12 0" />
+              </svg>
+            </OverlayArrow>
+          )}
+          {typeof children === "function" ? children(values) : children}
+        </>
       )}
     </PopoverPrimitive>
   );
 };
 
-const PopoverTrigger = Dialog.Trigger;
-const PopoverClose = Dialog.Close;
-const PopoverDescription = Dialog.Description;
+const PopoverTrigger = DialogTrigger;
+const PopoverClose = DialogClose;
+const PopoverDescription = DialogDescription;
 
 Popover.Trigger = PopoverTrigger;
 Popover.Close = PopoverClose;

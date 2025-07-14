@@ -2,15 +2,11 @@ import { triplitClient } from "@renderer/client";
 import { IconPicker } from "@renderer/components/business/icon-picker";
 import { ModelList } from "@renderer/components/business/model-list";
 import { Link } from "@renderer/components/ui/link";
-import {
-  Select,
-  SelectList,
-  SelectOption,
-  SelectTrigger,
-} from "@renderer/components/ui/select";
+import { Select } from "@renderer/components/ui/select";
 import { TextField } from "@renderer/components/ui/text-field";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import { cn } from "@renderer/lib/utils";
 import logger from "@shared/logger/renderer-logger";
 import type { UpdateProviderData } from "@shared/triplit/types";
 import { debounce } from "lodash-es";
@@ -349,19 +345,22 @@ export function ProviderModel() {
                 selectedKey={formData.apiType || "openai"}
                 onSelectionChange={handleFieldChange("apiType")}
               >
-                <SelectTrigger />
-                <SelectList placement="bottom start">
+                <Select.Trigger />
+                <Select.List>
                   {API_TYPE_OPTIONS.map(({ key, label }) => (
-                    <SelectOption
-                      className="flex cursor-pointer justify-between"
+                    <Select.Option
+                      className={cn(
+                        "flex cursor-pointer justify-between",
+                        "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+                      )}
                       key={key}
                       id={key}
                       textValue={label}
                     >
                       <span className="text-base">{label}</span>
-                    </SelectOption>
+                    </Select.Option>
                   ))}
-                </SelectList>
+                </Select.List>
               </Select>
             </div>
           )}

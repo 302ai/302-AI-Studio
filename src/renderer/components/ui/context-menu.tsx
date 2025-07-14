@@ -1,16 +1,7 @@
-import type { MenuContentProps } from "@renderer/components/ui/menu";
-import {
-  MenuContent,
-  MenuDescription,
-  MenuHeader,
-  MenuItem,
-  MenuKeyboard,
-  MenuLabel,
-  MenuSection,
-  MenuSeparator,
-} from "@renderer/components/ui/menu";
 import { createContext, use, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import type { MenuContentProps } from "./menu";
+import { Menu } from "./menu";
 
 interface ContextMenuTriggerContextType {
   buttonRef: React.RefObject<HTMLButtonElement | null>;
@@ -99,27 +90,29 @@ const ContextMenuContent = <T extends object>(
   const { contextMenuOffset, setContextMenuOffset, buttonRef } =
     useContextMenuTrigger();
   return contextMenuOffset ? (
-    <MenuContent
-      isOpen={!!contextMenuOffset}
-      onOpenChange={() => setContextMenuOffset(null)}
-      triggerRef={buttonRef}
-      shouldFlip={true}
-      placement="bottom left"
-      offset={contextMenuOffset?.offset}
-      crossOffset={contextMenuOffset?.crossOffset}
+    <Menu.Content
+      popover={{
+        isOpen: !!contextMenuOffset,
+        shouldFlip: false,
+        triggerRef: buttonRef,
+        onOpenChange: () => setContextMenuOffset(null),
+        placement: "bottom left",
+        offset: contextMenuOffset.offset,
+        crossOffset: contextMenuOffset.crossOffset,
+      }}
       onClose={() => setContextMenuOffset(null)}
       {...props}
     />
   ) : null;
 };
 
-const ContextMenuItem = MenuItem;
-const ContextMenuSeparator = MenuSeparator;
-const ContextMenuDescription = MenuDescription;
-const ContextMenuSection = MenuSection;
-const ContextMenuHeader = MenuHeader;
-const ContextMenuKeyboard = MenuKeyboard;
-const ContextMenuLabel = MenuLabel;
+const ContextMenuItem = Menu.Item;
+const ContextMenuSeparator = Menu.Separator;
+const ContextMenuDescription = Menu.Description;
+const ContextMenuSection = Menu.Section;
+const ContextMenuHeader = Menu.Header;
+const ContextMenuKeyboard = Menu.Keyboard;
+const ContextMenuLabel = Menu.Label;
 
 ContextMenu.Trigger = ContextMenuTrigger;
 ContextMenu.Content = ContextMenuContent;
@@ -132,15 +125,4 @@ ContextMenu.Header = ContextMenuHeader;
 ContextMenu.Keyboard = ContextMenuKeyboard;
 
 export type { ContextMenuProps };
-export {
-  ContextMenu,
-  ContextMenuTrigger,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuSeparator,
-  ContextMenuDescription,
-  ContextMenuSection,
-  ContextMenuHeader,
-  ContextMenuKeyboard,
-};
+export { ContextMenu };
