@@ -6,12 +6,7 @@ import {
   CardTitle,
 } from "@renderer/components/ui/card";
 
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@renderer/components/ui/context-menu";
+import { ContextMenu } from "@renderer/components/ui/context-menu";
 
 import { cn } from "@renderer/lib/utils";
 import type { Provider } from "@shared/triplit/types";
@@ -59,7 +54,7 @@ export function ProviderCard({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="w-full">
+      <ContextMenu.Trigger className="w-full">
         <div
           className={cn(
             "group flex h-[56px] flex-row items-center justify-between rounded-xl py-4 hover:bg-hover-primary",
@@ -102,13 +97,16 @@ export function ProviderCard({
             </div>
           </CardHeader>
         </div>
-      </ContextMenuTrigger>
+      </ContextMenu.Trigger>
       {provider.custom && (
-        <ContextMenuContent>
-          <ContextMenuItem onAction={onDelete} className="text-card-desc-error">
+        <ContextMenu.Content>
+          <ContextMenu.Item
+            onAction={onDelete}
+            className="text-card-desc-error"
+          >
             {t("settings.model-settings.model-provider.delete")}
-          </ContextMenuItem>
-        </ContextMenuContent>
+          </ContextMenu.Item>
+        </ContextMenu.Content>
       )}
     </ContextMenu>
   );
