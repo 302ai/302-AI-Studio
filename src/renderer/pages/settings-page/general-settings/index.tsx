@@ -1,5 +1,6 @@
 import { LanguageSelector } from "./language";
 import { ThemeSwitcher } from "./theme";
+import { VersionUpdate } from "./version-update";
 
 export function GeneralSettings() {
   return (
@@ -7,6 +8,8 @@ export function GeneralSettings() {
       <LanguageSelector />
 
       <ThemeSwitcher />
+
+      <VersionUpdate />
     </div>
   );
 }

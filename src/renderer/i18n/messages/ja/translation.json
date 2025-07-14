@@ -60,14 +60,17 @@
         "label": "言語"
       },
       "name": "一般",
-      "search-provider": {
-        "label": "検索プロバイダー"
-      },
       "theme": {
         "dark": "ダーク",
         "label": "テーマ",
         "light": "ライト",
         "system": "システム"
+      },
+      "version-update": {
+        "label": "バージョンの更新"
+      },
+      "switch": {
+        "label": "自動更新"
       }
     },
     "icon-tooltip": "設定を開く",

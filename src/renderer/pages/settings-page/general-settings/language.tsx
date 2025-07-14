@@ -1,4 +1,5 @@
 import { triplitClient } from "@renderer/client";
+import { Label } from "@renderer/components/ui/field";
 import {
   Select,
   SelectList,
@@ -30,16 +31,18 @@ export function LanguageSelector() {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div>{t("settings.general-settings.language.label")}</div>
+    <div className="mx-auto flex flex-col gap-2">
+      <Label className="text-label-fg">
+        {t("settings.general-settings.language.label")}
+      </Label>
       <Select
-        className="w-[240px]"
+        className="w-[398px]"
         selectedKey={currentLang.key}
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
       >
         <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
-        <SelectList popoverClassName="min-w-[240px]" items={langs}>
+        <SelectList popoverClassName="min-w-[398px]" items={langs}>
           {({ key, prefix, nativeName }) => (
             <SelectOption
               className="flex cursor-pointer justify-between"
