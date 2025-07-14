@@ -21,10 +21,7 @@ import { toast } from "sonner";
 
 const { configService, providerService } = window.service;
 
-const API_TYPE_OPTIONS = [
-  { key: "openai", label: "OpenAI" },
-  // { key: "302ai", label: "302.AI" },
-];
+const API_TYPE_OPTIONS = [{ key: "openai", label: "OpenAI" }];
 
 interface ProviderFormData {
   name: string;
@@ -312,7 +309,6 @@ export function ProviderModel() {
             </div>
           )}
 
-          {/* Base URL 字段 */}
           <div className="flex flex-col gap-y-2">
             <TextField
               label="Base URL"
@@ -320,12 +316,11 @@ export function ProviderModel() {
               placeholder={t("add-provider-form.placeholder-3")}
               onChange={handleFieldChange("baseUrl")}
             />
-            <span className="text-muted-fg text-xs">
+            <span className="max-w-full overflow-hidden whitespace-normal break-all text-muted-fg text-xs">
               {`${t("add-provider-form.api-forward")}：${formData.baseUrl || ""}/chat/completions`}
             </span>
           </div>
 
-          {/* API Key 字段 */}
           <div className="flex flex-col gap-2">
             <TextField
               label="API Key"
@@ -346,7 +341,6 @@ export function ProviderModel() {
             )}
           </div>
 
-          {/* 接口类型 */}
           {selectedProvider.custom && (
             <div className="flex flex-col gap-2">
               <Select
