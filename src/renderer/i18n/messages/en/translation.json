@@ -81,7 +81,8 @@
         "restart-to-update": "Restart",
         "downloading": "Downloading",
         "new-version-available": "New Version Available",
-        "update-downloaded": "The new version is ready, please restart the app to install it"
+        "update-downloaded": "The new version is ready, please restart the app to install it",
+        "new-version-downloaded": "New Version Ready"
       }
     },
     "icon-tooltip": "Open Settings",

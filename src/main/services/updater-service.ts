@@ -1,3 +1,4 @@
+import { isDev } from "@main/constant";
 import { TYPES } from "@main/shared/types";
 import logger from "@shared/logger/main-logger";
 import { app } from "electron";
@@ -41,7 +42,8 @@ export class UpdaterService {
     const feedUrl = await this.settingsService.getFeedUrl();
 
     this.autoUpdater.autoDownload = autoUpdate;
-    this.autoUpdater.autoInstallOnAppQuit = autoUpdate;
+    // * Avoid auto install on app quit in dev mode
+    this.autoUpdater.autoInstallOnAppQuit = isDev ? false : autoUpdate;
     this.autoUpdater.setFeedURL(feedUrl);
     this.autoUpdater.logger = logger;
     this.autoUpdater.forceDevUpdateConfig = !app.isPackaged;

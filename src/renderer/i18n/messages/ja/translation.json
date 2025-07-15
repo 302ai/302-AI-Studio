@@ -82,7 +82,8 @@
         "restart-to-update": "即時再起動",
         "downloading": "ダウンロード",
         "new-version-available": "新バージョン",
-        "update-downloaded": "新しいバージョンの準備ができました。アプリを再起動してインストールしてください"
+        "update-downloaded": "新しいバージョンの準備ができました。アプリを再起動してインストールしてください",
+        "new-version-downloaded": "新バージョンが完成"
       }
     },
     "icon-tooltip": "設定を開く",

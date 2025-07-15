@@ -38,7 +38,7 @@ export function VersionUpdate() {
         </Switch>
       )}
 
-      <div className="flex min-w-[398px] items-center justify-between rounded-[10px] bg-setting px-3.5 py-1.5">
+      <div className="flex min-w-[398px] items-center justify-between gap-x-10 rounded-[10px] bg-setting px-3.5 py-1.5">
         <div className="flex flex-row gap-1.5 text-sm">
           <span className="text-setting-fg ">{t("version-info")}</span>
           <span className="text-muted-fg">{version}</span>
@@ -48,7 +48,9 @@ export function VersionUpdate() {
               hidden: !showBadge,
             })}
           >
-            {t("new-version-available")}
+            {status === "downloaded"
+              ? t("new-version-downloaded")
+              : t("new-version-available")}
           </Badge>
         </div>
         <Button

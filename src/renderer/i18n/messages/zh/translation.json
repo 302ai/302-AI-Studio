@@ -82,7 +82,8 @@
         "restart-to-update": "立即重启",
         "downloading": "下载中",
         "new-version-available": "新版本可用",
-        "update-downloaded": "新版本已准备就绪，请重启应用进行安装"
+        "update-downloaded": "新版本已准备就绪，请重启应用进行安装",
+        "new-version-downloaded": "新版本已就绪"
       }
     },
     "icon-tooltip": "打开设置",
