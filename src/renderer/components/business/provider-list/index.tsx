@@ -397,7 +397,6 @@ export function ProviderList() {
               intent="primary"
               // onClick={() => setState({ type: "add" })}
               onClick={onClick}
-              size="extra-small"
             >
               {t("add")}
             </Button>
@@ -459,8 +458,6 @@ export function ProviderList() {
                 <p>{t("no-provider-description")}</p>
                 <Button
                   className="w-36 shrink-0"
-                  intent="primary"
-                  size="extra-small"
                   onClick={() => setState({ type: "add" })}
                 >
                   {/* <Plus className="size-4" /> */}

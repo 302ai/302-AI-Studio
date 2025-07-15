@@ -1,7 +1,7 @@
 import { ArtifactPreviewPanel } from "@renderer/components/business/artifacts/artifact-preview-panel";
 import { ChatInput } from "@renderer/components/business/chat-input";
 import { MessageList } from "@renderer/components/business/message-list";
-import { Button } from "@renderer/components/ui/button";
+import { Button } from "@renderer/components/ui/button1";
 import { useArtifact } from "@renderer/hooks/use-artifact";
 import { useChat } from "@renderer/hooks/use-chat";
 import { cn } from "@renderer/lib/utils";

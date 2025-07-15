@@ -81,8 +81,8 @@ export function ToolBar({
             <Send className="!size-4" />
           </Button> */}
           <Button
-            size="square-petite"
-            shape="square"
+            size="sq-sm"
+            isCircle={false}
             onClick={handleSendMessageClick}
             isDisabled={isDisabled}
             className="rounded-[10px] bg-primary text-fg"

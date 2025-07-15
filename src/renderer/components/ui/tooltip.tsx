@@ -7,7 +7,7 @@ import {
 } from "react-aria-components";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
-import { Button } from "./button";
+import { Button } from "./button1";
 
 const tooltipStyles = tv({
   base: [
@@ -66,7 +66,7 @@ const TooltipContent = ({
           ...renderProps,
           intent,
           className,
-        })
+        }),
       )}
     >
       {showArrow && (

@@ -89,8 +89,7 @@ export function AboutSettings() {
               key={item.name}
               className="size-7 hover:bg-transparent"
               intent="plain"
-              shape="square"
-              size="square-petite"
+              size="sq-xs"
               onClick={item.action}
             >
               <img src={item.icon} alt={item.name} />

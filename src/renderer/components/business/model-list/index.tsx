@@ -188,7 +188,6 @@ export function ModelList({
         {/* <ModelFilter onTabChange={setTabKey} /> */}
         <div className="flex gap-2">
           <Button
-            size="small"
             onClick={onFetchModels}
             intent="primary"
             isDisabled={isFetchingModels || !onFetchModels || !isFormValid}
@@ -197,13 +196,7 @@ export function ModelList({
             {t("fetch-models")}
           </Button>
 
-          <Button
-            size="small"
-            // className="w-[110px]"
-            onClick={() => setIsAddModelModalOpen(true)}
-            intent="outline"
-            className="!inset-ring-transparent bg-add-model text-add-model-fg ring-1 ring-add-model-ring hover:bg-add-model-hover hover:text-add-model-fg dark:pressed:bg-transparent"
-          >
+          <Button onClick={() => setIsAddModelModalOpen(true)} intent="outline">
             {t("add-model")}
           </Button>
         </div>
@@ -217,12 +210,9 @@ export function ModelList({
           />
 
           <Button
-            size="small"
-            // className="w-[110px]"
             onClick={handleClear}
-            intent="outline"
+            intent="danger"
             isDisabled={!selectedProvider?.id || filteredModels.length === 0}
-            className="!inset-ring-transparent bg-clear-models text-clear-models-fg ring-1 ring-clear-models-ring hover:bg-clear-models-hover hover:text-clear-models-fg"
           >
             {t("clear-models")}
           </Button>

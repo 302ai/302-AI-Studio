@@ -51,7 +51,7 @@ export function ModalAction({
             state && dangerActions?.includes(state) ? "danger" : "primary"
           }
           className="min-w-24"
-          size="small"
+          size="sq-sm"
           isDisabled={actionType.disabled}
           isPending={actionType.isPending}
           onPress={actionType.action}

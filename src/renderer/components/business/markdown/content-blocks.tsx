@@ -44,7 +44,7 @@ export function ContentBlocks({ content, messageId }: ContentBlocksProps) {
           >
             <Button
               intent="plain"
-              size="square-petite"
+              size="sq-sm"
               onPress={toggleCollapse}
               className="flex h-8 w-full cursor-pointer items-center gap-2 pressed:bg-transparent text-fg text-sm hover:bg-transparent"
             >

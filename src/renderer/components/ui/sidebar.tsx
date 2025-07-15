@@ -35,7 +35,7 @@ import {
 import { twJoin, twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 import { Badge } from "./badge";
-import { Button } from "./button";
+import { Button } from "./button1";
 import { Tooltip } from "./tooltip";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";

@@ -4,7 +4,7 @@ import {
   TooltipTrigger,
 } from "@renderer/components/ui/tooltip";
 import { cn } from "@renderer/lib/utils";
-import type { ButtonProps } from "../ui/button";
+import type { ButtonProps } from "../ui/button1";
 
 interface ButtonWithTooltipProps extends ButtonProps {
   className?: string;

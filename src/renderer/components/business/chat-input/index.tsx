@@ -211,7 +211,7 @@ export function ChatInput({ className }: ChatInputProps) {
             {t("edit-message")}
           </div>
           <div className="flex items-center gap-x-1 text-xs">
-            <Button intent="outline" onClick={handleSave} size="extra-small">
+            <Button intent="outline" onClick={handleSave} size="sq-xs">
               {t("edit-message-only-save")}
             </Button>
             <X className="size-4 cursor-pointer" onClick={handleCancelEdit} />

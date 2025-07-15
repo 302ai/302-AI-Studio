@@ -227,7 +227,6 @@ export function ProviderCfgForm({
                       <div className="mt-3 border-border/30 border-t pt-2">
                         <Button
                           intent="outline"
-                          size="extra-small"
                           onClick={() =>
                             onBaseUrlChange(
                               normalizedUrlResult.normalizedBaseUrl,
