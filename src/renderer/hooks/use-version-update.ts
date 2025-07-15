@@ -68,10 +68,7 @@ export function useVersionUpdate() {
       setStatus(isAvailable ? "available" : "idle");
 
       toast.success(
-        isAvailable ? t("update-available") : t("no-update-available"),
-        {
-          description: data.version,
-        },
+        `${isAvailable ? t("update-available") : t("no-update-available")}: ${data.version}`,
       );
     },
     [t],

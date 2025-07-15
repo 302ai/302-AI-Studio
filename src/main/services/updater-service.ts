@@ -29,6 +29,7 @@ export type UpdaterStatus =
 export class UpdaterService {
   private autoUpdater: _AppUpdater = autoUpdater;
   private status: UpdaterStatus = "idle";
+  private initFlag: boolean = false;
 
   constructor(
     @inject(TYPES.SettingsService) private settingsService: SettingsService,
@@ -38,6 +39,8 @@ export class UpdaterService {
   }
 
   private async init(): Promise<void> {
+    this.initFlag = true;
+
     const autoUpdate = await this.settingsService.getAutoUpdate();
     const feedUrl = await this.settingsService.getFeedUrl();
 
@@ -75,6 +78,12 @@ export class UpdaterService {
     this.autoUpdater.on("update-not-available", (updateInfo: UpdateInfo) => {
       logger.info("no new version available", { updateInfo });
       this.status = "idle";
+
+      if (this.initFlag) {
+        this.initFlag = false;
+        return;
+      }
+
       sendToRenderer(EventNames.UPDATER_CHECK_STATUS, {
         status: "not-available",
         version: updateInfo.version,
