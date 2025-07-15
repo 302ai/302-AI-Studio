@@ -191,7 +191,7 @@ export function ModelList({
             intent="primary"
             isDisabled={!onFetchModels || !isFormValid}
             isPending={isFetchingModels}
-            className="h-10 min-w-[110px] rounded-[8px]"
+            className="h-10 min-w-[110px] rounded-lg"
           >
             {({ isPending }) => (
               <>
@@ -202,7 +202,7 @@ export function ModelList({
           </Button>
 
           <Button
-            className="inset-ring-primary h-10 min-w-[110px] rounded-[8px] pressed:bg-accent text-primary hover:bg-accent"
+            className="inset-ring-primary h-10 min-w-[110px] rounded-lg pressed:bg-accent text-primary hover:bg-accent"
             onClick={() => setIsAddModelModalOpen(true)}
             intent="outline"
           >
@@ -211,17 +211,17 @@ export function ModelList({
         </div>
         <div className="flex items-center justify-center gap-2">
           <SearchField
+            className="h-10"
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder={t("search-placeholder")}
-            className="!w-[206px]"
           />
 
           <Button
             onClick={handleClear}
             intent="plain"
             isDisabled={!selectedProvider?.id || filteredModels.length === 0}
-            className="h-10 min-w-[78px] rounded-[8px] bg-danger-2 pressed:bg-danger-2/70 text-danger-fg-2 hover:bg-danger-2/70"
+            className="h-10 min-w-[78px] rounded-lg bg-danger-2 pressed:bg-danger-2/70 text-danger-fg-2 hover:bg-danger-2/70"
           >
             <Trash2 className="size-4" />
             {t("clear-models")}

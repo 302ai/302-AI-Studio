@@ -289,6 +289,7 @@ export function ProviderModel() {
                   placeholder={t("add-provider-form.name-placeholder")}
                   onChange={handleFieldChange("name")}
                   maxLength={100}
+                  aria-label="Provider Name"
                 />
               </div>
             </div>
@@ -300,6 +301,7 @@ export function ProviderModel() {
               value={formData.baseUrl}
               placeholder={t("add-provider-form.placeholder-3")}
               onChange={handleFieldChange("baseUrl")}
+              aria-label="Base URL"
             />
             <span className="max-w-full overflow-hidden whitespace-normal break-all text-muted-fg text-xs">
               {`${t("add-provider-form.api-forward")}：${formData.baseUrl || ""}/chat/completions`}
@@ -314,6 +316,7 @@ export function ProviderModel() {
               value={formData.apiKey}
               placeholder={t("add-provider-form.placeholder-2")}
               onChange={handleFieldChange("apiKey")}
+              aria-label="API Key"
             />
 
             {!selectedProvider.custom && (

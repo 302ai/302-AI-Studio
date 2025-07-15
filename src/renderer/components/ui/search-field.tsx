@@ -1,5 +1,6 @@
 import { IconSearch, IconX } from "@intentui/icons";
 import { composeTailwindRenderProps } from "@renderer/lib/primitive";
+import { cn } from "@renderer/lib/utils";
 import type { SearchFieldProps as SearchFieldPrimitiveProps } from "react-aria-components";
 import {
   Button,
@@ -46,7 +47,7 @@ const SearchField = ({
           ) : children ? (
             children
           ) : (
-            <FieldGroup>
+            <FieldGroup className={cn(className)}>
               {isPending ? <Loader variant="spin" /> : <IconSearch />}
               <Input placeholder={placeholder ?? "Search..."} />
 

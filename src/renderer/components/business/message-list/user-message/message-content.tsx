@@ -8,7 +8,7 @@ interface MessageContentProps {
 
 export function MessageContent({ messageId, content }: MessageContentProps) {
   return (
-    <div className="rounded-[8px] bg-accent px-4 py-3">
+    <div className="rounded-lg bg-accent px-4 py-3">
       <MessageAttachments messageId={messageId} />
 
       <div className="overflow-wrap-anywhere w-full break-words break-all text-accent-fg">

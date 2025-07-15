@@ -31,7 +31,7 @@ export function ActionGroup({
       {/* Star */}
       {onStar && (
         <ButtonWithTooltip
-          className="rounded-[8px]"
+          className="rounded-lg"
           title={t("settings.model-settings.model-provider.star")}
           intent="plain"
           size="sq-xs"
@@ -50,7 +50,7 @@ export function ActionGroup({
       {/* Edit */}
       {onEdit && (
         <ButtonWithTooltip
-          className="rounded-[8px]"
+          className="rounded-lg"
           title={t("settings.model-settings.model-provider.edit")}
           intent="plain"
           size="sq-xs"
@@ -64,7 +64,7 @@ export function ActionGroup({
       {/* Delete */}
       {onDelete && (
         <ButtonWithTooltip
-          className="rounded-[8px]"
+          className="rounded-lg"
           title={t("settings.model-settings.model-provider.delete")}
           intent="plain"
           size="sq-xs"
