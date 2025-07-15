@@ -27,18 +27,18 @@ export function LanguageSelector() {
   };
 
   return (
-    <div className="mx-auto flex flex-col gap-2">
+    <div className="flex min-w-[398px] flex-col gap-2">
       <Label className="text-label-fg">
         {t("settings.general-settings.language.label")}
       </Label>
       <Select
-        className="w-[398px]"
+        className="min-w-full"
         selectedKey={currentLang.key}
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
       >
         <Select.Trigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
-        <Select.List popover={{ className: "min-w-[398px]" }} items={langs}>
+        <Select.List className="min-w-full" items={langs}>
           {({ key, prefix, nativeName }) => (
             <Select.Option
               className={cn(

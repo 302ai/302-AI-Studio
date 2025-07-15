@@ -106,7 +106,7 @@ export function ShortcutsSettings() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-4 overflow-hidden py-[18px]">
+    <div className="mx-auto flex h-full flex-1 flex-col gap-4 overflow-hidden py-[18px]">
       <div className="flex flex-1 justify-center overflow-y-auto pr-2">
         <div className="w-full max-w-md space-y-6">
           {shortcutSettings.map((shortcut) => (

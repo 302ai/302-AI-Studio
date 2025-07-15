@@ -67,10 +67,22 @@
         "system": "システム"
       },
       "version-update": {
-        "label": "バージョンの更新"
-      },
-      "switch": {
-        "label": "自動更新"
+        "label": "バージョンの更新",
+        "check-for-updates": "更新を確認",
+        "switch": {
+          "label": "自動更新"
+        },
+        "version-info": "バージョン",
+        "update-available": "新しいバージョンが検出されました",
+        "update-now": "今すぐ更新",
+        "update-later": "後日更新",
+        "checking": "チェック中",
+        "no-update-available": "現在のバージョンはすでに最新バージョンです",
+        "check-failed": "チェックに失敗しました",
+        "restart-to-update": "即時再起動",
+        "downloading": "ダウンロード",
+        "new-version-available": "新バージョン",
+        "update-downloaded": "新しいバージョンの準備ができました。アプリを再起動してインストールしてください"
       }
     },
     "icon-tooltip": "設定を開く",

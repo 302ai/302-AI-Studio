@@ -29,4 +29,5 @@ export const TYPES = {
   WindowService: Symbol.for("WindowService"),
   TriplitService: Symbol.for("TriplitService"),
   SettingsService: Symbol.for("SettingsService"),
+  UpdaterService: Symbol.for("UpdaterService"),
 } as const;

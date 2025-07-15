@@ -1,6 +1,6 @@
 import { TYPES } from "@main/shared/types";
-import { shell } from "electron";
 import logger from "@shared/logger/main-logger";
+import { shell } from "electron";
 import { injectable } from "inversify";
 import {
   CommunicationWay,

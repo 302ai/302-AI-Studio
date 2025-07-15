@@ -71,9 +71,8 @@
   --color-sidebar: var(--sidebar);
   --color-sidebar-fg: var(--sidebar-fg);
 
-  --color-setting-tab-list: var(--setting-tab-list);
-  --color-setting-tab-list-fg: var(--setting-tab-list-fg);
-  --color-setting-about-text: var(--setting-about-text);
+  --color-setting: var(--setting);
+  --color-setting-fg: var(--setting-fg);
 
   --color-card-desc-text: var(--card-desc-text);
   --color-card-title-text: var(--card-title-text);
@@ -109,7 +108,7 @@
 
     --hover: #F1F1F1;
     --hover-fg: #000000;
-    --hover-2: #f9f9f9;
+    --hover-2: #F9F9F9;
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
@@ -140,8 +139,8 @@
     --sidebar: #F9F9F9;
     --sidebar-fg: #333333;
 
-    --setting-tab-list: #F9F9F9;
-    --setting-tab-list-fg: #333333;
+    --setting: #F9F9F9;
+    --setting-fg: #333333;
 
     --card-desc-text: #AAAAAA;
     --card-title-text: #333333;
@@ -216,8 +215,8 @@
     --sidebar: #1A1A1A;
     --sidebar-fg: #E6E6E6;
 
-    --setting-tab-list: #1A1A1A;
-    --setting-tab-list-fg: #E6E6E6;
+    --setting: #1A1A1A;
+    --setting-fg: #E6E6E6;
 
     --card-desc-text: #7A7A7A;
     --card-title-text: #E6E6E6;
@@ -255,7 +254,7 @@
     --sidebar-width: 280px;
     --sidebar-width-dock: 95px;
     --sidebar-width-collapsed: 95px;
-    --setting-tab-list-width: 170px;
+    --setting-width: 170px;
     --chat-input-toolbar-height: 36px;
   }
 

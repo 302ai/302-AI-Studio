@@ -5,7 +5,7 @@ import {
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
 import logger from "@shared/logger/main-logger";
-import type { SearchServices } from "@shared/triplit/types";
+import type { Language, SearchServices, Theme } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type {
   SettingsDbService,
@@ -108,7 +108,7 @@ export class SettingsService {
     }
   }
 
-  async getLanguage(): Promise<"zh" | "en" | "ja"> {
+  async getLanguage(): Promise<Language> {
     try {
       return await this.settingsDbService.getLanguage();
     } catch (error) {
@@ -117,7 +117,7 @@ export class SettingsService {
     }
   }
 
-  async setLanguage(language: "zh" | "en" | "ja"): Promise<void> {
+  async setLanguage(language: Language): Promise<void> {
     try {
       await this.settingsDbService.setLanguage(language);
     } catch (error) {
@@ -126,12 +126,29 @@ export class SettingsService {
     }
   }
 
-  async setTheme(theme: "light" | "dark" | "system"): Promise<void> {
+  async setTheme(theme: Theme): Promise<void> {
     try {
       await this.settingsDbService.setTheme(theme);
     } catch (error) {
       logger.error("SettingsService:setTheme error", { error });
       throw error;
     }
+  }
+
+  async setAutoUpdate(autoUpdate: boolean): Promise<void> {
+    try {
+      await this.settingsDbService.setAutoUpdate(autoUpdate);
+    } catch (error) {
+      logger.error("SettingsService:setAutoUpdate error", { error });
+      throw error;
+    }
+  }
+
+  async getAutoUpdate(): Promise<boolean> {
+    return await this.settingsDbService.getAutoUpdate();
+  }
+
+  async getFeedUrl(): Promise<string> {
+    return await this.settingsDbService.getFeedUrl();
   }
 }

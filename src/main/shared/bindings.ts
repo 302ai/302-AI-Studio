@@ -22,6 +22,7 @@ import { TabService } from "@main/services/tab-service";
 import { ThreadService } from "@main/services/thread-service";
 import { TriplitService } from "@main/services/triplit-service";
 import { UiService } from "@main/services/ui-service";
+import { UpdaterService } from "@main/services/updater-service";
 import { WindowService } from "@main/services/window-service";
 import { TYPES } from "@main/shared/types";
 import { Container } from "inversify";
@@ -128,5 +129,9 @@ export function initBindings() {
   container
     .bind<ModelService>(TYPES.ModelService)
     .to(ModelService)
+    .inSingletonScope();
+  container
+    .bind<UpdaterService>(TYPES.UpdaterService)
+    .to(UpdaterService)
     .inSingletonScope();
 }

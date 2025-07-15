@@ -30,10 +30,10 @@ export function SearchService() {
   };
 
   return (
-    <div className="mx-auto flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <Label className="text-label-fg">{t("search-provider.label")}</Label>
       <Select
-        className="w-[398px]"
+        className="min-w-[398px]"
         selectedKey={currentsearchService}
         onSelectionChange={handleSearchServiceChange}
         aria-label="Select search provider"

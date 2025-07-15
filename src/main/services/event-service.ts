@@ -31,6 +31,10 @@ export enum EventNames {
 
   // * Shortcut Events
   SHORTCUT_TRIGGERED = "shortcut:triggered",
+
+  // * Updater Events
+  UPDATER_CHECK_STATUS = "updater:check-status",
+  UPDATER_DOWNLOAD_STATUS = "updater:download-status",
 }
 
 type Events = {
@@ -61,6 +65,14 @@ type Events = {
   [EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE]: null;
   [EventNames.SHORTCUT_TRIGGERED]: {
     action: ShortcutAction;
+  };
+  [EventNames.UPDATER_CHECK_STATUS]: {
+    status: "available" | "not-available";
+    version: string;
+  };
+  [EventNames.UPDATER_DOWNLOAD_STATUS]: {
+    status: "downloading" | "downloaded";
+    precent?: number;
   };
 };
 

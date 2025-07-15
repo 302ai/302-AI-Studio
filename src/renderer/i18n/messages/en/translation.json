@@ -66,10 +66,22 @@
         "system": "System"
       },
       "version-update": {
-        "label": "Version Update"
-      },
-      "switch": {
-        "label": "Automatic Update"
+        "label": "Version Update",
+        "check-for-updates": "Check",
+        "switch": {
+          "label": "Automatic Update"
+        },
+        "version-info": "Version",
+        "update-available": "New version detected",
+        "update-now": "Update Now",
+        "update-later": "Update Later",
+        "checking": "Checking",
+        "no-update-available": "The current version is already the latest version",
+        "check-failed": "Check failed, please try again",
+        "restart-to-update": "Restart",
+        "downloading": "Downloading",
+        "new-version-available": "New Version Available",
+        "update-downloaded": "The new version is ready, please restart the app to install it"
       }
     },
     "icon-tooltip": "Open Settings",

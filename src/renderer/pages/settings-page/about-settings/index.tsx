@@ -59,7 +59,7 @@ export function AboutSettings() {
   ] as const;
 
   return (
-    <div className="flex h-full flex-col items-center justify-between pb-9">
+    <div className="mx-auto flex h-full flex-1 flex-col items-center justify-between pb-9">
       <div className="flex flex-1 flex-col items-center justify-center gap-6">
         <div className="flex flex-col items-center gap-y-[22px] text-center">
           <ModelIcon modelName="302" className="size-[62px]" />

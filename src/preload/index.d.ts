@@ -1,5 +1,6 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type { StreamChatParams } from "@main/services/provider-service/base-provider-service";
+import type { UpdaterStatus } from "@main/services/updater-service";
 import type {
   Attachment,
   CreateAttachmentData,
@@ -225,6 +226,13 @@ declare global {
           updateData: UpdateModelData,
         ) => Promise<Model>;
         deleteModel: (modelId: string) => Promise<void>;
+      };
+      updaterService: {
+        setAutoUpdate: (autoUpdate: boolean) => Promise<void>;
+        checkForUpdates: () => Promise<void>;
+        getStatus: () => Promise<UpdaterStatus>;
+        update: () => Promise<void>;
+        install: () => Promise<void>;
       };
     };
   }

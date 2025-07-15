@@ -2,7 +2,7 @@ import { SearchService } from "./search-service";
 
 export function PreferenceSettings() {
   return (
-    <div className="flex size-full flex-col gap-y-[18px] py-5">
+    <div className="mx-auto flex h-full flex-col gap-4 px-4 pt-[18px]">
       <SearchService />
     </div>
   );

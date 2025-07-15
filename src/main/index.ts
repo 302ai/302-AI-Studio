@@ -8,8 +8,6 @@ import { container } from "./shared/bindings";
 import { TYPES } from "./shared/types";
 import { MainWindow } from "./windows/main";
 
-// Logger initialization is handled automatically by the new logger system
-
 makeAppWithSingleInstanceLock(async () => {
   await app.whenReady();
   await makeAppSetup(MainWindow);

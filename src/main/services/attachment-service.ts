@@ -4,12 +4,12 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
+import logger from "@shared/logger/main-logger";
 import type {
   Attachment,
   CreateAttachmentData,
   UpdateAttachmentData,
 } from "@shared/triplit/types";
-import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { AttachmentDbService } from "./db-service/attachment-db-service";
 

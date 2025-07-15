@@ -72,7 +72,7 @@ export function SettingsPage() {
   return (
     <div className="flex h-full flex-row">
       <Tabs
-        className="w-auto min-w-[var(--setting-tab-list-width)] justify-end rounded-xl bg-setting-tab-list"
+        className="w-auto min-w-[var(--setting-width)] justify-end rounded-xl bg-setting"
         orientation="vertical"
         aria-label="Setting Tabs"
         onSelectionChange={handleTabSelect}
@@ -93,15 +93,13 @@ export function SettingsPage() {
         </div>
       </Tabs>
 
-      <div className="flex-1">
-        <Routes>
-          <Route path="/general-settings" element={<GeneralSettings />} />
-          <Route path="/preference-settings" element={<PreferenceSettings />} />
-          <Route path="/model-settings" element={<ModelSettings />} />
-          <Route path="/shortcuts-settings" element={<ShortcutsSettings />} />
-          <Route path="/about-settings" element={<AboutSettings />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/general-settings" element={<GeneralSettings />} />
+        <Route path="/preference-settings" element={<PreferenceSettings />} />
+        <Route path="/model-settings" element={<ModelSettings />} />
+        <Route path="/shortcuts-settings" element={<ShortcutsSettings />} />
+        <Route path="/about-settings" element={<AboutSettings />} />
+      </Routes>
     </div>
   );
 }

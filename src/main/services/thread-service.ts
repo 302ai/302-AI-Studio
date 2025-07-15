@@ -1,10 +1,10 @@
 import { TYPES } from "@main/shared/types";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateThreadData,
   Thread,
   UpdateThreadData,
 } from "@shared/triplit/types";
-import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import {
   CommunicationWay,

@@ -18,5 +18,10 @@ export const settingsSchema = {
       default: "zh",
     }),
     selectedModelId: S.String({ default: "" }),
+    autoUpdate: S.Boolean({ default: true }),
+    feedUrl: S.String({
+      default:
+        "https://github.com/302ai/302-AI-Studio/releases/latest/download",
+    }),
   }),
 };

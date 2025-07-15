@@ -76,11 +76,11 @@ export function ThemeSwitcher() {
   }, [theme, themeOptions]);
 
   return (
-    <div className="mx-auto flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <Label className="text-label-fg">{t("label")}</Label>
       <div
         ref={containerRef}
-        className="relative flex h-9 w-[398px] overflow-hidden rounded-xl border border-input bg-bg p-1"
+        className="relative flex h-9 min-w-[398px] overflow-hidden rounded-xl border border-input bg-bg p-1"
       >
         <div
           className="absolute z-2 h-[25.2px] rounded-xl bg-accent transition-all duration-400 ease-out"
