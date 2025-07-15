@@ -131,6 +131,6 @@ export class UpdaterService {
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async install(_event: Electron.IpcMainInvokeEvent): Promise<void> {
-    this.autoUpdater.quitAndInstall();
+    this.autoUpdater.quitAndInstall(true, true);
   }
 }
