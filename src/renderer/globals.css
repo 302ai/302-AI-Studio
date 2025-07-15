@@ -32,27 +32,33 @@
   --color-accent-fg: var(--accent-fg);
   --color-accent-hover: var(--accent-hover);
 
-  --color-add-model: var(--add-model);
-  --color-add-model-fg: var(--add-model-fg);
-  --color-add-model-hover: var(--add-model-hover);
-  --color-add-model-ring: var(--add-model-ring);
-
-  --color-clear-models: var(--clear-models);
-  --color-clear-models-fg: var(--clear-models-fg);
-  --color-clear-models-hover: var(--clear-models-hover);
-  --color-clear-models-ring: var(--clear-models-ring);
-
   --color-success: var(--success);
   --color-success-fg: var(--success-fg);
+  --color-success-bg: var(--success-bg);
+  --color-success-border: var(--success-border);
+  --color-success-text: var(--success-text);
+
+  --color-info-bg: var(--info-bg);
+  --color-info-border: var(--info-border);
+  --color-info-text: var(--info-text);
 
   --color-danger: var(--danger);
+  --color-danger-2: var(--danger-2);
   --color-danger-fg: var(--danger-fg);
+  --color-danger-fg-2: var(--danger-fg-2);
 
   --color-destructive: var(--destructive);
   --color-destructive-fg: var(--destructive-fg);
 
   --color-warning: var(--warning);
   --color-warning-fg: var(--warning-fg);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-border: var(--warning-border);
+  --color-warning-text: var(--warning-text);
+
+  --color-error-bg: var(--error-bg);
+  --color-error-border: var(--error-border);
+  --color-error-text: var(--error-text);
 
   --color-muted: var(--muted);
   --color-muted-fg: var(--muted-fg);
@@ -74,6 +80,8 @@
   --color-hover-secondary-fg: var(--hover-secondary-fg);
 
   --color-label-fg: var(--label-fg);
+
+  --color-btn-overlay: var(--btn-overlay);
 
   --color-navbar: var(--navbar);
   --color-navbar-fg: var(--navbar-fg);
@@ -113,17 +121,7 @@
     --accent-fg: #8450E8;
     --accent-hover: #e6d9f7;
 
-    --add-model: #EFE3FF;
-    --add-model-fg: #8E47F0;
-    --add-model-hover: #E6D9F7;
-    --add-model-ring: transparent;
-
-    --clear-models: #FFE7E7;
-    --clear-models-fg: #D82525;
-    --clear-models-hover: #FFE7E7;
-    --clear-models-ring: transparent;
-
-    --muted: oklch(0.97 0.001 106.424);
+    --muted: #F1F1F1;
     --muted-fg: #AAAAAA;
 
     --hover: #F1F1F1;
@@ -132,12 +130,28 @@
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
+    --success-bg: var(--color-emerald-50);
+    --success-border: var(--color-emerald-100);
+    --success-text: var(--color-emerald-600);
+
+    --info-bg: var(--color-blue-600/15%);
+    --info-border: var(--color-blue-600/15%);
+    --info-text: var(--color-blue-600);
 
     --warning: oklch(0.828 0.189 84.429);
     --warning-fg: oklch(0.279 0.077 45.635);
+    --warning-bg: var(--color-amber-500/15%);
+    --warning-border: var(--color-amber-400/40%);
+    --warning-text: var(--color-amber-600);
+
+    --error-bg: var(--color-red-500/20%);
+    --error-border: var(--color-red-200);
+    --error-text: var(--color-red-600);
 
     --danger: oklch(0.577 0.245 27.325);
+    --danger-2: #FFE7E7;
     --danger-fg: oklch(0.971 0.013 17.38);
+    --danger-fg-2: #D82525;
 
     --destructive: oklch(0.67 0.24 25.76);
     --destructive-fg: oklch(0.98 0 0);
@@ -196,17 +210,7 @@
     --accent-fg: #E6E6E6;
     --accent-hover: #503a6c;
 
-    --add-model: transparent;
-    --add-model-fg: #8E47F0;
-    --add-model-hover: transparent;
-    --add-model-ring: #7948EA;
-
-    --clear-models: #3A1A1A;
-    --clear-models-fg: #FF4D4D;
-    --clear-models-hover: #3A1A1A;
-    --clear-models-ring: transparent;
-
-    --muted: oklch(0.216 0.006 56.043);
+    --muted: #2D2D2D;
     --muted-fg: #5C5C5C;
 
     --hover: #2D2D2D;
@@ -218,12 +222,28 @@
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
+    --success-bg: var(--color-emerald-950);
+    --success-border: var(--color-emerald-900);
+    --success-text: var(--color-emerald-200);
+
+    --info-bg: var(--color-blue-600/15%);
+    --info-border: var(--color-blue-600/15%);
+    --info-text: var(--color-blue-200);
 
     --warning: oklch(0.828 0.189 84.429);
     --warning-fg: oklch(0.279 0.077 45.635);
+    --warning-bg: var(--color-amber-400/10%);
+    --warning-border: var(--color-amber-500/15%);
+    --warning-text: var(--color-amber-200);
+
+    --error-bg: var(--color-red-600/10%);
+    --error-border: var(--color-red-600/15%);
+    --error-text: var(--color-red-200);
 
     --danger: oklch(0.577 0.245 27.325);
+    --danger-2: #3A1A1A;
     --danger-fg: oklch(0.971 0.013 17.38);
+    --danger-fg-2: #FF4D4D;
 
     --destructive: oklch(0.61 0.25 25.9);
     --destructive-fg: oklch(0.98 0 0);
@@ -257,8 +277,6 @@
     --chart-3: oklch(0.702 0.183 293.541);
     --chart-4: oklch(0.811 0.111 293.571);
     --chart-5: oklch(0.894 0.057 293.283);
-
-
   }
 }
 

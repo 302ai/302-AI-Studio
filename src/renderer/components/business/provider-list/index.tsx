@@ -7,6 +7,7 @@ import {
 import empty from "@renderer/assets/images/empty.svg?url";
 import darkEmpty from "@renderer/assets/images/empty-dark.svg?url";
 import { triplitClient } from "@renderer/client";
+import { LdrsLoader } from "@renderer/components/business/ldrs-loader";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import {
@@ -28,7 +29,6 @@ import React, {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
-import { Fetching } from "../fetching";
 import { ModalAction as ModalActionComponent } from "../modal-action";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
@@ -409,7 +409,7 @@ export function ProviderList() {
               className="flex items-center justify-center"
               style={{ height: listHeight }}
             >
-              <Fetching />
+              <LdrsLoader type="waveform" />
             </div>
           ) : providers.length > 0 ? (
             <DragDropContext onDragEnd={handleDragEnd}>

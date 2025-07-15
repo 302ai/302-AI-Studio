@@ -129,7 +129,7 @@ export function ShortcutRecorder({
           <ButtonWithTooltip
             type="button"
             intent="outline"
-            size="small"
+            size="sm"
             onClick={handleCancel}
             className="h-9 px-2"
             title={t("cancel")}
@@ -140,7 +140,7 @@ export function ShortcutRecorder({
           <ButtonWithTooltip
             type="button"
             intent="outline"
-            size="small"
+            size="sm"
             onClick={handleReset}
             className="h-9 px-2"
             title={t("clear")}

@@ -1,10 +1,6 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@renderer/components/ui/tooltip";
+import { Button, type ButtonProps } from "@renderer/components/ui/button";
+import { Tooltip } from "@renderer/components/ui/tooltip";
 import { cn } from "@renderer/lib/utils";
-import type { ButtonProps } from "../ui/button1";
 
 interface ButtonWithTooltipProps extends ButtonProps {
   className?: string;
@@ -19,32 +15,36 @@ export function ButtonWithTooltip({
   className,
   title,
   tooltipPlacement,
-  tooltipDelay,
-  showArrow,
+  tooltipDelay = 100,
+  showArrow = false,
   children,
   ...buttonProps
 }: ButtonWithTooltipProps) {
   const {
     intent = "plain",
-    size = "square-petite",
-    shape = "square",
+    size = "sq-md",
+    isCircle = false,
     ...rest
   } = buttonProps;
 
   return (
     <Tooltip delay={tooltipDelay}>
-      <TooltipTrigger
-        className={cn("size-8", className)}
+      <Button
         intent={intent}
-        shape={shape}
         size={size}
+        isCircle={isCircle}
+        className={cn("rounded-[10px]", className)}
         {...rest}
       >
         {children}
-      </TooltipTrigger>
-      <TooltipContent placement={tooltipPlacement} showArrow={showArrow}>
+      </Button>
+      <Tooltip.Content
+        placement={tooltipPlacement}
+        showArrow={showArrow}
+        intent="inverse"
+      >
         {title}
-      </TooltipContent>
+      </Tooltip.Content>
     </Tooltip>
   );
 }

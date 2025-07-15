@@ -1,13 +1,5 @@
 import { Button } from "@renderer/components/ui/button";
-import {
-  ModalBody,
-  ModalClose,
-  ModalContent,
-  ModalDescription,
-  ModalFooter,
-  ModalHeader,
-  ModalTitle,
-} from "@renderer/components/ui/modal";
+import { Modal } from "@renderer/components/ui/modal";
 import { useTranslation } from "react-i18next";
 
 interface ModalActionProps {
@@ -36,16 +28,20 @@ export function ModalAction({
   });
 
   return (
-    <ModalContent isOpen={state !== null} onOpenChange={onOpenChange} isBlurred>
-      <ModalHeader>
-        <ModalTitle>{actionType.title}</ModalTitle>
+    <Modal.Content
+      isOpen={state !== null}
+      onOpenChange={onOpenChange}
+      isBlurred
+    >
+      <Modal.Header>
+        <Modal.Title>{actionType.title}</Modal.Title>
         {actionType.descriptions.map((description) => (
-          <ModalDescription key={description}>{description}</ModalDescription>
+          <Modal.Description key={description}>{description}</Modal.Description>
         ))}
-      </ModalHeader>
-      {actionType.body && <ModalBody>{actionType.body}</ModalBody>}
-      <ModalFooter>
-        <ModalClose>{t("cancel")}</ModalClose>
+      </Modal.Header>
+      {actionType.body && <Modal.Body>{actionType.body}</Modal.Body>}
+      <Modal.Footer>
+        <Modal.Close>{t("cancel")}</Modal.Close>
         <Button
           intent={
             state && dangerActions?.includes(state) ? "danger" : "primary"
@@ -58,7 +54,7 @@ export function ModalAction({
         >
           {actionType.confirmText ?? t("confirm")}
         </Button>
-      </ModalFooter>
-    </ModalContent>
+      </Modal.Footer>
+    </Modal.Content>
   );
 }

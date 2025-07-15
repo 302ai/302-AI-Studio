@@ -1,10 +1,7 @@
 import { DragDropContext, type DragStart, Droppable } from "@hello-pangea/dnd";
+import { buttonStyles } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@renderer/components/ui/tooltip";
+import { Tooltip } from "@renderer/components/ui/tooltip";
 import { useTabBar } from "@renderer/hooks/use-tab-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
@@ -168,20 +165,21 @@ export function TabBar() {
                 )}
               />
               <Tooltip>
-                <TooltipTrigger
-                  className="size-6 flex-shrink-0 self-center rounded-[4px]"
-                  intent="plain"
-                  size="square-petite"
+                <Tooltip.Trigger
+                  className={buttonStyles({
+                    intent: "plain",
+                    size: "sq-xs",
+                  })}
                   style={noDragRegion}
                   onClick={() => {
                     handleAddNewTab("thread");
                   }}
                 >
                   <Plus className="h-4 w-4" />
-                </TooltipTrigger>
-                <TooltipContent>
+                </Tooltip.Trigger>
+                <Tooltip.Content>
                   {t("sidebar.new-thread.tooltip")}
-                </TooltipContent>
+                </Tooltip.Content>
               </Tooltip>
             </div>
             {provided.placeholder}

@@ -128,7 +128,7 @@ export function ProviderCfgForm({
         {/* Label and Badge */}
         <div className="flex items-center gap-x-2">
           <Label className="font-medium text-fg text-sm">API Key</Label>
-          <Badge intent={getBadgeIntent(keyValidationStatus)} shape="square">
+          <Badge intent={getBadgeIntent(keyValidationStatus)} isCircle={false}>
             <LoaderRenderer
               status={keyValidationStatus}
               statuses={badgeStatuses}

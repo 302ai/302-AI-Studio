@@ -9,7 +9,7 @@ export function Layout() {
   useShortcutsHandlers();
 
   return (
-    <main className="flex h-screen flex-col overflow-hidden">
+    <main className="flex h-screen w-screen flex-col overflow-hidden">
       <Toast />
       <BasicTitleBar />
       <div

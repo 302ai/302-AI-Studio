@@ -1,6 +1,6 @@
 import { triplitClient } from "@renderer/client";
-import type { Provider } from "@shared/triplit/types";
 import logger from "@shared/logger/renderer-logger";
+import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 

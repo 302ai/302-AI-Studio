@@ -3,11 +3,7 @@ import {
   ListBoxItem,
   ListBoxSection,
 } from "@renderer/components/ui/list-box";
-import {
-  ModalContent,
-  ModalHeader,
-  ModalTitle,
-} from "@renderer/components/ui/modal";
+import { Modal } from "@renderer/components/ui/modal";
 import { SearchField } from "@renderer/components/ui/search-field";
 import { useThread } from "@renderer/hooks/use-thread";
 import { Autocomplete, useFilter } from "react-aria-components";
@@ -33,15 +29,15 @@ export function ThreadSearcher({
   };
 
   return (
-    <ModalContent
+    <Modal.Content
       isOpen={isOpenSearcher}
       onOpenChange={onOpenChange}
       closeButton={false}
       isBlurred
     >
-      <ModalHeader className="hidden">
-        <ModalTitle />
-      </ModalHeader>
+      <Modal.Header className="hidden">
+        <Modal.Title />
+      </Modal.Header>
       <Autocomplete filter={contains}>
         <div className="border-b bg-muted p-2">
           <SearchField
@@ -80,6 +76,6 @@ export function ThreadSearcher({
           ))}
         </ListBox>
       </Autocomplete>
-    </ModalContent>
+    </Modal.Content>
   );
 }

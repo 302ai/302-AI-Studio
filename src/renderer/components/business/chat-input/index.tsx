@@ -229,14 +229,14 @@ export function ChatInput({ className }: ChatInputProps) {
         <Textarea
           className={cn(
             "w-full flex-1 rounded-none border-0 bg-transparent p-0",
-            "resize-none shadow-none ring-0",
+            "resize-none shadow-none ring-0 focus:ring-0",
             "min-h-[calc(7rem-var(--chat-input-toolbar-height)-9px)]",
           )}
           placeholder={t("input-placeholder")}
           aria-label={t("input-label")}
-          resize="none"
           value={input}
           onChange={handleInputChange}
+          style={{ resize: "none" }}
         />
 
         <ToolBar

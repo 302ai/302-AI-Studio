@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/nursery/useUniqueElementIds: ignore */
+
+import { SidebarController } from "@renderer/components/business/sidebar/sidebar-controller";
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +19,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SearchButton } from "./search-button";
 import { SettingButton } from "./setting-button";
-import { SidebarController } from "./sidebar-controller";
 import { ThreadMenu } from "./thread-menu";
 import { ThreadSearcher } from "./thread-searcher";
 
@@ -94,10 +95,7 @@ export function AppSidebar(props: AppSidebarProps) {
                           isCurrent={id === activeThreadId}
                           onClick={() => handleClickThread(id)}
                         >
-                          <ThreadMenu
-                            thread={thread}
-                            activeThreadId={activeThreadId ?? ""}
-                          />
+                          <ThreadMenu thread={thread} />
                         </SidebarItem>
                       );
                     })}

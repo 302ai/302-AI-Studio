@@ -1,10 +1,9 @@
 import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
-import { Loader } from "@renderer/components/ui/loader";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { PackageOpen } from "lucide-react";
+import { PackageOpen, Trash2 } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -17,7 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { SearchField } from "../../ui/search-field";
-import { Fetching } from "../fetching";
+import { LdrsLoader } from "../ldrs-loader";
 import { AddModelModal } from "./add-model-modal";
 import { ClearModelsModal } from "./clear-models-modal";
 import { RowList } from "./row-list";
@@ -190,13 +189,23 @@ export function ModelList({
           <Button
             onClick={onFetchModels}
             intent="primary"
-            isDisabled={isFetchingModels || !onFetchModels || !isFormValid}
+            isDisabled={!onFetchModels || !isFormValid}
+            isPending={isFetchingModels}
+            className="h-10 min-w-[110px] rounded-[8px]"
           >
-            {isFetchingModels && <Loader variant="spin" size="small" />}
-            {t("fetch-models")}
+            {({ isPending }) => (
+              <>
+                {isPending && <LdrsLoader type="line-spinner" size={16} />}
+                {t("fetch-models")}
+              </>
+            )}
           </Button>
 
-          <Button onClick={() => setIsAddModelModalOpen(true)} intent="outline">
+          <Button
+            className="inset-ring-primary h-10 min-w-[110px] rounded-[8px] pressed:bg-accent text-primary hover:bg-accent"
+            onClick={() => setIsAddModelModalOpen(true)}
+            intent="outline"
+          >
             {t("add-model")}
           </Button>
         </div>
@@ -205,15 +214,16 @@ export function ModelList({
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder={t("search-placeholder")}
-            className=" !w-[206px]"
-            // fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
+            className="!w-[206px]"
           />
 
           <Button
             onClick={handleClear}
-            intent="danger"
+            intent="plain"
             isDisabled={!selectedProvider?.id || filteredModels.length === 0}
+            className="h-10 min-w-[78px] rounded-[8px] bg-danger-2 pressed:bg-danger-2/70 text-danger-fg-2 hover:bg-danger-2/70"
           >
+            <Trash2 className="size-4" />
             {t("clear-models")}
           </Button>
         </div>
@@ -227,7 +237,7 @@ export function ModelList({
             className="flex items-center justify-center"
             style={{ height: containerHeight }}
           >
-            <Fetching />
+            <LdrsLoader type="waveform" />
           </div>
         ) : (
           <div className=" w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">

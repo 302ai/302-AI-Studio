@@ -152,7 +152,7 @@ export const ArtifactPreviewPanel = () => {
               <div className="flex items-center rounded-md bg-gray-100 p-0.5 dark:bg-gray-800">
                 <Button
                   intent="plain"
-                  size="sq-xs"
+                  size="xs"
                   className={`rounded px-3 py-1 font-medium text-xs transition-all duration-200 ${
                     drawerContent === "preview"
                       ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100"
@@ -164,7 +164,7 @@ export const ArtifactPreviewPanel = () => {
                 </Button>
                 <Button
                   intent="plain"
-                  size="sq-xs"
+                  size="xs"
                   className={`rounded px-3 py-1 font-medium text-xs transition-all duration-200 ${
                     drawerContent === "code"
                       ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100"

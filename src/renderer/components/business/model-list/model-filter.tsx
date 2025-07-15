@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/nursery/useUniqueElementIds: biome-ignore-all */
-import { Tab, TabList, Tabs } from "@renderer/components/ui/tab";
+import { Tab, TabList, Tabs } from "@renderer/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 
 interface ModelFilterProps {

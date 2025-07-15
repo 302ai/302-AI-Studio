@@ -1,6 +1,6 @@
 import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
+import { ShortcutRecorder } from "@renderer/components/business/shortcut-recorder";
 import { Select } from "@renderer/components/ui/select";
-import { ShortcutRecorder } from "@renderer/components/ui/shortcut-recorder";
 import { formatShortcutLabel } from "@renderer/config/constant";
 import { useShortcuts } from "@renderer/hooks/use-shortcuts";
 import { cn } from "@renderer/lib/utils";
@@ -165,7 +165,7 @@ export function ShortcutsSettings() {
                 <ButtonWithTooltip
                   type="button"
                   intent="outline"
-                  size="small"
+                  size="sm"
                   onClick={() => handleResetShortcut(shortcut.action)}
                   className="h-9 px-2"
                   title={t("recorder.reset")}

@@ -89,11 +89,7 @@ export const RowList = memo(function RowList({
     >
       <div className="grid h-full grid-cols-[minmax(0,1fr)_170px_50px]">
         <div className="flex h-full items-center gap-3 pl-4 outline-hidden">
-          <Checkbox
-            className="cursor-pointer"
-            isSelected={item.enabled}
-            onChange={handleCheckboxChange}
-          />
+          <Checkbox isSelected={item.enabled} onChange={handleCheckboxChange} />
           <div className="truncate" title={item.name}>
             {item.remark || item.name}
           </div>
@@ -126,7 +122,7 @@ export const RowList = memo(function RowList({
           })}
         </div>
 
-        <div className="w-full flex-1 items-center justify-center">
+        <div className="w-full flex-1 items-center justify-center pr-2">
           <ActionGroup
             onEdit={handleEdit}
             onDelete={handleDelete}

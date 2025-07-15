@@ -1,13 +1,5 @@
 import { Button } from "@renderer/components/ui/button";
-import {
-  Modal,
-  ModalBody,
-  ModalClose,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalTitle,
-} from "@renderer/components/ui/modal";
+import { Modal } from "@renderer/components/ui/modal";
 
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import logger from "@shared/logger/renderer-logger";
@@ -107,19 +99,19 @@ export function AddModelModal({
 
   return (
     <Modal>
-      <ModalContent isOpen={isOpen} onOpenChange={handleOpenChange} size="lg">
-        <ModalHeader>
-          <ModalTitle>{t("title")}</ModalTitle>
-        </ModalHeader>
-        <ModalBody className="px-6 py-4">
+      <Modal.Content isOpen={isOpen} onOpenChange={handleOpenChange} size="lg">
+        <Modal.Header>
+          <Modal.Title>{t("title")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="px-6 py-4">
           <ModelForm
             data={formData}
             onChange={setFormData}
             validationErrors={validationErrors}
           />
-        </ModalBody>
-        <ModalFooter>
-          <ModalClose>{t("actions.cancel")}</ModalClose>
+        </Modal.Body>
+        <Modal.Footer>
+          <Modal.Close>{t("actions.cancel")}</Modal.Close>
           <Button
             intent="primary"
             onPress={handleSubmit}
@@ -130,8 +122,8 @@ export function AddModelModal({
           >
             {t("actions.save")}
           </Button>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 }
