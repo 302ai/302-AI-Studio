@@ -96,6 +96,7 @@
         "search-placeholder": "検索...",
         "fetch-models": "モデルを取得",
         "add-model": "モデルを追加",
+        "clear-models": "クリア",
         "model-name": "モデル名",
         "model-capabilities": "モデル機能",
         "actions": "操作"
@@ -130,7 +131,12 @@
           "delete-success-message": "削除に成功しました",
           "delete-title": "モデルを削除",
           "delete-description": "このモデルを削除してもよろしいですか？",
-          "delete-confirm-text": "削除"
+          "delete-confirm-text": "削除",
+          "clear-title": "すべてのモデルをクリア",
+          "clear-description": "このプロバイダーのすべてのモデルをクリアしてもよろしいですか？この操作は元に戻せません。",
+          "clear-confirm-text": "すべてクリア",
+          "clear-success-message": "すべてのモデルが正常にクリアされました",
+          "clear-error-message": "モデルのクリアに失敗しました"
         }
       },
       "model-provider": {

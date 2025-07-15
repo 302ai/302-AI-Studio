@@ -58,4 +58,17 @@ export class ModelService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async clearModel(
+    _event: Electron.IpcMainEvent,
+    providerId: string,
+  ): Promise<void> {
+    try {
+      await this.modelDbService.clearModel(providerId);
+    } catch (error) {
+      logger.error("ModelService: clearModel error", { error });
+      throw error;
+    }
+  }
 }

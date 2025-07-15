@@ -89,12 +89,13 @@
     "model-settings": {
       "model-list": {
         "label": "Model List",
-        "no-models-description": "The model list is empty...",
+        "no-models-description": "No models available...",
         "current": "Current",
         "collected": "Favorites",
         "search-placeholder": "Search...",
         "fetch-models": "Fetch Models",
         "add-model": "Add Model",
+        "clear-models": "Clear",
         "model-name": "Model Name",
         "model-capabilities": "Capabilities",
         "actions": "Actions"
@@ -129,7 +130,12 @@
           "delete-success-message": "Delete Success",
           "delete-title": "Delete Model",
           "delete-description": "Are you sure you want to delete this model?",
-          "delete-confirm-text": "Delete"
+          "delete-confirm-text": "Delete",
+          "clear-title": "Clear All Models",
+          "clear-description": "Are you sure you want to clear all models from this provider? This action cannot be undone.",
+          "clear-confirm-text": "Clear All",
+          "clear-success-message": "All models cleared successfully",
+          "clear-error-message": "Failed to clear models"
         }
       },
       "model-provider": {

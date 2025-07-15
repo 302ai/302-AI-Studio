@@ -19,6 +19,7 @@ import { FixedSizeList as List } from "react-window";
 import { SearchField } from "../../ui/search-field";
 import { Fetching } from "../fetching";
 import { AddModelModal } from "./add-model-modal";
+import { ClearModelsModal } from "./clear-models-modal";
 import { RowList } from "./row-list";
 
 interface ModelListProps {
@@ -59,6 +60,7 @@ export function ModelList({
   const [tabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddModelModalOpen, setIsAddModelModalOpen] = useState(false);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
 
   // 创建 providers 映射表，方便快速查找
   const providersMap = useMemo(() => {
@@ -176,9 +178,13 @@ export function ModelList({
 
   const loading = !ready || isPending;
 
+  const handleClear = () => {
+    setIsClearModalOpen(true);
+  };
+
   return (
     <>
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between gap-2">
         {/* <ModelFilter onTabChange={setTabKey} /> */}
         <div className="flex gap-2">
           <Button
@@ -196,17 +202,31 @@ export function ModelList({
             // className="w-[110px]"
             onClick={() => setIsAddModelModalOpen(true)}
             intent="outline"
+            className="!inset-ring-transparent bg-add-model text-add-model-fg ring-1 ring-add-model-ring hover:bg-add-model-hover hover:text-add-model-fg dark:pressed:bg-transparent"
           >
             {t("add-model")}
           </Button>
         </div>
-        <SearchField
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder={t("search-placeholder")}
-          className="!h-[40px] !w-[206px]"
-          // fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
-        />
+        <div className="flex items-center justify-center gap-2">
+          <SearchField
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={t("search-placeholder")}
+            className=" !w-[206px]"
+            // fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
+          />
+
+          <Button
+            size="small"
+            // className="w-[110px]"
+            onClick={handleClear}
+            intent="outline"
+            isDisabled={!selectedProvider?.id || filteredModels.length === 0}
+            className="!inset-ring-transparent bg-clear-models text-clear-models-fg ring-1 ring-clear-models-ring hover:bg-clear-models-hover hover:text-clear-models-fg"
+          >
+            {t("clear-models")}
+          </Button>
+        </div>
       </div>
       <div
         ref={setContainerRef}
@@ -267,6 +287,12 @@ export function ModelList({
       <AddModelModal
         isOpen={isAddModelModalOpen}
         onOpenChange={setIsAddModelModalOpen}
+      />
+
+      <ClearModelsModal
+        isOpen={isClearModalOpen}
+        onOpenChange={setIsClearModalOpen}
+        providerId={selectedProvider?.id}
       />
     </>
   );

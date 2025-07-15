@@ -96,6 +96,7 @@
         "search-placeholder": "搜索...",
         "fetch-models": "获取模型",
         "add-model": "添加模型",
+        "clear-models": "清空",
         "model-name": "模型名称",
         "model-capabilities": "模型能力",
         "actions": "操作"
@@ -130,7 +131,12 @@
           "delete-success-message": "删除成功",
           "delete-title": "删除模型",
           "delete-description": "确定要删除该模型吗？",
-          "delete-confirm-text": "删除"
+          "delete-confirm-text": "删除",
+          "clear-title": "清空所有模型",
+          "clear-description": "确定要清空该提供商的所有模型吗？此操作无法撤销。",
+          "clear-confirm-text": "清空所有",
+          "clear-success-message": "所有模型已清空",
+          "clear-error-message": "清空模型失败"
         }
       },
       "model-provider": {

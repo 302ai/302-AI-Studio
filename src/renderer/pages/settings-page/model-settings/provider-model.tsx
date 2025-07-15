@@ -254,22 +254,11 @@ export function ProviderModel() {
   }, [selectedProvider, formData, handleCheckKey, t, setProviderFetching]);
 
   if (!selectedProvider) {
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-4 p-6">
-        <div className="text-center">
-          <h2 className="mb-2 font-semibold text-fg text-lg">
-            {t("select-provider")}
-          </h2>
-          <p className="text-muted-fg text-sm">
-            {t("select-provider-description")}
-          </p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
-    <div className="flex h-[calc(100vh-50px)] w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px]">
+    <div className="flex w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px]">
       {/* 配置标题 */}
       <div className="flex flex-col gap-1">
         <h2 className="max-w-full whitespace-normal break-all text-fg leading-tight">

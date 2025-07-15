@@ -36,4 +36,20 @@ export class ModelDbService extends BaseDbService {
   async getModelById(modelId: string): Promise<Model | null> {
     return await triplitClient.fetchById("models", modelId);
   }
+
+  async clearModel(providerId: string): Promise<void> {
+    const query = triplitClient
+      .query("models")
+      .Where("providerId", "=", providerId);
+
+    const models = await triplitClient.fetch(query);
+
+    await triplitClient.transact(async (tx) => {
+      const deletePromises = models.map((model) =>
+        tx.delete("models", model.id),
+      );
+
+      await Promise.all(deletePromises);
+    });
+  }
 }

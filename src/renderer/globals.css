@@ -32,6 +32,16 @@
   --color-accent-fg: var(--accent-fg);
   --color-accent-hover: var(--accent-hover);
 
+  --color-add-model: var(--add-model);
+  --color-add-model-fg: var(--add-model-fg);
+  --color-add-model-hover: var(--add-model-hover);
+  --color-add-model-ring: var(--add-model-ring);
+
+  --color-clear-models: var(--clear-models);
+  --color-clear-models-fg: var(--clear-models-fg);
+  --color-clear-models-hover: var(--clear-models-hover);
+  --color-clear-models-ring: var(--clear-models-ring);
+
   --color-success: var(--success);
   --color-success-fg: var(--success-fg);
 
@@ -102,6 +112,16 @@
     --accent: #F3F2FF;
     --accent-fg: #8450E8;
     --accent-hover: #e6d9f7;
+
+    --add-model: #EFE3FF;
+    --add-model-fg: #8E47F0;
+    --add-model-hover: #E6D9F7;
+    --add-model-ring: transparent;
+
+    --clear-models: #FFE7E7;
+    --clear-models-fg: #D82525;
+    --clear-models-hover: #FFE7E7;
+    --clear-models-ring: transparent;
 
     --muted: oklch(0.97 0.001 106.424);
     --muted-fg: #AAAAAA;
@@ -175,6 +195,16 @@
     --accent: #49306A;
     --accent-fg: #E6E6E6;
     --accent-hover: #503a6c;
+
+    --add-model: transparent;
+    --add-model-fg: #8E47F0;
+    --add-model-hover: transparent;
+    --add-model-ring: #7948EA;
+
+    --clear-models: #3A1A1A;
+    --clear-models-fg: #FF4D4D;
+    --clear-models-hover: #3A1A1A;
+    --clear-models-ring: transparent;
 
     --muted: oklch(0.216 0.006 56.043);
     --muted-fg: #5C5C5C;

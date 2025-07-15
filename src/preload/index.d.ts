@@ -226,6 +226,7 @@ declare global {
           updateData: UpdateModelData,
         ) => Promise<Model>;
         deleteModel: (modelId: string) => Promise<void>;
+        clearModel: (providerId: string) => Promise<void>;
       };
       updaterService: {
         setAutoUpdate: (autoUpdate: boolean) => Promise<void>;

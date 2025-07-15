@@ -79,7 +79,7 @@ export function ProviderCard({
             <ProviderIcon provider={provider} className="size-8 " />
             {/* <ModelIcon modelName={provider.name ?? ""} className="size-8" /> */}
             <div className="flex min-w-0 flex-col gap-1">
-              <CardTitle className="truncate text-card-title-text text-sm">
+              <CardTitle className="truncate text-left text-card-title-text text-sm">
                 {provider.name}
               </CardTitle>
               <CardDescription className=" text-left text-card-desc-text text-xs">
