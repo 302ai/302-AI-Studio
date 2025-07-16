@@ -54,7 +54,7 @@ export function VersionUpdate() {
           </Badge>
         </div>
         <Button
-          className="h-8 text-sm"
+          className="h-8 rounded-lg"
           onPress={handleActions}
           isPending={status === "checking" || status === "downloading"}
         >

@@ -114,8 +114,8 @@
     --secondary: oklch(0.923 0.003 48.717);
     --secondary-fg: rgba(102, 102, 102, 1);
 
-    --overlay: oklch(1 0 0);
-    --overlay-fg: oklch(0.147 0.004 49.25);
+    --overlay: #F9F9F9;
+    --overlay-fg: #333333;
 
     --accent: #F3F2FF;
     --accent-fg: #8450E8;
@@ -217,8 +217,8 @@
     --hover-fg: #E6E6E6;
     --hover-2: #383838;
 
-    --overlay: oklch(0.176 0.006 56.043);
-    --overlay-fg: oklch(0.985 0.001 106.423);
+    --overlay: #1A1A1A;
+    --overlay-fg: #E6E6E6;
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
