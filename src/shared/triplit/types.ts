@@ -62,5 +62,32 @@ export type ShortcutAction =
   | "close-other-tabs"
   | "delete-current-thread"
   | "open-settings"
-  | "toggle-sidebar";
+  | "toggle-sidebar"
+  | "quick-navigation"
+  | "command-palette"
+  | "stop-generation"
+  | "new-tab"
+  | "new-session"
+  | "regenerate-response"
+  | "search"
+  | "create-branch"
+  | "close-all-tabs"
+  | "restore-last-tab"
+  | "screenshot"
+  | "next-tab"
+  | "previous-tab"
+  | "toggle-model-panel"
+  | "toggle-incognito-mode"
+  | "branch-and-send"
+  // Tab navigation (1-9)
+  | "switch-to-tab-1"
+  | "switch-to-tab-2"
+  | "switch-to-tab-3"
+  | "switch-to-tab-4"
+  | "switch-to-tab-5"
+  | "switch-to-tab-6"
+  | "switch-to-tab-7"
+  | "switch-to-tab-8"
+  | "switch-to-tab-9";
+
 export type ShortcutScope = "global" | "app";

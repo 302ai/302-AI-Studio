@@ -96,7 +96,7 @@ export function useShortcutsHandlers() {
   useGlobalShortcutHandler("delete-current-thread", handleDeleteCurrentThread);
   useGlobalShortcutHandler("open-settings", handleOpenSettings);
   useGlobalShortcutHandler("toggle-sidebar", handleToggleSidebar);
-  useGlobalShortcutHandler("new-chat", () => handleAddNewTab("thread"));
+  useGlobalShortcutHandler("new-tab", () => handleAddNewTab("thread"));
   useGlobalShortcutHandler("clear-messages", handleCleanMessages);
 
   return {
