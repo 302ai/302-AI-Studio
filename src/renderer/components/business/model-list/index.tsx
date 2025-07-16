@@ -185,7 +185,9 @@ export function ModelList({
       setIsEditModalOpen(true);
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const loading = !ready || isPending;
