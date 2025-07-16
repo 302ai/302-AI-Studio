@@ -151,4 +151,17 @@ export class SettingsService {
   async getFeedUrl(): Promise<string> {
     return await this.settingsDbService.getFeedUrl();
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setDisplayAppStore(
+    _event: Electron.IpcMainEvent,
+    displayAppStore: boolean,
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setDisplayAppStore(displayAppStore);
+    } catch (error) {
+      logger.error("SettingsService:setDisplayAppStore error", { error });
+      throw error;
+    }
+  }
 }

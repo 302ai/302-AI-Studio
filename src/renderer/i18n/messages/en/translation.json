@@ -309,6 +309,12 @@
       "name": "Preferences",
       "search-provider": {
         "label": "Default Search Service"
+      },
+      "display-app-store": {
+        "label": "302.AI App Store",
+        "switch": {
+          "label": "Display App Store on Homepage"
+        }
       }
     }
   },

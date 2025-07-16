@@ -1,6 +1,6 @@
 import { triplitClient } from "@renderer/client";
-import type { Thread } from "@shared/triplit/types";
 import logger from "@shared/logger/renderer-logger";
+import type { Thread } from "@shared/triplit/types";
 import { useQuery, useQueryOne } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 

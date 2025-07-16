@@ -199,6 +199,7 @@ declare global {
         setEnableReason: (enable: boolean) => Promise<void>;
         setsearchService: (searchService: SearchService) => Promise<void>;
         updateSelectedModelId: (modelId: string) => Promise<void>;
+        setDisplayAppStore: (displayAppStore: boolean) => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;

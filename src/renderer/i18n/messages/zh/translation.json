@@ -310,6 +310,12 @@
       "name": "偏好",
       "search-provider": {
         "label": "默认搜索服务"
+      },
+      "display-app-store": {
+        "label": "302.AI 应用超市",
+        "switch": {
+          "label": "在首页显示应用超市"
+        }
       }
     }
   },

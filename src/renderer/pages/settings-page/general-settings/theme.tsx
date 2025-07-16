@@ -78,44 +78,45 @@ export function ThemeSwitcher() {
   return (
     <div className="flex flex-col gap-2">
       <Label className="text-label-fg">{t("label")}</Label>
-      {theme && (
-        <div
-          ref={containerRef}
-          className="relative flex h-11 min-w-[398px] items-center rounded-[10px] bg-setting"
-        >
+
+      <div
+        ref={containerRef}
+        className="relative flex h-11 min-w-[398px] items-center rounded-[10px] bg-setting"
+      >
+        {Object.hasOwn(thumbStyle, "left") && (
           <div
-            className="absolute z-2 h-[32px] min-w-[116px] rounded-md bg-accent transition-all duration-300 ease-out"
+            className="absolute z-2 h-[32px] min-w-[116px] rounded-md bg-accent transition-all duration-400 ease-out"
             style={thumbStyle}
           />
+        )}
 
-          <div className="flex w-full justify-around">
-            {themeOptions.map((option, index) => (
-              <div
-                key={option.key}
-                ref={setItemRef(index)}
-                className={cn(
-                  "relative z-2 flex h-[32px] min-w-[116px] cursor-pointer items-center justify-center gap-1 rounded-md text-sm",
-                  theme === option.key
-                    ? "text-accent-fg"
-                    : "z-1 text-secondary-fg hover:bg-hover-primary",
-                )}
-                onMouseDown={() => handleThemeChange(option.key as Theme)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleThemeChange(option.key as Theme);
-                  }
-                }}
-                aria-checked={theme === option.key}
-                role="switch"
-                tabIndex={0}
-              >
-                {option.icon}
-                <span>{option.label}</span>
-              </div>
-            ))}
-          </div>
+        <div className="flex w-full justify-around">
+          {themeOptions.map((option, index) => (
+            <div
+              key={option.key}
+              ref={setItemRef(index)}
+              className={cn(
+                "relative z-2 flex h-[32px] min-w-[116px] cursor-pointer items-center justify-center gap-1 rounded-md text-sm",
+                theme === option.key
+                  ? "text-accent-fg"
+                  : "z-1 text-secondary-fg hover:bg-hover-primary",
+              )}
+              onMouseDown={() => handleThemeChange(option.key as Theme)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleThemeChange(option.key as Theme);
+                }
+              }}
+              aria-checked={theme === option.key}
+              role="switch"
+              tabIndex={0}
+            >
+              {option.icon}
+              <span>{option.label}</span>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }

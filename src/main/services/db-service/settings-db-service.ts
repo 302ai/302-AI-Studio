@@ -198,4 +198,21 @@ export class SettingsDbService extends BaseDbService {
       throw error;
     }
   }
+
+  async setDisplayAppStore(displayAppStore: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.displayAppStore = displayAppStore;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setDisplayAppStore error", { error });
+      throw error;
+    }
+  }
 }

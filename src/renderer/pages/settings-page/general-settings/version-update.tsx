@@ -30,11 +30,11 @@ export function VersionUpdate() {
       <Label className="text-label-fg">{t("label")}</Label>
       {result && (
         <Switch
-          className="min-w-[398px] rounded-[10px] bg-setting px-3.5 py-3"
+          className="h-11 min-w-[398px] rounded-[10px] bg-setting px-3.5 py-2.5"
           isSelected={result?.autoUpdate}
           onChange={handleChange}
         >
-          <Label>{t("switch.label")}</Label>
+          <Label className="self-center">{t("switch.label")}</Label>
         </Switch>
       )}
 

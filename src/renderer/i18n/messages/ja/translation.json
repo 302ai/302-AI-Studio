@@ -310,6 +310,12 @@
       "name": "好み",
       "search-provider": {
         "label": "デフォルトの検索サービス"
+      },
+      "display-app-store": {
+        "label": "302.AI アプリストア",
+        "switch": {
+          "label": "ホームページにアプリストアを表示"
+        }
       }
     }
   },
