@@ -2,6 +2,7 @@ import { IconChevronLgDown } from "@intentui/icons";
 import { triplitClient } from "@renderer/client";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import { Button } from "@renderer/components/ui/button";
+import { Modal } from "@renderer/components/ui/modal";
 import { SearchField } from "@renderer/components/ui/search-field";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { cn } from "@renderer/lib/utils";
@@ -51,6 +52,9 @@ export const ModelSelect = ({
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
+    new Set([]),
+  );
 
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<List>(null);
@@ -70,6 +74,18 @@ export const ModelSelect = ({
 
   const handleScroll = useCallback((props: { scrollOffset: number }) => {
     scrollPositionRef.current = props.scrollOffset;
+  }, []);
+
+  const handleToggleGroup = useCallback((groupId: string) => {
+    setExpandedGroups((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(groupId)) {
+        newSet.delete(groupId);
+      } else {
+        newSet.add(groupId);
+      }
+      return newSet;
+    });
   }, []);
 
   const handleOpenModelSettings = useCallback(async () => {
@@ -179,25 +195,29 @@ export const ModelSelect = ({
       .sort((a, b) => a.model.name.localeCompare(b.model.name));
 
     if (collectedModels.length > 0) {
+      const groupId = "group-collected";
       items.push({
         type: "group",
-        id: "group-collected",
+        id: groupId,
         name: t("collected"),
         providerId: "collected",
         model: {} as Model,
         remark: "",
       });
 
-      collectedModels.forEach(({ model, providerId }) => {
-        items.push({
-          type: "model",
-          id: model.id,
-          name: model.name,
-          providerId,
-          model,
-          remark: model.remark || model.name,
+      // Only add models if the group is expanded or if there's a search query
+      if (hasSearch || expandedGroups.has(groupId)) {
+        collectedModels.forEach(({ model, providerId }) => {
+          items.push({
+            type: "model",
+            id: model.id,
+            name: model.name,
+            providerId,
+            model,
+            remark: model.remark || model.name,
+          });
         });
-      });
+      }
     }
 
     groupedModels.forEach((group) => {
@@ -206,40 +226,52 @@ export const ModelSelect = ({
       );
 
       if (groupNonCollectedModels.length > 0) {
+        const groupId = `group-${group.id}`;
         items.push({
           type: "group",
-          id: `group-${group.id}`,
+          id: groupId,
           name: group.name,
           providerId: group.id,
           model: {} as Model,
           remark: group.name,
         });
 
-        groupNonCollectedModels
-          .sort((a, b) => a.model.name.localeCompare(b.model.name))
-          .forEach(({ model }) => {
-            items.push({
-              type: "model",
-              id: model.id,
-              name: model.name,
-              providerId: group.id,
-              model,
-              remark: model.remark || model.name,
+        // Only add models if the group is expanded or if there's a search query
+        if (hasSearch || expandedGroups.has(groupId)) {
+          groupNonCollectedModels
+            .sort((a, b) => a.model.name.localeCompare(b.model.name))
+            .forEach(({ model }) => {
+              items.push({
+                type: "model",
+                id: model.id,
+                name: model.name,
+                providerId: group.id,
+                model,
+                remark: model.remark || model.name,
+              });
             });
-          });
+        }
       }
     });
 
     return items;
-  }, [groupedModels, searchQuery, contains, t]);
+  }, [groupedModels, searchQuery, contains, t, expandedGroups]);
 
   const listData = useMemo(
     () => ({
       items: filteredItems,
       onSelect: handleModelSelect,
       selectedModelId,
+      onToggleGroup: handleToggleGroup,
+      expandedGroups,
     }),
-    [filteredItems, handleModelSelect, selectedModelId],
+    [
+      filteredItems,
+      handleModelSelect,
+      selectedModelId,
+      handleToggleGroup,
+      expandedGroups,
+    ],
   );
 
   const selectedModel = useMemo(() => {
@@ -289,41 +321,49 @@ export const ModelSelect = ({
       )}
 
       {isOpen && !hasNoProviders && (
-        <div className="absolute bottom-full z-50 mb-1 min-w-[240px] max-w-[240px] overflow-hidden rounded-md border border-border bg-overlay shadow-md">
-          <div className="border-b bg-muted p-2">
-            <SearchField
-              className="rounded-lg bg-bg"
-              placeholder={t("model-search-placeholder")}
-              value={searchQuery}
-              onChange={setSearchQuery}
-              autoFocus
-            />
-          </div>
-          <div className="max-h-[250px] min-w-[240px] max-w-[240px] p-1">
-            {filteredItems.length > 0 ? (
-              <List
-                ref={listRef}
-                height={Math.min(250, filteredItems.length * 30)}
-                itemCount={filteredItems.length}
-                itemSize={30}
-                itemData={listData}
-                overscanCount={5}
-                width="100%"
-                initialScrollOffset={scrollPositionRef.current}
-                onScroll={handleScroll}
-                style={{
-                  scrollbarGutter: "stable",
-                }}
-              >
-                {ModelRowList}
-              </List>
-            ) : (
-              <div className="flex h-32 flex-col items-center justify-center gap-2 p-4 text-muted-fg text-sm">
-                <SearchX className="size-8" />
-                <p>{t("no-models-found")}</p>
-              </div>
-            )}
-          </div>
+        <div className="">
+          <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+            <Modal.Content>
+              {() => (
+                <>
+                  <div className="border-b bg-muted p-2">
+                    <SearchField
+                      className="rounded-lg bg-bg"
+                      placeholder={t("model-search-placeholder")}
+                      value={searchQuery}
+                      onChange={setSearchQuery}
+                      autoFocus
+                    />
+                  </div>
+                  <div className="max-h-[250px] min-w-[240px] p-1">
+                    {filteredItems.length > 0 ? (
+                      <List
+                        ref={listRef}
+                        height={Math.min(250, filteredItems.length * 30)}
+                        itemCount={filteredItems.length}
+                        itemSize={30}
+                        itemData={listData}
+                        overscanCount={5}
+                        width="100%"
+                        initialScrollOffset={scrollPositionRef.current}
+                        onScroll={handleScroll}
+                        style={{
+                          scrollbarGutter: "stable",
+                        }}
+                      >
+                        {ModelRowList}
+                      </List>
+                    ) : (
+                      <div className="flex h-32 flex-col items-center justify-center gap-2 p-4 text-muted-fg text-sm">
+                        <SearchX className="size-8" />
+                        <p>{t("no-models-found")}</p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </Modal.Content>
+          </Modal>
         </div>
       )}
 

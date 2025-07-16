@@ -1,5 +1,9 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore useSemanticElements */
 import { ModelIcon } from "@renderer/components/business/model-icon";
+import {
+  Disclosure,
+  DisclosureTrigger,
+} from "@renderer/components/ui/disclosure";
 import type { Model } from "@shared/triplit/types";
 import { CheckIcon } from "lucide-react";
 import { memo } from "react";
@@ -12,6 +16,8 @@ export interface ListItem {
   providerId: string;
   model: Model;
   remark: string;
+  isExpanded?: boolean;
+  models?: Model[];
 }
 
 export const ModelRowList = memo(function ModelRowList({
@@ -25,18 +31,27 @@ export const ModelRowList = memo(function ModelRowList({
     items: ListItem[];
     onSelect: (modelId: string) => void;
     selectedModelId: string;
+    onToggleGroup?: (groupId: string) => void;
+    expandedGroups?: Set<string>;
   };
 }) {
-  const { items, onSelect, selectedModelId } = data;
+  const { items, onSelect, selectedModelId, onToggleGroup, expandedGroups } =
+    data;
   const item = items[index];
 
   if (item.type === "group") {
+    const isExpanded = expandedGroups?.has(item.id) ?? true;
+
     return (
-      <div
-        style={style}
-        className="flex items-center px-2 font-medium text-muted-fg text-xs"
-      >
-        {item.name}
+      <div style={style}>
+        <Disclosure isExpanded={isExpanded}>
+          <DisclosureTrigger
+            className="flex w-full items-center rounded-md px-2 py-1 font-medium text-muted-fg text-xs hover:bg-hover-primary"
+            onPress={() => onToggleGroup?.(item.id)}
+          >
+            {item.name}
+          </DisclosureTrigger>
+        </Disclosure>
       </div>
     );
   }
