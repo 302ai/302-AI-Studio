@@ -1,6 +1,6 @@
 // ! This service is only used within the renderer process
 
-import type { Message, ShortcutAction, Thread } from "@shared/triplit/types";
+import type { Message, Model, ShortcutAction, Thread } from "@shared/triplit/types";
 import mitt from "mitt";
 
 export enum EventNames {
@@ -18,6 +18,9 @@ export enum EventNames {
 
   // * Message events
   MESSAGE_EDIT = "message:edit",
+
+  // * Model events
+  MODEL_EDIT = "model:edit",
 
   // * Code preview events
   CODE_PREVIEW_OPEN = "code-preview:open",
@@ -53,6 +56,9 @@ type Events = {
   };
   [EventNames.TAB_CLOSE_ALL]: null;
   [EventNames.MESSAGE_EDIT]: Message;
+  [EventNames.MODEL_EDIT]: {
+    model: Model;
+  };
   [EventNames.CODE_PREVIEW_OPEN]: {
     code: string;
     language: string;

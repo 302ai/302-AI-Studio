@@ -1,6 +1,7 @@
 import { triplitClient } from "@renderer/client";
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { cn } from "@renderer/lib/utils";
+import { EventNames, emitter } from "@renderer/services/event-service";
 import logger from "@shared/logger/renderer-logger";
 import type { Model, Provider, UpdateModelData } from "@shared/triplit/types";
 import { Image, Lightbulb } from "lucide-react";
@@ -10,7 +11,6 @@ import { areEqual } from "react-window";
 import { toast } from "sonner";
 import { ActionGroup } from "../action-group";
 import { ModalAction } from "../modal-action";
-import { EditModelModal } from "./edit-model-modal";
 
 const { modelService } = window.service;
 
@@ -33,9 +33,6 @@ export const RowList = memo(function RowList({
     keyPrefix: "settings.model-settings.add-model-modal",
   });
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingModel, setEditingModel] = useState<Model | null>(null);
-
   const [deleteModalState, setDeleteModalState] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -48,8 +45,7 @@ export const RowList = memo(function RowList({
   };
 
   const handleEdit = () => {
-    setEditingModel(item);
-    setIsEditModalOpen(true);
+    emitter.emit(EventNames.MODEL_EDIT, { model: item });
   };
 
   const handleDelete = () => {
@@ -131,12 +127,6 @@ export const RowList = memo(function RowList({
           />
         </div>
       </div>
-
-      <EditModelModal
-        isOpen={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
-        model={editingModel}
-      />
 
       <ModalAction
         state={deleteModalState}

@@ -1,7 +1,8 @@
 import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
-import type { Provider } from "@shared/triplit/types";
+import { EventNames, emitter } from "@renderer/services/event-service";
+import type { Model, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { PackageOpen, Trash2 } from "lucide-react";
 import {
@@ -19,6 +20,7 @@ import { SearchField } from "../../ui/search-field";
 import { LdrsLoader } from "../ldrs-loader";
 import { AddModelModal } from "./add-model-modal";
 import { ClearModelsModal } from "./clear-models-modal";
+import { EditModelModal } from "./edit-model-modal";
 import { RowList } from "./row-list";
 
 interface ModelListProps {
@@ -60,6 +62,8 @@ export function ModelList({
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddModelModalOpen, setIsAddModelModalOpen] = useState(false);
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingModel, setEditingModel] = useState<Model | null>(null);
 
   // 创建 providers 映射表，方便快速查找
   const providersMap = useMemo(() => {
@@ -174,6 +178,15 @@ export function ModelList({
       });
     }
   }, [providersFetching, modelsFetching]);
+
+  useEffect(() => {
+    const unsubscribe = emitter.on(EventNames.MODEL_EDIT, ({ model }) => {
+      setEditingModel(model);
+      setIsEditModalOpen(true);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const loading = !ready || isPending;
 
@@ -293,6 +306,12 @@ export function ModelList({
         isOpen={isClearModalOpen}
         onOpenChange={setIsClearModalOpen}
         providerId={selectedProvider?.id}
+      />
+
+      <EditModelModal
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        model={editingModel}
       />
     </>
   );
