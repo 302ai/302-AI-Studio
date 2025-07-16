@@ -72,7 +72,7 @@ export function SettingsPage() {
   return (
     <div className="flex h-full flex-row">
       <Tabs
-        className="w-auto min-w-[var(--setting-width)] justify-end rounded-xl bg-setting"
+        className="w-auto min-w-[var(--setting-width)] justify-end bg-setting"
         orientation="vertical"
         aria-label="Setting Tabs"
         onSelectionChange={handleTabSelect}
@@ -85,7 +85,11 @@ export function SettingsPage() {
             items={settingTabs}
           >
             {(tab) => (
-              <Tab className="cursor-pointer" key={tab.name} id={tab.name}>
+              <Tab
+                className="rounded-lg transition-none"
+                key={tab.name}
+                id={tab.name}
+              >
                 <span className="w-full text-right">{tab.label}</span>
               </Tab>
             )}

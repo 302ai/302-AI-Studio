@@ -37,7 +37,7 @@ export function LanguageSelector() {
         onSelectionChange={handleLanguageChange}
         aria-label="Select language"
       >
-        <Select.Trigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
+        <Select.Trigger className="inset-ring-transparent h-11 rounded-[10px] bg-setting text-setting-fg transition-none hover:inset-ring-transparent" />
         <Select.List className="min-w-full" items={langs}>
           {({ key, prefix, nativeName }) => (
             <Select.Option

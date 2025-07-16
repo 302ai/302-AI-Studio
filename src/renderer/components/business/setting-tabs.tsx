@@ -127,7 +127,7 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
                 // horizontal
                 "group-data-[orientation=horizontal]/tabs:-bottom-px group-data-[orientation=horizontal]/tabs:inset-x-0 group-data-[orientation=horizontal]/tabs:h-0.5 group-data-[orientation=horizontal]/tabs:w-full",
                 // vertical
-                "group-data-[orientation=vertical]/tabs:right-[-12px] group-data-[orientation=vertical]/tabs:h-[calc(50%)] group-data-[orientation=vertical]/tabs:w-[3px] group-data-[orientation=vertical]/tabs:transform group-data-[orientation=vertical]/tabs:rounded-r-[2px]",
+                "group-data-[orientation=vertical]/tabs:right-[-12px] group-data-[orientation=vertical]/tabs:h-[calc(50%)] group-data-[orientation=vertical]/tabs:w-[5px] group-data-[orientation=vertical]/tabs:transform group-data-[orientation=vertical]/tabs:rounded-none",
               )}
               layoutId="current-selected"
               transition={{ type: "spring", stiffness: 500, damping: 40 }}
