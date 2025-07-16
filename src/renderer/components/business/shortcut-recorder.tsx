@@ -1,9 +1,8 @@
-import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
 import { formatShortcutKeys } from "@renderer/config/constant";
 import { cn } from "@renderer/lib/utils";
-import { Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface ShortcutRecorderProps {
   value?: string[];
@@ -12,7 +11,25 @@ interface ShortcutRecorderProps {
   className?: string;
   disabled?: boolean;
   onRecordingChange?: (isRecording: boolean) => void;
+  allShortcuts?: { action: string; keys: string[] }[];
+  onReset?: () => void;
 }
+
+const checkShortcutConflict = (
+  keys: string[],
+  allShortcuts: { action: string; keys: string[] }[] = [],
+): boolean => {
+  const currentKeysStr = keys.slice().sort().join(",");
+  return allShortcuts.some((shortcut) => {
+    const existingKeysStr = shortcut.keys.slice().sort().join(",");
+    return existingKeysStr === currentKeysStr;
+  });
+};
+
+const hasModifierKey = (keys: string[]): boolean => {
+  const modifierKeys = ["Ctrl", "Cmd", "Alt", "Shift"];
+  return keys.some((key) => modifierKeys.includes(key));
+};
 
 export function ShortcutRecorder({
   value = [],
@@ -21,12 +38,14 @@ export function ShortcutRecorder({
   className,
   disabled = false,
   onRecordingChange,
+  allShortcuts = [],
+  onReset,
 }: ShortcutRecorderProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.shortcuts-settings.recorder",
   });
   const [isRecording, setIsRecording] = useState(false);
-  const [recordedKeys, setRecordedKeys] = useState<string[]>([]);
+  const [currentKeys, setCurrentKeys] = useState<string[]>([]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -35,34 +54,88 @@ export function ShortcutRecorder({
       event.preventDefault();
       event.stopPropagation();
 
-      const keys: string[] = [];
+      if (event.key === "Backspace") {
+        setIsRecording(false);
+        setCurrentKeys([]);
+        onRecordingChange?.(false);
+        return;
+      }
 
-      if (event.ctrlKey) keys.push("Ctrl");
-      if (event.metaKey) keys.push("Cmd");
-      if (event.shiftKey) keys.push("Shift");
-      if (event.altKey) keys.push("Alt");
+      const newKeys: string[] = [];
+
+      if (event.ctrlKey) newKeys.push("Ctrl");
+      if (event.metaKey) newKeys.push("Cmd");
+      if (event.altKey) newKeys.push("Alt");
+      if (event.shiftKey) newKeys.push("Shift");
+
       if (
         event.key &&
         !["Control", "Meta", "Shift", "Alt"].includes(event.key)
       ) {
-        keys.push(event.key.toUpperCase());
+        let keyToAdd = event.key;
+
+        if (keyToAdd.length === 1) {
+          keyToAdd = keyToAdd.toUpperCase();
+        }
+
+        newKeys.push(keyToAdd);
       }
 
-      if (keys.length > 0) {
-        setRecordedKeys(keys);
-      }
+      setCurrentKeys(newKeys);
     },
-    [isRecording],
+    [isRecording, onRecordingChange],
   );
 
-  const handleKeyUp = useCallback(() => {
-    if (!isRecording || recordedKeys.length === 0) return;
+  const handleKeyUp = useCallback(
+    (event: KeyboardEvent) => {
+      if (!isRecording) return;
 
-    setIsRecording(false);
-    onValueChange(recordedKeys);
-    setRecordedKeys([]);
-    onRecordingChange?.(false);
-  }, [isRecording, recordedKeys, onValueChange, onRecordingChange]);
+      event.preventDefault();
+      event.stopPropagation();
+
+      const newKeys: string[] = [];
+
+      if (event.ctrlKey) newKeys.push("Ctrl");
+      if (event.metaKey) newKeys.push("Cmd");
+      if (event.altKey) newKeys.push("Alt");
+      if (event.shiftKey) newKeys.push("Shift");
+
+      if (
+        event.key &&
+        !["Control", "Meta", "Shift", "Alt"].includes(event.key)
+      ) {
+        if (currentKeys.length > 0) {
+          if (!hasModifierKey(currentKeys)) {
+            toast.error(t("error.modifier-required"));
+            setCurrentKeys([]);
+            return;
+          }
+
+          if (checkShortcutConflict(currentKeys, allShortcuts)) {
+            toast.error(t("error.shortcut-conflict"));
+            setCurrentKeys([]);
+            return;
+          }
+
+          setIsRecording(false);
+          onValueChange(currentKeys);
+          setCurrentKeys([]);
+          onRecordingChange?.(false);
+          return;
+        }
+      }
+
+      setCurrentKeys(newKeys);
+    },
+    [
+      isRecording,
+      currentKeys,
+      onValueChange,
+      onRecordingChange,
+      allShortcuts,
+      t,
+    ],
+  );
 
   useEffect(() => {
     if (!isRecording) return;
@@ -79,17 +152,21 @@ export function ShortcutRecorder({
   const startRecording = () => {
     if (disabled) return;
     setIsRecording(true);
-    setRecordedKeys([]);
+    setCurrentKeys([]);
     onRecordingChange?.(true);
   };
 
   const handleReset = () => {
-    onValueChange([]);
+    if (onReset) {
+      onReset();
+    } else {
+      onValueChange([]);
+    }
   };
 
   const handleCancel = () => {
     setIsRecording(false);
-    setRecordedKeys([]);
+    setCurrentKeys([]);
     onRecordingChange?.(false);
   };
 
@@ -98,56 +175,60 @@ export function ShortcutRecorder({
   };
 
   const displayValue = isRecording
-    ? recordedKeys.length > 0
-      ? formatKeys(recordedKeys)
+    ? currentKeys.length > 0
+      ? formatKeys(currentKeys)
       : t("press-keys")
     : value.length > 0
       ? formatKeys(value)
       : placeholder || t("placeholder");
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("relative", className)}>
       <button
         type="button"
-        onClick={startRecording}
+        onClick={() => {
+          if (!isRecording && !disabled) {
+            startRecording();
+          }
+        }}
         className={cn(
-          "flex h-9 w-full items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",
-          "placeholder:text-muted-fg",
+          "flex h-11 w-full items-center justify-between rounded-[10px] border border-input bg-setting px-3 py-1 text-setting-fg text-sm transition-colors",
           "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          isRecording && "ring-1 ring-ring",
           value.length === 0 && "text-muted-fg",
           disabled && "cursor-not-allowed opacity-50",
+          isRecording && "border-primary ring-1 ring-ring",
+          !isRecording && !disabled && "cursor-pointer",
         )}
-        disabled={isRecording || disabled}
+        disabled={disabled}
       >
-        {displayValue}
-      </button>
+        <span className="flex-1 text-left">{displayValue}</span>
 
-      {(value.length > 0 || isRecording) &&
-        (isRecording ? (
-          <ButtonWithTooltip
+        {isRecording && (
+          <button
             type="button"
-            intent="outline"
-            size="sm"
-            onClick={handleCancel}
-            className="h-9 px-2"
-            title={t("cancel")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCancel();
+            }}
+            className="ml-2 font-medium text-primary text-sm hover:text-primary/80"
           >
-            <X className="h-4 w-4" />
-          </ButtonWithTooltip>
-        ) : (
-          <ButtonWithTooltip
+            {t("cancel")}
+          </button>
+        )}
+
+        {!isRecording && (
+          <button
             type="button"
-            intent="outline"
-            size="sm"
-            onClick={handleReset}
-            className="h-9 px-2"
-            title={t("clear")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleReset();
+            }}
+            className="ml-2 font-medium text-primary text-sm hover:text-primary/80"
           >
-            <Trash2 className="h-4 w-4" />
-          </ButtonWithTooltip>
-        ))}
+            {t("reset")}
+          </button>
+        )}
+      </button>
     </div>
   );
 }

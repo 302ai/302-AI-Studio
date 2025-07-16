@@ -297,7 +297,12 @@
         "press-keys": "キーを押してください...",
         "cancel": "キャンセル",
         "reset": "リセット",
-        "clear": "クリア"
+        "clear": "クリア",
+        "no-shortcut": "ショートカットなし",
+        "error": {
+          "modifier-required": "ショートカットには少なくとも1つの修飾キー（Ctrl/Cmd/Alt/Shift）が必要です",
+          "shortcut-conflict": "このショートカットは既に存在します。再度録音してください"
+        }
       },
       "scope": {
         "label": "スコープ",
@@ -451,5 +456,9 @@
   "artifacts": {
     "preview": "プレビュー",
     "code": "コード"
+  },
+  "shortcuts": {
+    "tab-not-exist": "タブ {{tabNumber}} は存在しません",
+    "tab-switch-error": "タブ {{tabNumber}} への切り替えに失敗しました"
   }
 }

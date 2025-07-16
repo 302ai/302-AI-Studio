@@ -296,7 +296,12 @@
         "press-keys": "Press keys...",
         "cancel": "Cancel",
         "reset": "Reset",
-        "clear": "Clear"
+        "clear": "Clear",
+        "no-shortcut": "No shortcut",
+        "error": {
+          "modifier-required": "Shortcuts must include at least one modifier key (Ctrl/Cmd/Alt/Shift)",
+          "shortcut-conflict": "This shortcut already exists, please record again"
+        }
       },
       "scope": {
         "label": "Scope",
@@ -450,5 +455,9 @@
   "artifacts": {
     "preview": "Preview",
     "code": "Code"
+  },
+  "shortcuts": {
+    "tab-not-exist": "Tab {{tabNumber}} does not exist",
+    "tab-switch-error": "Failed to switch to tab {{tabNumber}}"
   }
 }

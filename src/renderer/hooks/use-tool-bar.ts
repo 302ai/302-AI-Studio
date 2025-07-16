@@ -125,11 +125,13 @@ export function useToolBar() {
     content: string,
     attachments?: AttachmentFile[],
     editMessageId?: string,
+    tabId?: string,
+    threadId?: string,
   ): Promise<void> => {
     let needSummaryTitle = false;
     try {
-      let currentActiveThreadId: string | null = activeThreadId;
-      let currentActiveTabId: string | null = activeTabId;
+      let currentActiveThreadId: string | null = threadId || activeThreadId;
+      let currentActiveTabId: string | null = tabId || activeTabId;
 
       if (!selectedModelId) {
         throw new Error("No model selected");

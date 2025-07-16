@@ -1,9 +1,9 @@
+import logger from "@shared/logger/renderer-logger";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
-import logger from "@shared/logger/renderer-logger";
 
 const { tabService } = window.service;
 
@@ -150,6 +150,30 @@ export function useAttachments() {
     [activeTabId],
   );
 
+  const saveFilesToTabByTabId = useCallback(
+    async (tabId: string, files: AttachmentFile[]) => {
+      if (tabId) {
+        try {
+          const filesData = files.map((file) => ({
+            id: file.id,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            filePath: file.filePath,
+            preview: file.preview,
+            fileData: file.fileData,
+          }));
+          await tabService.updateTab(tabId, {
+            files: JSON.stringify(filesData),
+          });
+        } catch (error) {
+          logger.error("Failed to save files to tab", { error });
+        }
+      }
+    },
+    [],
+  );
+
   // 从tab加载文件
   const loadFilesFromTab = useCallback(async () => {
     if (activeTabId) {
@@ -194,6 +218,50 @@ export function useAttachments() {
       setAttachments([]);
     }
   }, [activeTabId]);
+
+  const getAttachmentsByTabId = useCallback(
+    async (tabId: string | null | undefined) => {
+      let attachments: AttachmentFile[] = [];
+      if (tabId) {
+        try {
+          const tab = await tabService.getTab(tabId);
+          if (tab?.files) {
+            const filesData = JSON.parse(tab.files);
+            if (Array.isArray(filesData) && filesData.length > 0) {
+              const fileList = processAttachmentsFromData(filesData);
+
+              for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                const originalData = filesData[i];
+
+                const attachment: AttachmentFile = {
+                  id: originalData.id,
+                  name: file.name,
+                  size: file.size,
+                  type: file.type,
+                  file,
+                  filePath: originalData.filePath,
+                  preview: originalData.preview,
+                  fileData: originalData.fileData,
+                };
+
+                attachments.push(attachment);
+              }
+            }
+          } else {
+            attachments = [];
+          }
+        } catch (error) {
+          logger.error("Failed to load files from tab", { error });
+          attachments = [];
+        }
+      } else {
+        attachments = [];
+      }
+      return attachments;
+    },
+    [],
+  );
 
   // 当tab切换时，加载对应的文件
   useEffect(() => {
@@ -291,12 +359,18 @@ export function useAttachments() {
     [attachments, saveFilesToTab],
   );
 
-  const clearAttachments = useCallback(async () => {
-    setAttachments([]);
+  const clearAttachments = useCallback(
+    async (tabId?: string) => {
+      const currentTabId = tabId || activeTabId;
+      setAttachments([]);
 
-    // 清空tab中的文件
-    await saveFilesToTab([]);
-  }, [saveFilesToTab]);
+      // 清空tab中的文件
+      if (currentTabId) {
+        await saveFilesToTabByTabId(currentTabId, []);
+      }
+    },
+    [activeTabId, saveFilesToTabByTabId],
+  );
 
   // 直接设置附件（用于编辑模式）
   const setAttachmentsDirectly = useCallback(
@@ -313,6 +387,8 @@ export function useAttachments() {
     clearAttachments,
     loadFilesFromTab,
     setAttachmentsDirectly,
+    getAttachmentsByTabId,
+    saveFilesToTabByTabId,
   };
 }
 

@@ -33,7 +33,7 @@ export function useMessageActions() {
   const handleCreateNewBranch = async (
     message: Message,
     providerId: string,
-  ) => {
+  ): Promise<{ threadId: string; tabId: string } | null> => {
     try {
       const thread = await createThread({
         title: t("context-menu.new-thread-title"),
@@ -43,7 +43,7 @@ export function useMessageActions() {
 
       if (!thread) {
         logger.error("Failed to create thread");
-        return;
+        return null;
       }
 
       const { id: threadId, title } = thread;
@@ -55,7 +55,7 @@ export function useMessageActions() {
 
       if (!newTab) {
         logger.error("Failed to create new tab");
-        return;
+        return null;
       }
 
       const messages = await messageService.getMessagesByThreadId(
@@ -68,7 +68,7 @@ export function useMessageActions() {
       if (currentMessageIndex === -1) {
         logger.warn("Current message not found in thread");
         await setActiveTabId(newTab.id);
-        return;
+        return null;
       }
 
       const messagesToInsert = messages.slice(0, currentMessageIndex + 1);
@@ -81,9 +81,11 @@ export function useMessageActions() {
 
       await messageService.insertMessages(messagesToInsertData);
       await setActiveTabId(newTab.id);
+      return { threadId, tabId: newTab.id };
     } catch (error) {
       logger.error("Error creating new branch:", { error });
       toast.error(t("context-menu.create-new-branch-error"));
+      return null;
     }
   };
 

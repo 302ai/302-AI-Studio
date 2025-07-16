@@ -297,7 +297,12 @@
         "press-keys": "按下按键...",
         "cancel": "取消",
         "reset": "重置",
-        "clear": "清空"
+        "clear": "清空",
+        "no-shortcut": "无快捷键",
+        "error": {
+          "modifier-required": "快捷键必须包含至少一个辅助按键（Ctrl/Cmd/Alt/Shift）",
+          "shortcut-conflict": "该快捷键已存在，请重新录制"
+        }
       },
       "scope": {
         "label": "作用域",
@@ -451,5 +456,9 @@
   "artifacts": {
     "preview": "预览",
     "code": "代码"
+  },
+  "shortcuts": {
+    "tab-not-exist": "标签页 {{tabNumber}} 不存在",
+    "tab-switch-error": "切换到标签页 {{tabNumber}} 失败"
   }
 }

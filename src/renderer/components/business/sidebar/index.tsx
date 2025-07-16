@@ -14,6 +14,7 @@ import {
   SidebarLabel,
   useSidebar,
 } from "@renderer/components/ui/sidebar";
+import { useGlobalShortcutHandler } from "@renderer/hooks/use-global-shortcut-handler";
 import { useThread } from "@renderer/hooks/use-thread";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -43,6 +44,8 @@ export function AppSidebar(props: AppSidebarProps) {
   const handleSearchThread = () => {
     setIsOpen(!isOpen);
   };
+
+  useGlobalShortcutHandler("search", () => handleSearchThread());
 
   return (
     <>
