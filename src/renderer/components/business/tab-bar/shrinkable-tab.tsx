@@ -36,7 +36,7 @@ export function ShrinkableTab({
     ) : (
       <X
         className={cn(
-          "absolute size-5 shrink-0 rounded-[4px] p-1",
+          "absolute size-5 shrink-0 rounded-[6px] p-1",
           isActive ? "hover:bg-accent-hover" : "hover:bg-hover-2",
         )}
         onClick={(e) => {

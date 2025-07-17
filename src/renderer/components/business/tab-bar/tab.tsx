@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { ShrinkableTab } from "./shrinkable-tab";
 
 interface TabProps {
+  className?: string;
   id: string;
   threadId: string;
   index: number;
@@ -23,6 +24,7 @@ interface TabProps {
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function Tab({
+  className,
   id,
   threadId,
   index,
@@ -73,7 +75,7 @@ export function Tab({
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 className={cn(
-                  "relative mt-[1px] flex h-full select-none items-center rounded-[10px]",
+                  "relative flex h-full select-none items-center rounded-[10px]",
                   isShrinkedThree
                     ? "justify-center px-1"
                     : "justify-between px-3",
@@ -81,6 +83,7 @@ export function Tab({
                     ? "bg-accent text-accent-fg"
                     : "hover:bg-hover hover:text-hover-fg",
                   snapshot.isDragging ? "opacity-50" : "opacity-100",
+                  className,
                 )}
                 onClick={onClick}
                 onKeyDown={(e) => {
