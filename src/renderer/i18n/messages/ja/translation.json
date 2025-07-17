@@ -21,7 +21,12 @@
     "lack-model": "最初にモデルを選択してください！",
     "lack-provider": "モデルプロバイダーがありません！",
     "edit-message": "メッセージを編集",
-    "edit-message-only-save": "保存のみ"
+    "edit-message-only-save": "保存のみ",
+    "function_call": "ツール呼び出し",
+    "reasoning": "推論",
+    "vision": "写真",
+    "file": "ファイル",
+    "support": "サポート"
   },
   "settings": {
     "about-settings": {

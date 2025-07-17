@@ -20,7 +20,12 @@
     "lack-model": "Please select a model first!",
     "lack-provider": "Missing model provider!",
     "edit-message": "Edit Message",
-    "edit-message-only-save": "Only Save"
+    "edit-message-only-save": "Only Save",
+    "function_call": "Tool Call",
+    "reasoning": "Reasoning",
+    "vision": "Vision",
+    "file": "File",
+    "support": "Support"
   },
   "settings": {
     "about-settings": {

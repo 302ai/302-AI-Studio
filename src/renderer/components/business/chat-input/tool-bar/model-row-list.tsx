@@ -1,15 +1,16 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore useSemanticElements */
-
 import SelectedIcon from "@renderer/assets/icons/selected.svg";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import {
   Disclosure,
   DisclosureTrigger,
 } from "@renderer/components/ui/disclosure";
+import { Tooltip } from "@renderer/components/ui/tooltip";
 import { cn } from "@renderer/lib/utils";
 import type { Model } from "@shared/triplit/types";
 import { Star } from "lucide-react";
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { areEqual } from "react-window";
 
 const { modelService } = window.service;
@@ -49,6 +50,9 @@ export const ModelRowList = memo(function ModelRowList({
     hasSearch,
   } = data;
   const item = items[index];
+  const { t } = useTranslation("translation", {
+    keyPrefix: "chat",
+  });
 
   if (item.type === "group") {
     const isExpanded = hasSearch
@@ -81,55 +85,85 @@ export const ModelRowList = memo(function ModelRowList({
     await modelService.collectModel(item.model.id, !item.model.collected);
   };
 
-  return (
-    <div style={style} className="mb-1">
-      <div
-        className={cn(
-          "relative flex h-12 cursor-pointer items-center rounded-md pr-[12px] pl-[14px] text-sm outline-hidden hover:bg-hover-primary ",
-          "dark:text-[#E6E6E6] dark:hover:bg-[#1A1A1A]",
-          isSelected &&
-            "bg-[#F3F2FF] text-[#8E47F0] hover:bg-[#F3F2FF] dark:bg-[#49306A] dark:text-[#FFFFFF] dark:hover:bg-[#49306A]",
-        )}
-        onClick={() => onSelect(item.model.id)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            onSelect(item.model.id);
-          }
-        }}
-        role="option"
-        tabIndex={-1}
-        aria-selected={isSelected}
-      >
-        {isSelected && (
-          <img
-            src={SelectedIcon}
-            alt="selected"
-            className="absolute top-0 right-0 size-6"
-          />
-        )}
-        <div className="flex w-full flex-row items-center gap-2 overflow-hidden">
-          <ModelIcon
-            modelName={item.model.name}
-            className="size-5 flex-shrink-0"
-          />
-          <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap ">
-            {item.model.remark || item.model.name}
-          </span>
+  const hasCapabilities = Array.from(item.model.capabilities).some(
+    (capability) => capability,
+  );
 
-          <Star
+  return (
+    <Tooltip>
+      <div style={style} className="mb-1">
+        <Tooltip.Trigger className="w-full">
+          <div
             className={cn(
-              "mr-2 size-4 flex-shrink-0",
-              item.model.collected && " ",
+              "relative flex h-12 cursor-pointer items-center rounded-md pr-[12px] pl-[14px] text-sm outline-hidden hover:bg-hover-primary ",
+              "dark:text-[#E6E6E6] dark:hover:bg-[#1A1A1A]",
+              isSelected &&
+                "bg-[#F3F2FF] text-[#8E47F0] hover:bg-[#F3F2FF] dark:bg-[#49306A] dark:text-[#FFFFFF] dark:hover:bg-[#49306A]",
             )}
-            fill={item.model.collected ? "#FFB143" : "#E7E7E7"}
-            color={item.model.collected ? "#FFB143" : "#E7E7E7"}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleUpdateModel();
+            onClick={() => onSelect(item.model.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                onSelect(item.model.id);
+              }
             }}
-          />
-        </div>
+            role="option"
+            tabIndex={-1}
+            aria-selected={isSelected}
+          >
+            {isSelected && (
+              <img
+                src={SelectedIcon}
+                alt="selected"
+                className="absolute top-0 right-0 size-6"
+              />
+            )}
+            <div className="flex w-full flex-row items-center justify-between gap-2 overflow-hidden">
+              <div className="flex items-center gap-x-4">
+                <ModelIcon
+                  modelName={item.model.name}
+                  className="size-5 flex-shrink-0"
+                />
+                <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap ">
+                  {item.model.remark || item.model.name}
+                </span>
+              </div>
+
+              <Star
+                className={cn(
+                  "mr-2 size-4 flex-shrink-0",
+                  item.model.collected && " ",
+                )}
+                fill={item.model.collected ? "#FFB143" : "#E7E7E7"}
+                color={item.model.collected ? "#FFB143" : "#E7E7E7"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdateModel();
+                }}
+              />
+            </div>
+            {hasCapabilities && (
+              <Tooltip.Content
+                className={cn(
+                  "border-none bg-[#F3F2FF] text-[#8E47F0] [&_[data-slot=overlay-arrow]]:fill-[#F3F2FF]",
+                  "dark:bg-[#1A1A1A] dark:text-[#8E47F0] [&_[data-slot=overlay-arrow]]:dark:fill-[#1A1A1A]",
+                )}
+              >
+                <div>
+                  <span>{t("support")}</span>
+                  {Array.from(item.model.capabilities).map(
+                    (capability, index, array) => (
+                      <span key={capability}>
+                        {t(`${capability}`)}
+                        {index < array.length - 1 ? "、" : ""}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </Tooltip.Content>
+            )}
+          </div>
+        </Tooltip.Trigger>
       </div>
-    </div>
+    </Tooltip>
   );
 }, areEqual);
