@@ -1,6 +1,13 @@
 import { isLinux, isMac, isWindows } from "@renderer/config/constant";
 import { cn } from "@renderer/lib/utils";
-import type { HTMLAttributes, PropsWithChildren } from "react";
+import { EventNames, emitter } from "@renderer/services/event-service";
+import {
+  type HTMLAttributes,
+  type PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 type Props = PropsWithChildren & HTMLAttributes<HTMLDivElement>;
 
@@ -11,11 +18,30 @@ interface TitlebarProps extends Props {
 const dragRegion = { WebkitAppRegion: "drag" } as React.CSSProperties;
 
 export function TitlebarContainer({ children, ...props }: TitlebarProps) {
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  const handleMacWindowMaximizeStatusUpdate = useCallback(
+    (data: { isMaximized: boolean }) => {
+      setIsMaximized(data.isMaximized);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const unsub = emitter.on(
+      EventNames.WINDOW_MAC_FULLSCREEN_STATE_UPDATE,
+      handleMacWindowMaximizeStatusUpdate,
+    );
+
+    return () => unsub();
+  }, [handleMacWindowMaximizeStatusUpdate]);
+
   return (
     <div
       className={cn(
         "flex w-full flex-row items-center border-b border-b-border bg-navbar pl-[10px]",
-        isMac ? "pl-[75px]" : "",
+        "transition-all duration-200 ease-in-out",
+        isMac ? `pl-[${isMaximized ? "10px" : "75px"}]` : "",
       )}
       style={dragRegion}
       {...props}

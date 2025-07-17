@@ -1,6 +1,11 @@
 // ! This service is only used within the renderer process
 
-import type { Message, Model, ShortcutAction, Thread } from "@shared/triplit/types";
+import type {
+  Message,
+  Model,
+  ShortcutAction,
+  Thread,
+} from "@shared/triplit/types";
 import mitt from "mitt";
 
 export enum EventNames {
@@ -28,6 +33,9 @@ export enum EventNames {
 
   // * Shortcut events
   SHORTCUT_TRIGGERED = "shortcut:triggered",
+
+  // * Window events
+  WINDOW_MAC_FULLSCREEN_STATE_UPDATE = "window:mac-maximized-state-update",
 }
 
 type Events = {
@@ -66,6 +74,9 @@ type Events = {
   [EventNames.CODE_PREVIEW_CLOSE]: null;
   [EventNames.SHORTCUT_TRIGGERED]: {
     action: ShortcutAction;
+  };
+  [EventNames.WINDOW_MAC_FULLSCREEN_STATE_UPDATE]: {
+    isMaximized: boolean;
   };
 };
 

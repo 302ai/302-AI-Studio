@@ -1,10 +1,11 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
+
+import logger from "@shared/logger/main-logger";
 import { ipcMain, ipcRenderer } from "electron";
 import { services } from "./services";
 import { container, initBindings } from "./shared/bindings";
 import { CommunicationWay, getMetadata } from "./shared/reflect";
 import { TYPES } from "./shared/types";
-import logger from "@shared/logger/main-logger";
 
 export function initMainBridge(): void {
   try {

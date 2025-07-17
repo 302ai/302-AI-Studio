@@ -28,6 +28,7 @@ export enum EventNames {
 
   // * Window Events
   WINDOW_TITLE_BAR_OVERLAY_UPDATE = "window:title-bar-overlay-update",
+  WINDOW_MAC_FULLSCREEN_STATE_UPDATE = "window:mac-maximized-state-update",
 
   // * Shortcut Events
   SHORTCUT_TRIGGERED = "shortcut:triggered",
@@ -63,6 +64,9 @@ type Events = {
     };
   };
   [EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE]: null;
+  [EventNames.WINDOW_MAC_FULLSCREEN_STATE_UPDATE]: {
+    isMaximized: boolean;
+  };
   [EventNames.SHORTCUT_TRIGGERED]: {
     action: ShortcutAction;
   };
