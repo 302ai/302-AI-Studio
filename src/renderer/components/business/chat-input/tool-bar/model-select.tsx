@@ -10,7 +10,7 @@ import logger from "@shared/logger/renderer-logger";
 import type { Model, Provider, Tab } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { SearchX } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFilter } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
@@ -56,9 +56,6 @@ export const ModelSelect = ({
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-    new Set([]),
-  );
 
   const handleSearchChange = useCallback(
     (query: string) => {
@@ -199,6 +196,20 @@ export const ModelSelect = ({
 
     return result;
   }, [providerModelMap, providers]);
+
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => {
+    return new Set(groupedModels.map((group) => `group-${group.name}`));
+  });
+
+  // Reset expansion state when modal opens
+  useEffect(() => {
+    if (isOpen && groupedModels.length > 0) {
+      // 每次打开模态框时都展开所有分组
+      setExpandedGroups(
+        new Set(groupedModels.map((group) => `group-${group.name}`)),
+      );
+    }
+  }, [isOpen, groupedModels]);
 
   // Check if there are no available providers or models
   const hasNoProviders = useMemo(() => {

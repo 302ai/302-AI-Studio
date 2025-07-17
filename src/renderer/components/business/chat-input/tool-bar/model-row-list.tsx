@@ -64,7 +64,7 @@ export const ModelRowList = memo(function ModelRowList({
         <Disclosure
           isExpanded={isExpanded}
           className="!border-b-transparent"
-          defaultExpanded={true}
+          // defaultExpanded={true}
         >
           <DisclosureTrigger
             className="flex h-12 w-full items-center rounded-md border-b-none px-2 py-1 font-medium text-xs "
@@ -143,10 +143,11 @@ export const ModelRowList = memo(function ModelRowList({
             </div>
             {hasCapabilities && (
               <Tooltip.Content
-                className={cn(
-                  "border-none bg-[#F3F2FF] text-[#8E47F0] [&_[data-slot=overlay-arrow]]:fill-[#F3F2FF]",
-                  "dark:bg-[#1A1A1A] dark:text-[#8E47F0] [&_[data-slot=overlay-arrow]]:dark:fill-[#1A1A1A]",
-                )}
+                // className={cn(
+                //   "border-none bg-[#F3F2FF] text-[#8E47F0] [&_[data-slot=overlay-arrow]]:fill-[#F3F2FF]",
+                //   "dark:bg-[#1A1A1A] dark:text-[#8E47F0] [&_[data-slot=overlay-arrow]]:dark:fill-[#1A1A1A]",
+                // )}
+                showArrow={false}
               >
                 <div>
                   <span>{t("support")}</span>
