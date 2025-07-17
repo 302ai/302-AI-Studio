@@ -160,6 +160,7 @@ export const ModelRowList = memo(function ModelRowList({
                 //   "dark:bg-[#1A1A1A] dark:text-[#8E47F0] [&_[data-slot=overlay-arrow]]:dark:fill-[#1A1A1A]",
                 // )}
                 showArrow={false}
+                intent="inverse"
               >
                 <div>
                   <span>{t("support")}</span>
