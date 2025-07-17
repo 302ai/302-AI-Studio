@@ -16,11 +16,16 @@ export function App() {
   useEffect(() => {
     const setupClient = async () => {
       const client = initTriplitClient();
+      client.onConnectionStatusChange((status) => {
+        logger.info("Connection status changed", {
+          status,
+          process: "renderer",
+        });
+        setIsConnected(status === "OPEN");
+      });
       const serverUrl = await triplitService.getServerPort();
       client.updateServerUrl(`http://localhost:${serverUrl}`);
-      client.connect();
-
-      setIsConnected(client.connectionStatus === "OPEN");
+      await client.connect();
 
       logger.info("App: Client connected", {
         serverUrl: triplitClient.serverUrl,
@@ -40,7 +45,7 @@ export function App() {
   }, []);
 
   if (!isConnected) {
-    return <div>Error...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
