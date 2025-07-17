@@ -228,6 +228,7 @@ declare global {
         ) => Promise<Model>;
         deleteModel: (modelId: string) => Promise<void>;
         clearModel: (providerId: string) => Promise<void>;
+        collectModel: (modelId: string, collected: boolean) => Promise<void>;
       };
       updaterService: {
         setAutoUpdate: (autoUpdate: boolean) => Promise<void>;

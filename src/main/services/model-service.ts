@@ -71,4 +71,21 @@ export class ModelService {
       throw error;
     }
   }
+
+  // 收藏
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async collectModel(
+    _event: Electron.IpcMainEvent,
+    modelId: string,
+    collected: boolean,
+  ): Promise<void> {
+    try {
+      await this.modelDbService.updateModel(modelId, {
+        collected,
+      });
+    } catch (error) {
+      logger.error("ModelService: collectModel error", { error });
+      throw error;
+    }
+  }
 }

@@ -1,18 +1,19 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore useSemanticElements */
 
 import SelectedIcon from "@renderer/assets/icons/selected.svg";
-import { triplitClient } from "@renderer/client";
 import { ModelIcon } from "@renderer/components/business/model-icon";
 import {
   Disclosure,
   DisclosureTrigger,
 } from "@renderer/components/ui/disclosure";
+import { Tooltip } from "@renderer/components/ui/tooltip";
 import { cn } from "@renderer/lib/utils";
-import type { Model, UpdateModelData } from "@shared/triplit/types";
+import type { Model } from "@shared/triplit/types";
 import { Star } from "lucide-react";
 import { memo } from "react";
 import { areEqual } from "react-window";
 
+const { modelService } = window.service;
 export interface ListItem {
   type: "group" | "model";
   id: string;
@@ -75,59 +76,62 @@ export const ModelRowList = memo(function ModelRowList({
 
   const isSelected = selectedModelId === item.model.id;
 
-  const handleUpdateModel = async (updateModelData: UpdateModelData) => {
-    await triplitClient.update("models", item.id, updateModelData);
+  const handleUpdateModel = async () => {
+    await modelService.collectModel(item.model.id, !item.model.collected);
   };
 
   return (
-    <div style={style} className="mb-1">
-      <div
-        className={cn(
-          "relative flex h-12 cursor-pointer items-center rounded-md pr-[12px] pl-[14px] text-sm outline-hidden hover:bg-hover-primary ",
-          "dark:text-[#E6E6E6] dark:hover:bg-[#1A1A1A]",
-          isSelected &&
-            "bg-[#F3F2FF] text-[#8E47F0] hover:bg-[#F3F2FF] dark:bg-[#49306A] dark:text-[#FFFFFF] dark:hover:bg-[#49306A]",
-        )}
-        onClick={() => onSelect(item.model.id)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            onSelect(item.model.id);
-          }
-        }}
-        role="option"
-        tabIndex={-1}
-        aria-selected={isSelected}
-      >
-        {isSelected && (
-          <img
-            src={SelectedIcon}
-            alt="selected"
-            className="absolute top-0 right-0 size-6"
-          />
-        )}
-        <div className="flex w-full flex-row items-center gap-2 overflow-hidden">
-          <ModelIcon
-            modelName={item.model.name}
-            className="size-5 flex-shrink-0"
-          />
-          <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap ">
-            {item.model.remark || item.model.name}
-          </span>
+    <Tooltip>
+      <div style={style} className="mb-1">
+        <div
+          className={cn(
+            "relative flex h-12 cursor-pointer items-center rounded-md pr-[12px] pl-[14px] text-sm outline-hidden hover:bg-hover-primary ",
+            "dark:text-[#E6E6E6] dark:hover:bg-[#1A1A1A]",
+            isSelected &&
+              "bg-[#F3F2FF] text-[#8E47F0] hover:bg-[#F3F2FF] dark:bg-[#49306A] dark:text-[#FFFFFF] dark:hover:bg-[#49306A]",
+          )}
+          onClick={() => onSelect(item.model.id)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              onSelect(item.model.id);
+            }
+          }}
+          role="option"
+          tabIndex={-1}
+          aria-selected={isSelected}
+        >
+          {isSelected && (
+            <img
+              src={SelectedIcon}
+              alt="selected"
+              className="absolute top-0 right-0 size-6"
+            />
+          )}
+          <div className="flex w-full flex-row items-center gap-2 overflow-hidden">
+            <ModelIcon
+              modelName={item.model.name}
+              className="size-5 flex-shrink-0"
+            />
+            <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap ">
+              {item.model.remark || item.model.name}
+            </span>
 
-          <Star
-            className={cn(
-              "mr-2 size-4 flex-shrink-0",
-              item.model.collected && " ",
-            )}
-            fill={item.model.collected ? "#FFB143" : "#E7E7E7"}
-            color={item.model.collected ? "#FFB143" : "#E7E7E7"}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleUpdateModel({ collected: !item.model.collected });
-            }}
-          />
+            <Star
+              className={cn(
+                "mr-2 size-4 flex-shrink-0",
+                item.model.collected && " ",
+              )}
+              fill={item.model.collected ? "#FFB143" : "#E7E7E7"}
+              color={item.model.collected ? "#FFB143" : "#E7E7E7"}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUpdateModel();
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+      <Tooltip.Content>123</Tooltip.Content>
+    </Tooltip>
   );
 }, areEqual);
