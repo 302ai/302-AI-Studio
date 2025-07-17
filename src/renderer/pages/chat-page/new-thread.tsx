@@ -12,7 +12,7 @@ export function NewThread() {
       <BlurText
         text={t("hello-world")}
         animateBy="letters"
-        className="text-4xl"
+        className="max-w-[720px] justify-center text-[34px]"
         delay={50}
       />
       <motion.div

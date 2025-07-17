@@ -447,7 +447,7 @@
   },
   "stop-generating": "Stop",
   "new-thread": {
-    "hello-world": "Tell me, what are you thinking about?"
+    "hello-world": "Hi, are you ready to explore the world with me?"
   },
   "attachment": {
     "file-too-large": "File size cannot exceed 10MB"
