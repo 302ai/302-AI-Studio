@@ -63,10 +63,12 @@ export const ModelRowList = memo(function ModelRowList({
           defaultExpanded={true}
         >
           <DisclosureTrigger
-            className="flex h-12 w-full items-center rounded-md border-b-none px-2 py-1 font-medium text-[#000000] text-xs dark:text-[#E6E6E6]"
+            className="flex h-12 w-full items-center rounded-md border-b-none px-2 py-1 font-medium text-xs "
             onPress={() => onToggleGroup?.(item.id)}
           >
-            {item.name}
+            <span className="text-[#000000] dark:text-[#E6E6E6]">
+              {item.name}
+            </span>
           </DisclosureTrigger>
         </Disclosure>
       </div>
