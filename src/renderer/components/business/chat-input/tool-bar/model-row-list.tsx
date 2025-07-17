@@ -6,6 +6,7 @@ import {
   DisclosureTrigger,
 } from "@renderer/components/ui/disclosure";
 import { Tooltip } from "@renderer/components/ui/tooltip";
+import { useTheme } from "@renderer/context/theme-provider";
 import { cn } from "@renderer/lib/utils";
 import type { Model } from "@shared/triplit/types";
 import { Star } from "lucide-react";
@@ -53,6 +54,7 @@ export const ModelRowList = memo(function ModelRowList({
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
+  const { theme, isSystemDark } = useTheme();
 
   if (item.type === "group") {
     const isExpanded = hasSearch
@@ -88,6 +90,16 @@ export const ModelRowList = memo(function ModelRowList({
   const hasCapabilities = Array.from(item.model.capabilities).some(
     (capability) => capability,
   );
+
+  const isDarkMode = theme === "dark" || (theme === "system" && isSystemDark);
+
+  const starColor = item.model.collected
+    ? "#FFB143"
+    : isDarkMode
+      ? isSelected
+        ? "#1A1A1A"
+        : "#5C5C5C"
+      : "#E7E7E7";
 
   return (
     <Tooltip>
@@ -130,11 +142,11 @@ export const ModelRowList = memo(function ModelRowList({
 
               <Star
                 className={cn(
-                  "mr-2 size-4 flex-shrink-0",
+                  "mr-2 size-4 flex-shrink-0 ",
                   item.model.collected && " ",
                 )}
-                fill={item.model.collected ? "#FFB143" : "#E7E7E7"}
-                color={item.model.collected ? "#FFB143" : "#E7E7E7"}
+                fill={starColor}
+                color={starColor}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleUpdateModel();
