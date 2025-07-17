@@ -47,7 +47,6 @@ export const ModelSelect = ({
     .Order("order", "ASC");
 
   const { results: providers } = useQuery(triplitClient, providersQuery);
-
   const modelsQuery = triplitClient
     .query("models")
     .Where("enabled", "=", true)
@@ -157,7 +156,7 @@ export const ModelSelect = ({
   }, [setActiveTabId, tabs, t]);
 
   // Create provider map and provider model map from triplit data
-  const { providerMap, providerModelMap } = useMemo(() => {
+  const { providerModelMap } = useMemo(() => {
     const providersArray = providers ?? [];
     const modelsArray = models ?? [];
 
@@ -181,23 +180,25 @@ export const ModelSelect = ({
   }, [providers, models]);
 
   const groupedModels = useMemo(() => {
+    const providersArray = providers ?? [];
     const result: GroupedModel[] = [];
 
-    Object.entries(providerModelMap).forEach(([providerId, models]) => {
-      const enabledModels = models.filter((model) => model.enabled);
-      // No need to sort here - models are already sorted by the database query
+    for (const provider of providersArray) {
+      const models = providerModelMap[provider.id];
+      if (!models || models.length === 0) continue;
 
-      if (enabledModels.length > 0) {
-        result.push({
-          id: providerId,
-          name: providerMap[providerId]?.name || providerId,
-          models: enabledModels,
-        });
-      }
-    });
+      const enabledModels = models.filter((model) => model.enabled);
+      if (enabledModels.length === 0) continue;
+
+      result.push({
+        id: provider.id,
+        name: provider.name,
+        models: enabledModels,
+      });
+    }
 
     return result;
-  }, [providerModelMap, providerMap]);
+  }, [providerModelMap, providers]);
 
   // Check if there are no available providers or models
   const hasNoProviders = useMemo(() => {
@@ -223,7 +224,7 @@ export const ModelSelect = ({
         (model) => !model.collected,
       );
 
-      const groupId = `group-${group.id}`;
+      const groupId = `group-${group.name}`;
       items.push({
         type: "group",
         id: groupId,
@@ -338,10 +339,13 @@ export const ModelSelect = ({
       {isOpen && !hasNoProviders && (
         <div className="">
           <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
-            <Modal.Content className="min-w-[638px] dark:bg-[#242424]">
+            <Modal.Content
+              className="min-w-[638px] dark:bg-[#242424]"
+              closeButton={false}
+            >
               {() => (
                 <>
-                  <div className=" p-2">
+                  <div className=" p-4">
                     <SearchField
                       className=" h-[44px] rounded-lg bg-[#F9F9F9] dark:bg-[#1A1A1A] "
                       placeholder={t("model-search-placeholder")}
@@ -352,7 +356,7 @@ export const ModelSelect = ({
                   </div>
                   <div
                     className={cn(
-                      "min-w-[240px] px-4",
+                      "min-w-[240px] px-4 pb-2",
                       contentHeight >= 250 ? "mt-2" : "mt-0",
                     )}
                   >

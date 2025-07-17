@@ -51,10 +51,9 @@ export const ModelRowList = memo(function ModelRowList({
   const item = items[index];
 
   if (item.type === "group") {
-    // Determine if the group is expanded based on search state
     const isExpanded = hasSearch
-      ? !expandedGroups?.has(`collapsed-${item.id}`) // In search mode, expanded unless explicitly collapsed
-      : (expandedGroups?.has(item.id) ?? false); // In normal mode, collapsed unless explicitly expanded
+      ? !expandedGroups?.has(`collapsed-${item.id}`)
+      : (expandedGroups?.has(item.id) ?? false);
 
     return (
       <div style={style} className="mb-1">
