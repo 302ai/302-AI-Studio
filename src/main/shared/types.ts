@@ -9,6 +9,7 @@ export const TYPES = {
   SettingsDbService: Symbol.for("SettingsDbService"),
   ShortcutsDbService: Symbol.for("ShortcutsDbService"),
   ModelDbService: Symbol.for("ModelDbService"),
+  ToolboxDbService: Symbol.for("ToolboxDbService"),
 
   // * Business Services
   ConfigService: Symbol.for("ConfigService"),
@@ -21,6 +22,7 @@ export const TYPES = {
   ProviderService: Symbol.for("ProviderService"),
   ShortcutsService: Symbol.for("ShortcutsService"),
   ModelService: Symbol.for("ModelService"),
+  ToolboxService: Symbol.for("ToolboxService"),
 
   // * Utility Services
   FileParseService: Symbol.for("FileParseService"),

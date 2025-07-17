@@ -448,7 +448,10 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "嗨，准备好和我一起探索世界了吗?"
+    "hello-world": "嗨，准备好和我一起探索世界了吗?",
+    "toolbox-label": "AI 工具",
+    "toolbox-button": "更多工具",
+    "toolbox-title": "AI 工具"
   },
   "attachment": {
     "file-too-large": "文件大小不能超过10MB"

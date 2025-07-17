@@ -90,3 +90,8 @@ export type ShortcutAction =
   | "switch-to-tab-9";
 
 export type ShortcutScope = "global" | "app";
+
+// * Toolbox
+export type Toolbox = Entity<Schema, "toolbox">;
+export type CreateToolboxData = Omit<Toolbox, "id" | "createdAt">;
+export type UpdateToolboxData = Partial<Omit<Toolbox, "id">>;

@@ -9,6 +9,7 @@ import { SettingsDbService } from "@main/services/db-service/settings-db-service
 import { ShortcutsDbService } from "@main/services/db-service/shortcuts-db-service";
 import { TabDbService } from "@main/services/db-service/tab-db-service";
 import { ThreadDbService } from "@main/services/db-service/thread-db-service";
+import { ToolboxDbService } from "@main/services/db-service/toolbox-db-service";
 import { UiDbService } from "@main/services/db-service/ui-db-service";
 import { FileParseService } from "@main/services/file-service/file-parse-service";
 import { FilePreviewService } from "@main/services/file-service/file-preview-service";
@@ -20,6 +21,7 @@ import { ShellService } from "@main/services/shell-service";
 import { ShortcutsService } from "@main/services/shortcuts-service";
 import { TabService } from "@main/services/tab-service";
 import { ThreadService } from "@main/services/thread-service";
+import { ToolboxService } from "@main/services/toolbox-service";
 import { TriplitService } from "@main/services/triplit-service";
 import { UiService } from "@main/services/ui-service";
 import { UpdaterService } from "@main/services/updater-service";
@@ -66,6 +68,10 @@ export function initBindings() {
   container
     .bind<ModelDbService>(TYPES.ModelDbService)
     .to(ModelDbService)
+    .inSingletonScope();
+  container
+    .bind<ToolboxDbService>(TYPES.ToolboxDbService)
+    .to(ToolboxDbService)
     .inSingletonScope();
 
   // * Business Services
@@ -133,5 +139,9 @@ export function initBindings() {
   container
     .bind<UpdaterService>(TYPES.UpdaterService)
     .to(UpdaterService)
+    .inSingletonScope();
+  container
+    .bind<ToolboxService>(TYPES.ToolboxService)
+    .to(ToolboxService)
     .inSingletonScope();
 }

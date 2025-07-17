@@ -448,7 +448,10 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "やあ、僕と一緒に世界を探検する準備はできたかい？"
+    "hello-world": "やあ、僕と一緒に世界を探検する準備はできたかい？",
+    "toolbox-label": "AIツール",
+    "toolbox-button": "他のツール",
+    "toolbox-title": "AIツール"
   },
   "attachment": {
     "file-too-large": "ファイルサイズは10MBを超えることはできません"

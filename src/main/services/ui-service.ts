@@ -4,8 +4,8 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
-import type { Provider, Thread } from "@shared/triplit/types";
 import logger from "@shared/logger/main-logger";
+import type { Provider, Thread } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type { UiDbService } from "./db-service/ui-db-service";
 
