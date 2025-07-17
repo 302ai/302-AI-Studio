@@ -137,7 +137,9 @@ export function TabBar() {
                   className={cn(
                     "absolute right-[-3px]",
                     "mx-1 h-[20px] w-[2px] self-center transition-opacity duration-200",
-                    id === getPreviousTabIdForActiveTab() || id === activeTabId
+                    id === getPreviousTabIdForActiveTab() ||
+                      id === activeTabId ||
+                      index === tabs.length - 1
                       ? "opacity-0"
                       : "opacity-100",
                   )}
