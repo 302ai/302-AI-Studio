@@ -45,7 +45,7 @@ export function App() {
   }, []);
 
   if (!isConnected) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (
