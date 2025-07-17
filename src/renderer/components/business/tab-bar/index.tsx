@@ -5,6 +5,7 @@ import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Thread } from "@shared/triplit/types";
 import { Plus } from "lucide-react";
+import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ButtonWithTooltip } from "../button-with-tooltip";
@@ -136,7 +137,7 @@ export function TabBar() {
                   orientation="vertical"
                   className={cn(
                     "absolute right-[-3px]",
-                    "mx-1 h-[20px] w-[2px] self-center transition-opacity duration-200",
+                    "mx-1 h-[20px] w-[2px] self-center transition-opacity duration-300",
                     id === getPreviousTabIdForActiveTab() ||
                       id === activeTabId ||
                       index === tabs.length - 1
@@ -157,10 +158,18 @@ export function TabBar() {
                 />
               </div>
             ))}
-            <div
-              className={cn("flex items-center", {
-                "opacity-0": isDragging,
-              })}
+
+            <motion.div
+              layout
+              className="flex items-center"
+              animate={{
+                opacity: isDragging ? 0 : 1,
+              }}
+              transition={{
+                type: "spring",
+                damping: 20,
+                stiffness: 300,
+              }}
             >
               <Separator
                 orientation="vertical"
@@ -181,7 +190,7 @@ export function TabBar() {
               >
                 <Plus className="h-4 w-4" />
               </ButtonWithTooltip>
-            </div>
+            </motion.div>
             {provided.placeholder}
           </div>
         )}
