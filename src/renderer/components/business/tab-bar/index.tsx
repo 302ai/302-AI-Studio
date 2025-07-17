@@ -164,6 +164,9 @@ export function TabBar() {
               className="flex items-center"
               animate={{
                 opacity: isDragging ? 0 : 1,
+                transition: {
+                  duration: isDragging ? 0.1 : 1,
+                },
               }}
               transition={{
                 type: "spring",
