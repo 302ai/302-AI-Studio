@@ -76,7 +76,7 @@ export type ShortcutAction =
   | "next-tab"
   | "previous-tab"
   | "toggle-model-panel"
-  // | "toggle-incognito-mode"
+  | "toggle-incognito-mode"
   | "branch-and-send"
   // Tab navigation (1-9)
   | "switch-to-tab-1"
