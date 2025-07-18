@@ -120,6 +120,8 @@ declare global {
         clearActiveTabId: () => Promise<void>;
         updateActiveTabHistory: (tabId: string) => Promise<void>;
         updateActiveTabId: (tabId: string) => Promise<void>;
+        updateSidebarCollapsed: (collapsed: boolean) => Promise<void>;
+        getSidebarCollapsed: () => Promise<boolean>;
       };
       messageService: {
         insertMessage: (message: CreateMessageData) => Promise<Message>;

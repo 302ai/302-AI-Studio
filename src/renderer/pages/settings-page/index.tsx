@@ -1,5 +1,6 @@
 import { Tab, TabList, Tabs } from "@renderer/components/business/setting-tabs";
 import { useSidebar } from "@renderer/components/ui/sidebar";
+import logger from "@renderer/config/logger";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -8,6 +9,8 @@ import { GeneralSettings } from "./general-settings";
 import { ModelSettings } from "./model-settings";
 import { PreferenceSettings } from "./preference-settings";
 import { ShortcutsSettings } from "./shortcuts-settings";
+
+const { uiService } = window.service;
 
 export function SettingsPage() {
   const { t } = useTranslation("translation", {
@@ -67,6 +70,15 @@ export function SettingsPage() {
     if (state === "expanded") {
       toggleSidebar();
     }
+
+    return () => {
+      uiService.getSidebarCollapsed().then((sidebarCollapsed) => {
+        logger.info("SettingsPage:sidebarCollapsed", { sidebarCollapsed });
+        if (!sidebarCollapsed) {
+          toggleSidebar();
+        }
+      });
+    };
   }, [state, toggleSidebar]);
 
   return (
