@@ -26,6 +26,8 @@
     "reasoning": "推理",
     "vision": "照片",
     "file": "文件",
+    "music": "音频",
+    "video": "视频",
     "support": "支持"
   },
   "settings": {

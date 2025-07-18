@@ -25,6 +25,8 @@
     "reasoning": "Reasoning",
     "vision": "Vision",
     "file": "File",
+    "music": "Audio",
+    "video": "Video",
     "support": "Support"
   },
   "settings": {
