@@ -1,4 +1,3 @@
-import { triplitClient } from "@renderer/client";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import logger from "@shared/logger/renderer-logger";
@@ -36,7 +35,8 @@ export const RowList = memo(function RowList({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleUpdateModel = async (updateModelData: UpdateModelData) => {
-    await triplitClient.update("models", item.id, updateModelData);
+    // await triplitClient.update("models", item.id, updateModelData);
+    await modelService.updateModel(item.id, updateModelData);
   };
 
   const handleEdit = () => {
