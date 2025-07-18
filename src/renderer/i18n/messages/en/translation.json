@@ -105,6 +105,7 @@
         "clear-models": "Clear",
         "model-name": "Model Name",
         "model-capabilities": "Capabilities",
+        "model-type": "Model Type",
         "actions": "Actions"
       },
       "add-model-modal": {
