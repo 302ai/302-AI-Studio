@@ -258,7 +258,7 @@ export function ProviderModel() {
   }
 
   return (
-    <div className="flex w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px]">
+    <div className="flex w-full flex-col gap-y-3 overflow-y-scroll px-6 pt-[18px]">
       {/* 配置标题 */}
       <div className="flex flex-col gap-1">
         <h2 className="max-w-full whitespace-normal break-all text-fg leading-tight">
