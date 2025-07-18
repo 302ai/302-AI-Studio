@@ -1,4 +1,5 @@
 import { triplitClient } from "@main/triplit/client";
+import logger from "@shared/logger/main-logger";
 import type { Provider, Thread, Ui } from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
@@ -30,6 +31,7 @@ export class UiDbService extends BaseDbService {
       activeThreadId: "",
       activeTabId: "",
       activeTabHistory: new Set(),
+      sidebarCollapsed: false,
     });
   }
 
@@ -54,9 +56,14 @@ export class UiDbService extends BaseDbService {
   }
 
   async getActiveProviderId(): Promise<string> {
-    if (!this.uiRecord) return "";
-
-    return this.uiRecord.activeProviderId || "";
+    try {
+      const query = triplitClient.query("ui");
+      const ui = await triplitClient.fetch(query);
+      return ui[0].activeProviderId || "";
+    } catch (error) {
+      logger.error("UiDbService:getActiveProviderId error", { error });
+      throw error;
+    }
   }
 
   async clearActiveProviderId() {
@@ -88,9 +95,14 @@ export class UiDbService extends BaseDbService {
   }
 
   async getActiveThreadId(): Promise<string> {
-    if (!this.uiRecord) return "";
-
-    return this.uiRecord.activeThreadId || "";
+    try {
+      const query = triplitClient.query("ui");
+      const ui = await triplitClient.fetch(query);
+      return ui[0].activeThreadId || "";
+    } catch (error) {
+      logger.error("UiDbService:getActiveThreadId error", { error });
+      throw error;
+    }
   }
 
   async clearActiveThreadId() {
@@ -119,9 +131,14 @@ export class UiDbService extends BaseDbService {
   }
 
   async getActiveTabId(): Promise<string> {
-    if (!this.uiRecord) return "";
-
-    return this.uiRecord.activeTabId || "";
+    try {
+      const query = triplitClient.query("ui");
+      const ui = await triplitClient.fetch(query);
+      return ui[0].activeTabId || "";
+    } catch (error) {
+      logger.error("UiDbService:getActiveTabId error", { error });
+      throw error;
+    }
   }
 
   async clearActiveTabId() {
@@ -142,5 +159,30 @@ export class UiDbService extends BaseDbService {
 
       ui.activeTabHistory = new Set(historyArray);
     });
+  }
+
+  // * Sidebar Collapsed
+  async updateSidebarCollapsed(collapsed: boolean) {
+    if (!this.uiRecord) return;
+
+    try {
+      await triplitClient.update("ui", this.uiRecord.id, async (ui) => {
+        ui.sidebarCollapsed = collapsed;
+      });
+    } catch (error) {
+      logger.error("UiDbService:updateSidebarCollapsed error", { error });
+      throw error;
+    }
+  }
+
+  async getSidebarCollapsed(): Promise<boolean> {
+    try {
+      const query = triplitClient.query("ui");
+      const ui = await triplitClient.fetch(query);
+      return ui[0].sidebarCollapsed;
+    } catch (error) {
+      logger.error("UiDbService:getSidebarCollapsed error", { error });
+      throw error;
+    }
   }
 }

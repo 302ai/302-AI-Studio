@@ -1,9 +1,8 @@
 import logger from "@shared/logger/renderer-logger";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { initTriplitClient, triplitClient } from "./client";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { ThemeProvider } from "./context/theme-provider";
-import { useAppShortcutListenser } from "./hooks/use-app-shortcut-listener";
 import { Routes } from "./routes";
 import {
   cleanupIpcEventBridge,
@@ -13,15 +12,20 @@ import {
 const { triplitService } = window.service;
 
 export function App() {
-  // 初始化仅限于APP内的按键监听
-  useAppShortcutListenser();
-
+  const [isConnected, setIsConnected] = useState(false);
   useEffect(() => {
     const setupClient = async () => {
       const client = initTriplitClient();
+      client.onConnectionStatusChange((status) => {
+        logger.info("Connection status changed", {
+          status,
+          process: "renderer",
+        });
+        setIsConnected(status === "OPEN");
+      });
       const serverUrl = await triplitService.getServerPort();
       client.updateServerUrl(`http://localhost:${serverUrl}`);
-      client.connect();
+      await client.connect();
 
       logger.info("App: Client connected", {
         serverUrl: triplitClient.serverUrl,
@@ -39,6 +43,10 @@ export function App() {
       cleanupIpcEventBridge();
     };
   }, []);
+
+  if (!isConnected) {
+    return null;
+  }
 
   return (
     <ThemeProvider>

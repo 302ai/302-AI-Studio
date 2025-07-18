@@ -258,7 +258,7 @@ export function ProviderModel() {
   }
 
   return (
-    <div className="flex w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px]">
+    <div className="flex w-full flex-col gap-y-3 overflow-y-scroll px-6 pt-[18px]">
       {/* 配置标题 */}
       <div className="flex flex-col gap-1">
         <h2 className="max-w-full whitespace-normal break-all text-fg leading-tight">
@@ -290,6 +290,7 @@ export function ProviderModel() {
                   onChange={handleFieldChange("name")}
                   maxLength={100}
                   aria-label="Provider Name"
+                  className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
                 />
               </div>
             </div>
@@ -302,6 +303,7 @@ export function ProviderModel() {
               placeholder={t("add-provider-form.placeholder-3")}
               onChange={handleFieldChange("baseUrl")}
               aria-label="Base URL"
+              className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
             />
             <span className="max-w-full overflow-hidden whitespace-normal break-all text-muted-fg text-xs">
               {`${t("add-provider-form.api-forward")}：${formData.baseUrl || ""}/chat/completions`}
@@ -317,6 +319,7 @@ export function ProviderModel() {
               placeholder={t("add-provider-form.placeholder-2")}
               onChange={handleFieldChange("apiKey")}
               aria-label="API Key"
+              className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
             />
 
             {!selectedProvider.custom && (
@@ -337,7 +340,7 @@ export function ProviderModel() {
                 selectedKey={formData.apiType || "openai"}
                 onSelectionChange={handleFieldChange("apiType")}
               >
-                <Select.Trigger />
+                <Select.Trigger className="inset-ring-transparent h-11 rounded-[10px] bg-setting text-setting-fg transition-none hover:inset-ring-transparent" />
                 <Select.List>
                   {API_TYPE_OPTIONS.map(({ key, label }) => (
                     <Select.Option

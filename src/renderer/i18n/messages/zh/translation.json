@@ -21,7 +21,12 @@
     "lack-model": "请先选择一个模型！",
     "lack-provider": "缺少模型提供商！",
     "edit-message": "编辑消息",
-    "edit-message-only-save": "仅保存"
+    "edit-message-only-save": "仅保存",
+    "function_call": "工具",
+    "reasoning": "推理",
+    "vision": "照片",
+    "file": "文件",
+    "support": "支持"
   },
   "settings": {
     "about-settings": {

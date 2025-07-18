@@ -130,23 +130,23 @@
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
-    --success-bg: var(--color-emerald-50);
-    --success-border: var(--color-emerald-100);
-    --success-text: var(--color-emerald-600);
+    --success-bg: #ecfdf5;
+    --success-border: #d1fae5;
+    --success-text: #059669;
 
-    --info-bg: var(--color-blue-600/15%);
-    --info-border: var(--color-blue-600/15%);
-    --info-text: var(--color-blue-600);
+    --info-bg: rgba(37, 99, 235, 0.15);
+    --info-border: rgba(37, 99, 235, 0.15);
+    --info-text: #2563eb;
 
     --warning: oklch(0.828 0.189 84.429);
     --warning-fg: oklch(0.279 0.077 45.635);
-    --warning-bg: var(--color-amber-500/15%);
-    --warning-border: var(--color-amber-400/40%);
-    --warning-text: var(--color-amber-600);
+    --warning-bg: rgba(245, 158, 11, 0.15);
+    --warning-border: rgba(251, 191, 36, 0.4);
+    --warning-text: #d97706;
 
-    --error-bg: var(--color-red-500/20%);
-    --error-border: var(--color-red-200);
-    --error-text: var(--color-red-600);
+    --error-bg: rgba(239, 68, 68, 0.2);
+    --error-border: #fecaca;
+    --error-text: #dc2626;
 
     --danger: oklch(0.577 0.245 27.325);
     --danger-2: #FFE7E7;
@@ -222,23 +222,23 @@
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
-    --success-bg: var(--color-emerald-950);
-    --success-border: var(--color-emerald-900);
-    --success-text: var(--color-emerald-200);
+    --success-bg: oklch(26.2% 0.051 172.552);
+    --success-border: oklch(37.8% 0.077 168.94);
+    --success-text: oklch(90.5% 0.093 164.15);
 
-    --info-bg: var(--color-blue-600/15%);
-    --info-border: var(--color-blue-600/15%);
-    --info-text: var(--color-blue-200);
+    --info-bg: rgba(37, 99, 235, 0.15);
+    --info-border: rgba(37, 99, 235, 0.15);
+    --info-text: #bfdbfe;
 
     --warning: oklch(0.828 0.189 84.429);
     --warning-fg: oklch(0.279 0.077 45.635);
-    --warning-bg: var(--color-amber-400/10%);
-    --warning-border: var(--color-amber-500/15%);
-    --warning-text: var(--color-amber-200);
+    --warning-bg: rgba(251, 191, 36, 0.1);
+    --warning-border: rgba(245, 158, 11, 0.15);
+    --warning-text: #fde68a;
 
-    --error-bg: var(--color-red-600/10%);
-    --error-border: var(--color-red-600/15%);
-    --error-text: var(--color-red-200);
+    --error-bg: rgba(220, 38, 38, 0.1);
+    --error-border: rgba(220, 38, 38, 0.15);
+    --error-text: #fca5a5;
 
     --danger: oklch(0.577 0.245 27.325);
     --danger-2: #3A1A1A;
