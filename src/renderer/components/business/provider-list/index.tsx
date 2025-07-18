@@ -393,7 +393,7 @@ export function ProviderList() {
           <div>{t("label")}</div>
           {providers.length > 0 ? (
             <Button
-              className=" w-[76px] shrink-0"
+              className=" w-[66px] shrink-0 "
               intent="primary"
               // onClick={() => setState({ type: "add" })}
               onClick={onClick}
