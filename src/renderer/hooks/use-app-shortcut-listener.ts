@@ -13,6 +13,8 @@ export function useAppShortcutListenser() {
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
+      if (event.isComposing) return;
+
       const pressedKeys: string[] = [];
 
       if (event.ctrlKey) {
