@@ -41,7 +41,7 @@ export function TitlebarContainer({ children, ...props }: TitlebarProps) {
       className={cn(
         "flex w-full flex-row items-center border-b border-b-border bg-navbar pl-[10px]",
         "transition-all duration-200 ease-in-out",
-        isMac ? `pl-[${isMaximized ? "10px" : "75px"}]` : "",
+        isMac ? (isMaximized ? "pl-[10px]" : "pl-[75px]") : "",
       )}
       style={dragRegion}
       {...props}
