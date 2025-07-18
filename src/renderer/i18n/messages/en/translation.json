@@ -72,6 +72,10 @@
         "light": "Light",
         "system": "System"
       },
+      "privacy-mode": {
+        "title": "Privacy Mode",
+        "description": "Auto Inherit"
+      },
       "version-update": {
         "label": "Version Update",
         "check-for-updates": "Check",
@@ -392,7 +396,37 @@
     "selected-model-not-found": "Please select a model first!",
     "provider-not-found-for-selected-model": "Model provider setup error!",
     "message-not-found": "This message does not exist!",
-    "failed-to-generate-ai-response": "Failed to generate AI response!"
+    "failed-to-generate-ai-response": "Failed to generate AI response!",
+    "private-thread-title": "Private Chat"
+  },
+  "privacy-mode": {
+    "enable-tooltip": "Enable Privacy Mode",
+    "disable-tooltip": "Disable Privacy Mode",
+    "cannot-toggle-tooltip": "Cannot toggle privacy mode after session has started",
+    "cannot-toggle": {
+      "title": "Cannot Toggle Privacy Mode",
+      "description": "Privacy mode can only be changed before the session starts"
+    },
+    "enabled": {
+      "title": "Privacy Mode Enabled",
+      "description": "This session will not be saved or synced"
+    },
+    "disabled": {
+      "title": "Privacy Mode Disabled",
+      "description": "This session will be saved normally"
+    },
+    "error": {
+      "title": "Privacy Mode Error",
+      "description": "Failed to toggle privacy mode"
+    },
+    "confirm-switch": {
+      "message": "You are about to {{action}}. This will discard your private session content. Continue?"
+    },
+    "confirm-dialog": {
+      "title": "Confirm Privacy Mode Action",
+      "cancel": "Cancel",
+      "confirm": "Continue"
+    }
   },
   "thread-menu": {
     "actions": {

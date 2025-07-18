@@ -100,6 +100,7 @@ export function TabBar() {
           title,
           threadId: id,
           type: "thread",
+          isPrivate: false,
         });
         await setActiveTabId(newTab.id);
       }
@@ -131,7 +132,7 @@ export function TabBar() {
             }}
             {...provided.droppableProps}
           >
-            {tabs.map(({ id, title, type, threadId }, index) => (
+            {tabs.map(({ id, title, type, threadId, isPrivate }, index) => (
               <div key={id} className="relative flex items-center">
                 <Separator
                   orientation="vertical"
@@ -155,6 +156,7 @@ export function TabBar() {
                   onClick={() => activateTabId(id)}
                   type={type}
                   width={tabWidth}
+                  isPrivate={isPrivate}
                 />
               </div>
             ))}

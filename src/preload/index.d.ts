@@ -198,6 +198,8 @@ declare global {
       };
       settingsService: {
         setEnableWebSearch: (enable: boolean) => Promise<void>;
+        setEnableDefaultPrivacyMode: (enable: boolean) => Promise<void>;
+        setEnablePrivate: (enable: boolean) => Promise<void>;
         setEnableReason: (enable: boolean) => Promise<void>;
         setsearchService: (searchService: SearchService) => Promise<void>;
         updateSelectedModelId: (modelId: string) => Promise<void>;

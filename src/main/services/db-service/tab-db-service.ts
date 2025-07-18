@@ -1,3 +1,4 @@
+import { TYPES } from "@main/shared/types";
 import { triplitClient } from "@main/triplit/client";
 import logger from "@shared/logger/main-logger";
 import type {
@@ -6,12 +7,15 @@ import type {
   Ui,
   UpdateTabData,
 } from "@shared/triplit/types";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
+import type { ThreadDbService } from "./thread-db-service";
 
 @injectable()
 export class TabDbService extends BaseDbService {
-  constructor() {
+  constructor(
+    @inject(TYPES.ThreadDbService) private threadDbService: ThreadDbService,
+  ) {
     super("tabs");
   }
 
@@ -30,6 +34,9 @@ export class TabDbService extends BaseDbService {
   }
 
   async deleteTab(tabId: string): Promise<string> {
+    // Get the tab to check if it's private before deletion
+    const tabToDelete = await triplitClient.fetchById("tabs", tabId);
+
     // Get all tabs before deletion
     const query = triplitClient.query("tabs").Order("order", "ASC");
     const allTabs = await triplitClient.fetch(query);
@@ -42,6 +49,21 @@ export class TabDbService extends BaseDbService {
     }
 
     const currentActiveTabId = uiRecord?.activeTabId;
+
+    logger.info(`Deleting tab with ID ${tabId}`);
+
+    // If the tab is private and has a threadId, delete the associated thread
+    if (tabToDelete?.isPrivate && tabToDelete?.threadId) {
+      try {
+        await this.threadDbService.deleteThread(tabToDelete.threadId);
+        logger.info(`Deleted thread with ID ${tabToDelete.threadId}`);
+      } catch (error) {
+        logger.error("TabDbService: Failed to delete thread for private tab", {
+          error,
+          threadId: tabToDelete.threadId,
+        });
+      }
+    }
 
     // Delete the tab
     await triplitClient.delete("tabs", tabId);
@@ -83,6 +105,25 @@ export class TabDbService extends BaseDbService {
     const tabs = await triplitClient.fetch(tabsQuery);
 
     await triplitClient.transact(async (tx) => {
+      // First, delete threads for private tabs
+      for (const tab of tabs) {
+        if (tab.isPrivate && tab.threadId) {
+          try {
+            await this.threadDbService.deleteThread(tab.threadId);
+            logger.info(`Deleted thread with ID ${tab.threadId}`);
+          } catch (error) {
+            logger.error(
+              "TabDbService: Failed to delete thread for private tab",
+              {
+                error,
+                threadId: tab.threadId,
+              },
+            );
+          }
+        }
+      }
+
+      // Then delete all tabs
       const deletePromises = tabs.map((tab) => tx.delete("tabs", tab.id));
       await Promise.all(deletePromises);
     });

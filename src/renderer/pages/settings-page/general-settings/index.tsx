@@ -1,4 +1,5 @@
 import { LanguageSelector } from "./language";
+import { PrivacyModeSettings } from "./privacy-mode";
 import { ThemeSwitcher } from "./theme";
 import { VersionUpdate } from "./version-update";
 
@@ -8,6 +9,8 @@ export function GeneralSettings() {
       <LanguageSelector />
 
       <ThemeSwitcher />
+
+      <PrivacyModeSettings />
 
       <VersionUpdate />
     </div>

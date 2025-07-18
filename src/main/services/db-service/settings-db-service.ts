@@ -81,6 +81,28 @@ export class SettingsDbService extends BaseDbService {
     );
   }
 
+  async setEnableDefaultPrivacyMode(enable: boolean) {
+    if (!this.settingsRecord) return;
+    await triplitClient.update(
+      "settings",
+      this.settingsRecord.id,
+      async (setting) => {
+        setting.defaultPrivacyMode = enable;
+      },
+    );
+  }
+
+  async setEnablePrivate(enable: boolean) {
+    if (!this.settingsRecord) return;
+    await triplitClient.update(
+      "settings",
+      this.settingsRecord.id,
+      async (setting) => {
+        setting.isPrivate = enable;
+      },
+    );
+  }
+
   async setEnableReason(enable: boolean) {
     if (!this.settingsRecord) return;
     await triplitClient.update(

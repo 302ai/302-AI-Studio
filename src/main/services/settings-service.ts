@@ -49,6 +49,31 @@ export class SettingsService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setEnableDefaultPrivacyMode(
+    _event: Electron.IpcMainEvent,
+    enable: boolean,
+  ) {
+    try {
+      await this.settingsDbService.setEnableDefaultPrivacyMode(enable);
+    } catch (error) {
+      logger.error("SettingsService:setEnableDefaultPrivacyMode error", {
+        error,
+      });
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setEnablePrivate(enable: boolean) {
+    try {
+      await this.settingsDbService.setEnablePrivate(!!enable);
+    } catch (error) {
+      logger.error("SettingsService:setEnablePrivate error", { error });
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setEnableReason(_event: Electron.IpcMainEvent, enable: boolean) {
     try {
       await this.settingsDbService.setEnableReason(enable);

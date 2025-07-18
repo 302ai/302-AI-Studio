@@ -1,3 +1,4 @@
+import { PrivacyModeConfirmDialog } from "@renderer/components/business/privacy-mode-confirm-dialog";
 import { AppSidebar } from "@renderer/components/business/sidebar";
 import { BasicTitleBar } from "@renderer/components/business/title-bar";
 import { Toast } from "@renderer/components/ui/toast";
@@ -14,6 +15,7 @@ export function Layout() {
   return (
     <main className="flex h-screen w-screen flex-col overflow-hidden">
       <Toast />
+      <PrivacyModeConfirmDialog />
       <BasicTitleBar />
       <div
         className="flex flex-1"

@@ -73,6 +73,10 @@
         "light": "浅色",
         "system": "系统"
       },
+      "privacy-mode": {
+        "title": "隐私模式",
+        "description": "自动继承"
+      },
       "version-update": {
         "label": "版本更新",
         "check-for-updates": "检查更新",
@@ -391,9 +395,39 @@
     "lack-model": "请先选择一个模型！",
     "lack-provider": "缺少模型提供商！",
     "selected-model-not-found": "请先选择一个模型！",
-    "provider-not-found-for-selected-model": "模型供应商设置错误！",
+    "provider-not-found-for-selected-model": "模型提供商设置错误！",
     "message-not-found": "此消息不存在！",
-    "failed-to-generate-ai-response": "生成AI响应失败！"
+    "failed-to-generate-ai-response": "生成AI回复失败！",
+    "private-thread-title": "私密聊天"
+  },
+  "privacy-mode": {
+    "enable-tooltip": "启用隐私模式",
+    "disable-tooltip": "禁用隐私模式",
+    "cannot-toggle-tooltip": "会话开始后无法切换隐私模式",
+    "cannot-toggle": {
+      "title": "无法切换隐私模式",
+      "description": "隐私模式只能在会话开始前更改"
+    },
+    "enabled": {
+      "title": "隐私模式已启用",
+      "description": "此会话不会被保存或同步"
+    },
+    "disabled": {
+      "title": "隐私模式已禁用",
+      "description": "此会话将正常保存"
+    },
+    "error": {
+      "title": "隐私模式错误",
+      "description": "切换隐私模式失败"
+    },
+    "confirm-switch": {
+      "message": "您即将{{action}}。这将丢弃您的私密会话内容。是否继续？"
+    },
+    "confirm-dialog": {
+      "title": "确认隐私模式操作",
+      "cancel": "取消",
+      "confirm": "继续"
+    }
   },
   "thread-menu": {
     "actions": {

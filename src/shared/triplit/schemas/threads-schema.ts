@@ -9,6 +9,7 @@ export const threadsSchema = {
     createdAt: S.Date({ default: S.Default.now() }),
     updatedAt: S.Date({ default: S.Default.now() }),
     collected: S.Boolean({ default: false }),
+    isPrivate: S.Boolean({ default: false }),
   }),
   relationships: {
     model: S.RelationById("models", "$modelId"),

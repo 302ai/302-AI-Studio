@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
+import { usePrivacyMode } from "./use-privacy-mode";
 
 const {
   threadService,
@@ -27,8 +28,10 @@ export function useToolBar() {
   const { t } = useTranslation("translation", {
     keyPrefix: "thread",
   });
+  const { t: oT } = useTranslation("translation");
   const { activeThreadId, setActiveThreadId } = useActiveThread();
   const { activeTab, activeTabId, setActiveTabId } = useActiveTab();
+  const { privacyState } = usePrivacyMode();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
   const { results: tabs } = useQuery(triplitClient, tabsQuery);
@@ -75,11 +78,11 @@ export function useToolBar() {
         title,
         modelId,
         providerId,
+        isPrivate: privacyState.isPrivate,
       };
 
       const thread = await threadService.insertThread(createData);
       await setActiveThreadId(thread.id);
-
       return thread;
     } catch (error) {
       logger.error("create thread error", { error });
@@ -155,25 +158,34 @@ export function useToolBar() {
       const needCreateTab = tabs?.length === 0;
       const needCreateThread = needCreateTab || !activeTab?.threadId;
       if (needCreateThread) {
-        needSummaryTitle = true;
+        needSummaryTitle = !privacyState.isPrivate;
         const thread = await createThread({
-          title: content,
+          title:
+            (privacyState.isPrivate
+              ? oT("thread.private-thread-title")
+              : content) || " ",
           modelId: selectedModelId,
           providerId: provider.id,
+          isPrivate: privacyState.isPrivate,
         });
 
         if (thread) {
           const { id, title } = thread;
           if (activeTab) {
             await tabService.updateTab(activeTab.id, {
-              title,
+              title: privacyState.isPrivate
+                ? oT("thread.private-thread-title")
+                : title,
               threadId: id,
             });
           } else {
             const newTab = await tabService.insertTab({
-              title,
+              title: privacyState.isPrivate
+                ? oT("thread.private-thread-title")
+                : title,
               threadId: id,
               type: "thread",
+              isPrivate: privacyState.isPrivate,
             });
             await setActiveTabId(newTab.id);
             currentActiveTabId = newTab.id;
@@ -328,6 +340,7 @@ export function useToolBar() {
           provider,
           selectedModel, // Use model name for the API call
         );
+
         if (needSummaryTitle) {
           const queryMessages = await messageService.getMessagesByThreadId(
             currentActiveThreadId,

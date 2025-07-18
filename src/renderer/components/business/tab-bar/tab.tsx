@@ -20,6 +20,7 @@ interface TabProps {
   onClick: () => void;
   width: number;
   type: "thread" | "setting";
+  isPrivate?: boolean;
 }
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
@@ -33,6 +34,7 @@ export function Tab({
   onClick,
   width,
   type,
+  isPrivate = false,
 }: TabProps) {
   const { t } = useTranslation();
   const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
@@ -112,6 +114,7 @@ export function Tab({
                   type={type}
                   handleTabClose={handleTabClose}
                   streaming={isStreaming}
+                  isPrivate={isPrivate}
                 />
               </div>
             </ContextMenu.Trigger>
