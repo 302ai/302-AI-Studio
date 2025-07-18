@@ -87,6 +87,7 @@ export class OpenAIProviderService extends BaseProviderService {
             enabled: true,
             collected: false,
             capabilities,
+            type: "language" as const,
           };
         }) || [];
 

@@ -122,7 +122,18 @@
         "capabilities": {
           "label": "Capabilities",
           "reasoning": "Reasoning",
-          "vision": "Vision"
+          "vision": "Vision",
+          "music": "Music",
+          "video": "Video",
+          "function_call": "Tool Call"
+        },
+        "type": {
+          "label": "Model Type",
+          "language": "Language",
+          "image-generation": "Image Generation",
+          "tts": "TTS",
+          "embedding": "Embedding",
+          "rerank": "Rerank"
         },
         "actions": {
           "cancel": "Cancel",

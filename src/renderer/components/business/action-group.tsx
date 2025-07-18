@@ -26,7 +26,7 @@ export function ActionGroup({
 
   return (
     <CardAction
-      className={cn("flex h-full items-center justify-center gap-1", className)}
+      className={cn("flex h-full items-center justify-center", className)}
     >
       {/* Star */}
       {onStar && (

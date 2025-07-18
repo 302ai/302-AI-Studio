@@ -148,6 +148,7 @@ export class AI302ProviderService extends OpenAIProviderService {
                 ? ["vision", "file", ...capabilities]
                 : capabilities,
             ),
+            type: "language" as const,
           };
         }) || [];
 

@@ -104,6 +104,7 @@
         "clear-models": "清空",
         "model-name": "模型名称",
         "model-capabilities": "模型能力",
+        "model-type": "模型类型",
         "actions": "操作"
       },
       "add-model-modal": {
@@ -123,7 +124,18 @@
         "capabilities": {
           "label": "能力",
           "reasoning": "推理",
-          "vision": "图像理解"
+          "vision": "图像理解",
+          "music": "音频理解",
+          "video": "视频理解",
+          "function_call": "工具使用"
+        },
+        "type": {
+          "label": "模型类型",
+          "language": "语言",
+          "image-generation": "图像生成",
+          "tts": "TTS",
+          "embedding": "Embedding",
+          "rerank": "Rerank"
         },
         "actions": {
           "cancel": "取消",

@@ -30,10 +30,13 @@ export function AddModelModal({
   const [formData, setFormData] = useState<ModelFormData>({
     name: "",
     description: "",
+    type: "language",
     capabilities: {
       reasoning: false,
       vision: false,
       function_call: false,
+      music: false,
+      video: false,
     },
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,6 +60,7 @@ export function AddModelModal({
         name: formData.name.trim(),
         providerId: selectedProvider.id,
         capabilities: new Set(capabilityArray),
+        type: formData.type,
         custom: true,
         enabled: true,
         collected: false,
@@ -81,10 +85,13 @@ export function AddModelModal({
     setFormData({
       name: "",
       description: "",
+      type: "language",
       capabilities: {
         reasoning: false,
         vision: false,
         function_call: false,
+        music: false,
+        video: false,
       },
     });
     setValidationErrors({});

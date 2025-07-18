@@ -256,20 +256,20 @@ export function ModelList({
           </div>
         ) : (
           <div className=" w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
-            <div className="!bg-muted mb-1 grid h-10 grid-cols-[minmax(0,1fr)_180px_50px] text-muted-fg">
-              <div className="flex h-full items-center pl-4 outline-hidden">
+            <div className="!bg-muted mb-1 flex h-10 text-muted-fg">
+              <div className="flex h-full min-w-[160px] flex-[1.3] items-center pl-4 outline-hidden">
                 <div className="truncate">{t("model-name")}</div>
               </div>
-              {/* TODO: add model type
-              <div className="flex h-full items-center outline-hidden">
-                <div className="truncate">模型类型</div>
-              </div> */}
 
-              <div className="flex h-full items-center outline-hidden">
+              <div className="flex h-full min-w-[40px] flex-[0.7] items-center outline-hidden">
+                <div className="truncate">{t("model-type")}</div>
+              </div>
+
+              <div className="flex h-full min-w-[100px] flex-[1.2] items-center outline-hidden">
                 <div className="truncate">{t("model-capabilities")}</div>
               </div>
 
-              <div className="flex h-full items-center outline-hidden">
+              <div className="flex h-full min-w-[70px] flex-[0.8] items-center justify-center outline-hidden">
                 <div className="truncate">{t("actions")}</div>
               </div>
             </div>

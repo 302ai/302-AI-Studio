@@ -104,6 +104,7 @@
         "clear-models": "クリア",
         "model-name": "モデル名",
         "model-capabilities": "モデル機能",
+        "model-type": "モデルタイプ",
         "actions": "操作"
       },
       "add-model-modal": {
@@ -123,7 +124,18 @@
         "capabilities": {
           "label": "機能",
           "reasoning": "推論",
-          "vision": "画像理解"
+          "vision": "画像理解",
+          "music": "音楽理解",
+          "video": "ビデオ理解",
+          "function_call": "ツール使用"
+        },
+        "type": {
+          "label": "モデルタイプ",
+          "language": "言語",
+          "image-generation": "画像生成",
+          "tts": "TTS",
+          "embedding": "Embedding",
+          "rerank": "Rerank"
         },
         "actions": {
           "cancel": "キャンセル",
