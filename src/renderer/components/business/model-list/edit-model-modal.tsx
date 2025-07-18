@@ -123,7 +123,12 @@ export function EditModelModal({
 
   return (
     <Modal>
-      <Modal.Content isOpen={isOpen} onOpenChange={handleOpenChange} size="lg">
+      <Modal.Content
+        isOpen={isOpen}
+        onOpenChange={handleOpenChange}
+        size="lg"
+        className="bg-[#FFFFFF] dark:bg-[#121212]"
+      >
         <Modal.Header>
           <Modal.Title>{t("edit-title")}</Modal.Title>
         </Modal.Header>

@@ -106,7 +106,12 @@ export function AddModelModal({
 
   return (
     <Modal>
-      <Modal.Content isOpen={isOpen} onOpenChange={handleOpenChange} size="lg">
+      <Modal.Content
+        isOpen={isOpen}
+        onOpenChange={handleOpenChange}
+        size="lg"
+        className="bg-[#FFFFFF] dark:bg-[#121212]"
+      >
         <Modal.Header>
           <Modal.Title>{t("title")}</Modal.Title>
         </Modal.Header>

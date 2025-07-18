@@ -65,7 +65,7 @@ export function ModelForm({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <TextField
         label={t("model-id.label")}
         placeholder={t("model-id.placeholder")}
@@ -74,6 +74,7 @@ export function ModelForm({
         onChange={handleNameChange}
         errorMessage={validationErrors.name}
         isRequired
+        className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
       />
 
       <TextField
@@ -82,23 +83,25 @@ export function ModelForm({
         description={t("description.description")}
         value={data.description}
         onChange={handleDescriptionChange}
+        className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
       />
 
-      <RadioGroup
-        label={t("type.label")}
-        // description={t("type.description")}
-        value={data.type}
-        onChange={(value) => handleTypeChange(value as ModelType)}
-        className="space-y-3"
-      >
-        <div className="flex flex-wrap gap-4">
-          <Radio value="language">{t("type.language")}</Radio>
-          <Radio value="image-generation">{t("type.image-generation")}</Radio>
-          <Radio value="tts">{t("type.tts")}</Radio>
-          <Radio value="embedding">{t("type.embedding")}</Radio>
-          <Radio value="rerank">{t("type.rerank")}</Radio>
-        </div>
-      </RadioGroup>
+      <div className="space-y-4">
+        <div className="font-medium text-sm">{t("type.label")}</div>
+        <RadioGroup
+          // description={t("type.description")}
+          value={data.type}
+          onChange={(value) => handleTypeChange(value as ModelType)}
+        >
+          <div className="flex flex-wrap gap-4">
+            <Radio value="language">{t("type.language")}</Radio>
+            <Radio value="image-generation">{t("type.image-generation")}</Radio>
+            <Radio value="tts">{t("type.tts")}</Radio>
+            <Radio value="embedding">{t("type.embedding")}</Radio>
+            <Radio value="rerank">{t("type.rerank")}</Radio>
+          </div>
+        </RadioGroup>
+      </div>
 
       <div className="space-y-4">
         <div className="font-medium text-sm">{t("capabilities.label")}</div>
