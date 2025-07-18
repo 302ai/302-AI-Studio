@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore all */
 import logger from "@shared/logger/main-logger";
-import { schema } from "@shared/triplit/schema";
 import { TriplitLogHandler } from "@shared/triplit/log-handler";
+import { schema } from "@shared/triplit/schema";
 import { TriplitClient } from "@triplit/client";
 import { Logger } from "@triplit/logger";
 

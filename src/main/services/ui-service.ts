@@ -4,8 +4,8 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
-import type { Provider, Thread } from "@shared/triplit/types";
 import logger from "@shared/logger/main-logger";
+import type { Provider, Thread } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type { UiDbService } from "./db-service/ui-db-service";
 
@@ -153,6 +153,30 @@ export class UiService {
       await this.uiDbService.updateActiveTabId(tabId);
     } catch (error) {
       logger.error("UiService:updateActiveTabId error", { error });
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateSidebarCollapsed(
+    _event: Electron.IpcMainEvent,
+    collapsed: boolean,
+  ): Promise<void> {
+    try {
+      await this.uiDbService.updateSidebarCollapsed(collapsed);
+    } catch (error) {
+      logger.error("UiService:updateSidebarCollapsed error", { error });
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getSidebarCollapsed(): Promise<boolean> {
+    try {
+      const sidebarCollapsed = await this.uiDbService.getSidebarCollapsed();
+      return sidebarCollapsed;
+    } catch (error) {
+      logger.error("UiService:getSidebarCollapsed error", { error });
       throw error;
     }
   }

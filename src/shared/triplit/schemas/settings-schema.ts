@@ -18,5 +18,13 @@ export const settingsSchema = {
       default: "zh",
     }),
     selectedModelId: S.String({ default: "" }),
+    autoUpdate: S.Boolean({ default: true }),
+    displayAppStore: S.Boolean({ default: true }),
+    defaultPrivacyMode: S.Boolean({ default: false }),
+    isPrivate: S.Boolean({ default: false }),
+    feedUrl: S.String({
+      default:
+        "https://github.com/302ai/302-AI-Studio/releases/latest/download",
+    }),
   }),
 };

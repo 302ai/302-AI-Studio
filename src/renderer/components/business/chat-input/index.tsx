@@ -8,7 +8,7 @@ import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import logger from "@shared/logger/renderer-logger";
 import type { Message } from "@shared/triplit/types";
-import { Pencil, X } from "lucide-react";
+import { SquarePen, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -207,11 +207,11 @@ export function ChatInput({ className }: ChatInputProps) {
       {editMessageId && (
         <div className="my-1 mt-2 flex justify-between px-2 text-xs">
           <div className="flex items-center gap-x-1">
-            <Pencil className="size-4" />
+            <SquarePen className="size-4" />
             {t("edit-message")}
           </div>
           <div className="flex items-center gap-x-1 text-xs">
-            <Button intent="outline" onClick={handleSave} size="extra-small">
+            <Button intent="outline" onClick={handleSave} size="sq-xs">
               {t("edit-message-only-save")}
             </Button>
             <X className="size-4 cursor-pointer" onClick={handleCancelEdit} />
@@ -221,7 +221,7 @@ export function ChatInput({ className }: ChatInputProps) {
       <div
         className={cn(
           "relative",
-          "flex max-h-52 min-h-28 w-full flex-col rounded-[20px] border border-input pt-2 pr-2 pb-2 pl-4",
+          "flex max-h-52 min-h-[126px] w-full flex-col gap-y-1 rounded-[20px] border border-input pt-2 pr-2 pb-2 pl-4",
           "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-4 focus-within:ring-ring/20",
         )}
         onPaste={handlePaste}
@@ -229,14 +229,14 @@ export function ChatInput({ className }: ChatInputProps) {
         <Textarea
           className={cn(
             "w-full flex-1 rounded-none border-0 bg-transparent p-0",
-            "resize-none shadow-none ring-0",
-            "min-h-[calc(7rem-var(--chat-input-toolbar-height))]",
+            "resize-none shadow-none ring-0 focus:ring-0",
+            "min-h-[calc(7rem-var(--chat-input-toolbar-height)-9px)]",
           )}
           placeholder={t("input-placeholder")}
           aria-label={t("input-label")}
-          resize="none"
           value={input}
           onChange={handleInputChange}
+          style={{ resize: "none" }}
         />
 
         <ToolBar

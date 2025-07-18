@@ -4,6 +4,7 @@ import {
   version,
   resources,
   description,
+  appId,
   author as _author,
   productName,
 } from "./package.json";
@@ -12,11 +13,9 @@ import { getDevFolder } from "./src/lib/electron-app/release/utils/path";
 
 const author = _author?.name ?? _author
 const currentYear = new Date().getFullYear();
-// const authorInKebabCase = author.replace(/\s+/g, "-");
-// const appId = `com.${authorInKebabCase}.${name}`.toLowerCase();
 
 export default {
-  appId: "com.302ai.302aistudio",
+  appId: appId,
   productName: productName,
   copyright: `Copyright © ${currentYear} — ${author}`,
 
@@ -57,7 +56,7 @@ export default {
     ].join(""),
     category: "Utilities",
     synopsis: description,
-    target: ["AppImage", "deb", "pacman", "freebsd", "rpm"],
+    target: ["AppImage", "deb", "pacman", "rpm"],
   },
 
   win: {

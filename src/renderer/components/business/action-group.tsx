@@ -1,18 +1,13 @@
 import { CardAction } from "@renderer/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@renderer/components/ui/tooltip";
 import { cn } from "@renderer/lib/utils";
-import { CircleX, PencilLine, Star } from "lucide-react";
+import { PenLine, Star, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { ButtonWithTooltip } from "./button-with-tooltip";
 
 interface ActionGroupProps {
   className?: string;
-  actionClassName?: string;
-  size?: "medium" | "large" | "square-petite" | "extra-small" | "small";
-  shape?: "square" | "circle";
+  size?: "md" | "xs" | "sq-xs" | "sm" | "lg" | "sq-sm" | "sq-md" | "sq-lg";
+  isCircle?: boolean;
   stared?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -21,9 +16,7 @@ interface ActionGroupProps {
 
 export function ActionGroup({
   className,
-  actionClassName,
-  size = "square-petite",
-  shape = "square",
+  isCircle = false,
   stared = false,
   onEdit,
   onDelete,
@@ -33,65 +26,56 @@ export function ActionGroup({
 
   return (
     <CardAction
-      className={cn("flex h-full items-center justify-center gap-1", className)}
+      className={cn("flex h-full items-center justify-center", className)}
     >
       {/* Star */}
       {onStar && (
-        <Tooltip>
-          <TooltipTrigger
-            className={actionClassName}
-            intent="plain"
-            size={size}
-            shape={shape}
-            onClick={onStar}
-          >
-            <Star
-              className={cn(
-                "size-4",
-                stared ? "fill-yellow-500 text-yellow-500" : "",
-              )}
-            />
-          </TooltipTrigger>
-          <TooltipContent>
-            {t("settings.model-settings.model-provider.star")}
-          </TooltipContent>
-        </Tooltip>
+        <ButtonWithTooltip
+          className="rounded-lg"
+          title={t("settings.model-settings.model-provider.star")}
+          intent="plain"
+          size="sq-xs"
+          isCircle={isCircle}
+          onClick={onStar}
+        >
+          <Star
+            className={cn(
+              "size-4",
+              stared
+                ? "fill-yellow-500 text-yellow-500"
+                : "fill-[#E5E5E5] text-[#E5E5E5] dark:fill-[#5C5C5C] dark:text-[#5C5C5C]",
+            )}
+          />
+        </ButtonWithTooltip>
       )}
 
       {/* Edit */}
       {onEdit && (
-        <Tooltip>
-          <TooltipTrigger
-            className={actionClassName}
-            intent="plain"
-            size={size}
-            shape={shape}
-            onClick={onEdit}
-          >
-            <PencilLine className="size-4" />
-          </TooltipTrigger>
-          <TooltipContent>
-            {t("settings.model-settings.model-provider.edit")}
-          </TooltipContent>
-        </Tooltip>
+        <ButtonWithTooltip
+          className="rounded-lg"
+          title={t("settings.model-settings.model-provider.edit")}
+          intent="plain"
+          size="sq-xs"
+          isCircle={isCircle}
+          onClick={onEdit}
+        >
+          {/* <SquarePen className="size-4" /> */}
+          <PenLine className="size-4" strokeWidth={1.5} />
+        </ButtonWithTooltip>
       )}
 
       {/* Delete */}
       {onDelete && (
-        <Tooltip>
-          <TooltipTrigger
-            className={actionClassName}
-            intent="plain"
-            size={size}
-            shape={shape}
-            onClick={onDelete}
-          >
-            <CircleX className="size-4" />
-          </TooltipTrigger>
-          <TooltipContent>
-            {t("settings.model-settings.model-provider.delete")}
-          </TooltipContent>
-        </Tooltip>
+        <ButtonWithTooltip
+          className="rounded-lg"
+          title={t("settings.model-settings.model-provider.delete")}
+          intent="plain"
+          size="sq-xs"
+          isCircle={isCircle}
+          onClick={onDelete}
+        >
+          <Trash2 className="size-4 text-danger-fg-2" />
+        </ButtonWithTooltip>
       )}
     </CardAction>
   );

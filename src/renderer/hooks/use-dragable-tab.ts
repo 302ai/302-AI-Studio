@@ -2,6 +2,7 @@ import { EventNames, emitter } from "@renderer/services/event-service";
 import logger from "@shared/logger/renderer-logger";
 import { useCallback, useEffect, useRef } from "react";
 import { useActiveTab } from "./use-active-tab";
+import { usePrivacyMode } from "./use-privacy-mode";
 
 interface HookParams {
   id: string;
@@ -12,17 +13,23 @@ const { tabService } = window.service;
 
 export function useDragableTab({ id }: HookParams) {
   const { setActiveTabId, tabs } = useActiveTab();
+  const { confirmSwitchFromPrivate } = usePrivacyMode();
 
   const ref = useRef<HTMLDivElement>(null);
 
   const handleTabClose = useCallback(async () => {
     try {
+      const canClose = await confirmSwitchFromPrivate("close this tab");
+      if (!canClose) {
+        return;
+      }
+
       const nextActiveTabId = await tabService.deleteTab(id);
       emitter.emit(EventNames.TAB_CLOSE, { tabId: id, nextActiveTabId });
     } catch (error) {
       logger.error("Error closing tab", { error });
     }
-  }, [id]);
+  }, [id, confirmSwitchFromPrivate]);
 
   const handleTabCloseAll = useCallback(async () => {
     try {

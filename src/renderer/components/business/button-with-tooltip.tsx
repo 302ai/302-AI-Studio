@@ -1,32 +1,50 @@
 import { Button, type ButtonProps } from "@renderer/components/ui/button";
-import { Tooltip, TooltipContent } from "@renderer/components/ui/tooltip";
+import { Tooltip } from "@renderer/components/ui/tooltip";
+import { cn } from "@renderer/lib/utils";
 
 interface ButtonWithTooltipProps extends ButtonProps {
+  className?: string;
   title: string;
   tooltipPlacement?: "top" | "bottom" | "left" | "right";
   tooltipDelay?: number;
   showArrow?: boolean;
+  children: React.ReactNode;
 }
 
-const ButtonWithTooltip = ({
+export function ButtonWithTooltip({
+  className,
   title,
-  tooltipPlacement = "top",
-  tooltipDelay = 10,
+  tooltipPlacement,
+  tooltipDelay = 100,
   showArrow = false,
+  children,
   ...buttonProps
-}: ButtonWithTooltipProps) => {
+}: ButtonWithTooltipProps) {
+  const {
+    intent = "plain",
+    size = "sq-md",
+    isCircle = false,
+    ...rest
+  } = buttonProps;
+
   return (
     <Tooltip delay={tooltipDelay}>
-      <Button {...buttonProps} />
-      <TooltipContent
+      <Button
+        intent={intent}
+        size={size}
+        isCircle={isCircle}
+        className={cn("rounded-[10px]", className)}
+        {...rest}
+      >
+        {children}
+      </Button>
+      <Tooltip.Content
         placement={tooltipPlacement}
         showArrow={showArrow}
+        intent="inverse"
       >
         {title}
-      </TooltipContent>
+      </Tooltip.Content>
     </Tooltip>
   );
-};
-
-export type { ButtonWithTooltipProps };
-export { ButtonWithTooltip };
+}

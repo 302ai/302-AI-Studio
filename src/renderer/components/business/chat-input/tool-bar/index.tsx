@@ -60,7 +60,7 @@ export function ToolBar({
         className,
       )}
     >
-      <div className="flex w-full flex-row justify-between">
+      <div className="flex h-full w-full flex-row justify-between">
         <ActionGroup onFilesSelect={onFilesSelect} disabled={disabled} />
 
         <div className="flex flex-row items-center gap-x-2">
@@ -81,15 +81,13 @@ export function ToolBar({
             <Send className="!size-4" />
           </Button> */}
           <Button
-            intent="outline"
-            size="square-petite"
-            shape="square"
+            size="sq-sm"
+            isCircle={false}
             onClick={handleSendMessageClick}
             isDisabled={isDisabled}
-            className="!rounded-[10px] !bg-primary !text-white"
+            className="rounded-[10px] bg-primary text-fg"
           >
-            <img src={plane} alt="plane" className="!size-5" />
-            {/* <Send className="!size-4" /> */}
+            <img src={plane} alt="plane" className="size-5" />
           </Button>
         </div>
       </div>

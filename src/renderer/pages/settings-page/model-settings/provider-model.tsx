@@ -2,15 +2,11 @@ import { triplitClient } from "@renderer/client";
 import { IconPicker } from "@renderer/components/business/icon-picker";
 import { ModelList } from "@renderer/components/business/model-list";
 import { Link } from "@renderer/components/ui/link";
-import {
-  Select,
-  SelectList,
-  SelectOption,
-  SelectTrigger,
-} from "@renderer/components/ui/select";
+import { Select } from "@renderer/components/ui/select";
 import { TextField } from "@renderer/components/ui/text-field";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import { cn } from "@renderer/lib/utils";
 import logger from "@shared/logger/renderer-logger";
 import type { UpdateProviderData } from "@shared/triplit/types";
 import { debounce } from "lodash-es";
@@ -21,10 +17,7 @@ import { toast } from "sonner";
 
 const { configService, providerService } = window.service;
 
-const API_TYPE_OPTIONS = [
-  { key: "openai", label: "OpenAI" },
-  // { key: "302ai", label: "302.AI" },
-];
+const API_TYPE_OPTIONS = [{ key: "openai", label: "OpenAI" }];
 
 interface ProviderFormData {
   name: string;
@@ -47,11 +40,29 @@ export function ProviderModel() {
   const { handleCheckKey } = useProviderList();
   const [formData, setFormData] = useState<ProviderFormData>(DEFAULT_FORM_DATA);
   const [isSaving, setIsSaving] = useState(false);
-  const [isFetchingModels, setIsFetchingModels] = useState(false);
+  const [fetchingModelsState, setFetchingModelsState] = useState<
+    Record<string, boolean>
+  >({});
 
   const { t } = useTranslation("translation", {
     keyPrefix: "settings.model-settings.model-provider",
   });
+
+  const currentProviderFetching = useMemo(() => {
+    return selectedProvider?.id
+      ? fetchingModelsState[selectedProvider.id] || false
+      : false;
+  }, [selectedProvider?.id, fetchingModelsState]);
+
+  const setProviderFetching = useCallback(
+    (providerId: string, isFetching: boolean) => {
+      setFetchingModelsState((prev) => ({
+        ...prev,
+        [providerId]: isFetching,
+      }));
+    },
+    [],
+  );
 
   const getProvider = useCallback(async (id?: string) => {
     if (!id) return;
@@ -82,32 +93,29 @@ export function ProviderModel() {
 
       setIsSaving(true);
       try {
-        await configService.updateProvider(selectedProvider.id, updates);
-        if (selectedProvider.status === "error") return;
+        if (selectedProvider.status === "error") {
+          await configService.updateProvider(selectedProvider.id, updates);
+          return;
+        }
+
+        let newStatus: "pending" | "success" = "success";
+
         if (!selectedProvider.custom) {
           if (updates.apiKey === "" || updates.baseUrl === "") {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "pending",
-            });
-          } else {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "success",
-            });
+            newStatus = "pending";
+          }
+        } else {
+          if (!updates.baseUrl) {
+            newStatus = "pending";
           }
         }
 
-        if (selectedProvider.custom) {
-          if (!updates.baseUrl) {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "pending",
-            });
-            return;
-          } else {
-            await configService.updateProvider(selectedProvider.id, {
-              status: "success",
-            });
-          }
-        }
+        const newData = {
+          ...updates,
+          status: newStatus,
+        };
+
+        await configService.updateProvider(selectedProvider.id, newData);
       } catch (error) {
         logger.error("Failed to save provider:", { error });
       } finally {
@@ -203,7 +211,7 @@ export function ProviderModel() {
   const handleFetchModels = useCallback(async () => {
     if (!selectedProvider) return;
 
-    setIsFetchingModels(true);
+    setProviderFetching(selectedProvider.id, true);
 
     try {
       const currentProvider = {
@@ -226,10 +234,12 @@ export function ProviderModel() {
       }
 
       const models = await providerService.fetchModels(currentProvider);
-      await configService.updateProviderModels(selectedProvider.id, models);
-      await configService.updateProvider(selectedProvider.id, {
-        status: "success",
-      });
+      await Promise.all([
+        configService.updateProviderModels(selectedProvider.id, models),
+        configService.updateProvider(selectedProvider.id, {
+          status: "success",
+        }),
+      ]);
 
       toast.success(t("model-check-success"));
     } catch (error) {
@@ -239,30 +249,19 @@ export function ProviderModel() {
         status: "error",
       });
     } finally {
-      setIsFetchingModels(false);
+      setProviderFetching(selectedProvider.id, false);
     }
-  }, [selectedProvider, formData, handleCheckKey, t]);
+  }, [selectedProvider, formData, handleCheckKey, t, setProviderFetching]);
 
   if (!selectedProvider) {
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-4 p-6">
-        <div className="text-center">
-          <h2 className="mb-2 font-semibold text-fg text-lg">
-            {t("select-provider")}
-          </h2>
-          <p className="text-muted-fg text-sm">
-            {t("select-provider-description")}
-          </p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
-    <div className="flex h-[calc(100vh-50px)] w-full flex-col gap-y-4 overflow-y-scroll px-6 pt-[18px]">
+    <div className="flex w-full flex-col gap-y-3 overflow-y-scroll px-6 pt-[18px]">
       {/* 配置标题 */}
       <div className="flex flex-col gap-1">
-        <h2 className="text-fg">
+        <h2 className="max-w-full whitespace-normal break-all text-fg leading-tight">
           {t("add-provider-form.configure")} {selectedProvider.name}
         </h2>
       </div>
@@ -289,25 +288,28 @@ export function ProviderModel() {
                   value={formData.name}
                   placeholder={t("add-provider-form.name-placeholder")}
                   onChange={handleFieldChange("name")}
+                  maxLength={100}
+                  aria-label="Provider Name"
+                  className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
                 />
               </div>
             </div>
           )}
 
-          {/* Base URL 字段 */}
           <div className="flex flex-col gap-y-2">
             <TextField
               label="Base URL"
               value={formData.baseUrl}
               placeholder={t("add-provider-form.placeholder-3")}
               onChange={handleFieldChange("baseUrl")}
+              aria-label="Base URL"
+              className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
             />
-            <span className="text-muted-fg text-xs">
+            <span className="max-w-full overflow-hidden whitespace-normal break-all text-muted-fg text-xs">
               {`${t("add-provider-form.api-forward")}：${formData.baseUrl || ""}/chat/completions`}
             </span>
           </div>
 
-          {/* API Key 字段 */}
           <div className="flex flex-col gap-2">
             <TextField
               label="API Key"
@@ -316,6 +318,8 @@ export function ProviderModel() {
               value={formData.apiKey}
               placeholder={t("add-provider-form.placeholder-2")}
               onChange={handleFieldChange("apiKey")}
+              aria-label="API Key"
+              className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
             />
 
             {!selectedProvider.custom && (
@@ -328,7 +332,6 @@ export function ProviderModel() {
             )}
           </div>
 
-          {/* 接口类型 */}
           {selectedProvider.custom && (
             <div className="flex flex-col gap-2">
               <Select
@@ -337,19 +340,22 @@ export function ProviderModel() {
                 selectedKey={formData.apiType || "openai"}
                 onSelectionChange={handleFieldChange("apiType")}
               >
-                <SelectTrigger />
-                <SelectList placement="bottom start">
+                <Select.Trigger className="inset-ring-transparent h-11 rounded-[10px] bg-setting text-setting-fg transition-none hover:inset-ring-transparent" />
+                <Select.List>
                   {API_TYPE_OPTIONS.map(({ key, label }) => (
-                    <SelectOption
-                      className="flex cursor-pointer justify-between"
+                    <Select.Option
+                      className={cn(
+                        "flex cursor-pointer justify-between",
+                        "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+                      )}
                       key={key}
                       id={key}
                       textValue={label}
                     >
                       <span className="text-base">{label}</span>
-                    </SelectOption>
+                    </Select.Option>
                   ))}
-                </SelectList>
+                </Select.List>
               </Select>
             </div>
           )}
@@ -357,7 +363,7 @@ export function ProviderModel() {
 
         <ModelList
           onFetchModels={handleFetchModels}
-          isFetchingModels={isFetchingModels}
+          isFetchingModels={currentProviderFetching}
           isFormValid={isCurrentFormValid}
         />
       </div>

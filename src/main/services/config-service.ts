@@ -6,7 +6,7 @@ import type {
   Language,
   Model,
   Provider,
-  SearchService,
+  SearchServices,
   Theme,
   UpdateProviderData,
 } from "@shared/triplit/types";
@@ -173,7 +173,7 @@ export class ConfigService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setSearchService(
     _event: Electron.IpcMainEvent,
-    searchService: SearchService,
+    searchService: SearchServices,
   ) {
     try {
       await this.settingsService._setSearchService(searchService);

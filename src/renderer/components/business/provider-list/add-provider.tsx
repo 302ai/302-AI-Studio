@@ -1,11 +1,7 @@
 /** biome-ignore-all lint/nursery/useUniqueElementIds: ignore */
-import {
-  Select,
-  SelectList,
-  SelectOption,
-  SelectTrigger,
-} from "@renderer/components/ui/select";
+import { Select } from "@renderer/components/ui/select";
 import { useProviderList } from "@renderer/hooks/use-provider-list";
+import { cn } from "@renderer/lib/utils";
 import { normalizeBaseUrl } from "@renderer/utils/url-normalizer";
 import { DEFAULT_PROVIDERS } from "@shared/providers";
 import type { Provider } from "@shared/triplit/types";
@@ -162,11 +158,14 @@ export function AddProvider({
           placeholder={t("placeholder")}
           onSelectionChange={(key) => handleProviderSelect(key as string)}
         >
-          <SelectTrigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
-          <SelectList popoverClassName="min-w-[300px]">
+          <Select.Trigger className="h-9 cursor-pointer rounded-xl text-secondary-fg" />
+          <Select.List popover={{ className: "min-w-[300px]" }}>
             {canSelectProviders.map(({ id, name }) => (
-              <SelectOption
-                className="flex cursor-pointer justify-between"
+              <Select.Option
+                className={cn(
+                  "flex cursor-pointer justify-between",
+                  "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+                )}
                 key={id}
                 id={`${id}-${name}`}
                 textValue={name}
@@ -175,11 +174,14 @@ export function AddProvider({
                   <ModelIcon modelName={name} />
                   <span className="text-base">{name}</span>
                 </span>
-              </SelectOption>
+              </Select.Option>
             ))}
             {/* Custom Provider */}
-            <SelectOption
-              className="flex cursor-pointer justify-between"
+            <Select.Option
+              className={cn(
+                "flex cursor-pointer justify-between",
+                "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+              )}
               key="custom"
               id="custom"
               textValue="Custom"
@@ -188,8 +190,8 @@ export function AddProvider({
                 <LayoutDashboard className="size-4" />
                 <span className="text-base">{t("custom-provider")}</span>
               </span>
-            </SelectOption>
-          </SelectList>
+            </Select.Option>
+          </Select.List>
         </Select>
       </div>
 

@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/nursery/useUniqueElementIds: ignore */
+
+import { SidebarController } from "@renderer/components/business/sidebar/sidebar-controller";
 import {
   Sidebar,
   SidebarContent,
@@ -12,13 +14,12 @@ import {
   SidebarLabel,
   useSidebar,
 } from "@renderer/components/ui/sidebar";
+import { useGlobalShortcutHandler } from "@renderer/hooks/use-global-shortcut-handler";
 import { useThread } from "@renderer/hooks/use-thread";
-import { cn } from "@renderer/lib/utils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SearchButton } from "./search-button";
 import { SettingButton } from "./setting-button";
-import { SidebarController } from "./sidebar-controller";
 import { ThreadMenu } from "./thread-menu";
 import { ThreadSearcher } from "./thread-searcher";
 
@@ -43,6 +44,8 @@ export function AppSidebar(props: AppSidebarProps) {
   const handleSearchThread = () => {
     setIsOpen(!isOpen);
   };
+
+  useGlobalShortcutHandler("search", () => handleSearchThread());
 
   return (
     <>
@@ -95,10 +98,7 @@ export function AppSidebar(props: AppSidebarProps) {
                           isCurrent={id === activeThreadId}
                           onClick={() => handleClickThread(id)}
                         >
-                          <ThreadMenu
-                            thread={thread}
-                            activeThreadId={activeThreadId ?? ""}
-                          />
+                          <ThreadMenu thread={thread} />
                         </SidebarItem>
                       );
                     })}
@@ -113,14 +113,7 @@ export function AppSidebar(props: AppSidebarProps) {
           </SidebarFooter>
         </Sidebar>
 
-        <SidebarInset
-          className={cn(
-            "min-h-full",
-            state === "expanded" && "max-w-[calc(100vw-var(--sidebar-width))]",
-          )}
-        >
-          {props.children}
-        </SidebarInset>
+        <SidebarInset>{props.children}</SidebarInset>
       </div>
 
       <ThreadSearcher

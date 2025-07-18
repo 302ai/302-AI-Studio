@@ -33,13 +33,13 @@ export function ChatPage() {
     >
       <div
         className={cn(
-          "flex h-full flex-col p-6 pr-0 transition-all duration-300 ease-in-out ",
+          "flex h-full flex-col py-6 transition-all duration-300 ease-in-out",
           isArtifactOpen ? "flex-[0_0_60%]" : "flex-1",
         )}
       >
         <div
           ref={scrollRef}
-          className="flex-1 space-y-4 overflow-y-auto pr-6"
+          className="flex-1 space-y-4 overflow-y-auto"
           onScroll={handleScroll}
           style={{
             scrollbarGutter: "stable",
@@ -47,32 +47,29 @@ export function ChatPage() {
         >
           <MessageList messages={messages} />
         </div>
-        {streaming && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex justify-center py-2 pr-6"
-          >
-            <Button
-              intent="outline"
-              size="small"
-              className="shrink-0"
-              onClick={stopStreamChat}
-            >
-              {t("stop-generating")}
-            </Button>
-          </motion.div>
-        )}
+
         <motion.div
           layoutId="chat-input"
           transition={{
             duration: 0.3,
             ease: "easeInOut",
           }}
-          className="flex-shrink-0 pt-4 pr-6"
+          className="relative mx-auto w-full max-w-[720px] pt-4"
         >
           <ChatInput />
+          <Button
+            className={cn(
+              "-top-[-5px] -translate-x-1/2 -translate-y-full absolute left-1/2 z-10",
+              {
+                hidden: !streaming,
+              },
+            )}
+            intent="secondary"
+            size="sm"
+            onClick={stopStreamChat}
+          >
+            {t("stop-generating")}
+          </Button>
         </motion.div>
       </div>
 

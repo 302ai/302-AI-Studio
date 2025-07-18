@@ -28,9 +28,14 @@ export enum EventNames {
 
   // * Window Events
   WINDOW_TITLE_BAR_OVERLAY_UPDATE = "window:title-bar-overlay-update",
+  WINDOW_MAC_FULLSCREEN_STATE_UPDATE = "window:mac-maximized-state-update",
 
   // * Shortcut Events
   SHORTCUT_TRIGGERED = "shortcut:triggered",
+
+  // * Updater Events
+  UPDATER_CHECK_STATUS = "updater:check-status",
+  UPDATER_DOWNLOAD_STATUS = "updater:download-status",
 }
 
 type Events = {
@@ -59,8 +64,19 @@ type Events = {
     };
   };
   [EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE]: null;
+  [EventNames.WINDOW_MAC_FULLSCREEN_STATE_UPDATE]: {
+    isMaximized: boolean;
+  };
   [EventNames.SHORTCUT_TRIGGERED]: {
     action: ShortcutAction;
+  };
+  [EventNames.UPDATER_CHECK_STATUS]: {
+    status: "available" | "not-available";
+    version: string;
+  };
+  [EventNames.UPDATER_DOWNLOAD_STATUS]: {
+    status: "downloading" | "downloaded";
+    precent?: number;
   };
 };
 

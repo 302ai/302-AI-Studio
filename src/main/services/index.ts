@@ -13,6 +13,7 @@ import { TabService } from "./tab-service";
 import { ThreadService } from "./thread-service";
 import { TriplitService } from "./triplit-service";
 import { UiService } from "./ui-service";
+import { UpdaterService } from "./updater-service";
 import { WindowService } from "./window-service";
 
 export const services = [
@@ -32,4 +33,5 @@ export const services = [
   FilePreviewService,
   ShellService,
   ModelService,
+  UpdaterService,
 ];

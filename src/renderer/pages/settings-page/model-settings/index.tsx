@@ -3,7 +3,7 @@ import { ProviderModel } from "./provider-model";
 
 export function ModelSettings() {
   return (
-    <div className="flex h-screen bg-bg">
+    <div className="flex h-full w-full">
       <div className="border-border border-r-1">
         <ProviderWapper />
       </div>

@@ -7,6 +7,7 @@ import {
 import empty from "@renderer/assets/images/empty.svg?url";
 import darkEmpty from "@renderer/assets/images/empty-dark.svg?url";
 import { triplitClient } from "@renderer/client";
+import { LdrsLoader } from "@renderer/components/business/ldrs-loader";
 import { Button } from "@renderer/components/ui/button";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
 import {
@@ -28,8 +29,6 @@ import React, {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { areEqual, FixedSizeList } from "react-window";
-import { ActionGroup } from "../action-group";
-import { Fetching } from "../fetching";
 import { ModalAction as ModalActionComponent } from "../modal-action";
 import { AddProvider } from "./add-provider";
 import { EditProvider } from "./edit-provider";
@@ -77,12 +76,13 @@ const ListRow = React.memo(function ListRow({
           provider={provider}
           isSelected={selectedProvider?.id === provider.id}
           modelCount={modelCounts[provider.id] || 0}
-          actionGroup={
-            provider.custom ? (
-              <ActionGroup onEdit={undefined} onDelete={handleDelete} />
-            ) : null
-          }
+          // actionGroup={
+          //   provider.custom ? (
+          //     <ActionGroup onEdit={undefined} onDelete={handleDelete} />
+          //   ) : null
+          // }
           onClick={handleProviderSelect}
+          onDelete={handleDelete}
         />
       )}
     </Draggable>
@@ -393,11 +393,10 @@ export function ProviderList() {
           <div>{t("label")}</div>
           {providers.length > 0 ? (
             <Button
-              className=" w-[76px] shrink-0"
+              className=" h-[30px] w-[76px] shrink-0"
               intent="primary"
               // onClick={() => setState({ type: "add" })}
               onClick={onClick}
-              size="extra-small"
             >
               {t("add")}
             </Button>
@@ -410,7 +409,7 @@ export function ProviderList() {
               className="flex items-center justify-center"
               style={{ height: listHeight }}
             >
-              <Fetching />
+              <LdrsLoader type="waveform" />
             </div>
           ) : providers.length > 0 ? (
             <DragDropContext onDragEnd={handleDragEnd}>
@@ -426,9 +425,9 @@ export function ProviderList() {
                       isSelected={selectedProvider?.id === provider.id}
                       provider={provider}
                       modelCount={modelCounts[provider.id] || 0}
-                      actionGroup={
-                        <ActionGroup onEdit={() => {}} onDelete={() => {}} />
-                      }
+                      // actionGroup={
+                      //   <ActionGroup onEdit={() => {}} onDelete={() => {}} />
+                      // }
                     />
                   );
                 }}
@@ -459,8 +458,6 @@ export function ProviderList() {
                 <p>{t("no-provider-description")}</p>
                 <Button
                   className="w-36 shrink-0"
-                  intent="primary"
-                  size="extra-small"
                   onClick={() => setState({ type: "add" })}
                 >
                   {/* <Plus className="size-4" /> */}

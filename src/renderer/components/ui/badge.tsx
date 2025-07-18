@@ -17,20 +17,20 @@ const badgeIntents = {
     "bg-amber-400/20 text-amber-700 group-hover:bg-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400 dark:group-hover:bg-amber-400/15",
   danger:
     "bg-red-500/15 text-red-700 group-hover:bg-red-500/25 dark:bg-red-500/10 dark:text-red-400 dark:group-hover:bg-red-500/20",
-};
-const badgeShapes = {
-  square: "rounded-md px-1.5",
-  circle: "px-2 rounded-full",
+  outline: "inset-ring-border bg-transparent text-fg group-hover:bg-secondary",
 };
 const badgeStyles = tv({
-  base: "inline-flex items-center gap-x-1.5 py-0.5 font-medium text-xs/5 **:data-[slot=icon]:size-3 forced-colors:outline",
+  base: "inset-ring inset-ring-transparent inline-flex items-center gap-x-1.5 py-0.5 font-medium text-xs/5 **:data-[slot=icon]:size-3 forced-colors:outline",
   variants: {
     intent: { ...badgeIntents },
-    shape: { ...badgeShapes },
+    isCircle: {
+      true: "rounded-full px-2",
+      false: "rounded-sm px-1.5",
+    },
   },
   defaultVariants: {
     intent: "primary",
-    shape: "circle",
+    isCircle: true,
   },
 });
 
@@ -44,16 +44,16 @@ interface BadgeProps
 const Badge = ({
   children,
   intent,
-  shape,
+  isCircle = true,
   className,
   ...props
 }: BadgeProps) => {
   return (
-    <span {...props} className={badgeStyles({ intent, shape, className })}>
+    <span {...props} className={badgeStyles({ intent, isCircle, className })}>
       {children}
     </span>
   );
 };
 
 export type { BadgeProps };
-export { Badge, badgeIntents, badgeStyles, badgeShapes };
+export { Badge, badgeIntents, badgeStyles };

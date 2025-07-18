@@ -35,16 +35,42 @@ export function useTabInput() {
     [activeTabId, debouncedUpdateTabInput],
   );
 
-  // 清空输入
-  const clearInput = useCallback(async () => {
-    setInput("");
-    // 取消所有待执行的防抖操作，避免清空后被重新赋值
-    debouncedUpdateTabInput.cancel();
-    // 清空input时也清空tab的inputValue
-    if (activeTabId) {
-      await tabService.updateTab(activeTabId, { inputValue: "" });
+  const setInputByTabId = useCallback(async (tabId: string, value: string) => {
+    setInput(value);
+    if (tabId) {
+      await tabService.updateTab(tabId, { inputValue: value });
     }
-  }, [activeTabId, debouncedUpdateTabInput]);
+  }, []);
+
+  const getInputByTabId = useCallback(async (tabId: string) => {
+    if (tabId) {
+      const tab = await tabService.getTab(tabId);
+      return tab?.inputValue || "";
+    }
+    return "";
+  }, []);
+
+  // 清空输入
+  const clearInput = useCallback(
+    async (tabId?: string) => {
+      const currentTabId = tabId || activeTabId;
+      setInput("");
+      // 取消所有待执行的防抖操作，避免清空后被重新赋值
+      debouncedUpdateTabInput.cancel();
+      // 清空input时也清空tab的inputValue
+      if (currentTabId) {
+        await tabService.updateTab(currentTabId, { inputValue: "" });
+      }
+    },
+    [activeTabId, debouncedUpdateTabInput],
+  );
+
+  const clearInputByTabId = useCallback(async (tabId: string) => {
+    setInput("");
+    if (tabId) {
+      await tabService.updateTab(tabId, { inputValue: "" });
+    }
+  }, []);
 
   // 当tab切换时，从数据库加载inputValue
   useEffect(() => {
@@ -71,5 +97,8 @@ export function useTabInput() {
     setInput,
     handleInputChange,
     clearInput,
+    getInputByTabId,
+    setInputByTabId,
+    clearInputByTabId,
   };
 }

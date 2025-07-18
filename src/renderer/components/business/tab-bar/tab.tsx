@@ -1,12 +1,7 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ignore semantic elements */
 import { Draggable } from "@hello-pangea/dnd";
 import { triplitClient } from "@renderer/client";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@renderer/components/ui/context-menu";
+import { ContextMenu } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
 import { useQueryOne } from "@triplit/react";
@@ -16,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { ShrinkableTab } from "./shrinkable-tab";
 
 interface TabProps {
+  className?: string;
   id: string;
   threadId: string;
   index: number;
@@ -24,10 +20,12 @@ interface TabProps {
   onClick: () => void;
   width: number;
   type: "thread" | "setting";
+  isPrivate?: boolean;
 }
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function Tab({
+  className,
   id,
   threadId,
   index,
@@ -36,6 +34,7 @@ export function Tab({
   onClick,
   width,
   type,
+  isPrivate = false,
 }: TabProps) {
   const { t } = useTranslation();
   const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
@@ -69,7 +68,7 @@ export function Tab({
             transition={{ duration: 0.5 }}
             className="h-[74%]"
           >
-            <ContextMenuTrigger className="size-full">
+            <ContextMenu.Trigger className="size-full">
               <div
                 ref={(node) => {
                   ref.current = node;
@@ -78,7 +77,7 @@ export function Tab({
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 className={cn(
-                  "relative mt-[1px] flex h-full select-none items-center rounded-[10px]",
+                  "relative flex h-full select-none items-center rounded-[10px]",
                   isShrinkedThree
                     ? "justify-center px-1"
                     : "justify-between px-3",
@@ -86,6 +85,7 @@ export function Tab({
                     ? "bg-accent text-accent-fg"
                     : "hover:bg-hover hover:text-hover-fg",
                   snapshot.isDragging ? "opacity-50" : "opacity-100",
+                  className,
                 )}
                 onClick={onClick}
                 onKeyDown={(e) => {
@@ -114,20 +114,21 @@ export function Tab({
                   type={type}
                   handleTabClose={handleTabClose}
                   streaming={isStreaming}
+                  isPrivate={isPrivate}
                 />
               </div>
-            </ContextMenuTrigger>
+            </ContextMenu.Trigger>
           </motion.div>
-          <ContextMenuContent aria-label={`Tab options for ${title}`}>
-            <ContextMenuItem onAction={handleTabClose}>
+          <ContextMenu.Content aria-label={`Tab options for ${title}`}>
+            <ContextMenu.Item onAction={handleTabClose}>
               <X className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close")}
-            </ContextMenuItem>
-            <ContextMenuItem onAction={handleTabCloseAll}>
+            </ContextMenu.Item>
+            <ContextMenu.Item onAction={handleTabCloseAll}>
               <CopyX className="mr-2 h-4 w-4" />
               {t("tab-bar.menu-item.close-all")}
-            </ContextMenuItem>
-          </ContextMenuContent>
+            </ContextMenu.Item>
+          </ContextMenu.Content>
         </ContextMenu>
       )}
     </Draggable>

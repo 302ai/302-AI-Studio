@@ -1,6 +1,11 @@
 // ! This service is only used within the renderer process
 
-import type { Message, ShortcutAction, Thread } from "@shared/triplit/types";
+import type {
+  Message,
+  Model,
+  ShortcutAction,
+  Thread,
+} from "@shared/triplit/types";
 import mitt from "mitt";
 
 export enum EventNames {
@@ -19,12 +24,24 @@ export enum EventNames {
   // * Message events
   MESSAGE_EDIT = "message:edit",
 
+  // * Model events
+  MODEL_EDIT = "model:edit",
+
   // * Code preview events
   CODE_PREVIEW_OPEN = "code-preview:open",
   CODE_PREVIEW_CLOSE = "code-preview:close",
 
   // * Shortcut events
   SHORTCUT_TRIGGERED = "shortcut:triggered",
+
+  // * Window events
+  WINDOW_MAC_FULLSCREEN_STATE_UPDATE = "window:mac-maximized-state-update",
+
+  // * Privacy mode events
+  PRIVACY_MODE_TOGGLE = "privacy-mode:toggle",
+  PRIVACY_MODE_CONFIRM = "privacy-mode:confirm",
+  PRIVACY_MODE_CANCEL = "privacy-mode:cancel",
+  PRIVACY_MODE_CONFIRM_DIALOG = "privacy-mode:confirm-dialog",
 }
 
 type Events = {
@@ -53,6 +70,9 @@ type Events = {
   };
   [EventNames.TAB_CLOSE_ALL]: null;
   [EventNames.MESSAGE_EDIT]: Message;
+  [EventNames.MODEL_EDIT]: {
+    model: Model;
+  };
   [EventNames.CODE_PREVIEW_OPEN]: {
     code: string;
     language: string;
@@ -60,6 +80,20 @@ type Events = {
   [EventNames.CODE_PREVIEW_CLOSE]: null;
   [EventNames.SHORTCUT_TRIGGERED]: {
     action: ShortcutAction;
+  };
+  [EventNames.WINDOW_MAC_FULLSCREEN_STATE_UPDATE]: {
+    isMaximized: boolean;
+  };
+  [EventNames.PRIVACY_MODE_TOGGLE]: {
+    isPrivate: boolean;
+    tabId?: string;
+    threadId?: string;
+  };
+  [EventNames.PRIVACY_MODE_CONFIRM]: null;
+  [EventNames.PRIVACY_MODE_CANCEL]: null;
+  [EventNames.PRIVACY_MODE_CONFIRM_DIALOG]: {
+    action: string;
+    message: string;
   };
 };
 

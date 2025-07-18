@@ -20,7 +20,14 @@
     "lack-model": "Please select a model first!",
     "lack-provider": "Missing model provider!",
     "edit-message": "Edit Message",
-    "edit-message-only-save": "Only Save"
+    "edit-message-only-save": "Only Save",
+    "function_call": "Tool Call",
+    "reasoning": "Reasoning",
+    "vision": "Vision",
+    "file": "File",
+    "music": "Audio",
+    "video": "Video",
+    "support": "Support"
   },
   "settings": {
     "about-settings": {
@@ -58,29 +65,51 @@
       "language": {
         "label": "Language"
       },
-      "name": "General Settings",
-      "search-provider": {
-        "label": "Search Provider"
-      },
+      "name": "General",
       "theme": {
         "dark": "Dark",
         "label": "Theme",
         "light": "Light",
         "system": "System"
+      },
+      "privacy-mode": {
+        "title": "Privacy Mode",
+        "description": "Auto Inherit"
+      },
+      "version-update": {
+        "label": "Version Update",
+        "check-for-updates": "Check",
+        "switch": {
+          "label": "Automatic Update"
+        },
+        "version-info": "Version",
+        "update-available": "New version detected",
+        "update-now": "Update Now",
+        "update-later": "Update Later",
+        "checking": "Checking",
+        "no-update-available": "The current version is already the latest version",
+        "check-failed": "Check failed, please try again",
+        "restart-to-update": "Restart",
+        "downloading": "Downloading",
+        "new-version-available": "New Version Available",
+        "update-downloaded": "The new version is ready, please restart the app to install it",
+        "new-version-downloaded": "New Version Ready"
       }
     },
     "icon-tooltip": "Open Settings",
     "model-settings": {
       "model-list": {
         "label": "Model List",
-        "no-models-description": "The model list is empty...",
+        "no-models-description": "No models available...",
         "current": "Current",
         "collected": "Favorites",
         "search-placeholder": "Search...",
         "fetch-models": "Fetch Models",
         "add-model": "Add Model",
+        "clear-models": "Clear",
         "model-name": "Model Name",
         "model-capabilities": "Capabilities",
+        "model-type": "Model Type",
         "actions": "Actions"
       },
       "add-model-modal": {
@@ -100,7 +129,18 @@
         "capabilities": {
           "label": "Capabilities",
           "reasoning": "Reasoning",
-          "vision": "Vision"
+          "vision": "Vision",
+          "music": "Music",
+          "video": "Video",
+          "function_call": "Tool Call"
+        },
+        "type": {
+          "label": "Model Type",
+          "language": "Language",
+          "image-generation": "Image Generation",
+          "tts": "TTS",
+          "embedding": "Embedding",
+          "rerank": "Rerank"
         },
         "actions": {
           "cancel": "Cancel",
@@ -113,7 +153,12 @@
           "delete-success-message": "Delete Success",
           "delete-title": "Delete Model",
           "delete-description": "Are you sure you want to delete this model?",
-          "delete-confirm-text": "Delete"
+          "delete-confirm-text": "Delete",
+          "clear-title": "Clear All Models",
+          "clear-description": "Are you sure you want to clear all models from this provider? This action cannot be undone.",
+          "clear-confirm-text": "Clear All",
+          "clear-success-message": "All models cleared successfully",
+          "clear-error-message": "Failed to clear models"
         }
       },
       "model-provider": {
@@ -185,7 +230,7 @@
         },
         "star": "Collect"
       },
-      "name": "Model Settings",
+      "name": "Model",
       "loading": "Loading..."
     },
     "tab-title": "Settings",
@@ -203,7 +248,32 @@
         "close-other-tabs": "Close Other Tabs",
         "delete-current-thread": "Delete Current Thread",
         "open-settings": "Open Settings",
-        "toggle-sidebar": "Toggle Sidebar"
+        "toggle-sidebar": "Toggle Sidebar",
+        "quick-navigation": "Quick Navigation",
+        "command-palette": "Command Palette",
+        "stop-generation": "Stop Generation",
+        "new-tab": "New Tab",
+        "new-session": "New Session",
+        "regenerate-response": "Regenerate Response",
+        "search": "Search",
+        "create-branch": "Create Branch",
+        "close-all-tabs": "Close All Tabs",
+        "restore-last-tab": "Restore Last Tab",
+        "screenshot": "Screenshot",
+        "next-tab": "Next Tab",
+        "previous-tab": "Previous Tab",
+        "toggle-model-panel": "Toggle Model Panel",
+        "toggle-incognito-mode": "Toggle Incognito Mode",
+        "branch-and-send": "Branch and Send",
+        "switch-to-tab-1": "Switch to Tab 1",
+        "switch-to-tab-2": "Switch to Tab 2",
+        "switch-to-tab-3": "Switch to Tab 3",
+        "switch-to-tab-4": "Switch to Tab 4",
+        "switch-to-tab-5": "Switch to Tab 5",
+        "switch-to-tab-6": "Switch to Tab 6",
+        "switch-to-tab-7": "Switch to Tab 7",
+        "switch-to-tab-8": "Switch to Tab 8",
+        "switch-to-tab-9": "Switch to Tab 9"
       },
       "hints": {
         "send-message": "Choose how to send messages in chat",
@@ -213,7 +283,32 @@
         "close-other-tabs": "Close all tabs except the current one",
         "delete-current-thread": "Delete the current conversation thread",
         "open-settings": "Open the settings page",
-        "toggle-sidebar": "Show or hide the sidebar"
+        "toggle-sidebar": "Show or hide the sidebar",
+        "quick-navigation": "Quick navigation to different parts of the app",
+        "command-palette": "Open command palette for quick actions",
+        "stop-generation": "Stop the current AI response generation",
+        "new-tab": "Create a new chat tab",
+        "new-session": "Start a new session in current tab",
+        "regenerate-response": "Regenerate the last AI response",
+        "search": "Search within the application",
+        "create-branch": "Create a new branch from current conversation",
+        "close-all-tabs": "Close all open tabs",
+        "restore-last-tab": "Restore the last closed tab",
+        "screenshot": "Take a screenshot (global shortcut)",
+        "next-tab": "Switch to the next tab",
+        "previous-tab": "Switch to the previous tab",
+        "toggle-model-panel": "Show or hide the model selection panel",
+        "toggle-incognito-mode": "Toggle incognito mode for private conversations",
+        "branch-and-send": "Create a branch and send message simultaneously",
+        "switch-to-tab-1": "Switch to tab 1",
+        "switch-to-tab-2": "Switch to tab 2",
+        "switch-to-tab-3": "Switch to tab 3",
+        "switch-to-tab-4": "Switch to tab 4",
+        "switch-to-tab-5": "Switch to tab 5",
+        "switch-to-tab-6": "Switch to tab 6",
+        "switch-to-tab-7": "Switch to tab 7",
+        "switch-to-tab-8": "Switch to tab 8",
+        "switch-to-tab-9": "Switch to tab 9"
       },
       "description": {
         "title": "Keyboard Shortcuts Description",
@@ -224,7 +319,12 @@
         "press-keys": "Press keys...",
         "cancel": "Cancel",
         "reset": "Reset",
-        "clear": "Clear"
+        "clear": "Clear",
+        "no-shortcut": "No shortcut",
+        "error": {
+          "modifier-required": "Shortcuts must include at least one modifier key (Ctrl/Cmd/Alt/Shift)",
+          "shortcut-conflict": "This shortcut already exists, please record again"
+        }
       },
       "scope": {
         "label": "Scope",
@@ -232,7 +332,19 @@
         "global": "Global"
       }
     },
-    "text": "Settings"
+    "text": "Settings",
+    "preference-settings": {
+      "name": "Preferences",
+      "search-provider": {
+        "label": "Default Search Service"
+      },
+      "display-app-store": {
+        "label": "302.AI App Store",
+        "switch": {
+          "label": "Display App Store on Homepage"
+        }
+      }
+    }
   },
   "sidebar": {
     "close-sidebar": {
@@ -284,7 +396,37 @@
     "selected-model-not-found": "Please select a model first!",
     "provider-not-found-for-selected-model": "Model provider setup error!",
     "message-not-found": "This message does not exist!",
-    "failed-to-generate-ai-response": "Failed to generate AI response!"
+    "failed-to-generate-ai-response": "Failed to generate AI response!",
+    "private-thread-title": "Private Chat"
+  },
+  "privacy-mode": {
+    "enable-tooltip": "Enable Privacy Mode",
+    "disable-tooltip": "Disable Privacy Mode",
+    "cannot-toggle-tooltip": "Cannot toggle privacy mode after session has started",
+    "cannot-toggle": {
+      "title": "Cannot Toggle Privacy Mode",
+      "description": "Privacy mode can only be changed before the session starts"
+    },
+    "enabled": {
+      "title": "Privacy Mode Enabled",
+      "description": "This session will not be saved or synced"
+    },
+    "disabled": {
+      "title": "Privacy Mode Disabled",
+      "description": "This session will be saved normally"
+    },
+    "error": {
+      "title": "Privacy Mode Error",
+      "description": "Failed to toggle privacy mode"
+    },
+    "confirm-switch": {
+      "message": "You are about to {{action}}. This will discard your private session content. Continue?"
+    },
+    "confirm-dialog": {
+      "title": "Confirm Privacy Mode Action",
+      "cancel": "Cancel",
+      "confirm": "Continue"
+    }
   },
   "thread-menu": {
     "actions": {
@@ -342,7 +484,7 @@
       "save-success": "Message updated successfully",
       "save-error": "Failed to update message"
     },
-    "generate-failed": "Generate failed",
+    "generate-failed": "Generation failed, please try again...",
     "delete-success": "Message deleted successfully",
     "delete-error": "Failed to delete message",
     "context-menu": {
@@ -358,7 +500,7 @@
   },
   "stop-generating": "Stop",
   "new-thread": {
-    "hello-world": "Tell me, what are you thinking about?"
+    "hello-world": "Hi, are you ready to explore the world with me?"
   },
   "attachment": {
     "file-too-large": "File size cannot exceed 10MB"
@@ -366,5 +508,9 @@
   "artifacts": {
     "preview": "Preview",
     "code": "Code"
+  },
+  "shortcuts": {
+    "tab-not-exist": "Tab {{tabNumber}} does not exist",
+    "tab-switch-error": "Failed to switch to tab {{tabNumber}}"
   }
 }

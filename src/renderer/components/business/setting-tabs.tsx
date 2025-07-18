@@ -38,7 +38,7 @@ const Tabs = ({ className, ref, ...props }: TabsProps) => {
         tabsStyles({
           ...renderProps,
           className,
-        })
+        }),
       )}
       ref={ref}
       {...props}
@@ -71,7 +71,7 @@ const TabList = <T extends object>({
         ref={ref}
         {...props}
         className={composeRenderProps(className, (className, renderProps) =>
-          tabListStyles({ ...renderProps, className })
+          tabListStyles({ ...renderProps, className }),
         )}
       />
     </LayoutGroup>
@@ -86,7 +86,7 @@ const tabStyles = tv({
   ],
   variants: {
     isSelected: {
-      false: "text-setting-tab-list-fg hover:bg-hover-primary",
+      false: "text-setting-fg hover:bg-hover-primary",
       true: "text-accent-fg bg-accent hover:bg-accent",
     },
     isFocused: {
@@ -113,7 +113,7 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
           tabStyles({
             ...renderProps,
             className: twJoin("href" in props && "cursor-pointer", _className),
-          })
+          }),
       )}
     >
       {({ isSelected }) => (
@@ -127,7 +127,7 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
                 // horizontal
                 "group-data-[orientation=horizontal]/tabs:-bottom-px group-data-[orientation=horizontal]/tabs:inset-x-0 group-data-[orientation=horizontal]/tabs:h-0.5 group-data-[orientation=horizontal]/tabs:w-full",
                 // vertical
-                "group-data-[orientation=vertical]/tabs:right-[-12px] group-data-[orientation=vertical]/tabs:h-[calc(50%)] group-data-[orientation=vertical]/tabs:w-[3px] group-data-[orientation=vertical]/tabs:transform group-data-[orientation=vertical]/tabs:rounded-r-[2px]"
+                "group-data-[orientation=vertical]/tabs:right-[-12px] group-data-[orientation=vertical]/tabs:h-[calc(50%)] group-data-[orientation=vertical]/tabs:w-[5px] group-data-[orientation=vertical]/tabs:transform group-data-[orientation=vertical]/tabs:rounded-none",
               )}
               layoutId="current-selected"
               transition={{ type: "spring", stiffness: 500, damping: 40 }}
@@ -149,7 +149,7 @@ const TabPanel = ({ className, ref, ...props }: TabPanelProps) => {
       ref={ref}
       className={composeTailwindRenderProps(
         className,
-        "flex-1 text-fg text-sm focus-visible:outline-hidden"
+        "flex-1 text-fg text-sm focus-visible:outline-hidden",
       )}
     />
   );

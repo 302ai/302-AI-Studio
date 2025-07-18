@@ -1,17 +1,14 @@
 import { DragDropContext, type DragStart, Droppable } from "@hello-pangea/dnd";
 import { Separator } from "@renderer/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@renderer/components/ui/tooltip";
 import { useTabBar } from "@renderer/hooks/use-tab-bar";
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import type { Thread } from "@shared/triplit/types";
 import { Plus } from "lucide-react";
+import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ButtonWithTooltip } from "../button-with-tooltip";
 import { Tab } from "./tab";
 
 export type TabItem = {
@@ -41,14 +38,14 @@ export function TabBar() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const addButtonWidth = 33;
-  const separatorWidth = 9;
+  const spaceWidth = 4;
 
   const calculateTabWidth = useCallback(() => {
     if (!containerRef.current) return;
 
     const containerWidth = containerRef.current.offsetWidth;
     const availableWidth =
-      containerWidth - addButtonWidth - separatorWidth * tabs.length;
+      containerWidth - addButtonWidth - spaceWidth * tabs.length;
 
     const minTabWidth = 0;
     const maxTabWidth = 200;
@@ -62,6 +59,11 @@ export function TabBar() {
 
     setTabWidth(newTabWidth);
   }, [tabs.length]);
+
+  const getPreviousTabIdForActiveTab = useCallback(() => {
+    const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTabId);
+    return tabs[activeTabIndex - 1]?.id;
+  }, [tabs, activeTabId]);
 
   /**
    * * This effect is used to calculate the width of the tab
@@ -98,6 +100,7 @@ export function TabBar() {
           title,
           threadId: id,
           type: "thread",
+          isPrivate: false,
         });
         await setActiveTabId(newTab.id);
       }
@@ -129,21 +132,22 @@ export function TabBar() {
             }}
             {...provided.droppableProps}
           >
-            {tabs.map(({ id, title, type, threadId }, index) => (
-              <div key={id} className="flex items-center">
+            {tabs.map(({ id, title, type, threadId, isPrivate }, index) => (
+              <div key={id} className="relative flex items-center">
                 <Separator
                   orientation="vertical"
                   className={cn(
-                    "mx-1 h-[20px] w-[1px] self-center transition-opacity duration-200",
-                    index === 0 ||
-                      tabs[index - 1].id === activeTabId ||
-                      id === activeTabId
+                    "absolute right-[-3px]",
+                    "mx-1 h-[20px] w-[2px] self-center transition-opacity duration-300",
+                    id === getPreviousTabIdForActiveTab() ||
+                      id === activeTabId ||
+                      index === tabs.length - 1
                       ? "opacity-0"
                       : "opacity-100",
                   )}
                 />
-
                 <Tab
+                  className="mr-1"
                   id={id}
                   threadId={threadId ?? ""}
                   index={index}
@@ -152,38 +156,46 @@ export function TabBar() {
                   onClick={() => activateTabId(id)}
                   type={type}
                   width={tabWidth}
+                  isPrivate={isPrivate}
                 />
               </div>
             ))}
-            <div
-              className={cn("flex items-center", {
-                "opacity-0": isDragging,
-              })}
+
+            <motion.div
+              layout
+              className="flex items-center"
+              animate={{
+                opacity: isDragging ? 0 : 1,
+                transition: {
+                  duration: isDragging ? 0.1 : 1,
+                },
+              }}
+              transition={{
+                type: "spring",
+                damping: 20,
+                stiffness: 300,
+              }}
             >
               <Separator
                 orientation="vertical"
                 className={cn(
-                  "mx-1 h-[20px] w-[1px]",
+                  "mr-1 h-[20px] w-[2px]",
                   tabs.length === 0 ? "opacity-0" : "opacity-100",
                 )}
               />
-              <Tooltip>
-                <TooltipTrigger
-                  className="size-6 flex-shrink-0 self-center rounded-[4px]"
-                  intent="plain"
-                  size="square-petite"
-                  style={noDragRegion}
-                  onClick={() => {
-                    handleAddNewTab("thread");
-                  }}
-                >
-                  <Plus className="h-4 w-4" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  {t("sidebar.new-thread.tooltip")}
-                </TooltipContent>
-              </Tooltip>
-            </div>
+              <ButtonWithTooltip
+                className="!size-6 rounded-[4px]"
+                title={t("sidebar.new-thread.tooltip")}
+                intent="plain"
+                size="sq-xs"
+                style={noDragRegion}
+                onClick={() => {
+                  handleAddNewTab("thread");
+                }}
+              >
+                <Plus className="h-4 w-4" />
+              </ButtonWithTooltip>
+            </motion.div>
             {provided.placeholder}
           </div>
         )}

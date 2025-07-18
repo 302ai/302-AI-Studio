@@ -1,10 +1,10 @@
 import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
-import { Loader } from "@renderer/components/ui/loader";
 import { useActiveProvider } from "@renderer/hooks/use-active-provider";
-import type { Provider } from "@shared/triplit/types";
+import { EventNames, emitter } from "@renderer/services/event-service";
+import type { Model, Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
-import { PackageOpen } from "lucide-react";
+import { PackageOpen, Trash2 } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -17,8 +17,10 @@ import {
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { SearchField } from "../../ui/search-field";
-import { Fetching } from "../fetching";
+import { LdrsLoader } from "../ldrs-loader";
 import { AddModelModal } from "./add-model-modal";
+import { ClearModelsModal } from "./clear-models-modal";
+import { EditModelModal } from "./edit-model-modal";
 import { RowList } from "./row-list";
 
 interface ModelListProps {
@@ -59,6 +61,9 @@ export function ModelList({
   const [tabKey] = useState<React.Key>("current");
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddModelModalOpen, setIsAddModelModalOpen] = useState(false);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingModel, setEditingModel] = useState<Model | null>(null);
 
   // 创建 providers 映射表，方便快速查找
   const providersMap = useMemo(() => {
@@ -174,39 +179,69 @@ export function ModelList({
     }
   }, [providersFetching, modelsFetching]);
 
+  useEffect(() => {
+    const unsubscribe = emitter.on(EventNames.MODEL_EDIT, ({ model }) => {
+      setEditingModel(model);
+      setIsEditModalOpen(true);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const loading = !ready || isPending;
+
+  const handleClear = () => {
+    setIsClearModalOpen(true);
+  };
 
   return (
     <>
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between gap-2">
         {/* <ModelFilter onTabChange={setTabKey} /> */}
         <div className="flex gap-2">
           <Button
-            size="small"
             onClick={onFetchModels}
             intent="primary"
-            isDisabled={isFetchingModels || !onFetchModels || !isFormValid}
+            isDisabled={!onFetchModels || !isFormValid}
+            isPending={isFetchingModels}
+            className="h-10 min-w-[110px] rounded-lg"
           >
-            {isFetchingModels && <Loader variant="spin" size="small" />}
-            {t("fetch-models")}
+            {({ isPending }) => (
+              <>
+                {isPending && <LdrsLoader type="line-spinner" size={16} />}
+                {t("fetch-models")}
+              </>
+            )}
           </Button>
 
           <Button
-            size="small"
-            className="w-[110px]"
+            className="inset-ring-primary h-10 min-w-[110px] rounded-lg pressed:bg-accent text-primary hover:bg-accent"
             onClick={() => setIsAddModelModalOpen(true)}
             intent="outline"
           >
             {t("add-model")}
           </Button>
         </div>
-        <SearchField
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder={t("search-placeholder")}
-          className="!h-[40px] !w-[206px]"
-          // fieldGroupClassName="!border-none !shadow-none rounded-xl bg-muted"
-        />
+        <div className="flex items-center justify-center gap-2">
+          <SearchField
+            className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-[40px] [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={t("search-placeholder")}
+          />
+
+          <Button
+            onClick={handleClear}
+            intent="plain"
+            isDisabled={!selectedProvider?.id || filteredModels.length === 0}
+            className="h-10 min-w-[78px] rounded-lg bg-danger-2 pressed:bg-danger-2/70 text-danger-fg-2 hover:bg-danger-2/70"
+          >
+            <Trash2 className="size-4" />
+            {t("clear-models")}
+          </Button>
+        </div>
       </div>
       <div
         ref={setContainerRef}
@@ -217,24 +252,24 @@ export function ModelList({
             className="flex items-center justify-center"
             style={{ height: containerHeight }}
           >
-            <Fetching />
+            <LdrsLoader type="waveform" />
           </div>
         ) : (
           <div className=" w-full min-w-full flex-1 caption-bottom text-sm outline-hidden">
-            <div className="!bg-muted mb-1 grid h-10 grid-cols-[minmax(0,1fr)_180px_50px] text-muted-fg">
-              <div className="flex h-full items-center pl-4 outline-hidden">
+            <div className="!bg-muted mb-1 flex h-10 text-muted-fg">
+              <div className="flex h-full min-w-[160px] flex-[1.3] items-center pl-4 outline-hidden">
                 <div className="truncate">{t("model-name")}</div>
               </div>
-              {/* TODO: add model type
-              <div className="flex h-full items-center outline-hidden">
-                <div className="truncate">模型类型</div>
-              </div> */}
 
-              <div className="flex h-full items-center outline-hidden">
+              <div className="flex h-full min-w-[40px] flex-[0.7] items-center outline-hidden">
+                <div className="truncate">{t("model-type")}</div>
+              </div>
+
+              <div className="flex h-full min-w-[100px] flex-[1.2] items-center outline-hidden">
                 <div className="truncate">{t("model-capabilities")}</div>
               </div>
 
-              <div className="flex h-full items-center outline-hidden">
+              <div className="flex h-full min-w-[70px] flex-[0.8] items-center justify-center outline-hidden">
                 <div className="truncate">{t("actions")}</div>
               </div>
             </div>
@@ -267,6 +302,18 @@ export function ModelList({
       <AddModelModal
         isOpen={isAddModelModalOpen}
         onOpenChange={setIsAddModelModalOpen}
+      />
+
+      <ClearModelsModal
+        isOpen={isClearModalOpen}
+        onOpenChange={setIsClearModalOpen}
+        providerId={selectedProvider?.id}
+      />
+
+      <EditModelModal
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        model={editingModel}
       />
     </>
   );

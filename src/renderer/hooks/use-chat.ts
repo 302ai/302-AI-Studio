@@ -12,7 +12,7 @@ enum IpcRendererEvent {
   MESSAGE_ACTIONS = "message:actions",
 }
 
-export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
+export function useChat(scrollRef?: React.RefObject<HTMLDivElement | null>) {
   const { activeThreadId } = useActiveThread();
   const [messages, setMessages] = useState<Message[]>([]);
   const [streaming, setStreaming] = useState(false);
@@ -20,7 +20,7 @@ export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(false);
 
   const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
+    const el = scrollRef?.current;
     if (!el) return;
     const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 200;
 
@@ -222,12 +222,12 @@ export function useChat(scrollRef: React.RefObject<HTMLDivElement | null>) {
   }, [activeThreadId, fetchMessages]);
 
   useLayoutEffect(() => {
-    if (shouldScrollToBottom && scrollRef.current) {
-      const el = scrollRef.current;
+    if (shouldScrollToBottom && scrollRef?.current) {
+      const el = scrollRef?.current;
       el.scrollTop = el.scrollHeight;
       setShouldScrollToBottom(false);
     }
-  }, [shouldScrollToBottom, scrollRef.current]);
+  }, [shouldScrollToBottom, scrollRef?.current]);
 
   return {
     activeThreadId,

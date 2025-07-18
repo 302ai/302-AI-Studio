@@ -1,9 +1,5 @@
 import { triplitClient } from "@renderer/client";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@renderer/components/ui/tooltip";
+import { ButtonWithTooltip } from "@renderer/components/business/button-with-tooltip";
 import { ALLOWED_TYPES } from "@renderer/hooks/use-attachments";
 import { cn } from "@renderer/lib/utils";
 import { useQueryOne } from "@triplit/react";
@@ -53,63 +49,40 @@ export function ActionGroup({ onFilesSelect, disabled }: ActionGroupProps) {
 
   return (
     <div className="flex flex-row items-center gap-x-2">
-      <Tooltip>
-        <TooltipTrigger
-          className="size-8"
-          intent="plain"
-          size="square-petite"
-          onClick={handleAttachFile}
-        >
-          <Paperclip className="size-4" />
-        </TooltipTrigger>
-        <TooltipContent>
-          <span>{t("chat.tool-bar.attach-file")}</span>
-        </TooltipContent>
-      </Tooltip>
+      <ButtonWithTooltip
+        title={t("chat.tool-bar.attach-file")}
+        onClick={handleAttachFile}
+      >
+        <Paperclip className="size-4" />
+      </ButtonWithTooltip>
 
-      <Tooltip>
-        <TooltipTrigger
-          className={cn(
-            "size-8",
-            enabledReason && "bg-primary/15 text-primary",
-            disabled && "cursor-not-allowed opacity-50",
-          )}
-          intent="plain"
-          size="square-petite"
-          onClick={handleReason}
-        >
-          <Lightbulb className="size-4" />
-        </TooltipTrigger>
-        <TooltipContent>
-          <span>
-            {disabled
-              ? t("chat.tool-bar.disabled")
-              : t("chat.tool-bar.thinking")}
-          </span>
-        </TooltipContent>
-      </Tooltip>
+      <ButtonWithTooltip
+        className={cn(
+          enabledReason && "bg-primary/15 text-primary",
+          disabled && "cursor-not-allowed opacity-50",
+        )}
+        title={
+          disabled ? t("chat.tool-bar.disabled") : t("chat.tool-bar.thinking")
+        }
+        onClick={handleReason}
+      >
+        <Lightbulb className="size-4" />
+      </ButtonWithTooltip>
 
-      <Tooltip>
-        <TooltipTrigger
-          className={cn(
-            "size-8",
-            enabledWebSearch && "bg-primary/15 text-primary",
-            disabled && "cursor-not-allowed opacity-50",
-          )}
-          intent="plain"
-          size="square-petite"
-          onClick={handleWebSearch}
-        >
-          <Globe className="size-4" />
-        </TooltipTrigger>
-        <TooltipContent>
-          <span>
-            {disabled
-              ? t("chat.tool-bar.disabled")
-              : t("chat.tool-bar.online-search")}
-          </span>
-        </TooltipContent>
-      </Tooltip>
+      <ButtonWithTooltip
+        className={cn(
+          enabledWebSearch && "bg-primary/15 text-primary",
+          disabled && "cursor-not-allowed opacity-50",
+        )}
+        title={
+          disabled
+            ? t("chat.tool-bar.disabled")
+            : t("chat.tool-bar.online-search")
+        }
+        onClick={handleWebSearch}
+      >
+        <Globe className="size-4" />
+      </ButtonWithTooltip>
 
       <input
         ref={fileInputRef}

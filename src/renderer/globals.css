@@ -34,15 +34,31 @@
 
   --color-success: var(--success);
   --color-success-fg: var(--success-fg);
+  --color-success-bg: var(--success-bg);
+  --color-success-border: var(--success-border);
+  --color-success-text: var(--success-text);
+
+  --color-info-bg: var(--info-bg);
+  --color-info-border: var(--info-border);
+  --color-info-text: var(--info-text);
 
   --color-danger: var(--danger);
+  --color-danger-2: var(--danger-2);
   --color-danger-fg: var(--danger-fg);
+  --color-danger-fg-2: var(--danger-fg-2);
 
   --color-destructive: var(--destructive);
   --color-destructive-fg: var(--destructive-fg);
 
   --color-warning: var(--warning);
   --color-warning-fg: var(--warning-fg);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-border: var(--warning-border);
+  --color-warning-text: var(--warning-text);
+
+  --color-error-bg: var(--error-bg);
+  --color-error-border: var(--error-border);
+  --color-error-text: var(--error-text);
 
   --color-muted: var(--muted);
   --color-muted-fg: var(--muted-fg);
@@ -63,15 +79,18 @@
   --color-hover-secondary: var(--hover-secondary);
   --color-hover-secondary-fg: var(--hover-secondary-fg);
 
+  --color-label-fg: var(--label-fg);
+
+  --color-btn-overlay: var(--btn-overlay);
+
   --color-navbar: var(--navbar);
   --color-navbar-fg: var(--navbar-fg);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-fg: var(--sidebar-fg);
 
-  --color-setting-tab-list: var(--setting-tab-list);
-  --color-setting-tab-list-fg: var(--setting-tab-list-fg);
-  --color-setting-about-text: var(--setting-about-text);
+  --color-setting: var(--setting);
+  --color-setting-fg: var(--setting-fg);
 
   --color-card-desc-text: var(--card-desc-text);
   --color-card-title-text: var(--card-title-text);
@@ -95,29 +114,44 @@
     --secondary: oklch(0.923 0.003 48.717);
     --secondary-fg: rgba(102, 102, 102, 1);
 
-    --overlay: oklch(1 0 0);
-    --overlay-fg: oklch(0.147 0.004 49.25);
+    --overlay: #F9F9F9;
+    --overlay-fg: #333333;
 
     --accent: #F3F2FF;
     --accent-fg: #8450E8;
     --accent-hover: #e6d9f7;
 
-    --muted: oklch(0.97 0.001 106.424);
+    --muted: #F1F1F1;
     --muted-fg: #AAAAAA;
-    --muted-2:#F9F9F9;
 
     --hover: #F1F1F1;
     --hover-fg: #000000;
-    --hover-2: #f9f9f9;
+    --hover-2: #F9F9F9;
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
+    --success-bg: #ecfdf5;
+    --success-border: #d1fae5;
+    --success-text: #059669;
+
+    --info-bg: rgba(37, 99, 235, 0.15);
+    --info-border: rgba(37, 99, 235, 0.15);
+    --info-text: #2563eb;
 
     --warning: oklch(0.828 0.189 84.429);
     --warning-fg: oklch(0.279 0.077 45.635);
+    --warning-bg: rgba(245, 158, 11, 0.15);
+    --warning-border: rgba(251, 191, 36, 0.4);
+    --warning-text: #d97706;
+
+    --error-bg: rgba(239, 68, 68, 0.2);
+    --error-border: #fecaca;
+    --error-text: #dc2626;
 
     --danger: oklch(0.577 0.245 27.325);
+    --danger-2: #FFE7E7;
     --danger-fg: oklch(0.971 0.013 17.38);
+    --danger-fg-2: #D82525;
 
     --destructive: oklch(0.67 0.24 25.76);
     --destructive-fg: oklch(0.98 0 0);
@@ -131,15 +165,16 @@
     --hover-secondary: #f9f9f9;
     --hover-secondary-fg: rgba(102, 102, 102, 1);
 
+    --label-fg: #8E8E8E;
+
     --navbar: #F9F9F9;
     --navbar-fg:  #333333;
 
     --sidebar: #F9F9F9;
     --sidebar-fg: #333333;
 
-    --setting-tab-list: rgba(249, 249, 249, 1);
-    --setting-tab-list-fg: rgba(51, 51, 51, 1);
-    --setting-about-text:#333333;
+    --setting: #F9F9F9;
+    --setting-fg: #333333;
 
     --card-desc-text: #AAAAAA;
     --card-title-text: #333333;
@@ -151,7 +186,7 @@
     --chart-4: oklch(0.894 0.057 293.283);
     --chart-5: oklch(0.943 0.029 294.588);
 
-    --radius-lg: 0.25rem;
+    --radius-lg: 0.5rem;
     --radius-xs: calc(var(--radius-lg) * 0.5);
     --radius-sm: calc(var(--radius-lg) * 0.75);
     --radius-md: calc(var(--radius-lg) * 0.9);
@@ -175,25 +210,40 @@
     --accent-fg: #E6E6E6;
     --accent-hover: #503a6c;
 
-    --muted: oklch(0.216 0.006 56.043);
+    --muted: #2D2D2D;
     --muted-fg: #5C5C5C;
-    --muted-2:#7A7A7A;
 
     --hover: #2D2D2D;
     --hover-fg: #E6E6E6;
     --hover-2: #383838;
 
-    --overlay: oklch(0.176 0.006 56.043);
-    --overlay-fg: oklch(0.985 0.001 106.423);
+    --overlay: #1A1A1A;
+    --overlay-fg: #E6E6E6;
 
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
+    --success-bg: oklch(26.2% 0.051 172.552);
+    --success-border: oklch(37.8% 0.077 168.94);
+    --success-text: oklch(90.5% 0.093 164.15);
+
+    --info-bg: rgba(37, 99, 235, 0.15);
+    --info-border: rgba(37, 99, 235, 0.15);
+    --info-text: #bfdbfe;
 
     --warning: oklch(0.828 0.189 84.429);
     --warning-fg: oklch(0.279 0.077 45.635);
+    --warning-bg: rgba(251, 191, 36, 0.1);
+    --warning-border: rgba(245, 158, 11, 0.15);
+    --warning-text: #fde68a;
+
+    --error-bg: rgba(220, 38, 38, 0.1);
+    --error-border: rgba(220, 38, 38, 0.15);
+    --error-text: #fca5a5;
 
     --danger: oklch(0.577 0.245 27.325);
+    --danger-2: #3A1A1A;
     --danger-fg: oklch(0.971 0.013 17.38);
+    --danger-fg-2: #FF4D4D;
 
     --destructive: oklch(0.61 0.25 25.9);
     --destructive-fg: oklch(0.98 0 0);
@@ -207,15 +257,16 @@
     --hover-secondary:#383838;
     --hover-secondary-fg: oklch(0.985 0.001 106.423);
 
+    --label-fg: #A0A0A0;
+
     --navbar: #1A1A1A;
     --navbar-fg: #E6E6E6;
 
     --sidebar: #1A1A1A;
     --sidebar-fg: #E6E6E6;
 
-    --setting-tab-list: #1f1f1f;
-    --setting-tab-list-fg: oklch(0.985 0.001 106.423);
-    --setting-about-text:#E6E6E6;
+    --setting: #1A1A1A;
+    --setting-fg: #E6E6E6;
 
     --card-desc-text: #7A7A7A;
     --card-title-text: #E6E6E6;
@@ -226,8 +277,6 @@
     --chart-3: oklch(0.702 0.183 293.541);
     --chart-4: oklch(0.811 0.111 293.571);
     --chart-5: oklch(0.894 0.057 293.283);
-
-
   }
 }
 
@@ -253,8 +302,8 @@
     --sidebar-width: 280px;
     --sidebar-width-dock: 95px;
     --sidebar-width-collapsed: 95px;
-    --setting-tab-list-width: 148px;
-    --chat-input-toolbar-height: 40px;
+    --setting-width: 170px;
+    --chat-input-toolbar-height: 36px;
   }
 
   html {

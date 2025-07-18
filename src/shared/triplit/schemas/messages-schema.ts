@@ -16,9 +16,9 @@ export const messagesSchema = {
       default: "pending",
       enum: ["pending", "success", "error", "stop"],
     }),
-    modelId: S.String({ nullable: true }),
-    modelName: S.String({ nullable: true }),
-    providerId: S.String({ nullable: true }),
+    modelId: S.String(),
+    modelName: S.String(),
+    providerId: S.String(),
   }),
   relationships: {
     thread: S.RelationById("threads", "$threadId"),

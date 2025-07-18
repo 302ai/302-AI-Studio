@@ -1,18 +1,11 @@
 import { Button } from "@renderer/components/ui/button";
-import {
-  ModalBody,
-  ModalClose,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalTitle,
-} from "@renderer/components/ui/modal";
+import { Modal } from "@renderer/components/ui/modal";
 import { Textarea } from "@renderer/components/ui/textarea";
+import logger from "@shared/logger/renderer-logger";
 import type { Message } from "@shared/triplit/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import logger from "@shared/logger/renderer-logger";
 
 interface EditMessageDialogProps {
   message: Message;
@@ -70,29 +63,28 @@ export function EditMessageDialog({
   };
 
   return (
-    <ModalContent
+    <Modal.Content
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       size="lg"
       aria-label="Edit message dialog"
     >
-      <ModalHeader>
-        <ModalTitle>{t("edit-dialog.title")}</ModalTitle>
-      </ModalHeader>
-      <ModalBody>
+      <Modal.Header>
+        <Modal.Title>{t("edit-dialog.title")}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
         <Textarea
           value={editContent}
           onChange={setEditContent}
           placeholder={message.content}
           className="min-h-32"
-          resize="vertical"
           aria-label="Edit message content"
         />
-      </ModalBody>
-      <ModalFooter>
-        <ModalClose onPress={handleCancelEdit}>
+      </Modal.Body>
+      <Modal.Footer>
+        <Modal.Close onPress={handleCancelEdit}>
           {t("edit-dialog.cancel")}
-        </ModalClose>
+        </Modal.Close>
         <Button
           intent="primary"
           onPress={handleSaveEdit}
@@ -101,7 +93,7 @@ export function EditMessageDialog({
         >
           {t("edit-dialog.save")}
         </Button>
-      </ModalFooter>
-    </ModalContent>
+      </Modal.Footer>
+    </Modal.Content>
   );
 }

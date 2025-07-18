@@ -22,11 +22,35 @@ export const PLATFORM_KEY_MAP: Record<string, string> = {
   ArrowRight: "→",
 };
 
+function sortKeys(keys: string[]): string[] {
+  const modifierOrder = ["Ctrl", "Cmd", "Meta", "Alt", "Shift"];
+  const modifiers: string[] = [];
+  const regularKeys: string[] = [];
+
+  keys.forEach((key) => {
+    if (modifierOrder.includes(key)) {
+      modifiers.push(key);
+    } else {
+      regularKeys.push(key);
+    }
+  });
+
+  modifiers.sort((a, b) => modifierOrder.indexOf(a) - modifierOrder.indexOf(b));
+
+  regularKeys.sort();
+
+  return [...modifiers, ...regularKeys];
+}
+
 export function formatShortcutKeys(keys: string[]): string {
-  return keys.map((key) => PLATFORM_KEY_MAP[key] || key).join(isMac ? "" : "+");
+  const sortedKeys = sortKeys(keys);
+  return sortedKeys
+    .map((key) => PLATFORM_KEY_MAP[key] || key)
+    .join(isMac ? "" : "+");
 }
 
 export function formatShortcutLabel(keys: string[]): string {
-  const formattedKeys = keys.map((key) => PLATFORM_KEY_MAP[key] || key);
+  const sortedKeys = sortKeys(keys);
+  const formattedKeys = sortedKeys.map((key) => PLATFORM_KEY_MAP[key] || key);
   return formattedKeys.join("+");
 }

@@ -1,0 +1,5 @@
+provider: github
+owner: 302ai
+repo: 302-AI-Studio
+channel: latest
+updaterCacheDirName: 302aistudio-updater

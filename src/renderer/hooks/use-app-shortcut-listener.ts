@@ -13,9 +13,14 @@ export function useAppShortcutListenser() {
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
+      if (event.isComposing) return;
+
       const pressedKeys: string[] = [];
 
-      if (event.ctrlKey || event.metaKey) {
+      if (event.ctrlKey) {
+        pressedKeys.push("Ctrl");
+      }
+      if (event.metaKey) {
         pressedKeys.push("Cmd");
       }
       if (event.shiftKey) {
@@ -43,7 +48,10 @@ export function useAppShortcutListenser() {
       if (pressedKeys.length === 0) return;
 
       for (const shortcut of appShortcuts || []) {
-        if (arraysEqual(Array.from(shortcut.keys), pressedKeys)) {
+        const shortcutKeys = Array.from(shortcut.keys);
+
+        // 检查直接匹配
+        if (arraysEqual(shortcutKeys, pressedKeys)) {
           event.preventDefault();
           event.stopPropagation();
 
@@ -51,6 +59,38 @@ export function useAppShortcutListenser() {
             action: shortcut.action,
           });
           return;
+        }
+
+        // 跨平台兼容：如果快捷键定义中有 Cmd，也尝试用 Ctrl 匹配
+        if (shortcutKeys.includes("Cmd")) {
+          const crossPlatformKeys = shortcutKeys.map((key) =>
+            key === "Cmd" ? "Ctrl" : key,
+          );
+          if (arraysEqual(crossPlatformKeys, pressedKeys)) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            emitter.emit(EventNames.SHORTCUT_TRIGGERED, {
+              action: shortcut.action,
+            });
+            return;
+          }
+        }
+
+        // 跨平台兼容：如果快捷键定义中有 Ctrl，也尝试用 Cmd 匹配
+        if (shortcutKeys.includes("Ctrl")) {
+          const crossPlatformKeys = shortcutKeys.map((key) =>
+            key === "Ctrl" ? "Cmd" : key,
+          );
+          if (arraysEqual(crossPlatformKeys, pressedKeys)) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            emitter.emit(EventNames.SHORTCUT_TRIGGERED, {
+              action: shortcut.action,
+            });
+            return;
+          }
         }
       }
     },

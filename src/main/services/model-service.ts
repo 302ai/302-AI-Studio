@@ -58,4 +58,34 @@ export class ModelService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async clearModel(
+    _event: Electron.IpcMainEvent,
+    providerId: string,
+  ): Promise<void> {
+    try {
+      await this.modelDbService.clearModel(providerId);
+    } catch (error) {
+      logger.error("ModelService: clearModel error", { error });
+      throw error;
+    }
+  }
+
+  // 收藏
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async collectModel(
+    _event: Electron.IpcMainEvent,
+    modelId: string,
+    collected: boolean,
+  ): Promise<void> {
+    try {
+      await this.modelDbService.updateModel(modelId, {
+        collected,
+      });
+    } catch (error) {
+      logger.error("ModelService: collectModel error", { error });
+      throw error;
+    }
+  }
 }

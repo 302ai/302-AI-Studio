@@ -4,7 +4,7 @@
 
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
-import { Eye } from "lucide-react";
+import { ScanSearch } from "lucide-react";
 import mermaid from "mermaid";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -82,11 +82,8 @@ export function MarkdownCodeBlock({
                   language,
                 });
               }}
-              size="small"
-              intent="outline"
-              className="h-8 w-8 p-0"
             >
-              <Eye className="h-4 w-4" />
+              <ScanSearch className="h-4 w-4" />
             </ButtonWithTooltip>
           )}
           <CopyButton content={code} />

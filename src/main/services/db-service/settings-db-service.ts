@@ -1,10 +1,17 @@
 import { triplitClient } from "@main/triplit/client";
-import type { SearchService, Settings } from "@shared/triplit/types";
+import logger from "@shared/logger/main-logger";
+import type {
+  Language,
+  SearchServices,
+  Settings,
+  Theme,
+} from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
+
 export interface WebSearchConfig {
   enabled: boolean;
-  service?: SearchService;
+  service?: SearchServices;
 }
 @injectable()
 export class SettingsDbService extends BaseDbService {
@@ -74,6 +81,28 @@ export class SettingsDbService extends BaseDbService {
     );
   }
 
+  async setEnableDefaultPrivacyMode(enable: boolean) {
+    if (!this.settingsRecord) return;
+    await triplitClient.update(
+      "settings",
+      this.settingsRecord.id,
+      async (setting) => {
+        setting.defaultPrivacyMode = enable;
+      },
+    );
+  }
+
+  async setEnablePrivate(enable: boolean) {
+    if (!this.settingsRecord) return;
+    await triplitClient.update(
+      "settings",
+      this.settingsRecord.id,
+      async (setting) => {
+        setting.isPrivate = enable;
+      },
+    );
+  }
+
   async setEnableReason(enable: boolean) {
     if (!this.settingsRecord) return;
     await triplitClient.update(
@@ -85,7 +114,7 @@ export class SettingsDbService extends BaseDbService {
     );
   }
 
-  async setSearchService(searchService: SearchService) {
+  async setSearchService(searchService: SearchServices) {
     if (!this.settingsRecord) return;
     await triplitClient.update(
       "settings",
@@ -111,7 +140,7 @@ export class SettingsDbService extends BaseDbService {
     };
   }
 
-  async setTheme(theme: "light" | "dark" | "system") {
+  async setTheme(theme: Theme) {
     if (!this.settingsRecord) return;
     await triplitClient.update(
       "settings",
@@ -122,13 +151,13 @@ export class SettingsDbService extends BaseDbService {
     );
   }
 
-  async getLanguage(): Promise<"zh" | "en" | "ja"> {
+  async getLanguage(): Promise<Language> {
     const query = triplitClient.query("settings");
     const settings = await triplitClient.fetchOne(query);
-    return (settings?.language as "zh" | "en" | "ja") ?? "zh";
+    return (settings?.language as Language) ?? "zh";
   }
 
-  async setLanguage(language: "zh" | "en" | "ja") {
+  async setLanguage(language: Language) {
     if (!this.settingsRecord) return;
     await triplitClient.update(
       "settings",
@@ -148,5 +177,64 @@ export class SettingsDbService extends BaseDbService {
         setting.selectedModelId = modelId || "";
       },
     );
+  }
+
+  async setAutoUpdate(autoUpdate: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.autoUpdate = autoUpdate;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setAutoUpdate error", { error });
+      throw error;
+    }
+  }
+
+  async getAutoUpdate(): Promise<boolean> {
+    try {
+      const query = triplitClient.query("settings");
+      const settings = await triplitClient.fetchOne(query);
+      return settings?.autoUpdate ?? true;
+    } catch (error) {
+      logger.error("SettingsDbService:getAutoUpdate error", { error });
+      throw error;
+    }
+  }
+
+  async getFeedUrl(): Promise<string> {
+    try {
+      const query = triplitClient.query("settings");
+      const settings = await triplitClient.fetchOne(query);
+      return (
+        settings?.feedUrl ??
+        "https://github.com/302ai/302-AI-Studio/releases/latest/download"
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:getFeedUrl error", { error });
+      throw error;
+    }
+  }
+
+  async setDisplayAppStore(displayAppStore: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.displayAppStore = displayAppStore;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setDisplayAppStore error", { error });
+      throw error;
+    }
   }
 }

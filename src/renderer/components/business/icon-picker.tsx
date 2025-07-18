@@ -52,23 +52,20 @@ export function IconPicker({ value, onChange, className }: IconPickerProps) {
 
   return (
     <Popover>
-      <Popover.Trigger>
-        <button
-          type="button"
-          className={cn(
-            "flex size-[40px] items-center justify-center rounded-lg bg-muted transition-colors hover:bg-muted/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-            className,
-          )}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {selectedIcon ? (
-            <ModelIcon modelName={selectedIcon.key} className="size-6" />
-          ) : (
-            <span className="text-muted-fg text-xs">
-              <FileImage />
-            </span>
-          )}
-        </button>
+      <Popover.Trigger
+        className={cn(
+          "flex size-[44px] items-center justify-center rounded-lg bg-[#F5F5F5] transition-colors hover:bg-muted/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:bg-[#1A1A1A]",
+          className,
+        )}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {selectedIcon ? (
+          <ModelIcon modelName={selectedIcon.key} className="size-6" />
+        ) : (
+          <span className="text-muted-fg text-xs">
+            <FileImage />
+          </span>
+        )}
       </Popover.Trigger>
 
       <PopoverContent

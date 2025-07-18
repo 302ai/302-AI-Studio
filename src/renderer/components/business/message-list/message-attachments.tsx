@@ -1,6 +1,7 @@
 import { triplitClient } from "@renderer/client";
 import { Button } from "@renderer/components/ui/button";
 import { cn } from "@renderer/lib/utils";
+import logger from "@shared/logger/renderer-logger";
 import type { Attachment } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import {
@@ -14,7 +15,6 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import logger from "@shared/logger/renderer-logger";
 
 interface MessageAttachmentsProps {
   messageId: string;

@@ -21,7 +21,14 @@
     "lack-model": "最初にモデルを選択してください！",
     "lack-provider": "モデルプロバイダーがありません！",
     "edit-message": "メッセージを編集",
-    "edit-message-only-save": "保存のみ"
+    "edit-message-only-save": "保存のみ",
+    "function_call": "ツール呼び出し",
+    "reasoning": "推論",
+    "vision": "写真",
+    "file": "ファイル",
+    "music": "音楽",
+    "video": "ビデオ",
+    "support": "サポート"
   },
   "settings": {
     "about-settings": {
@@ -29,7 +36,7 @@
       "version": "バージョン",
       "description": {
         "title": "アプリケーションの説明",
-        "content": "302 AI Studio は、強力なAIチャットアプリケーションで、ユーザーにインテリジェントな対話体験を提供します。複数のAIモデルをサポートし、ファイルアップロード、オンライン検索などの機能を備えており、ユーザーに最高のAIインタラクションプラットフォームを構築することに専念しています。"
+        "content": "302.AI Studio は、強力なAIチャットアプリケーションで、ユーザーにインテリジェントな対話体験を提供します。複数のAIモデルをサポートし、ファイルアップロード、オンライン検索などの機能を備えており、ユーザーに最高のAIインタラクションプラットフォームを構築することに専念しています。"
       },
       "website": {
         "title": "公式ウェブサイト"
@@ -59,15 +66,35 @@
       "language": {
         "label": "言語"
       },
-      "name": "一般設定",
-      "search-provider": {
-        "label": "検索プロバイダー"
-      },
+      "name": "一般",
       "theme": {
         "dark": "ダーク",
         "label": "テーマ",
         "light": "ライト",
         "system": "システム"
+      },
+      "privacy-mode": {
+        "title": "プライバシーモード",
+        "description": "自動継承"
+      },
+      "version-update": {
+        "label": "バージョンの更新",
+        "check-for-updates": "更新を確認",
+        "switch": {
+          "label": "自動更新"
+        },
+        "version-info": "バージョン",
+        "update-available": "新しいバージョンが検出されました",
+        "update-now": "今すぐ更新",
+        "update-later": "後日更新",
+        "checking": "チェック中",
+        "no-update-available": "現在のバージョンはすでに最新バージョンです",
+        "check-failed": "チェックに失敗しました",
+        "restart-to-update": "即時再起動",
+        "downloading": "ダウンロード",
+        "new-version-available": "新バージョン",
+        "update-downloaded": "新しいバージョンの準備ができました。アプリを再起動してインストールしてください",
+        "new-version-downloaded": "新バージョンが完成"
       }
     },
     "icon-tooltip": "設定を開く",
@@ -80,8 +107,10 @@
         "search-placeholder": "検索...",
         "fetch-models": "モデルを取得",
         "add-model": "モデルを追加",
+        "clear-models": "クリア",
         "model-name": "モデル名",
         "model-capabilities": "モデル機能",
+        "model-type": "モデルタイプ",
         "actions": "操作"
       },
       "add-model-modal": {
@@ -101,7 +130,18 @@
         "capabilities": {
           "label": "機能",
           "reasoning": "推論",
-          "vision": "画像理解"
+          "vision": "画像理解",
+          "music": "音楽理解",
+          "video": "ビデオ理解",
+          "function_call": "ツール使用"
+        },
+        "type": {
+          "label": "モデルタイプ",
+          "language": "言語",
+          "image-generation": "画像生成",
+          "tts": "TTS",
+          "embedding": "Embedding",
+          "rerank": "Rerank"
         },
         "actions": {
           "cancel": "キャンセル",
@@ -114,7 +154,12 @@
           "delete-success-message": "削除に成功しました",
           "delete-title": "モデルを削除",
           "delete-description": "このモデルを削除してもよろしいですか？",
-          "delete-confirm-text": "削除"
+          "delete-confirm-text": "削除",
+          "clear-title": "すべてのモデルをクリア",
+          "clear-description": "このプロバイダーのすべてのモデルをクリアしてもよろしいですか？この操作は元に戻せません。",
+          "clear-confirm-text": "すべてクリア",
+          "clear-success-message": "すべてのモデルが正常にクリアされました",
+          "clear-error-message": "モデルのクリアに失敗しました"
         }
       },
       "model-provider": {
@@ -186,7 +231,7 @@
         },
         "star": "集める"
       },
-      "name": "モデル設定",
+      "name": "モデル",
       "loading": "読み込み..."
     },
     "tab-title": "設定",
@@ -194,7 +239,7 @@
       "name": "ツール設定"
     },
     "shortcuts-settings": {
-      "name": "ショートカット",
+      "name": "ショートカットキー",
       "title": "キーボードショートカット",
       "actions": {
         "send-message": "メッセージ送信",
@@ -204,7 +249,32 @@
         "close-other-tabs": "他のタブを閉じる",
         "delete-current-thread": "現在のスレッドを削除",
         "open-settings": "設定を開く",
-        "toggle-sidebar": "サイドバー切り替え"
+        "toggle-sidebar": "サイドバー切り替え",
+        "quick-navigation": "クイックナビゲーション",
+        "command-palette": "コマンドパレット",
+        "stop-generation": "生成停止",
+        "new-tab": "新しいタブ",
+        "new-session": "新しいセッション",
+        "regenerate-response": "応答を再生成",
+        "search": "検索",
+        "create-branch": "ブランチ作成",
+        "close-all-tabs": "すべてのタブを閉じる",
+        "restore-last-tab": "最後のタブを復元",
+        "screenshot": "スクリーンショット",
+        "next-tab": "次のタブ",
+        "previous-tab": "前のタブ",
+        "toggle-model-panel": "モデルパネル切り替え",
+        "toggle-incognito-mode": "シークレットモード切り替え",
+        "branch-and-send": "ブランチ作成して送信",
+        "switch-to-tab-1": "タブ1に切り替え",
+        "switch-to-tab-2": "タブ2に切り替え",
+        "switch-to-tab-3": "タブ3に切り替え",
+        "switch-to-tab-4": "タブ4に切り替え",
+        "switch-to-tab-5": "タブ5に切り替え",
+        "switch-to-tab-6": "タブ6に切り替え",
+        "switch-to-tab-7": "タブ7に切り替え",
+        "switch-to-tab-8": "タブ8に切り替え",
+        "switch-to-tab-9": "タブ9に切り替え"
       },
       "hints": {
         "send-message": "チャットでメッセージを送信する方法を選択",
@@ -214,7 +284,32 @@
         "close-other-tabs": "現在のタブ以外のすべてのタブを閉じる",
         "delete-current-thread": "現在の会話スレッドを削除",
         "open-settings": "設定ページを開く",
-        "toggle-sidebar": "サイドバーを表示/非表示"
+        "toggle-sidebar": "サイドバーを表示/非表示",
+        "quick-navigation": "アプリの異なる部分への素早いナビゲーション",
+        "command-palette": "素早い操作のためのコマンドパレットを開く",
+        "stop-generation": "現在のAI応答生成を停止",
+        "new-tab": "新しいチャットタブを作成",
+        "new-session": "現在のタブで新しいセッションを開始",
+        "regenerate-response": "最後のAI応答を再生成",
+        "search": "アプリケーション内で検索",
+        "create-branch": "現在の会話から新しいブランチを作成",
+        "close-all-tabs": "開いているすべてのタブを閉じる",
+        "restore-last-tab": "最後に閉じたタブを復元",
+        "screenshot": "スクリーンショットを撮る（グローバルショートカット）",
+        "next-tab": "次のタブに切り替え",
+        "previous-tab": "前のタブに切り替え",
+        "toggle-model-panel": "モデル選択パネルを表示/非表示",
+        "toggle-incognito-mode": "プライベート会話のためのシークレットモードを切り替え",
+        "branch-and-send": "ブランチを作成して同時にメッセージを送信",
+        "switch-to-tab-1": "タブ1に切り替え",
+        "switch-to-tab-2": "タブ2に切り替え",
+        "switch-to-tab-3": "タブ3に切り替え",
+        "switch-to-tab-4": "タブ4に切り替え",
+        "switch-to-tab-5": "タブ5に切り替え",
+        "switch-to-tab-6": "タブ6に切り替え",
+        "switch-to-tab-7": "タブ7に切り替え",
+        "switch-to-tab-8": "タブ8に切り替え",
+        "switch-to-tab-9": "タブ9に切り替え"
       },
       "description": {
         "title": "キーボードショートカット説明",
@@ -225,7 +320,12 @@
         "press-keys": "キーを押してください...",
         "cancel": "キャンセル",
         "reset": "リセット",
-        "clear": "クリア"
+        "clear": "クリア",
+        "no-shortcut": "ショートカットなし",
+        "error": {
+          "modifier-required": "ショートカットには少なくとも1つの修飾キー（Ctrl/Cmd/Alt/Shift）が必要です",
+          "shortcut-conflict": "このショートカットは既に存在します。再度録音してください"
+        }
       },
       "scope": {
         "label": "スコープ",
@@ -233,7 +333,19 @@
         "global": "グローバル"
       }
     },
-    "text": "設定"
+    "text": "設定",
+    "preference-settings": {
+      "name": "好み",
+      "search-provider": {
+        "label": "デフォルトの検索サービス"
+      },
+      "display-app-store": {
+        "label": "302.AI アプリストア",
+        "switch": {
+          "label": "ホームページにアプリストアを表示"
+        }
+      }
+    }
   },
   "sidebar": {
     "close-sidebar": {
@@ -283,9 +395,39 @@
     "lack-model": "最初にモデルを選択してください！",
     "lack-provider": "モデルプロバイダーがありません！",
     "selected-model-not-found": "最初にモデルを選択してください！",
-    "provider-not-found-for-selected-model": "モデルベンダーのセットアップエラー！",
+    "provider-not-found-for-selected-model": "モデルプロバイダー設定エラー！",
     "message-not-found": "このメッセージは存在しません！",
-    "failed-to-generate-ai-response": "AI応答の生成に失敗しました！"
+    "failed-to-generate-ai-response": "AI応答の生成に失敗しました！",
+    "private-thread-title": "プライベートチャット"
+  },
+  "privacy-mode": {
+    "enable-tooltip": "プライバシーモードを有効にする",
+    "disable-tooltip": "プライバシーモードを無効にする",
+    "cannot-toggle-tooltip": "セッション開始後はプライバシーモードを切り替えできません",
+    "cannot-toggle": {
+      "title": "プライバシーモードを切り替えできません",
+      "description": "プライバシーモードはセッション開始前のみ変更できます"
+    },
+    "enabled": {
+      "title": "プライバシーモードが有効になりました",
+      "description": "このセッションは保存または同期されません"
+    },
+    "disabled": {
+      "title": "プライバシーモードが無効になりました",
+      "description": "このセッションは正常に保存されます"
+    },
+    "error": {
+      "title": "プライバシーモードエラー",
+      "description": "プライバシーモードの切り替えに失敗しました"
+    },
+    "confirm-switch": {
+      "message": "{{action}}しようとしています。これによりプライベートセッションの内容が破棄されます。続行しますか？"
+    },
+    "confirm-dialog": {
+      "title": "プライバシーモードアクションの確認",
+      "cancel": "キャンセル",
+      "confirm": "続行"
+    }
   },
   "thread-menu": {
     "actions": {
@@ -343,7 +485,7 @@
       "save-success": "メッセージが正常に更新されました",
       "save-error": "メッセージの更新に失敗しました"
     },
-    "generate-failed": "生成に失敗しました",
+    "generate-failed": "世代が失敗しました、もう一度やり直してください...",
     "delete-success": "メッセージが正常に削除されました",
     "delete-error": "メッセージの削除に失敗しました",
     "context-menu": {
@@ -359,7 +501,7 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "教えてください、あなたは何を考えていますか？"
+    "hello-world": "やあ、僕と一緒に世界を探検する準備はできたかい？"
   },
   "attachment": {
     "file-too-large": "ファイルサイズは10MBを超えることはできません"
@@ -367,5 +509,9 @@
   "artifacts": {
     "preview": "プレビュー",
     "code": "コード"
+  },
+  "shortcuts": {
+    "tab-not-exist": "タブ {{tabNumber}} は存在しません",
+    "tab-switch-error": "タブ {{tabNumber}} への切り替えに失敗しました"
   }
 }

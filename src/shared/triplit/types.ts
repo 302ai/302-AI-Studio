@@ -38,7 +38,7 @@ export type UpdateAttachmentData = Partial<Omit<Attachment, "id">>;
 export type Ui = Entity<Schema, "ui">;
 export type Theme = "light" | "dark" | "system";
 export type Language = "zh" | "en" | "ja";
-export type SearchService = "search1api" | "tavily" | "exa" | "bochaai";
+export type SearchServices = "search1api" | "tavily" | "exa" | "bochaai";
 
 // * Settings
 export type Settings = Entity<Schema, "settings">;
@@ -62,5 +62,31 @@ export type ShortcutAction =
   | "close-other-tabs"
   | "delete-current-thread"
   | "open-settings"
-  | "toggle-sidebar";
+  | "toggle-sidebar"
+  // | "quick-navigation"
+  // | "command-palette"
+  | "stop-generation"
+  | "new-tab"
+  //  | "new-session"
+  | "regenerate-response"
+  | "search"
+  | "create-branch"
+  | "restore-last-tab"
+  | "screenshot"
+  | "next-tab"
+  | "previous-tab"
+  | "toggle-model-panel"
+  | "toggle-incognito-mode"
+  | "branch-and-send"
+  // Tab navigation (1-9)
+  | "switch-to-tab-1"
+  | "switch-to-tab-2"
+  | "switch-to-tab-3"
+  | "switch-to-tab-4"
+  | "switch-to-tab-5"
+  | "switch-to-tab-6"
+  | "switch-to-tab-7"
+  | "switch-to-tab-8"
+  | "switch-to-tab-9";
+
 export type ShortcutScope = "global" | "app";

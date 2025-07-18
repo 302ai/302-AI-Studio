@@ -5,7 +5,7 @@ import {
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
 import logger from "@shared/logger/main-logger";
-import type { SearchService } from "@shared/triplit/types";
+import type { Language, SearchServices, Theme } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type {
   SettingsDbService,
@@ -29,7 +29,7 @@ export class SettingsService {
     });
   }
 
-  async _setSearchService(searchService: SearchService) {
+  async _setSearchService(searchService: SearchServices) {
     try {
       await this.settingsDbService.setSearchService(searchService);
     } catch (error) {
@@ -49,6 +49,31 @@ export class SettingsService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setEnableDefaultPrivacyMode(
+    _event: Electron.IpcMainEvent,
+    enable: boolean,
+  ) {
+    try {
+      await this.settingsDbService.setEnableDefaultPrivacyMode(enable);
+    } catch (error) {
+      logger.error("SettingsService:setEnableDefaultPrivacyMode error", {
+        error,
+      });
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setEnablePrivate(enable: boolean) {
+    try {
+      await this.settingsDbService.setEnablePrivate(!!enable);
+    } catch (error) {
+      logger.error("SettingsService:setEnablePrivate error", { error });
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setEnableReason(_event: Electron.IpcMainEvent, enable: boolean) {
     try {
       await this.settingsDbService.setEnableReason(enable);
@@ -61,7 +86,7 @@ export class SettingsService {
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async setSearchService(
     _event: Electron.IpcMainEvent,
-    searchService: SearchService,
+    searchService: SearchServices,
   ) {
     try {
       await this.settingsDbService.setSearchService(searchService);
@@ -108,7 +133,7 @@ export class SettingsService {
     }
   }
 
-  async getLanguage(): Promise<"zh" | "en" | "ja"> {
+  async getLanguage(): Promise<Language> {
     try {
       return await this.settingsDbService.getLanguage();
     } catch (error) {
@@ -117,7 +142,7 @@ export class SettingsService {
     }
   }
 
-  async setLanguage(language: "zh" | "en" | "ja"): Promise<void> {
+  async setLanguage(language: Language): Promise<void> {
     try {
       await this.settingsDbService.setLanguage(language);
     } catch (error) {
@@ -126,11 +151,41 @@ export class SettingsService {
     }
   }
 
-  async setTheme(theme: "light" | "dark" | "system"): Promise<void> {
+  async setTheme(theme: Theme): Promise<void> {
     try {
       await this.settingsDbService.setTheme(theme);
     } catch (error) {
       logger.error("SettingsService:setTheme error", { error });
+      throw error;
+    }
+  }
+
+  async setAutoUpdate(autoUpdate: boolean): Promise<void> {
+    try {
+      await this.settingsDbService.setAutoUpdate(autoUpdate);
+    } catch (error) {
+      logger.error("SettingsService:setAutoUpdate error", { error });
+      throw error;
+    }
+  }
+
+  async getAutoUpdate(): Promise<boolean> {
+    return await this.settingsDbService.getAutoUpdate();
+  }
+
+  async getFeedUrl(): Promise<string> {
+    return await this.settingsDbService.getFeedUrl();
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setDisplayAppStore(
+    _event: Electron.IpcMainEvent,
+    displayAppStore: boolean,
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setDisplayAppStore(displayAppStore);
+    } catch (error) {
+      logger.error("SettingsService:setDisplayAppStore error", { error });
       throw error;
     }
   }

@@ -1,6 +1,6 @@
 import { triplitClient } from "@renderer/client";
-import type { Provider } from "@shared/triplit/types";
 import logger from "@shared/logger/renderer-logger";
+import type { Provider } from "@shared/triplit/types";
 import { useQuery } from "@triplit/react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -15,7 +15,7 @@ export function useActiveProvider() {
   const { results: uiResults } = useQuery(triplitClient, uiQuery);
 
   // Subscribe to providers changes
-  const providersQuery = triplitClient.query("providers");
+  const providersQuery = triplitClient.query("providers").Order("order", "ASC");
   const { results: providers } = useQuery(triplitClient, providersQuery);
 
   // Get active provider ID from UI state
@@ -23,13 +23,26 @@ export function useActiveProvider() {
 
   // Update selectedProvider when activeProviderId changes
   useEffect(() => {
-    if (!activeProviderId || !providers) {
+    if (!providers || providers.length === 0) {
       setSelectedProviderState(null);
       return;
     }
 
-    const activeProvider = providers.find((p) => p.id === activeProviderId);
-    setSelectedProviderState(activeProvider || null);
+    if (activeProviderId) {
+      const activeProvider = providers.find((p) => p.id === activeProviderId);
+      if (activeProvider) {
+        setSelectedProviderState(activeProvider);
+        return;
+      }
+    }
+
+    const firstProvider = providers[0];
+    if (firstProvider) {
+      setSelectedProviderState(firstProvider);
+      uiService.updateActiveProviderId(firstProvider.id);
+    } else {
+      setSelectedProviderState(null);
+    }
   }, [activeProviderId, providers]);
 
   const setSelectedProvider = useCallback(async (provider: Provider | null) => {

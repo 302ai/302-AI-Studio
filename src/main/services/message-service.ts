@@ -4,12 +4,12 @@ import {
   ServiceRegister,
 } from "@main/shared/reflect";
 import { TYPES } from "@main/shared/types";
+import logger from "@shared/logger/main-logger";
 import type {
   CreateMessageData,
   Message,
   UpdateMessageData,
 } from "@shared/triplit/types";
-import logger from "@shared/logger/main-logger";
 import { inject, injectable } from "inversify";
 import type { MessageDbService } from "./db-service/message-db-service";
 import { EventNames, sendToThread } from "./event-service";

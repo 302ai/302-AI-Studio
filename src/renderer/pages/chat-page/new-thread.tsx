@@ -12,7 +12,7 @@ export function NewThread() {
       <BlurText
         text={t("hello-world")}
         animateBy="letters"
-        className="text-4xl"
+        className="max-w-[720px] justify-center text-[34px]"
         delay={50}
       />
       <motion.div
@@ -21,7 +21,7 @@ export function NewThread() {
           duration: 0.3,
           ease: "easeInOut",
         }}
-        className="w-full max-w-[800px]"
+        className="mx-auto w-full max-w-[720px]"
       >
         <ChatInput />
       </motion.div>

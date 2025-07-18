@@ -18,6 +18,7 @@ export const tabsSchema = {
       nullable: true,
     }),
     order: S.Number({ default: 0 }),
+    isPrivate: S.Boolean({ default: false }),
   }),
   relationships: {
     threads: S.RelationById("threads", "$threadId"),

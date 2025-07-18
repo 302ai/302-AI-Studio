@@ -1,5 +1,6 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type { StreamChatParams } from "@main/services/provider-service/base-provider-service";
+import type { UpdaterStatus } from "@main/services/updater-service";
 import type {
   Attachment,
   CreateAttachmentData,
@@ -119,6 +120,8 @@ declare global {
         clearActiveTabId: () => Promise<void>;
         updateActiveTabHistory: (tabId: string) => Promise<void>;
         updateActiveTabId: (tabId: string) => Promise<void>;
+        updateSidebarCollapsed: (collapsed: boolean) => Promise<void>;
+        getSidebarCollapsed: () => Promise<boolean>;
       };
       messageService: {
         insertMessage: (message: CreateMessageData) => Promise<Message>;
@@ -195,9 +198,12 @@ declare global {
       };
       settingsService: {
         setEnableWebSearch: (enable: boolean) => Promise<void>;
+        setEnableDefaultPrivacyMode: (enable: boolean) => Promise<void>;
+        setEnablePrivate: (enable: boolean) => Promise<void>;
         setEnableReason: (enable: boolean) => Promise<void>;
         setsearchService: (searchService: SearchService) => Promise<void>;
         updateSelectedModelId: (modelId: string) => Promise<void>;
+        setDisplayAppStore: (displayAppStore: boolean) => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;
@@ -225,6 +231,15 @@ declare global {
           updateData: UpdateModelData,
         ) => Promise<Model>;
         deleteModel: (modelId: string) => Promise<void>;
+        clearModel: (providerId: string) => Promise<void>;
+        collectModel: (modelId: string, collected: boolean) => Promise<void>;
+      };
+      updaterService: {
+        setAutoUpdate: (autoUpdate: boolean) => Promise<void>;
+        checkForUpdates: () => Promise<void>;
+        getStatus: () => Promise<UpdaterStatus>;
+        update: () => Promise<void>;
+        install: () => Promise<void>;
       };
     };
   }

@@ -21,7 +21,14 @@
     "lack-model": "请先选择一个模型！",
     "lack-provider": "缺少模型提供商！",
     "edit-message": "编辑消息",
-    "edit-message-only-save": "仅保存"
+    "edit-message-only-save": "仅保存",
+    "function_call": "工具",
+    "reasoning": "推理",
+    "vision": "照片",
+    "file": "文件",
+    "music": "音频",
+    "video": "视频",
+    "support": "支持"
   },
   "settings": {
     "about-settings": {
@@ -59,15 +66,35 @@
       "language": {
         "label": "语言"
       },
-      "name": "通用设置",
-      "search-provider": {
-        "label": "搜索提供商"
-      },
+      "name": "通用",
       "theme": {
         "dark": "深色",
         "label": "主题",
         "light": "浅色",
         "system": "系统"
+      },
+      "privacy-mode": {
+        "title": "隐私模式",
+        "description": "自动继承"
+      },
+      "version-update": {
+        "label": "版本更新",
+        "check-for-updates": "检查更新",
+        "switch": {
+          "label": "自动更新"
+        },
+        "version-info": "版本信息",
+        "update-available": "检测到新版本",
+        "update-now": "立刻更新",
+        "update-later": "稍后更新",
+        "checking": "检查中",
+        "no-update-available": "当前版本已经是最新版本",
+        "check-failed": "检查失败，请重新尝试",
+        "restart-to-update": "立即重启",
+        "downloading": "下载中",
+        "new-version-available": "新版本可用",
+        "update-downloaded": "新版本已准备就绪，请重启应用进行安装",
+        "new-version-downloaded": "新版本已就绪"
       }
     },
     "icon-tooltip": "打开设置",
@@ -80,14 +107,15 @@
         "search-placeholder": "搜索...",
         "fetch-models": "获取模型",
         "add-model": "添加模型",
+        "clear-models": "清空",
         "model-name": "模型名称",
         "model-capabilities": "模型能力",
+        "model-type": "模型类型",
         "actions": "操作"
       },
       "add-model-modal": {
         "title": "添加模型",
         "edit-title": "编辑模型",
-
         "model-id": {
           "label": "模型ID",
           "placeholder": "请输入模型ID",
@@ -102,7 +130,18 @@
         "capabilities": {
           "label": "能力",
           "reasoning": "推理",
-          "vision": "图像理解"
+          "vision": "图像理解",
+          "music": "音频理解",
+          "video": "视频理解",
+          "function_call": "工具使用"
+        },
+        "type": {
+          "label": "模型类型",
+          "language": "语言",
+          "image-generation": "图像生成",
+          "tts": "TTS",
+          "embedding": "Embedding",
+          "rerank": "Rerank"
         },
         "actions": {
           "cancel": "取消",
@@ -115,10 +154,14 @@
           "delete-success-message": "删除成功",
           "delete-title": "删除模型",
           "delete-description": "确定要删除该模型吗？",
-          "delete-confirm-text": "删除"
+          "delete-confirm-text": "删除",
+          "clear-title": "清空所有模型",
+          "clear-description": "确定要清空该提供商的所有模型吗？此操作无法撤销。",
+          "clear-confirm-text": "清空所有",
+          "clear-success-message": "所有模型已清空",
+          "clear-error-message": "清空模型失败"
         }
       },
-
       "model-provider": {
         "add-provider": "添加模型",
         "custom-provider": "自定义提供商",
@@ -188,7 +231,7 @@
         },
         "star": "收藏"
       },
-      "name": "模型设置",
+      "name": "模型",
       "loading": "加载中..."
     },
     "tab-title": "设置",
@@ -206,7 +249,32 @@
         "close-other-tabs": "关闭其他标签页",
         "delete-current-thread": "删除当前会话",
         "open-settings": "打开设置",
-        "toggle-sidebar": "切换侧边栏"
+        "toggle-sidebar": "切换侧边栏",
+        "quick-navigation": "快速导航",
+        "command-palette": "命令面板",
+        "stop-generation": "停止生成",
+        "new-tab": "新建标签页",
+        "new-session": "新建会话",
+        "regenerate-response": "重新生成回复",
+        "search": "搜索",
+        "create-branch": "创建分支",
+        "close-all-tabs": "关闭全部标签页",
+        "restore-last-tab": "恢复上一个标签页",
+        "screenshot": "截图",
+        "next-tab": "下一个标签页",
+        "previous-tab": "上一个标签页",
+        "toggle-model-panel": "切换模型面板",
+        "toggle-incognito-mode": "切换无痕模式",
+        "branch-and-send": "创建分支并发送",
+        "switch-to-tab-1": "切换到标签页1",
+        "switch-to-tab-2": "切换到标签页2",
+        "switch-to-tab-3": "切换到标签页3",
+        "switch-to-tab-4": "切换到标签页4",
+        "switch-to-tab-5": "切换到标签页5",
+        "switch-to-tab-6": "切换到标签页6",
+        "switch-to-tab-7": "切换到标签页7",
+        "switch-to-tab-8": "切换到标签页8",
+        "switch-to-tab-9": "切换到标签页9"
       },
       "hints": {
         "send-message": "选择在聊天中发送消息的方式",
@@ -216,7 +284,32 @@
         "close-other-tabs": "关闭除当前标签页外的所有标签页",
         "delete-current-thread": "删除当前对话线程",
         "open-settings": "打开设置页面",
-        "toggle-sidebar": "显示或隐藏侧边栏"
+        "toggle-sidebar": "显示或隐藏侧边栏",
+        "quick-navigation": "快速导航到应用的不同部分",
+        "command-palette": "打开命令面板进行快速操作",
+        "stop-generation": "停止当前AI回复生成",
+        "new-tab": "创建新的聊天标签页",
+        "new-session": "在当前标签页开始新会话",
+        "regenerate-response": "重新生成最后的AI回复",
+        "search": "在应用内搜索",
+        "create-branch": "从当前对话创建新分支",
+        "close-all-tabs": "关闭所有打开的标签页",
+        "restore-last-tab": "恢复最后关闭的标签页",
+        "screenshot": "截图（全局快捷键）",
+        "next-tab": "切换到下一个标签页",
+        "previous-tab": "切换到上一个标签页",
+        "toggle-model-panel": "显示或隐藏模型选择面板",
+        "toggle-incognito-mode": "切换无痕模式进行私密对话",
+        "branch-and-send": "同时创建分支并发送消息",
+        "switch-to-tab-1": "切换到标签页1",
+        "switch-to-tab-2": "切换到标签页2",
+        "switch-to-tab-3": "切换到标签页3",
+        "switch-to-tab-4": "切换到标签页4",
+        "switch-to-tab-5": "切换到标签页5",
+        "switch-to-tab-6": "切换到标签页6",
+        "switch-to-tab-7": "切换到标签页7",
+        "switch-to-tab-8": "切换到标签页8",
+        "switch-to-tab-9": "切换到标签页9"
       },
       "description": {
         "title": "键盘快捷键说明",
@@ -227,7 +320,12 @@
         "press-keys": "按下按键...",
         "cancel": "取消",
         "reset": "重置",
-        "clear": "清空"
+        "clear": "清空",
+        "no-shortcut": "无快捷键",
+        "error": {
+          "modifier-required": "快捷键必须包含至少一个辅助按键（Ctrl/Cmd/Alt/Shift）",
+          "shortcut-conflict": "该快捷键已存在，请重新录制"
+        }
       },
       "scope": {
         "label": "作用域",
@@ -235,7 +333,19 @@
         "global": "全局"
       }
     },
-    "text": "设置"
+    "text": "设置",
+    "preference-settings": {
+      "name": "偏好",
+      "search-provider": {
+        "label": "默认搜索服务"
+      },
+      "display-app-store": {
+        "label": "302.AI 应用超市",
+        "switch": {
+          "label": "在首页显示应用超市"
+        }
+      }
+    }
   },
   "sidebar": {
     "close-sidebar": {
@@ -285,9 +395,39 @@
     "lack-model": "请先选择一个模型！",
     "lack-provider": "缺少模型提供商！",
     "selected-model-not-found": "请先选择一个模型！",
-    "provider-not-found-for-selected-model": "模型供应商设置错误！",
+    "provider-not-found-for-selected-model": "模型提供商设置错误！",
     "message-not-found": "此消息不存在！",
-    "failed-to-generate-ai-response": "生成AI响应失败！"
+    "failed-to-generate-ai-response": "生成AI回复失败！",
+    "private-thread-title": "私密聊天"
+  },
+  "privacy-mode": {
+    "enable-tooltip": "启用隐私模式",
+    "disable-tooltip": "禁用隐私模式",
+    "cannot-toggle-tooltip": "会话开始后无法切换隐私模式",
+    "cannot-toggle": {
+      "title": "无法切换隐私模式",
+      "description": "隐私模式只能在会话开始前更改"
+    },
+    "enabled": {
+      "title": "隐私模式已启用",
+      "description": "此会话不会被保存或同步"
+    },
+    "disabled": {
+      "title": "隐私模式已禁用",
+      "description": "此会话将正常保存"
+    },
+    "error": {
+      "title": "隐私模式错误",
+      "description": "切换隐私模式失败"
+    },
+    "confirm-switch": {
+      "message": "您即将{{action}}。这将丢弃您的私密会话内容。是否继续？"
+    },
+    "confirm-dialog": {
+      "title": "确认隐私模式操作",
+      "cancel": "取消",
+      "confirm": "继续"
+    }
   },
   "thread-menu": {
     "actions": {
@@ -333,7 +473,7 @@
       "save-success": "消息更新成功",
       "save-error": "消息更新失败"
     },
-    "generate-failed": "生成失败",
+    "generate-failed": "生成失败，请重新尝试...",
     "delete-success": "消息删除成功",
     "delete-error": "消息删除失败",
     "context-menu": {
@@ -361,7 +501,7 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "告诉我，你在思考些什么？"
+    "hello-world": "嗨，准备好和我一起探索世界了吗?"
   },
   "attachment": {
     "file-too-large": "文件大小不能超过10MB"
@@ -369,5 +509,9 @@
   "artifacts": {
     "preview": "预览",
     "code": "代码"
+  },
+  "shortcuts": {
+    "tab-not-exist": "标签页 {{tabNumber}} 不存在",
+    "tab-switch-error": "切换到标签页 {{tabNumber}} 失败"
   }
 }

@@ -2,13 +2,14 @@ import type { DropResult } from "@hello-pangea/dnd";
 import { triplitClient } from "@renderer/client";
 import logger from "@shared/logger/renderer-logger";
 import type { Tab } from "@shared/triplit/types";
-import { useQuery } from "@triplit/react";
+import { useQuery, useQueryOne } from "@triplit/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
 import { useActiveTab } from "./use-active-tab";
 import { useActiveThread } from "./use-active-thread";
+import { usePrivacyMode } from "./use-privacy-mode";
 
 const { tabService } = window.service;
 
@@ -16,9 +17,13 @@ export function useTabBar() {
   const { t } = useTranslation();
   const { activeTabId, activeTab, setActiveTabId } = useActiveTab();
   const { setActiveThreadId } = useActiveThread();
+  const { privacyState, inheritPrivacyState } = usePrivacyMode();
 
   const tabsQuery = triplitClient.query("tabs").Order("order", "ASC");
   const { results: alltabs } = useQuery(triplitClient, tabsQuery);
+
+  const settingsQuery = triplitClient.query("settings");
+  const { result: settings } = useQueryOne(triplitClient, settingsQuery);
 
   const navigate = useNavigate();
 
@@ -36,20 +41,35 @@ export function useTabBar() {
         ];
         await Promise.all(promises);
 
+        emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
+
         return;
       }
     }
 
-    const newTab = await tabService.insertTab({
-      title:
-        type === "thread"
-          ? t("thread.new-thread-title")
-          : t("settings.tab-title"),
-      type,
-      path: type === "thread" ? "/" : "/settings/general-settings",
-    });
-    const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
-    await Promise.all(promises);
+    const shouldUseDefaultPrivacy =
+      type === "thread" &&
+      privacyState.isPrivate &&
+      settings?.defaultPrivacyMode;
+
+    if (shouldUseDefaultPrivacy) {
+      await inheritPrivacyState();
+    } else {
+      const newTab = await tabService.insertTab({
+        title:
+          type === "thread"
+            ? t("thread.new-thread-title")
+            : t("settings.tab-title"),
+        type,
+        path: type === "thread" ? "/" : "/settings/general-settings",
+        isPrivate: false,
+      });
+      const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+      await Promise.all(promises);
+      logger.info("Tab created", { newTab });
+    }
+
+    emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
   };
 
   const activateTabId = async (id: string) => {
@@ -105,7 +125,6 @@ export function useTabBar() {
    * * This effect is used to navigate to the active tab
    */
   useEffect(() => {
-    console.log("Active tab changed", { activeTab });
     if (activeTab) {
       navigate(activeTab?.path || "/");
     }
