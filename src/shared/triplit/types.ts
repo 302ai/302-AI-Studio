@@ -92,6 +92,6 @@ export type ShortcutAction =
 export type ShortcutScope = "global" | "app";
 
 // * Toolbox
-export type Toolbox = Entity<Schema, "toolbox">;
-export type CreateToolboxData = Omit<Toolbox, "id" | "createdAt">;
-export type UpdateToolboxData = Partial<Omit<Toolbox, "id">>;
+export type Tool = Entity<Schema, "toolbox">;
+export type CreateToolData = Omit<Tool, "id" | "createdAt">;
+export type UpdateToolData = Partial<Omit<Tool, "id">>;

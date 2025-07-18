@@ -456,7 +456,8 @@
     "hello-world": "やあ、僕と一緒に世界を探検する準備はできたかい？",
     "toolbox-label": "AIツール",
     "toolbox-button": "他のツール",
-    "toolbox-title": "AIツール"
+    "toolbox-title": "AIツール",
+    "toolbox-search-placeholder": "検索"
   },
   "attachment": {
     "file-too-large": "ファイルサイズは10MBを超えることはできません"

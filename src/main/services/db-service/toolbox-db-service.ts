@@ -1,6 +1,6 @@
 import { triplitClient } from "@main/triplit/client";
 import logger from "@shared/logger/main-logger";
-import type { CreateToolboxData } from "@shared/triplit/types";
+import type { CreateToolData } from "@shared/triplit/types";
 import { injectable } from "inversify";
 import { BaseDbService } from "./base-db-service";
 
@@ -10,7 +10,7 @@ export class ToolboxDbService extends BaseDbService {
     super("toolbox");
   }
 
-  async insertTools(tools: CreateToolboxData[]) {
+  async insertTools(tools: CreateToolData[]) {
     try {
       // * Delete all tools
       await this.clearToolbox();

@@ -455,7 +455,8 @@
     "hello-world": "Hi, are you ready to explore the world with me?",
     "toolbox-label": "AI Tools",
     "toolbox-button": "More Tools",
-    "toolbox-title": "AI Tools"
+    "toolbox-title": "AI Tools",
+    "toolbox-search-placeholder": "Search"
   },
   "attachment": {
     "file-too-large": "File size cannot exceed 10MB"

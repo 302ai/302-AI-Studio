@@ -60,7 +60,7 @@ export async function fetch302AIToolList(lang: Language) {
   const langMap: Record<Language, string> = {
     zh: "cn",
     en: "en",
-    ja: "ja",
+    ja: "jp",
   };
 
   const { data, error } = await betterFetch<Ai302ToolsList>(
@@ -79,4 +79,36 @@ export async function fetch302AIToolList(lang: Language) {
   }
 
   return data.data;
+}
+
+const ai302ToolDetailSchema = z.object({
+  data: z.object({
+    app_box_detail: z.array(
+      z.object({
+        api_key: z.string(),
+        url: z.string(),
+      }),
+    ),
+  }),
+});
+
+type Ai302ToolDetail = z.infer<typeof ai302ToolDetailSchema>;
+
+export async function fetch302AIToolDetail(uidBase64: string) {
+  const { data, error } = await betterFetch<Ai302ToolDetail>(
+    `https://dash-api.302.ai/gpt/api/v1/code`,
+    {
+      method: "GET",
+      headers: {
+        uid: uidBase64,
+      },
+    },
+  );
+
+  if (error) {
+    const errorMessage = extractErrorMessage(error);
+    throw new Error(`Failed to fetch 302.AI tool detail: ${errorMessage}`);
+  }
+
+  return data;
 }
