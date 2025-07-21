@@ -83,9 +83,10 @@ export async function fetch302AIToolList(lang: Language) {
 
 const ai302ToolDetailSchema = z.object({
   data: z.object({
-    app_box_detail: z.array(
+    app_box_detail: z.record(
+      z.string(),
       z.object({
-        api_key: z.string(),
+        api_key: z.string().optional(),
         url: z.string(),
       }),
     ),

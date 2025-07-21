@@ -15,6 +15,7 @@ export type UpdateModelData = Partial<Omit<Model, "id">>;
 export type Tab = Entity<Schema, "tabs">;
 export type CreateTabData = Omit<Tab, "id" | "order">;
 export type UpdateTabData = Partial<Omit<Tab, "id">>;
+export type TabType = "thread" | "setting" | "302ai-tool";
 
 // * Threads
 export type Thread = Entity<Schema, "threads">;

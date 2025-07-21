@@ -197,4 +197,22 @@ export class ConfigDbService extends BaseDbService {
     const provider = await triplitClient.fetchById("providers", providerId);
     return provider || null;
   }
+
+  async get302AIProvider(): Promise<Provider> {
+    try {
+      const query = triplitClient
+        .query("providers")
+        .Where("apiType", "=", "302ai");
+      const provider = await triplitClient.fetchOne(query);
+
+      if (!provider) {
+        throw new Error("302AI provider not found");
+      }
+
+      return provider;
+    } catch (error) {
+      logger.error("ConfigDbService:get302AIProvider error", { error });
+      throw error;
+    }
+  }
 }

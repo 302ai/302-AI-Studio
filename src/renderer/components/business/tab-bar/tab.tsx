@@ -4,6 +4,7 @@ import { triplitClient } from "@renderer/client";
 import { ContextMenu } from "@renderer/components/ui/context-menu";
 import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
+import type { TabType } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
 import { CopyX, X } from "lucide-react";
 import { motion } from "motion/react";
@@ -19,7 +20,7 @@ interface TabProps {
   isActive: boolean;
   onClick: () => void;
   width: number;
-  type: "thread" | "setting";
+  type: TabType;
   isPrivate?: boolean;
 }
 const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;

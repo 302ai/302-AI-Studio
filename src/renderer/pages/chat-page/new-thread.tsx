@@ -38,16 +38,26 @@ export function NewThread() {
         </motion.div>
       </div>
 
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{
+          opacity: displayAppStore ? 1 : 0,
+          y: displayAppStore ? 0 : 20,
+        }}
+        transition={{
+          duration: 0.3,
+          delay: 0.3,
+          ease: "easeOut",
+        }}
         className={cn("flex w-full flex-col gap-2", {
-          hidden: !displayAppStore,
+          "pointer-events-none": !displayAppStore,
         })}
       >
         <Label>{t("toolbox-label")}</Label>
         <div className="flex w-full justify-end">
           <Toolbox />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
