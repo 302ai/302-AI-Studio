@@ -1,6 +1,7 @@
 import { triplitClient } from "@renderer/client";
 import { IconPicker } from "@renderer/components/business/icon-picker";
 import { ModelList } from "@renderer/components/business/model-list";
+import { Label } from "@renderer/components/ui/field";
 import { Link } from "@renderer/components/ui/link";
 import { Select } from "@renderer/components/ui/select";
 import { TextField } from "@renderer/components/ui/text-field";
@@ -272,38 +273,38 @@ export function ProviderModel() {
           {selectedProvider.custom && (
             <div className="flex items-start gap-4">
               <div className="flex flex-col gap-2">
-                <span className="font-medium text-fg text-sm">
+                <Label className="text-label-fg">
                   {t("add-provider-form.icon")}
-                </span>
+                </Label>
                 <IconPicker
                   value={formData.avatar}
                   onChange={handleIconChange}
                 />
               </div>
               <div className="flex flex-1 flex-col gap-2">
-                <span className="font-medium text-fg text-sm">
+                <Label className="text-label-fg">
                   {t("add-provider-form.name")}
-                </span>
+                </Label>
                 <TextField
                   value={formData.name}
                   placeholder={t("add-provider-form.name-placeholder")}
                   onChange={handleFieldChange("name")}
                   maxLength={100}
                   aria-label="Provider Name"
-                  className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
+                  className="bg-setting [&_[role=group]]:h-11"
                 />
               </div>
             </div>
           )}
 
           <div className="flex flex-col gap-y-2">
+            <Label className="text-label-fg">Base URL</Label>
             <TextField
-              label="Base URL"
               value={formData.baseUrl}
               placeholder={t("add-provider-form.placeholder-3")}
               onChange={handleFieldChange("baseUrl")}
               aria-label="Base URL"
-              className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
+              className="bg-setting [&_[role=group]]:h-11"
             />
             <span className="max-w-full overflow-hidden whitespace-normal break-all text-muted-fg text-xs">
               {`${t("add-provider-form.api-forward")}：${formData.baseUrl || ""}/chat/completions`}
@@ -311,15 +312,15 @@ export function ProviderModel() {
           </div>
 
           <div className="flex flex-col gap-2">
+            <Label className="text-label-fg">API Key</Label>
             <TextField
-              label="API Key"
               type="password"
               isRevealable
               value={formData.apiKey}
               placeholder={t("add-provider-form.placeholder-2")}
               onChange={handleFieldChange("apiKey")}
               aria-label="API Key"
-              className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-11 [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
+              className="bg-setting [&_[role=group]]:h-11"
             />
 
             {!selectedProvider.custom && (
@@ -334,8 +335,10 @@ export function ProviderModel() {
 
           {selectedProvider.custom && (
             <div className="flex flex-col gap-2">
+              <Label className="text-label-fg">
+                {t("add-provider-form.interface-type")}
+              </Label>
               <Select
-                label={t("add-provider-form.interface-type")}
                 placeholder={t("add-provider-form.interface-type-placeholder")}
                 selectedKey={formData.apiType || "openai"}
                 onSelectionChange={handleFieldChange("apiType")}
