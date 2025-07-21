@@ -297,7 +297,7 @@ export function ProviderModel() {
             </div>
           )}
 
-          <div className="flex flex-col gap-y-2">
+          <div className="flex flex-col gap-y-1">
             <Label className="text-label-fg">Base URL</Label>
             <TextField
               value={formData.baseUrl}
@@ -311,7 +311,7 @@ export function ProviderModel() {
             </span>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-y-1">
             <Label className="text-label-fg">API Key</Label>
             <TextField
               type="password"
