@@ -291,7 +291,7 @@ export function ProviderModel() {
                   onChange={handleFieldChange("name")}
                   maxLength={100}
                   aria-label="Provider Name"
-                  className="bg-setting [&_[role=group]]:h-11"
+                  className="rounded-[10px] bg-setting [&_[role=group]]:h-11"
                 />
               </div>
             </div>
@@ -304,7 +304,7 @@ export function ProviderModel() {
               placeholder={t("add-provider-form.placeholder-3")}
               onChange={handleFieldChange("baseUrl")}
               aria-label="Base URL"
-              className="bg-setting [&_[role=group]]:h-11"
+              className="rounded-[10px] bg-setting [&_[role=group]]:h-11"
             />
             <span className="max-w-full overflow-hidden whitespace-normal break-all text-muted-fg text-xs">
               {`${t("add-provider-form.api-forward")}：${formData.baseUrl || ""}/chat/completions`}
@@ -320,7 +320,7 @@ export function ProviderModel() {
               placeholder={t("add-provider-form.placeholder-2")}
               onChange={handleFieldChange("apiKey")}
               aria-label="API Key"
-              className="bg-setting [&_[role=group]]:h-11"
+              className="rounded-[10px] bg-setting [&_[role=group]]:h-11"
             />
 
             {!selectedProvider.custom && (
