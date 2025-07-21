@@ -22,14 +22,14 @@ export function HomePageTitleBar() {
           intent="plain"
           size="sm"
           className={cn(
-            "ml-auto p-2 transition-all duration-200",
+            "!p-0 ml-auto size-8 transition-all duration-200",
             privacyState.isPrivate
               ? "bg-primary text-primary-fg hover:bg-primary/90 hover:text-primary-fg/90"
               : "text-muted-foreground hover:text-foreground",
           )}
           onPress={handlePrivacyToggle}
         >
-          <Ghost className="h-5 w-5" />
+          <Ghost size={18} />
         </Button>
       )}
     </div>
