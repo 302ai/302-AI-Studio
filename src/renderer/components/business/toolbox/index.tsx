@@ -1,9 +1,8 @@
-import { triplitClient } from "@renderer/client";
 import { buttonStyles } from "@renderer/components/ui/button";
 import { Label } from "@renderer/components/ui/field";
 import { SearchField } from "@renderer/components/ui/search-field";
 import { Sheet } from "@renderer/components/ui/sheet";
-import { useQuery } from "@triplit/react";
+import { useTriplit } from "@renderer/hooks/use-triplit";
 import { LayoutGrid } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LdrsLoader } from "../ldrs-loader";
@@ -14,8 +13,7 @@ export function Toolbox() {
     keyPrefix: "new-thread",
   });
 
-  const toolboxQuery = triplitClient.query("toolbox");
-  const { results, fetching } = useQuery(triplitClient, toolboxQuery);
+  const { toolbox, toolboxFetching } = useTriplit();
 
   return (
     <Sheet>
@@ -42,13 +40,13 @@ export function Toolbox() {
           />
         </Sheet.Header>
         <Sheet.Body className="flex flex-col gap-y-2 py-3 pr-2 pl-4">
-          {fetching ? (
+          {toolboxFetching ? (
             <div className="flex h-full items-center justify-center">
               <LdrsLoader type="waveform" size={24} />
             </div>
           ) : (
             <div className="flex flex-col gap-y-2">
-              {results?.map((tool) => (
+              {toolbox?.map((tool) => (
                 <ToolCard key={tool.id} tool={tool} />
               ))}
             </div>

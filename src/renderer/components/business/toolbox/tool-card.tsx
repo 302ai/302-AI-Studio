@@ -18,7 +18,9 @@ export function ToolCard({ tool }: ToolCardProps) {
       <div>icon</div>
       <div className="flex flex-col">
         <div className="text-fg">{tool.name}</div>
-        <div className="line-clamp-1 text-muted-fg">{tool.description}</div>
+        <div className="line-clamp-1 text-muted-fg" title={tool.description}>
+          {tool.description}
+        </div>
       </div>
     </Button>
   );

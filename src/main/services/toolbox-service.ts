@@ -3,7 +3,11 @@ import { TYPES } from "@main/shared/types";
 import logger from "@shared/logger/main-logger";
 import type { CreateToolData, Language } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
-import { ServiceRegister } from "../shared/reflect";
+import {
+  CommunicationWay,
+  ServiceHandler,
+  ServiceRegister,
+} from "../shared/reflect";
 import type { ToolboxDbService } from "./db-service/toolbox-db-service";
 import { EventNames, emitter } from "./event-service";
 import type { SettingsService } from "./settings-service";
@@ -65,11 +69,20 @@ export class ToolboxService {
     }
   }
 
-  async getToolUrl(toolId: number) {
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async getToolUrl(
+    _event: Electron.IpcMainEvent,
+    toolId: number,
+  ): Promise<string> {
     if (!this.apiKey) {
       throw new Error("ToolboxService:getToolUrl error: apiKey is not set");
     }
 
-    return this.toolDetailMap.get(toolId);
+    const url = this.toolDetailMap.get(toolId);
+    if (!url) {
+      throw new Error("ToolboxService:getToolUrl error: url is not set");
+    }
+
+    return url;
   }
 }
