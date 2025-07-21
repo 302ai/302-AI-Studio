@@ -72,7 +72,7 @@ export function ShortcutsSettings() {
       "next-tab": t("hints.next-tab"),
       "previous-tab": t("hints.previous-tab"),
       "toggle-model-panel": t("hints.toggle-model-panel"),
-      // "toggle-incognito-mode": t("hints.toggle-incognito-mode"),
+      "toggle-incognito-mode": t("hints.toggle-incognito-mode"),
       "branch-and-send": t("hints.branch-and-send"),
       "switch-to-tab-1": t("hints.switch-to-tab-1"),
       "switch-to-tab-2": t("hints.switch-to-tab-2"),

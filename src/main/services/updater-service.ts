@@ -44,7 +44,7 @@ export class UpdaterService {
     const autoUpdate = await this.settingsService.getAutoUpdate();
     const feedUrl = await this.settingsService.getFeedUrl();
 
-    this.autoUpdater.autoDownload = autoUpdate;
+    this.autoUpdater.autoDownload = isDev ? false : autoUpdate;
     // * Avoid auto install on app quit in dev mode
     this.autoUpdater.autoInstallOnAppQuit = isDev ? false : autoUpdate;
     this.autoUpdater.setFeedURL(feedUrl);

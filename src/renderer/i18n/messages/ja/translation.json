@@ -26,6 +26,8 @@
     "reasoning": "推論",
     "vision": "写真",
     "file": "ファイル",
+    "music": "音楽",
+    "video": "ビデオ",
     "support": "サポート"
   },
   "settings": {
@@ -71,6 +73,10 @@
         "light": "ライト",
         "system": "システム"
       },
+      "privacy-mode": {
+        "title": "プライバシーモード",
+        "description": "自動継承"
+      },
       "version-update": {
         "label": "バージョンの更新",
         "check-for-updates": "更新を確認",
@@ -104,6 +110,7 @@
         "clear-models": "クリア",
         "model-name": "モデル名",
         "model-capabilities": "モデル機能",
+        "model-type": "モデルタイプ",
         "actions": "操作"
       },
       "add-model-modal": {
@@ -123,7 +130,18 @@
         "capabilities": {
           "label": "機能",
           "reasoning": "推論",
-          "vision": "画像理解"
+          "vision": "画像理解",
+          "music": "音楽理解",
+          "video": "ビデオ理解",
+          "function_call": "ツール使用"
+        },
+        "type": {
+          "label": "モデルタイプ",
+          "language": "言語",
+          "image-generation": "画像生成",
+          "tts": "TTS",
+          "embedding": "Embedding",
+          "rerank": "Rerank"
         },
         "actions": {
           "cancel": "キャンセル",
@@ -377,9 +395,39 @@
     "lack-model": "最初にモデルを選択してください！",
     "lack-provider": "モデルプロバイダーがありません！",
     "selected-model-not-found": "最初にモデルを選択してください！",
-    "provider-not-found-for-selected-model": "モデルベンダーのセットアップエラー！",
+    "provider-not-found-for-selected-model": "モデルプロバイダー設定エラー！",
     "message-not-found": "このメッセージは存在しません！",
-    "failed-to-generate-ai-response": "AI応答の生成に失敗しました！"
+    "failed-to-generate-ai-response": "AI応答の生成に失敗しました！",
+    "private-thread-title": "プライベートチャット"
+  },
+  "privacy-mode": {
+    "enable-tooltip": "プライバシーモードを有効にする",
+    "disable-tooltip": "プライバシーモードを無効にする",
+    "cannot-toggle-tooltip": "セッション開始後はプライバシーモードを切り替えできません",
+    "cannot-toggle": {
+      "title": "プライバシーモードを切り替えできません",
+      "description": "プライバシーモードはセッション開始前のみ変更できます"
+    },
+    "enabled": {
+      "title": "プライバシーモードが有効になりました",
+      "description": "このセッションは保存または同期されません"
+    },
+    "disabled": {
+      "title": "プライバシーモードが無効になりました",
+      "description": "このセッションは正常に保存されます"
+    },
+    "error": {
+      "title": "プライバシーモードエラー",
+      "description": "プライバシーモードの切り替えに失敗しました"
+    },
+    "confirm-switch": {
+      "message": "{{action}}しようとしています。これによりプライベートセッションの内容が破棄されます。続行しますか？"
+    },
+    "confirm-dialog": {
+      "title": "プライバシーモードアクションの確認",
+      "cancel": "キャンセル",
+      "confirm": "続行"
+    }
   },
   "thread-menu": {
     "actions": {

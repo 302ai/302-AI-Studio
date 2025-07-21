@@ -7,6 +7,10 @@ export const modelsSchema = {
     remark: S.String({ default: "" }),
     providerId: S.String(),
     capabilities: S.Set(S.String()),
+    type: S.String({
+      enum: ["language", "image-generation", "tts", "embedding", "rerank"],
+      default: "language",
+    }),
     custom: S.Boolean({ default: false }),
     enabled: S.Boolean({ default: true }),
     collected: S.Boolean({ default: false }),

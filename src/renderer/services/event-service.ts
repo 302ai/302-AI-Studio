@@ -36,6 +36,12 @@ export enum EventNames {
 
   // * Window events
   WINDOW_MAC_FULLSCREEN_STATE_UPDATE = "window:mac-maximized-state-update",
+
+  // * Privacy mode events
+  PRIVACY_MODE_TOGGLE = "privacy-mode:toggle",
+  PRIVACY_MODE_CONFIRM = "privacy-mode:confirm",
+  PRIVACY_MODE_CANCEL = "privacy-mode:cancel",
+  PRIVACY_MODE_CONFIRM_DIALOG = "privacy-mode:confirm-dialog",
 }
 
 type Events = {
@@ -77,6 +83,17 @@ type Events = {
   };
   [EventNames.WINDOW_MAC_FULLSCREEN_STATE_UPDATE]: {
     isMaximized: boolean;
+  };
+  [EventNames.PRIVACY_MODE_TOGGLE]: {
+    isPrivate: boolean;
+    tabId?: string;
+    threadId?: string;
+  };
+  [EventNames.PRIVACY_MODE_CONFIRM]: null;
+  [EventNames.PRIVACY_MODE_CANCEL]: null;
+  [EventNames.PRIVACY_MODE_CONFIRM_DIALOG]: {
+    action: string;
+    message: string;
   };
 };
 

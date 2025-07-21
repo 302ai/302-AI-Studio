@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { EventNames, emitter } from "../services/event-service";
 import { useActiveThread } from "./use-active-thread";
+import { usePrivacyMode } from "./use-privacy-mode";
 
 type SidebarSection =
   | "collected"
@@ -25,9 +26,11 @@ const { threadService, uiService, tabService } = window.service;
 export function useThread() {
   const { t } = useTranslation();
   const { activeThreadId, setActiveThreadId } = useActiveThread();
+  const { confirmSwitchFromPrivate } = usePrivacyMode();
 
   const threadsQuery = triplitClient
     .query("threads")
+    .Where("isPrivate", "=", false)
     .Order("createdAt", "DESC");
   const { results: threadItems } = useQuery(triplitClient, threadsQuery);
   const threads = threadItems ?? [];
@@ -143,6 +146,13 @@ export function useThread() {
    * @param threadId The id of the thread to be clicked
    */
   const handleClickThread = async (threadId: string) => {
+    const canSwitch = await confirmSwitchFromPrivate(
+      "switch to another thread",
+    );
+    if (!canSwitch) {
+      return;
+    }
+
     await setActiveThreadId(threadId);
     emitter.emit(EventNames.THREAD_SELECT, { thread: threadMap[threadId] });
   };

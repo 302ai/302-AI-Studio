@@ -144,6 +144,7 @@ export const ModelSelect = ({
           title: t("tab-title"),
           type: "setting",
           path: "/settings/model-settings",
+          isPrivate: true,
         });
         await setActiveTabId(newTab.id);
       }

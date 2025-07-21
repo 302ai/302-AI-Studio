@@ -187,12 +187,12 @@ export const DEFAULT_SHORTCUTS: CreateShortcutData[] = [
     keys: new Set(["Ctrl", "M"]),
     scope: "app",
   },
-  // {
-  //   order: 42,
-  //   action: "toggle-incognito-mode",
-  //   keys: new Set(["Cmd", "E"]),
-  //   scope: "app",
-  // },
+  {
+    order: 42,
+    action: "toggle-incognito-mode",
+    keys: new Set(["Cmd", "E"]),
+    scope: "app",
+  },
 
   // System Actions
   {
@@ -248,7 +248,7 @@ export const SHORTCUT_MODES: Record<
   "next-tab": "display",
   "previous-tab": "display",
   "toggle-model-panel": "record",
-  // "toggle-incognito-mode": "record",
+  "toggle-incognito-mode": "record",
   "branch-and-send": "record",
   "switch-to-tab-1": "display",
   "switch-to-tab-2": "display",
@@ -299,7 +299,7 @@ export const SHORTCUT_OPTIONS: Record<ShortcutAction, ShortcutOption[]> = {
   "next-tab": [],
   "previous-tab": [],
   "toggle-model-panel": [],
-  // "toggle-incognito-mode": [],
+  "toggle-incognito-mode": [],
   "branch-and-send": [],
   // Tab navigation (1-9)
   "switch-to-tab-1": [],

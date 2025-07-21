@@ -10,6 +10,7 @@ import { useAttachments } from "./use-attachments";
 import { useChat } from "./use-chat";
 import { useGlobalShortcutHandler } from "./use-global-shortcut-handler";
 import { useMessageActions } from "./use-message-actions";
+import { usePrivacyMode } from "./use-privacy-mode";
 import { useTabBar } from "./use-tab-bar";
 import { useTabInput } from "./use-tab-input";
 import { useToolBar } from "./use-tool-bar";
@@ -31,6 +32,7 @@ export function useShortcutsHandlers() {
   } = useToolBar();
   const { handleCreateNewBranch } = useMessageActions();
   const { getAttachmentsByTabId } = useAttachments();
+  const { togglePrivacyMode, privacyState } = usePrivacyMode();
 
   const handleRefreshLatestMessage = useCallback(async () => {
     if (!activeThreadId) return;
@@ -257,6 +259,10 @@ export function useShortcutsHandlers() {
   useGlobalShortcutHandler("branch-and-send", () =>
     handleCreateNewBranchForLatestMessageWithInputAndAttachments(),
   );
+
+  useGlobalShortcutHandler("toggle-incognito-mode", () => {
+    if (privacyState.canToggle) togglePrivacyMode();
+  });
 
   return {
     handleCloseCurrentTab,

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
+import { usePrivacyMode } from "./use-privacy-mode";
 import { useToolBar } from "./use-tool-bar";
 
 const { tabService, messageService } = window.service;
@@ -14,6 +15,7 @@ export function useMessageActions() {
   const { t } = useTranslation("translation", { keyPrefix: "message" });
   const { createThread, selectedModelId } = useToolBar();
   const { setActiveTabId } = useActiveTab();
+  const { privacyState } = usePrivacyMode();
 
   const handleRefreshMessage = async (
     messageId: string,
@@ -39,6 +41,7 @@ export function useMessageActions() {
         title: t("context-menu.new-thread-title"),
         modelId: selectedModelId,
         providerId,
+        isPrivate: privacyState?.isPrivate || false,
       });
 
       if (!thread) {
@@ -51,6 +54,7 @@ export function useMessageActions() {
         title,
         threadId,
         type: "thread",
+        isPrivate: privacyState?.isPrivate || false,
       });
 
       if (!newTab) {

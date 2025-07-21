@@ -1,6 +1,6 @@
 import { CardAction } from "@renderer/components/ui/card";
 import { cn } from "@renderer/lib/utils";
-import { CircleX, PencilLine, Star } from "lucide-react";
+import { PenLine, Star, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ButtonWithTooltip } from "./button-with-tooltip";
 
@@ -26,7 +26,7 @@ export function ActionGroup({
 
   return (
     <CardAction
-      className={cn("flex h-full items-center justify-center gap-1", className)}
+      className={cn("flex h-full items-center justify-center", className)}
     >
       {/* Star */}
       {onStar && (
@@ -41,7 +41,9 @@ export function ActionGroup({
           <Star
             className={cn(
               "size-4",
-              stared ? "fill-yellow-500 text-yellow-500" : "",
+              stared
+                ? "fill-yellow-500 text-yellow-500"
+                : "fill-[#E5E5E5] text-[#E5E5E5] dark:fill-[#5C5C5C] dark:text-[#5C5C5C]",
             )}
           />
         </ButtonWithTooltip>
@@ -57,7 +59,8 @@ export function ActionGroup({
           isCircle={isCircle}
           onClick={onEdit}
         >
-          <PencilLine className="size-4" />
+          {/* <SquarePen className="size-4" /> */}
+          <PenLine className="size-4" strokeWidth={1.5} />
         </ButtonWithTooltip>
       )}
 
@@ -71,7 +74,7 @@ export function ActionGroup({
           isCircle={isCircle}
           onClick={onDelete}
         >
-          <CircleX className="size-4" />
+          <Trash2 className="size-4 text-danger-fg-2" />
         </ButtonWithTooltip>
       )}
     </CardAction>

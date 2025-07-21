@@ -6,7 +6,7 @@ import type { Model, UpdateModelData } from "@shared/triplit/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { ModelForm, type ModelFormData } from "./model-form";
+import { ModelForm, type ModelFormData, type ModelType } from "./model-form";
 
 interface EditModelModalProps {
   isOpen: boolean;
@@ -29,10 +29,13 @@ export function EditModelModal({
   const [formData, setFormData] = useState<ModelFormData>({
     name: "",
     description: "",
+    type: "language",
     capabilities: {
       reasoning: false,
       vision: false,
       function_call: false,
+      music: false,
+      video: false,
     },
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,10 +50,13 @@ export function EditModelModal({
       setFormData({
         name: model.name,
         description: model.remark || "",
+        type: (model.type as ModelType) || "language",
         capabilities: {
           reasoning: modelCapabilities.includes("reasoning"),
           vision: modelCapabilities.includes("vision"),
           function_call: modelCapabilities.includes("function_call"),
+          music: modelCapabilities.includes("music"),
+          video: modelCapabilities.includes("video"),
         },
       });
 
@@ -73,6 +79,7 @@ export function EditModelModal({
         name: formData.name.trim(),
         capabilities: new Set(capabilityArray),
         remark: formData.description.trim(),
+        type: formData.type,
       };
 
       // await triplitClient.update("models", model.id, updateData);
@@ -95,10 +102,13 @@ export function EditModelModal({
     setFormData({
       name: "",
       description: "",
+      type: "language",
       capabilities: {
         reasoning: false,
         vision: false,
         function_call: false,
+        music: false,
+        video: false,
       },
     });
     setValidationErrors({});
@@ -113,7 +123,12 @@ export function EditModelModal({
 
   return (
     <Modal>
-      <Modal.Content isOpen={isOpen} onOpenChange={handleOpenChange} size="lg">
+      <Modal.Content
+        isOpen={isOpen}
+        onOpenChange={handleOpenChange}
+        size="lg"
+        className="bg-[#FFFFFF] dark:bg-[#121212]"
+      >
         <Modal.Header>
           <Modal.Title>{t("edit-title")}</Modal.Title>
         </Modal.Header>
