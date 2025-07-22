@@ -1,5 +1,3 @@
-"use client";
-
 import { IconChevronLeft } from "@intentui/icons";
 import { composeTailwindRenderProps } from "@renderer/lib/primitive";
 import type {
