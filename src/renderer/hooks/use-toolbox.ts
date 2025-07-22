@@ -47,17 +47,11 @@ export function useToolbox() {
   }, [toolbox, searchQuery]);
 
   const randomTools = useMemo(() => {
-    if (!categorizedTools || categorizedTools.length === 0) return [];
+    if (!toolbox || toolbox.length === 0) return [];
 
-    const allTools: Tool[] = categorizedTools.flatMap(
-      (category) => category.tools,
-    );
-
-    if (allTools.length === 0) return [];
-
-    const shuffled = [...allTools].sort(() => 0.5 - Math.random());
+    const shuffled = [...toolbox].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, Math.min(4, shuffled.length));
-  }, [categorizedTools]);
+  }, [toolbox]);
 
   return {
     randomTools,
