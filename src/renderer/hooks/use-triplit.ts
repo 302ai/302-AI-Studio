@@ -10,7 +10,7 @@ export function useTriplit() {
   );
 
   // * Toolbox Collection
-  const toolboxQuery = triplitClient.query("toolbox");
+  const toolboxQuery = triplitClient.query("toolbox").Order("toolId", "ASC");
   const { results: toolbox, fetching: toolboxFetching } = useQuery(
     triplitClient,
     toolboxQuery,

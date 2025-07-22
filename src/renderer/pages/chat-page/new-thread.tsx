@@ -49,7 +49,7 @@ export function NewThread() {
           delay: 0.3,
           ease: "easeOut",
         }}
-        className={cn("flex w-full flex-col gap-2", {
+        className={cn("flex w-[720px] flex-col gap-2", {
           "pointer-events-none": !displayAppStore,
         })}
       >

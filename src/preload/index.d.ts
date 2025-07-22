@@ -242,7 +242,11 @@ declare global {
         install: () => Promise<void>;
       };
       toolboxService: {
-        getToolUrl: (toolId: number) => Promise<string>;
+        getToolUrl: (toolId: number) => Promise<{
+          isOk: boolean;
+          url: string;
+          errorMsg: string | null;
+        }>;
       };
     };
   }

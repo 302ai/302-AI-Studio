@@ -517,5 +517,6 @@
   "shortcuts": {
     "tab-not-exist": "タブ {{tabNumber}} は存在しません",
     "tab-switch-error": "タブ {{tabNumber}} への切り替えに失敗しました"
-  }
+  },
+  "toolbox-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています"
 }

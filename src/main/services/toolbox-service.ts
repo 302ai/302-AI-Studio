@@ -46,6 +46,12 @@ export class ToolboxService {
     emitter.on(EventNames.SETTINGS_LANGUAGE_UPDATE, async ({ language }) => {
       await this.updateToolList(language);
     });
+    emitter.on(EventNames.PROVIDER_UPDATE, async ({ updateData }) => {
+      if (updateData.apiType === "302ai") {
+        const lang = await this.settingsService.getLanguage();
+        await this.updateToolList(lang);
+      }
+    });
   }
 
   private async updateToolList(lang: Language) {
@@ -97,7 +103,23 @@ export class ToolboxService {
   async getToolUrl(
     _event: Electron.IpcMainEvent,
     toolId: number,
-  ): Promise<string> {
-    return this.toolDetailMap.get(`${toolId}`) ?? "";
+  ): Promise<{
+    isOk: boolean;
+    url: string;
+    errorMsg: string | null;
+  }> {
+    const url = this.toolDetailMap.get(`${toolId}`);
+    if (!url) {
+      return {
+        isOk: false,
+        url: "",
+        errorMsg: `Tool with ID ${toolId} not found`,
+      };
+    }
+    return {
+      isOk: true,
+      url,
+      errorMsg: null,
+    };
   }
 }
