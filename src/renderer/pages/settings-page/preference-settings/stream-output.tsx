@@ -55,6 +55,7 @@ export function StreamOutput() {
   );
 
   const currentSpeed = result?.streamSpeed || "normal";
+  const streamSmootherEnabled = result?.streamSmootherEnabled ?? true;
 
   useEffect(() => {
     const currentIndex = speedOptions.findIndex(
@@ -84,19 +85,17 @@ export function StreamOutput() {
       {/* Stream Smoother Toggle */}
       <div className="flex flex-col gap-2">
         <Label className="text-label-fg">{t("smoother.label")}</Label>
-        {result && (
-          <Switch
-            className="h-11 min-w-[398px] rounded-[10px] bg-setting px-3.5 py-2.5"
-            isSelected={result?.streamSmootherEnabled ?? true}
-            onChange={handleStreamToggle}
-          >
-            <Label className="self-center">{t("smoother.switch.label")}</Label>
-          </Switch>
-        )}
+        <Switch
+          className="h-11 min-w-[398px] rounded-[10px] bg-setting px-3.5 py-2.5"
+          isSelected={streamSmootherEnabled}
+          onChange={handleStreamToggle}
+        >
+          <Label className="self-center">{t("smoother.switch.label")}</Label>
+        </Switch>
       </div>
 
       {/* Stream Speed Selector */}
-      {result?.streamSmootherEnabled && (
+      {streamSmootherEnabled && (
         <div className="flex flex-col gap-2">
           <Label className="text-label-fg">{t("speed.label")}</Label>
 
