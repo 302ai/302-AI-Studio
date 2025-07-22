@@ -16,7 +16,6 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import type { LanguageModelUsage } from "ai";
 import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
@@ -278,28 +277,29 @@ export class ProviderService {
         status: "pending",
       });
 
-      for await (const delta of result.textStream) {
-        fullContent += delta;
+      // Stream processing for OpenAI SDK
+      for await (const chunk of result) {
+        const delta = chunk.choices[0]?.delta?.content || "";
+        if (delta) {
+          fullContent += delta;
 
-        await this.chatService.updateMessage(assistantMessage.id, {
-          content: fullContent,
-        });
-        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
-          threadId,
-          status: "pending",
-          delta: delta,
-        });
+          await this.chatService.updateMessage(assistantMessage.id, {
+            content: fullContent,
+          });
+          sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+            threadId,
+            status: "pending",
+            delta: delta,
+          });
+        }
       }
 
-      let usage: LanguageModelUsage | null = null;
-
-      if (fullContent !== "") {
-        usage = await result.usage;
-      }
+      // Note: OpenAI SDK streaming doesn't provide usage info in real-time
+      // Token counting would require a separate call if needed
 
       if (fullContent === "") {
         await this.chatService.updateMessage(assistantMessage.id, {
-          tokenCount: usage?.outputTokens ?? 0,
+          tokenCount: 0,
           status: "error",
         });
         sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
@@ -314,7 +314,7 @@ export class ProviderService {
       }
 
       await this.chatService.updateMessage(assistantMessage.id, {
-        tokenCount: usage?.outputTokens ?? 0,
+        tokenCount: 0,
         status: "success",
       });
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {

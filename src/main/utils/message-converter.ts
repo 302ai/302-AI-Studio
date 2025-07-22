@@ -1,12 +1,13 @@
 import type { AttachmentService } from "@main/services/attachment-service";
-import type { FilePart, ImagePart, ModelMessage, TextPart } from "ai";
+import type { ModelMessage } from "@main/services/provider-service/base-provider-service";
 import logger from "@shared/logger/main-logger";
+import type OpenAI from "openai";
 import { FilePresenter } from "../services/file-service/file-parse-service";
 import { container } from "../shared/bindings";
 import { TYPES } from "../shared/types";
 
-// Type definitions for AI SDK content parts - using the actual AI SDK types
-type ContentPart = TextPart | ImagePart | FilePart;
+// Use OpenAI SDK official types
+type ContentPart = OpenAI.Chat.Completions.ChatCompletionContentPart;
 
 // Type definition for chat message
 export interface ChatMessage {
@@ -83,8 +84,8 @@ export async function convertToModelMessage(
       for (const attachment of attachments) {
         if (attachment.type?.startsWith("image/") && attachment.preview) {
           contentParts.push({
-            type: "image",
-            image: attachment.preview,
+            type: "image_url",
+            image_url: { url: attachment.preview },
           });
         } else if (attachment.fileContent) {
           // Use pre-parsed file content if available (from database)

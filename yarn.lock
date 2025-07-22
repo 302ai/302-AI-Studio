@@ -9,7 +9,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "302AIStudio@workspace:."
   dependencies:
-    "@ai-sdk/openai": "npm:^2.0.0-alpha.8"
     "@babel/core": "npm:^7.28.0"
     "@better-fetch/fetch": "npm:^1.1.18"
     "@biomejs/biome": "npm:^2.0.6"
@@ -38,7 +37,6 @@ __metadata:
     "@types/semver": "npm:^7.5.8"
     "@types/xml2js": "npm:^0"
     "@vitejs/plugin-react": "npm:^4.3.4"
-    ai: "npm:^5.0.0-alpha.8"
     babel-plugin-react-compiler: "npm:^19.1.0-rc.2"
     better-sqlite3: "npm:^11.10.0"
     class-variance-authority: "npm:^0.7.1"
@@ -76,6 +74,7 @@ __metadata:
     nanoid: "npm:^5.1.5"
     npm-run-all: "npm:^4.1.5"
     open: "npm:^10.1.0"
+    openai: "npm:^5.10.1"
     pdf-parse-new: "npm:^1.3.9"
     portfinder: "npm:^1.0.37"
     react: "npm:^19.1.0"
@@ -122,40 +121,6 @@ __metadata:
   version: 5.2.0
   resolution: "7zip-bin@npm:5.2.0"
   checksum: 10c0/7f6c69b4cb10c4060fb8fda258ae2ab88d30516b5a52941efa0e2cbd9ce362ab7d8d568549cd85e9f125c1c68f95c7bb076cc314c2f3c0cb306d3b638080c2ce
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/openai@npm:^2.0.0-alpha.8":
-  version: 2.0.0-canary.20
-  resolution: "@ai-sdk/openai@npm:2.0.0-canary.20"
-  dependencies:
-    "@ai-sdk/provider": "npm:2.0.0-canary.14"
-    "@ai-sdk/provider-utils": "npm:3.0.0-canary.19"
-  peerDependencies:
-    zod: ^3.24.0
-  checksum: 10c0/0ebd2b13d45b2e863a7048c01bc15615a8248d349fe97025c5f48ad6e93b7f4a4648220dc3a2f8820bf9713f1d312f8fe2b58ab6f714cb1c9614caaa2e0da0ac
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/provider-utils@npm:3.0.0-canary.19":
-  version: 3.0.0-canary.19
-  resolution: "@ai-sdk/provider-utils@npm:3.0.0-canary.19"
-  dependencies:
-    "@ai-sdk/provider": "npm:2.0.0-canary.14"
-    "@standard-schema/spec": "npm:^1.0.0"
-    zod-to-json-schema: "npm:^3.24.1"
-  peerDependencies:
-    zod: ^3.23.8
-  checksum: 10c0/26abc4fe8fe3afb59d504c2db372a61d8d2a427333756cd568483e9457e518762856c1787929b355b854c6e93e52bb760408c4c7451c40e69ca6a8e96bd6dfc7
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/provider@npm:2.0.0-canary.14":
-  version: 2.0.0-canary.14
-  resolution: "@ai-sdk/provider@npm:2.0.0-canary.14"
-  dependencies:
-    json-schema: "npm:^0.4.0"
-  checksum: 10c0/bf1f361ae91ecaddaa75e3bce14f232d72f72db25d5c4093345c63fccefe024efbc41c3d2029eca1b8d6d2470eea983be9d54e3f7b265e56fa85f3bdb7745d6a
   languageName: node
   linkType: hard
 
@@ -2081,13 +2046,6 @@ __metadata:
     mkdirp: "npm:^1.0.4"
     rimraf: "npm:^3.0.2"
   checksum: 10c0/11b2151e6d1de6f6eb23128de5aa8a429fd9097d839a5190cb77aa47a6b627022c42d50fa7c47a00f1c9f8f0c1560092b09b061855d293fa0741a2a94cfb174d
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/api@npm:1.9.0":
-  version: 1.9.0
-  resolution: "@opentelemetry/api@npm:1.9.0"
-  checksum: 10c0/9aae2fe6e8a3a3eeb6c1fdef78e1939cf05a0f37f8a4fae4d6bf2e09eb1e06f966ece85805626e01ba5fab48072b94f19b835449e58b6d26720ee19a58298add
   languageName: node
   linkType: hard
 
@@ -4166,13 +4124,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@standard-schema/spec@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@standard-schema/spec@npm:1.0.0"
-  checksum: 10c0/a1ab9a8bdc09b5b47aa8365d0e0ec40cc2df6437be02853696a0e377321653b0d3ac6f079a8c67d5ddbe9821025584b1fb71d9cc041a6666a96f1fadf2ece15f
-  languageName: node
-  linkType: hard
-
 "@swc/helpers@npm:^0.5.0":
   version: 0.5.17
   resolution: "@swc/helpers@npm:0.5.17"
@@ -5256,19 +5207,6 @@ __metadata:
     clean-stack: "npm:^2.0.0"
     indent-string: "npm:^4.0.0"
   checksum: 10c0/a42f67faa79e3e6687a4923050e7c9807db3848a037076f791d10e092677d65c1d2d863b7848560699f40fc0502c19f40963fb1cd1fb3d338a7423df8e45e039
-  languageName: node
-  linkType: hard
-
-"ai@npm:^5.0.0-alpha.8":
-  version: 5.0.0-canary.24
-  resolution: "ai@npm:5.0.0-canary.24"
-  dependencies:
-    "@ai-sdk/provider": "npm:2.0.0-canary.14"
-    "@ai-sdk/provider-utils": "npm:3.0.0-canary.19"
-    "@opentelemetry/api": "npm:1.9.0"
-  peerDependencies:
-    zod: ^3.23.8
-  checksum: 10c0/a3274f16a26dc97b940088ba5c9878889d67aaa5de061fc91246ac3eee77f165f8dc00ead148d26f6e3ad9e09eb4e38ea786bec47023e7e2392cce854a22d59a
   languageName: node
   linkType: hard
 
@@ -10166,13 +10104,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-schema@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "json-schema@npm:0.4.0"
-  checksum: 10c0/d4a637ec1d83544857c1c163232f3da46912e971d5bf054ba44fdb88f07d8d359a462b4aec46f2745efbc57053365608d88bc1d7b1729f7b4fc3369765639ed3
-  languageName: node
-  linkType: hard
-
 "json-stringify-safe@npm:^5.0.1":
   version: 5.0.1
   resolution: "json-stringify-safe@npm:5.0.1"
@@ -12329,6 +12260,23 @@ __metadata:
     is-inside-container: "npm:^1.0.0"
     is-wsl: "npm:^3.1.0"
   checksum: 10c0/1bee796f06e549ce764f693272100323fbc04da8fa3c5b0402d6c2d11b3d76fa0aac0be7535e710015ff035326638e3b9a563f3b0e7ac3266473ed5663caae6d
+  languageName: node
+  linkType: hard
+
+"openai@npm:^5.10.1":
+  version: 5.10.1
+  resolution: "openai@npm:5.10.1"
+  peerDependencies:
+    ws: ^8.18.0
+    zod: ^3.23.8
+  peerDependenciesMeta:
+    ws:
+      optional: true
+    zod:
+      optional: true
+  bin:
+    openai: bin/cli
+  checksum: 10c0/267a843eae4059f86548a6792e00dbb8b0865d712938a04402fa58dcb25b6a3943fa2da04c48b60f1605e90afd131a50c2e535bfbffb997cf161724bf6b78106
   languageName: node
   linkType: hard
 
@@ -15937,15 +15885,6 @@ __metadata:
     compress-commons: "npm:^6.0.2"
     readable-stream: "npm:^4.0.0"
   checksum: 10c0/50f2fb30327fb9d09879abf7ae2493705313adf403e794b030151aaae00009162419d60d0519e807673ec04d442e140c8879ca14314df0a0192de3b233e8f28b
-  languageName: node
-  linkType: hard
-
-"zod-to-json-schema@npm:^3.24.1":
-  version: 3.24.6
-  resolution: "zod-to-json-schema@npm:3.24.6"
-  peerDependencies:
-    zod: ^3.24.1
-  checksum: 10c0/b907ab6d057100bd25a37e5545bf5f0efa5902cd84d3c3ec05c2e51541431a47bd9bf1e5e151a244273409b45f5986d55b26e5d207f98abc5200702f733eb368
   languageName: node
   linkType: hard
 

@@ -8,14 +8,14 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import {
-  type LanguageModel,
-  type ModelMessage,
-  type StreamTextResult,
-  smoothStream,
-  streamText,
-  type ToolSet,
-} from "ai";
+import type OpenAI from "openai";
+import type { Stream } from "openai/streaming";
+
+// Use OpenAI SDK types instead of custom types
+export type OpenAIStreamResponse = Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
+
+// Define message interface compatible with OpenAI
+export type ModelMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
 
 import {
   cleanupAbortController as cleanupAbortControllerForTab,
@@ -94,30 +94,29 @@ export abstract class BaseProviderService {
   abstract startStreamChat(
     params: StreamChatParams,
     abortController: AbortController,
-  ): Promise<StreamTextResult<ToolSet, never>>;
+  ): Promise<OpenAIStreamResponse>;
 
   protected async _startStreamChat(
     params: StreamChatParams,
     abortController: AbortController,
-    languageModel: LanguageModel,
+    openaiClient: OpenAI,
     modelMessages: ModelMessage[],
-  ): Promise<StreamTextResult<ToolSet, never>> {
+    modelName: string,
+  ): Promise<OpenAIStreamResponse> {
     const { tabId, threadId } = params;
 
     try {
       logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
 
-      const result = streamText({
-        model: languageModel,
+      const stream = await openaiClient.chat.completions.create({
+        model: modelName,
         messages: modelMessages,
-
-        experimental_transform: smoothStream({
-          chunking: "line",
-        }),
-        abortSignal: abortController.signal,
+        stream: true,
+      }, {
+        signal: abortController.signal,
       });
 
-      return result;
+      return stream;
     } catch (error) {
       logger.error("Failed to start stream chat:", { error });
       throw error;
