@@ -344,6 +344,21 @@
         "switch": {
           "label": "ホームページにアプリストアを表示"
         }
+      },
+      "stream-output": {
+        "label": "ストリーム出力",
+        "smoother": {
+          "label": "ストリームスムーザー",
+          "switch": {
+            "label": "スムーズなストリーミング出力を有効にする"
+          }
+        },
+        "speed": {
+          "label": "出力速度",
+          "slow": "遅い",
+          "normal": "普通",
+          "fast": "速い"
+        }
       }
     }
   },

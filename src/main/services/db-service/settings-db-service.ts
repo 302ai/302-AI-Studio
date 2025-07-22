@@ -44,6 +44,8 @@ export class SettingsDbService extends BaseDbService {
       theme: "system",
       language: "zh",
       selectedModelId: "",
+      streamSmootherEnabled: true,
+      streamSpeed: "normal",
     });
   }
 
@@ -234,6 +236,63 @@ export class SettingsDbService extends BaseDbService {
       );
     } catch (error) {
       logger.error("SettingsDbService:setDisplayAppStore error", { error });
+      throw error;
+    }
+  }
+
+  // Streaming configuration methods
+  async getStreamSmootherEnabled(): Promise<boolean> {
+    try {
+      const query = triplitClient.query("settings");
+      const settings = await triplitClient.fetchOne(query);
+      return settings?.streamSmootherEnabled ?? true;
+    } catch (error) {
+      logger.error("SettingsDbService:getStreamSmootherEnabled error", { error });
+      return true;
+    }
+  }
+
+  async setStreamSmootherEnabled(enabled: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.streamSmootherEnabled = enabled;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setStreamSmootherEnabled error", { error });
+      throw error;
+    }
+  }
+
+  async getStreamSpeed(): Promise<"slow" | "normal" | "fast"> {
+    try {
+      const query = triplitClient.query("settings");
+      const settings = await triplitClient.fetchOne(query);
+      return (settings?.streamSpeed as "slow" | "normal" | "fast") ?? "normal";
+    } catch (error) {
+      logger.error("SettingsDbService:getStreamSpeed error", { error });
+      return "normal";
+    }
+  }
+
+  async setStreamSpeed(speed: "slow" | "normal" | "fast") {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.streamSpeed = speed;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setStreamSpeed error", { error });
       throw error;
     }
   }

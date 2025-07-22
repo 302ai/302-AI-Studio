@@ -204,6 +204,9 @@ declare global {
         setsearchService: (searchService: SearchService) => Promise<void>;
         updateSelectedModelId: (modelId: string) => Promise<void>;
         setDisplayAppStore: (displayAppStore: boolean) => Promise<void>;
+        // Stream output settings
+        setStreamSmootherEnabled: (enabled: boolean) => Promise<void>;
+        setStreamSpeed: (speed: "slow" | "normal" | "fast") => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;

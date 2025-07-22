@@ -344,6 +344,21 @@
         "switch": {
           "label": "在首页显示应用超市"
         }
+      },
+      "stream-output": {
+        "label": "流式输出",
+        "smoother": {
+          "label": "流输出平滑",
+          "switch": {
+            "label": "启用流式输出平滑功能"
+          }
+        },
+        "speed": {
+          "label": "输出速度",
+          "slow": "慢速",
+          "normal": "正常",
+          "fast": "快速"
+        }
       }
     }
   },
