@@ -12,7 +12,7 @@ yarn dev
 # Type checking (required before builds)
 yarn typecheck
 
-# Code linting and formatting
+# Code linting and formatting (uses Biome)
 yarn lint
 yarn lint:fix
 
@@ -21,6 +21,9 @@ yarn build
 
 # Install Electron dependencies (run after yarn install)
 yarn install:deps
+
+# Rebuild native modules if database issues occur
+yarn electron-rebuild
 
 # Clean development artifacts
 yarn clean:dev
@@ -34,6 +37,42 @@ The build system uses a multi-step process:
 4. `yarn typecheck` - Validate TypeScript
 
 Always run `yarn typecheck` before committing. The build will fail without it.
+
+### Troubleshooting Development Issues
+
+**Database Connection Errors (`ERR_DLOPEN_FAILED`)**:
+```bash
+yarn electron-rebuild  # Rebuild native modules
+```
+
+**GPU Process Errors in Headless Environments**:
+```bash
+ELECTRON_DISABLE_GPU=1 yarn dev  # Disable GPU acceleration
+```
+
+These errors don't affect React Compiler functionality or core development workflow.
+
+## React Compiler Integration
+
+This project uses React Compiler (RC) for automatic optimization of React components. The compiler is integrated via Vite's Babel plugin and runs during the build process.
+
+### How It Works
+- Components are automatically memoized where beneficial
+- No manual `useMemo`/`useCallback` needed in most cases
+- Compiler analyzes component dependencies and optimizes renders
+- Look for ✨ badge in React DevTools to see optimized components
+
+### Debugging Compilation Issues
+If a component has unexpected behavior after compilation:
+1. Add `"use no memo"` directive at the top of the component to temporarily disable optimization
+2. Verify the issue is compiler-related (should disappear with directive)
+3. Check for Rules of React violations - common causes of issues
+4. Remove directive once underlying issue is fixed
+
+### Development Notes
+- The compiler runs automatically - no special configuration needed
+- Build output will contain `react/compiler-runtime` imports when optimization occurs
+- Components violating React rules are safely skipped by the compiler
 
 ## Architecture Overview
 
