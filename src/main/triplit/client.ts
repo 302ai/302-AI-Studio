@@ -6,7 +6,7 @@ import { TriplitClient } from "@triplit/client";
 import { Logger } from "@triplit/logger";
 import { createMainMigrationManager } from "./migrations";
 
-// import { AddMessagePriorityMigration } from "./migrations/versions/_1.1.0.add-message-priority";
+import { AddStreamSettingsMigration } from "./migrations/versions/1.2.0.add-stream-settings";
 
 // Create custom logger instance for triplit
 const triplitLogger = new Logger([new TriplitLogHandler(logger)]);
@@ -19,7 +19,8 @@ const migrationManager = createMainMigrationManager({
   logger: logger,
 });
 
-// migrationManager.registerMigration(new AddMessagePriorityMigration());
+// Register migrations
+migrationManager.registerMigration(new AddStreamSettingsMigration());
 
 export const triplitClient = new TriplitClient({
   storage: "memory",

@@ -26,5 +26,11 @@ export const settingsSchema = {
       default:
         "https://github.com/302ai/302-AI-Studio/releases/latest/download",
     }),
+    // Streaming output configuration
+    streamSmootherEnabled: S.Optional(S.Boolean({ default: true })),
+    streamSpeed: S.Optional(S.String({
+      enum: ["slow", "normal", "fast"],
+      default: "normal",
+    })),
   }),
 };

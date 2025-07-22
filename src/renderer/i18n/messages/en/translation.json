@@ -343,6 +343,21 @@
         "switch": {
           "label": "Display App Store on Homepage"
         }
+      },
+      "stream-output": {
+        "label": "Stream Output",
+        "smoother": {
+          "label": "Stream Smoother",
+          "switch": {
+            "label": "Enable smooth streaming output"
+          }
+        },
+        "speed": {
+          "label": "Output Speed",
+          "slow": "Slow",
+          "normal": "Normal",
+          "fast": "Fast"
+        }
       }
     }
   },
