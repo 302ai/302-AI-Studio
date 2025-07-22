@@ -182,4 +182,8 @@ export class ConfigService {
       throw error;
     }
   }
+
+  async get302AIProvider(): Promise<Provider> {
+    return this.configDbService.get302AIProvider();
+  }
 }

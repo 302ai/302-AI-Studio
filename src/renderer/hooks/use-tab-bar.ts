@@ -1,9 +1,9 @@
 import type { DropResult } from "@hello-pangea/dnd";
 import { triplitClient } from "@renderer/client";
 import logger from "@shared/logger/renderer-logger";
-import type { Tab } from "@shared/triplit/types";
+import type { Tab, TabType } from "@shared/triplit/types";
 import { useQuery, useQueryOne } from "@triplit/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { EventNames, emitter } from "../services/event-service";
@@ -29,53 +29,125 @@ export function useTabBar() {
 
   const [tabs, setTabs] = useState<Tab[]>([]);
 
-  const handleAddNewTab = async (type: "thread" | "setting") => {
-    if (type === "setting") {
-      const existingSettingTab = tabs.find((tab) => tab.type === "setting");
+  const handleAddNewTab = useCallback(
+    async (type: TabType, title?: string, params?: Record<string, string>) => {
+      switch (type) {
+        case "thread": {
+          const shouldUseDefaultPrivacy =
+            privacyState.isPrivate && settings?.defaultPrivacyMode;
 
-      if (existingSettingTab) {
-        const promises = [
-          setActiveTabId(existingSettingTab.id),
-          setActiveThreadId(""),
-          tabService.activateTab(existingSettingTab.id),
-        ];
-        await Promise.all(promises);
+          if (shouldUseDefaultPrivacy) {
+            await inheritPrivacyState();
+          } else {
+            const newTab = await tabService.insertTab({
+              title: t("thread.new-thread-title"),
+              type,
+              path: "/",
+              isPrivate: false,
+            });
+            const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+            await Promise.all(promises);
+            logger.info("Tab created", { newTab });
+          }
 
-        emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
+          break;
+        }
 
-        return;
+        case "setting": {
+          const existingSettingTab = tabs.find((tab) => tab.type === "setting");
+          if (existingSettingTab) {
+            const promises = [
+              setActiveTabId(existingSettingTab.id),
+              setActiveThreadId(""),
+            ];
+            await Promise.all(promises);
+          } else {
+            const newTab = await tabService.insertTab({
+              title: t("settings.tab-title"),
+              type,
+              path: "/settings/general-settings",
+              isPrivate: false,
+            });
+            const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+            await Promise.all(promises);
+          }
+          break;
+        }
+
+        case "302ai-tool": {
+          const newTab = await tabService.insertTab({
+            title: title ?? "",
+            type,
+            path: `/302ai-tool/${params?.subdomain}`,
+            isPrivate: false,
+          });
+          const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+          await Promise.all(promises);
+          break;
+        }
+
+        default:
+          break;
       }
-    }
 
-    const shouldUseDefaultPrivacy =
-      type === "thread" &&
-      privacyState.isPrivate &&
-      settings?.defaultPrivacyMode;
+      emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
+    },
+    [
+      setActiveTabId,
+      setActiveThreadId,
+      t,
+      tabs,
+      inheritPrivacyState,
+      privacyState.isPrivate,
+      settings?.defaultPrivacyMode,
+    ],
+  );
 
-    if (shouldUseDefaultPrivacy) {
-      await inheritPrivacyState();
-    } else {
-      const newTab = await tabService.insertTab({
-        title:
-          type === "thread"
-            ? t("thread.new-thread-title")
-            : t("settings.tab-title"),
-        type,
-        path: type === "thread" ? "/" : "/settings/general-settings",
-        isPrivate: false,
-      });
-      const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
-      await Promise.all(promises);
-      logger.info("Tab created", { newTab });
-    }
+  // const handleAddNewTab = async (type: TabType) => {
+  //   if (type === "setting") {
+  //     const existingSettingTab = tabs.find((tab) => tab.type === "setting");
 
-    emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
-  };
+  //     if (existingSettingTab) {
+  //       const promises = [
+  //         setActiveTabId(existingSettingTab.id),
+  //         setActiveThreadId(""),
+  //       ];
+  //       await Promise.all(promises);
+
+  //       emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
+
+  //       return;
+  //     }
+  //   }
+
+  //   const shouldUseDefaultPrivacy =
+  //     type === "thread" &&
+  //     privacyState.isPrivate &&
+  //     settings?.defaultPrivacyMode;
+
+  //   if (shouldUseDefaultPrivacy) {
+  //     await inheritPrivacyState();
+  //   } else {
+  //     const newTab = await tabService.insertTab({
+  //       title:
+  //         type === "thread"
+  //           ? t("thread.new-thread-title")
+  //           : t("settings.tab-title"),
+  //       type,
+  //       path: type === "thread" ? "/" : "/settings/general-settings",
+  //       isPrivate: false,
+  //     });
+  //     const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+  //     await Promise.all(promises);
+  //     logger.info("Tab created", { newTab });
+  //   }
+
+  //   emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
+  // };
 
   const activateTabId = async (id: string) => {
-    setActiveTabId(id);
     try {
-      await tabService.activateTab(id);
+      setActiveTabId(id);
       emitter.emit(EventNames.TAB_SELECT, { tabId: id });
     } catch (error) {
       logger.error("Failed to activate tab", { error });

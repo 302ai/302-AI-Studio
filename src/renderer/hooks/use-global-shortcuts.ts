@@ -137,7 +137,6 @@ export function useShortcutsHandlers() {
     try {
       const existingSettingTab = tabs.find((tab) => tab.type === "setting");
       if (existingSettingTab) {
-        await tabService.activateTab(existingSettingTab.id);
         await uiService.updateActiveTabId(existingSettingTab.id);
       } else {
         handleAddNewTab("setting");
@@ -171,7 +170,6 @@ export function useShortcutsHandlers() {
       const nextIndex = (currentIndex + 1) % tabs.length;
       const nextTab = tabs[nextIndex];
 
-      await tabService.activateTab(nextTab.id);
       await uiService.updateActiveTabId(nextTab.id);
     } catch (error) {
       logger.error("Error switching to next tab", { error });
@@ -190,7 +188,6 @@ export function useShortcutsHandlers() {
         currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
       const previousTab = tabs[previousIndex];
 
-      await tabService.activateTab(previousTab.id);
       await uiService.updateActiveTabId(previousTab.id);
     } catch (error) {
       logger.error("Error switching to previous tab", { error });
@@ -214,7 +211,6 @@ export function useShortcutsHandlers() {
       }
 
       try {
-        await tabService.activateTab(targetTab.id);
         await uiService.updateActiveTabId(targetTab.id);
       } catch (error) {
         logger.error(`Error switching to tab ${tabNumber}`, { error });

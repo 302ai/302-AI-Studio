@@ -6,6 +6,7 @@ import { settingsSchema } from "./settings-schema";
 import { shortcutsSchema } from "./shortcuts-schema";
 import { tabsSchema } from "./tabs-schema";
 import { threadsSchema } from "./threads-schema";
+import { toolboxSchema } from "./toolbox-schema";
 import { uiSchema } from "./ui-schema";
 
 export {
@@ -18,4 +19,5 @@ export {
   uiSchema,
   settingsSchema,
   shortcutsSchema,
+  toolboxSchema,
 };

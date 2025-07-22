@@ -157,7 +157,7 @@
     --destructive-fg: oklch(0.98 0 0);
 
     --border: rgba(229, 229, 229, 1);
-    --input: oklch(0.869 0.005 56.366);
+    --input: #F9F9F9;
     --ring: #8E47F0;
 
     --hover-primary: rgba(241, 241, 241, 1);
@@ -249,7 +249,7 @@
     --destructive-fg: oklch(0.98 0 0);
 
     --border: oklch(0.274 0.01 67.558);
-    --input: oklch(0.324 0.01 67.558);
+    --input: #1A1A1A;
     --ring: #8E47F0;
 
     --hover-primary: hsl(240, 4%, 16%);

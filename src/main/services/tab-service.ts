@@ -95,22 +95,22 @@ export class TabService {
     }
   }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async activateTab(
-    _event: Electron.IpcMainEvent,
-    tabId: string,
-  ): Promise<void> {
-    //! TODO: Implement logic to handle tab activation
-    try {
-      const tab = await this.tabDbService.getTab(tabId);
-      if (tab && tab.type === "setting") {
-        await this.tabDbService.updateTab(tabId, {
-          path: "/settings/general-settings",
-        });
-      }
-    } catch (error) {
-      logger.error("TabService:activateTab error", { error });
-      throw error;
-    }
-  }
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  // async activateTab(
+  //   _event: Electron.IpcMainEvent,
+  //   tabId: string,
+  // ): Promise<void> {
+  //   //! TODO: Implement logic to handle tab activation
+  //   try {
+  //     const tab = await this.tabDbService.getTab(tabId);
+  //     if (tab && tab.type === "setting") {
+  //       await this.tabDbService.updateTab(tabId, {
+  //         path: "/settings/general-settings",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     logger.error("TabService:activateTab error", { error });
+  //     throw error;
+  //   }
+  // }
 }

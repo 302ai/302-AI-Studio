@@ -4,7 +4,7 @@ import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import logger from "@shared/logger/renderer-logger";
 import { useQueryOne } from "@triplit/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -77,10 +77,6 @@ export function usePrivacyMode() {
       canToggle,
     });
   }, [checkSessionStarted, activeTab, settings?.isPrivate]);
-
-  useEffect(() => {
-    updatePrivacyState();
-  }, [updatePrivacyState]);
 
   // Toggle privacy mode with validation
   const togglePrivacyMode = useCallback(async () => {
@@ -255,5 +251,6 @@ export function usePrivacyMode() {
     createPrivateSession,
     inheritPrivacyState,
     cleanupPrivateSession,
+    updatePrivacyState,
   };
 }

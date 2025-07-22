@@ -129,10 +129,10 @@ export function EditModelModal({
         size="lg"
         className="bg-[#FFFFFF] dark:bg-[#121212]"
       >
-        <Modal.Header>
+        <Modal.Header className="px-4">
           <Modal.Title>{t("edit-title")}</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="px-6 py-4">
+        <Modal.Body className="px-4">
           <ModelForm
             data={formData}
             onChange={setFormData}

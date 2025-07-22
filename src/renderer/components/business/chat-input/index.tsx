@@ -221,8 +221,8 @@ export function ChatInput({ className }: ChatInputProps) {
       <div
         className={cn(
           "relative",
-          "flex max-h-52 min-h-[126px] w-full flex-col gap-y-1 rounded-[20px] border border-input pt-2 pr-2 pb-2 pl-4",
-          "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-4 focus-within:ring-ring/20",
+          "flex max-h-52 min-h-[126px] w-full flex-col gap-y-1 rounded-[20px] border border-[#3D3D3D] pt-2 pr-2 pb-2 pl-4",
+          "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-3 focus-within:ring-ring/20",
         )}
         onPaste={handlePaste}
       >
