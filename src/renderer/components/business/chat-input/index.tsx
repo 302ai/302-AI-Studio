@@ -1,5 +1,4 @@
 import { Button } from "@renderer/components/ui/button";
-import { Textarea } from "@renderer/components/ui/textarea";
 import { useAttachments } from "@renderer/hooks/use-attachments";
 import { useTabInput } from "@renderer/hooks/use-tab-input";
 import { useThread } from "@renderer/hooks/use-thread";
@@ -9,7 +8,7 @@ import { EventNames, emitter } from "@renderer/services/event-service";
 import logger from "@shared/logger/renderer-logger";
 import type { Message } from "@shared/triplit/types";
 import { SquarePen, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentList } from "./attachment-list";
@@ -19,12 +18,24 @@ interface ChatInputProps {
   className?: string;
 }
 
+export interface ChatInputRef {
+  focus: () => void;
+}
+
 const { messageService, attachmentService } = window.service;
 
-export function ChatInput({ className }: ChatInputProps) {
+export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ className }, ref) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      textareaRef.current?.focus();
+    },
+  }));
 
   const {
     attachments,
@@ -34,6 +45,10 @@ export function ChatInput({ className }: ChatInputProps) {
     setAttachmentsDirectly,
   } = useAttachments();
   const { input, setInput, handleInputChange, clearInput } = useTabInput();
+
+  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleInputChange(event.target.value);
+  };
 
   const [isSending, setIsSending] = useState(false);
   const [editMessageId, setEditMessageId] = useState<string | null>(null);
@@ -226,16 +241,18 @@ export function ChatInput({ className }: ChatInputProps) {
         )}
         onPaste={handlePaste}
       >
-        <Textarea
+        <textarea
+          ref={textareaRef}
           className={cn(
             "w-full flex-1 rounded-none border-0 bg-transparent p-0",
             "resize-none shadow-none ring-0 focus:ring-0",
             "min-h-[calc(7rem-var(--chat-input-toolbar-height)-9px)]",
+            "outline-none"
           )}
           placeholder={t("input-placeholder")}
           aria-label={t("input-label")}
           value={input}
-          onChange={handleInputChange}
+          onChange={handleTextAreaChange}
           style={{ resize: "none" }}
         />
 
@@ -251,4 +268,4 @@ export function ChatInput({ className }: ChatInputProps) {
       </div>
     </div>
   );
-}
+});

@@ -1,9 +1,10 @@
 import { ArtifactPreviewPanel } from "@renderer/components/business/artifacts/artifact-preview-panel";
-import { ChatInput } from "@renderer/components/business/chat-input";
+import { ChatInput, type ChatInputRef } from "@renderer/components/business/chat-input";
 import { MessageList } from "@renderer/components/business/message-list";
 import { Button } from "@renderer/components/ui/button";
 import { useArtifact } from "@renderer/hooks/use-artifact";
 import { useChat } from "@renderer/hooks/use-chat";
+import { useChatInputFocus } from "@renderer/hooks/use-chat-input-focus";
 import { cn } from "@renderer/lib/utils";
 import { motion } from "motion/react";
 import { useRef } from "react";
@@ -12,11 +13,14 @@ import { NewThread } from "./new-thread";
 
 export function ChatPage() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const chatInputRef = useRef<ChatInputRef>(null);
 
   const { t } = useTranslation();
   const { activeThreadId, messages, streaming, stopStreamChat, handleScroll } =
     useChat(scrollRef);
   const { isArtifactOpen } = useArtifact();
+
+  useChatInputFocus(chatInputRef);
 
   const isWelcomeState = !activeThreadId;
 
@@ -56,7 +60,7 @@ export function ChatPage() {
           }}
           className="relative mx-auto w-full max-w-[720px] pt-4"
         >
-          <ChatInput />
+          <ChatInput ref={chatInputRef} />
           <Button
             className={cn(
               "-top-[-5px] -translate-x-1/2 -translate-y-full absolute left-1/2 z-10",
