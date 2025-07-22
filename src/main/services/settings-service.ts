@@ -11,7 +11,7 @@ import type {
   SettingsDbService,
   WebSearchConfig,
 } from "./db-service/settings-db-service";
-import { EventNames, emitter } from "./event-service";
+import { EventNames, emitter, sendToMain } from "./event-service";
 
 @injectable()
 @ServiceRegister(TYPES.SettingsService)
@@ -145,6 +145,7 @@ export class SettingsService {
   async setLanguage(language: Language): Promise<void> {
     try {
       await this.settingsDbService.setLanguage(language);
+      sendToMain(EventNames.SETTINGS_LANGUAGE_UPDATE, { language });
     } catch (error) {
       logger.error("SettingsService:setLanguage error", { error });
       throw error;
@@ -186,6 +187,51 @@ export class SettingsService {
       await this.settingsDbService.setDisplayAppStore(displayAppStore);
     } catch (error) {
       logger.error("SettingsService:setDisplayAppStore error", { error });
+      throw error;
+    }
+  }
+
+  // Streaming configuration methods
+  async getStreamSmootherEnabled(): Promise<boolean> {
+    try {
+      return await this.settingsDbService.getStreamSmootherEnabled();
+    } catch (error) {
+      logger.error("SettingsService:getStreamSmootherEnabled error", { error });
+      return true;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setStreamSmootherEnabled(
+    _event: Electron.IpcMainEvent,
+    enabled: boolean,
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setStreamSmootherEnabled(enabled);
+    } catch (error) {
+      logger.error("SettingsService:setStreamSmootherEnabled error", { error });
+      throw error;
+    }
+  }
+
+  async getStreamSpeed(): Promise<"slow" | "normal" | "fast"> {
+    try {
+      return await this.settingsDbService.getStreamSpeed();
+    } catch (error) {
+      logger.error("SettingsService:getStreamSpeed error", { error });
+      return "normal";
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setStreamSpeed(
+    _event: Electron.IpcMainEvent,
+    speed: "slow" | "normal" | "fast",
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setStreamSpeed(speed);
+    } catch (error) {
+      logger.error("SettingsService:setStreamSpeed error", { error });
       throw error;
     }
   }

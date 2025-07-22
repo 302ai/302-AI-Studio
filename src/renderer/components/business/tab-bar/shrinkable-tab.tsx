@@ -1,4 +1,5 @@
 import { cn } from "@renderer/lib/utils";
+import type { TabType } from "@shared/triplit/types";
 import { Ghost, Settings2, X } from "lucide-react";
 import { LdrsLoader } from "../ldrs-loader";
 
@@ -6,7 +7,7 @@ interface ShrinkableTabProps {
   title: string;
   isActive: boolean;
   width: number;
-  type: "thread" | "setting";
+  type: TabType;
   streaming: boolean;
   isPrivate?: boolean;
   handleTabClose: () => void;

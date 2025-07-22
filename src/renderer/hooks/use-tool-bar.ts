@@ -238,6 +238,7 @@ export function useToolBar() {
             modelId: selectedModelId,
             modelName: selectedModel.name,
             providerId: provider.id,
+            isThinkBlockCollapsed: false,
           });
 
           if (attachments && attachments.length > 0) {
@@ -298,6 +299,7 @@ export function useToolBar() {
         modelId: selectedModelId,
         modelName: selectedModel.name,
         providerId: provider.id,
+        isThinkBlockCollapsed: false,
       });
 
       if (attachments && attachments.length > 0) {

@@ -9,6 +9,7 @@ export const messagesSchema = {
       enum: ["user", "assistant", "system", "function"],
     }),
     content: S.String(),
+    isThinkBlockCollapsed: S.Boolean({ default: false }),
     createdAt: S.Date({ default: S.Default.now() }),
     orderSeq: S.Number({ default: 0 }),
     tokenCount: S.Number({ default: 0 }),

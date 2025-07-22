@@ -344,6 +344,21 @@
         "switch": {
           "label": "ホームページにアプリストアを表示"
         }
+      },
+      "stream-output": {
+        "label": "ストリーム出力",
+        "smoother": {
+          "label": "ストリームスムーザー",
+          "switch": {
+            "label": "スムーズなストリーミング出力を有効にする"
+          }
+        },
+        "speed": {
+          "label": "出力速度",
+          "slow": "遅い",
+          "normal": "普通",
+          "fast": "速い"
+        }
       }
     }
   },
@@ -501,7 +516,11 @@
   },
   "stop-generating": "停止",
   "new-thread": {
-    "hello-world": "やあ、僕と一緒に世界を探検する準備はできたかい？"
+    "hello-world": "やあ、僕と一緒に世界を探検する準備はできたかい？",
+    "toolbox-label": "AIツール",
+    "toolbox-button": "他のツール",
+    "toolbox-title": "AIツール",
+    "toolbox-search-placeholder": "検索"
   },
   "attachment": {
     "file-too-large": "ファイルサイズは10MBを超えることはできません"
@@ -513,5 +532,6 @@
   "shortcuts": {
     "tab-not-exist": "タブ {{tabNumber}} は存在しません",
     "tab-switch-error": "タブ {{tabNumber}} への切り替えに失敗しました"
-  }
+  },
+  "toolbox-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています"
 }

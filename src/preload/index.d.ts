@@ -83,7 +83,7 @@ declare global {
           toIndex: number,
           tabs: Tab[],
         ) => Promise<void>;
-        activateTab: (tabId: string) => Promise<void>;
+        // activateTab: (tabId: string) => Promise<void>;
       };
       providerService: {
         checkApiKey: (provider: Provider) => Promise<{
@@ -204,6 +204,9 @@ declare global {
         setsearchService: (searchService: SearchService) => Promise<void>;
         updateSelectedModelId: (modelId: string) => Promise<void>;
         setDisplayAppStore: (displayAppStore: boolean) => Promise<void>;
+        // Stream output settings
+        setStreamSmootherEnabled: (enabled: boolean) => Promise<void>;
+        setStreamSpeed: (speed: "slow" | "normal" | "fast") => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;
@@ -240,6 +243,13 @@ declare global {
         getStatus: () => Promise<UpdaterStatus>;
         update: () => Promise<void>;
         install: () => Promise<void>;
+      };
+      toolboxService: {
+        getToolUrl: (toolId: number) => Promise<{
+          isOk: boolean;
+          url: string;
+          errorMsg: string | null;
+        }>;
       };
     };
   }

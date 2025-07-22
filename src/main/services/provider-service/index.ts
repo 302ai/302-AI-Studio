@@ -9,6 +9,7 @@ import {
   type ChatMessage,
   convertMessagesToModelMessages,
 } from "@main/utils/message-converter";
+import { StreamSmoother, DEFAULT_SMOOTHER_CONFIG, type StreamSmootherConfig } from "@main/utils/stream-smoother";
 import logger from "@shared/logger/main-logger";
 import type {
   CreateModelData,
@@ -16,7 +17,6 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import type { LanguageModelUsage } from "ai";
 import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
@@ -188,6 +188,30 @@ export class ProviderService {
     return providerInst;
   }
 
+  /**
+   * Get streaming configuration from settings
+   */
+  private async getStreamConfig(): Promise<StreamSmootherConfig> {
+    const enabled = await this.settingsService.getStreamSmootherEnabled();
+    const speed = await this.settingsService.getStreamSpeed();
+    
+    const speedMultipliers = {
+      slow: 0.5,    // 50% speed
+      normal: 1.0,  // 100% speed  
+      fast: 2.0,    // 200% speed
+    };
+    
+    const multiplier = speedMultipliers[speed];
+    
+    return {
+      ...DEFAULT_SMOOTHER_CONFIG,
+      enabled,
+      baseSpeed: DEFAULT_SMOOTHER_CONFIG.baseSpeed * multiplier,
+      minSpeed: DEFAULT_SMOOTHER_CONFIG.minSpeed * multiplier,
+      maxSpeed: DEFAULT_SMOOTHER_CONFIG.maxSpeed * multiplier,
+    };
+  }
+
   private getProviderById(providerId: string): Provider {
     const provider = this.providerMap.get(providerId);
     if (!provider) {
@@ -271,34 +295,79 @@ export class ProviderService {
         parentMessageId: userMessageId,
         modelId: model.id,
         modelName: model.name,
+        isThinkBlockCollapsed: false,
       });
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,
         status: "pending",
       });
 
-      for await (const delta of result.textStream) {
-        fullContent += delta;
+      // Get dynamic stream configuration
+      const streamConfig = await this.getStreamConfig();
 
-        await this.chatService.updateMessage(assistantMessage.id, {
-          content: fullContent,
-        });
-        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
-          threadId,
-          status: "pending",
-          delta: delta,
-        });
+      // Initialize StreamSmoother for smooth output
+      const streamSmoother = new StreamSmoother(
+        async (smoothedChunk: string) => {
+          // Check if request was aborted
+          if (abortController.signal.aborted) {
+            streamSmoother.stop();
+            return;
+          }
+
+          fullContent += smoothedChunk;
+          
+          if (assistantMessage) {
+            await this.chatService.updateMessage(assistantMessage.id, {
+              content: fullContent,
+            });
+          }
+          sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+            threadId,
+            status: "pending",
+            delta: smoothedChunk,
+          });
+        },
+        streamConfig,  // Use dynamic configuration
+      );
+
+      // Handle abort signal
+      abortController.signal.addEventListener('abort', () => {
+        streamSmoother.stop();
+      });
+
+      try {
+        // Stream processing for OpenAI SDK with smoothing
+        for await (const chunk of result) {
+          if (abortController.signal.aborted) {
+            break;
+          }
+          
+          const delta = chunk.choices[0]?.delta?.content || "";
+          if (delta) {
+            // Add chunk to smoother instead of directly outputting
+            streamSmoother.addChunk(delta);
+          }
+        }
+
+        // Signal completion to smoother and wait for it to finish
+        if (!abortController.signal.aborted) {
+          await new Promise<void>((resolve) => {
+            streamSmoother.complete(() => {
+              resolve();
+            });
+          });
+        }
+      } catch (error) {
+        streamSmoother.stop();
+        throw error;
       }
 
-      let usage: LanguageModelUsage | null = null;
-
-      if (fullContent !== "") {
-        usage = await result.usage;
-      }
+      // Note: OpenAI SDK streaming doesn't provide usage info in real-time
+      // Token counting would require a separate call if needed
 
       if (fullContent === "") {
         await this.chatService.updateMessage(assistantMessage.id, {
-          tokenCount: usage?.outputTokens ?? 0,
+          tokenCount: 0,
           status: "error",
         });
         sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
@@ -313,7 +382,7 @@ export class ProviderService {
       }
 
       await this.chatService.updateMessage(assistantMessage.id, {
-        tokenCount: usage?.outputTokens ?? 0,
+        tokenCount: 0,
         status: "success",
       });
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {

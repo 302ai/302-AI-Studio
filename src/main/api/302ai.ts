@@ -1,5 +1,6 @@
 import { betterFetch } from "@better-fetch/fetch";
 import { extractErrorMessage } from "@main/utils/error-utils";
+import type { Language } from "@shared/triplit/types";
 import { z } from "zod";
 
 const ai302UserInfoSchema = z.object({
@@ -38,4 +39,77 @@ export async function fetch302AIUserInfo(
   return data;
 }
 
-// export async function fetch302AIDefaultToolboxApiKey();
+const ai302ToolListSchema = z.object({
+  data: z.object({
+    data: z.array(
+      z.object({
+        tool_id: z.number(),
+        tool_name: z.string(),
+        tool_description: z.string(),
+        enable: z.boolean(),
+        category_name: z.string(),
+        category_id: z.number(),
+      }),
+    ),
+  }),
+});
+
+type Ai302ToolsList = z.infer<typeof ai302ToolListSchema>;
+
+export async function fetch302AIToolList(lang: Language) {
+  const langMap: Record<Language, string> = {
+    zh: "cn",
+    en: "en",
+    ja: "jp",
+  };
+
+  const { data, error } = await betterFetch<Ai302ToolsList>(
+    "https://dash-api.302.ai/gpt/api/tool/list",
+    {
+      method: "GET",
+      headers: {
+        Lang: langMap[lang],
+      },
+    },
+  );
+
+  if (error) {
+    const errorMessage = extractErrorMessage(error);
+    throw new Error(`Failed to fetch 302.AI tools list: ${errorMessage}`);
+  }
+
+  return data.data;
+}
+
+const ai302ToolDetailSchema = z.object({
+  data: z.object({
+    app_box_detail: z.record(
+      z.string(),
+      z.object({
+        api_key: z.string().optional(),
+        url: z.string(),
+      }),
+    ),
+  }),
+});
+
+type Ai302ToolDetail = z.infer<typeof ai302ToolDetailSchema>;
+
+export async function fetch302AIToolDetail(uidBase64: string) {
+  const { data, error } = await betterFetch<Ai302ToolDetail>(
+    `https://dash-api.302.ai/gpt/api/v1/code`,
+    {
+      method: "GET",
+      headers: {
+        uid: uidBase64,
+      },
+    },
+  );
+
+  if (error) {
+    const errorMessage = extractErrorMessage(error);
+    throw new Error(`Failed to fetch 302.AI tool detail: ${errorMessage}`);
+  }
+
+  return data;
+}

@@ -60,7 +60,7 @@ export class TriplitService {
       this.isServerRunning = true;
       logger.info("Triplit server started successfully");
 
-      const client = initTriplitClient();
+      const client = await initTriplitClient();
       client.updateServerUrl(`http://localhost:${this.port}`);
       client.connect();
 
@@ -137,10 +137,7 @@ export class TriplitService {
       ? join(__dirname, "../../../db")
       : app.getPath("userData");
     const defaultDatabaseDir = path.join(userDataPath, "triplit");
-    const defaultDatabaseFile = path.join(
-      defaultDatabaseDir,
-      "db-25.29.5.sqlite",
-    );
+    const defaultDatabaseFile = path.join(defaultDatabaseDir, "db.sqlite");
 
     logger.info("Default database file:", { defaultDatabaseFile });
 
