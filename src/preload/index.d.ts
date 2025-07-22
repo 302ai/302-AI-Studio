@@ -83,7 +83,7 @@ declare global {
           toIndex: number,
           tabs: Tab[],
         ) => Promise<void>;
-        activateTab: (tabId: string) => Promise<void>;
+        // activateTab: (tabId: string) => Promise<void>;
       };
       providerService: {
         checkApiKey: (provider: Provider) => Promise<{
@@ -240,6 +240,13 @@ declare global {
         getStatus: () => Promise<UpdaterStatus>;
         update: () => Promise<void>;
         install: () => Promise<void>;
+      };
+      toolboxService: {
+        getToolUrl: (toolId: number) => Promise<{
+          isOk: boolean;
+          url: string;
+          errorMsg: string | null;
+        }>;
       };
     };
   }

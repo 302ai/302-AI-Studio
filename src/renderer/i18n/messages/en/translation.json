@@ -500,7 +500,11 @@
   },
   "stop-generating": "Stop",
   "new-thread": {
-    "hello-world": "Hi, are you ready to explore the world with me?"
+    "hello-world": "Hi, are you ready to explore the world with me?",
+    "toolbox-label": "AI Tools",
+    "toolbox-button": "More Tools",
+    "toolbox-title": "AI Tools",
+    "toolbox-search-placeholder": "Search"
   },
   "attachment": {
     "file-too-large": "File size cannot exceed 10MB"
@@ -512,5 +516,6 @@
   "shortcuts": {
     "tab-not-exist": "Tab {{tabNumber}} does not exist",
     "tab-switch-error": "Failed to switch to tab {{tabNumber}}"
-  }
+  },
+  "toolbox-error-msg": "The API Key of 302.AI provider is not configured or is incorrect, please reconfigure"
 }

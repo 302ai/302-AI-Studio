@@ -1,4 +1,3 @@
-import { createOpenAI } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import {
@@ -12,9 +11,10 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import type { StreamTextResult, ToolSet } from "ai";
+import OpenAI from "openai";
 import type { SettingsService } from "../../settings-service";
 import type {
+  OpenAIStreamResponse,
   StreamChatParams,
   SummaryTitleParams,
 } from "../base-provider-service";
@@ -38,7 +38,7 @@ export class AI302ProviderService extends OpenAIProviderService {
 
   private async initializeOpenAI(provider: Provider) {
     const { enableReason, webSearchConfig } = await this.getSettings();
-    this.openai = createOpenAI({
+    this.openai = new OpenAI({
       apiKey: provider.apiKey,
       baseURL: provider.baseUrl,
       fetch: ai302Fetcher(enableReason, webSearchConfig),
@@ -59,7 +59,7 @@ export class AI302ProviderService extends OpenAIProviderService {
     };
 
     const { enableReason, webSearchConfig } = await this.getSettings();
-    this.openai = createOpenAI({
+    this.openai = new OpenAI({
       apiKey: updateData.apiKey,
       baseURL: updateData.baseUrl,
       fetch: ai302Fetcher(enableReason, webSearchConfig, false, false),
@@ -69,7 +69,7 @@ export class AI302ProviderService extends OpenAIProviderService {
   async startStreamChat(
     params: StreamChatParams,
     abortController: AbortController,
-  ): Promise<StreamTextResult<ToolSet, never>> {
+  ): Promise<OpenAIStreamResponse> {
     const { enableReason, webSearchConfig } = await this.getSettings();
     const { messages, model } = params;
     const modelMessages = await convertMessagesToModelMessages(
@@ -85,12 +85,12 @@ export class AI302ProviderService extends OpenAIProviderService {
       enableVision =
         Array.isArray(lastMessage.content) &&
         lastMessage.content.some(
-          (item: { type: string }) => item.type === "image",
+          (item: { type: string }) => item.type === "image_url",
         );
       if (enableVision) {
         newMessages = newMessages.filter((item) => {
           if (Array.isArray(item?.content)) {
-            return !item?.content.some((item) => item.type === "image");
+            return !item?.content.some((item) => item.type === "image_url");
           }
           return true;
         });
@@ -98,7 +98,7 @@ export class AI302ProviderService extends OpenAIProviderService {
       } else {
         newMessages = newMessages.filter((item) => {
           if (Array.isArray(item?.content)) {
-            return !item?.content.some((item) => item.type === "image");
+            return !item?.content.some((item) => item.type === "image_url");
           }
           return true;
         });
@@ -110,17 +110,18 @@ export class AI302ProviderService extends OpenAIProviderService {
     const canReason = !model.capabilities.has("reasoning") && enableReason;
     const isClaude = detectModelProvider(model.name) === "anthropic";
 
-    this.openai = createOpenAI({
+    this.openai = new OpenAI({
       apiKey: this.provider.apiKey,
       baseURL: this.provider.baseUrl,
       fetch: ai302Fetcher(canReason, webSearchConfig, enableVision, isClaude),
     });
 
-    return await super._startStreamChat(
+    return await this._startStreamChat(
       { ...params, messages: newMessages as ChatMessage[] },
       abortController,
-      this.openai(model.name),
+      this.openai,
       newMessages,
+      model.name,
     );
   }
 
@@ -167,7 +168,7 @@ export class AI302ProviderService extends OpenAIProviderService {
   async summaryTitle(params: SummaryTitleParams): Promise<{
     text: string;
   }> {
-    this.openai = createOpenAI({
+    this.openai = new OpenAI({
       apiKey: this.provider.apiKey,
       baseURL: this.provider.baseUrl,
       fetch: ai302Fetcher(false, { enabled: false }),

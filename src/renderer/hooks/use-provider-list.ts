@@ -1,6 +1,6 @@
+import logger from "@shared/logger/renderer-logger";
 import type { CreateProviderData, Provider } from "@shared/triplit/types";
 import { useState } from "react";
-import logger from "@shared/logger/renderer-logger";
 
 const { configService, providerService } = window.service;
 

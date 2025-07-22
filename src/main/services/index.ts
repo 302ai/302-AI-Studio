@@ -11,6 +11,7 @@ import { ShellService } from "./shell-service";
 import { ShortcutsService } from "./shortcuts-service";
 import { TabService } from "./tab-service";
 import { ThreadService } from "./thread-service";
+import { ToolboxService } from "./toolbox-service";
 import { TriplitService } from "./triplit-service";
 import { UiService } from "./ui-service";
 import { UpdaterService } from "./updater-service";
@@ -34,4 +35,5 @@ export const services = [
   ShellService,
   ModelService,
   UpdaterService,
+  ToolboxService,
 ];

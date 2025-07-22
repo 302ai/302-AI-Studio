@@ -11,7 +11,7 @@ import type {
   SettingsDbService,
   WebSearchConfig,
 } from "./db-service/settings-db-service";
-import { EventNames, emitter } from "./event-service";
+import { EventNames, emitter, sendToMain } from "./event-service";
 
 @injectable()
 @ServiceRegister(TYPES.SettingsService)
@@ -145,6 +145,7 @@ export class SettingsService {
   async setLanguage(language: Language): Promise<void> {
     try {
       await this.settingsDbService.setLanguage(language);
+      sendToMain(EventNames.SETTINGS_LANGUAGE_UPDATE, { language });
     } catch (error) {
       logger.error("SettingsService:setLanguage error", { error });
       throw error;

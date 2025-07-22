@@ -2,6 +2,7 @@
 // ! Support main process to main process communication of main process to renderer process communication
 
 import type {
+  Language,
   Message,
   Provider,
   ShortcutAction,
@@ -36,6 +37,9 @@ export enum EventNames {
   // * Updater Events
   UPDATER_CHECK_STATUS = "updater:check-status",
   UPDATER_DOWNLOAD_STATUS = "updater:download-status",
+
+  // * Settings Events
+  SETTINGS_LANGUAGE_UPDATE = "settings:language-update",
 }
 
 type Events = {
@@ -77,6 +81,9 @@ type Events = {
   [EventNames.UPDATER_DOWNLOAD_STATUS]: {
     status: "downloading" | "downloaded";
     precent?: number;
+  };
+  [EventNames.SETTINGS_LANGUAGE_UPDATE]: {
+    language: Language;
   };
 };
 

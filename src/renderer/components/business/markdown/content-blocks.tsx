@@ -7,17 +7,24 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MarkdownRenderer } from "./markdown-renderer";
 
+const { messageService } = window.service;
+
 interface ContentBlocksProps {
   content: string;
   messageId: string;
+  isThinkBlockCollapsed: boolean;
 }
 
-export function ContentBlocks({ content, messageId }: ContentBlocksProps) {
+export function ContentBlocks({
+  content,
+  messageId,
+  isThinkBlockCollapsed,
+}: ContentBlocksProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(isThinkBlockCollapsed);
 
   const { blocks } = useContentBlocks(content);
 
@@ -27,6 +34,9 @@ export function ContentBlocks({ content, messageId }: ContentBlocksProps) {
 
   const toggleCollapse = () => {
     setIsCollapsed((prev) => !prev);
+    messageService.updateMessage(messageId, {
+      isThinkBlockCollapsed: !isCollapsed,
+    });
   };
 
   return (

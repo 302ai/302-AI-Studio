@@ -71,7 +71,7 @@ export function AboutSettings() {
           </div>
         </div>
 
-        <p className="mx-auto line-clamp-2 max-w-xl text-center text-muted-fg text-sm leading-relaxed">
+        <p className="mx-auto max-w-xl text-center text-muted-fg text-sm leading-relaxed">
           {t("description.content")}
           <Link
             onClick={() => handleLinkClick(homepage)}

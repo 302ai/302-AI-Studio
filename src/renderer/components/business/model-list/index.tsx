@@ -226,7 +226,7 @@ export function ModelList({
         </div>
         <div className="flex items-center justify-center gap-2">
           <SearchField
-            className="[&_[role=group]]:inset-ring-transparent [&_[role=group]]:h-[40px] [&_[role=group]]:bg-setting [&_[role=group]]:shadow-none [&_[role=group]]:focus-within:inset-ring-transparent [&_[role=group]]:hover:inset-ring-transparent [&_input]:text-setting-fg"
+            className="rounded-[10px] bg-setting [&_[role=group]]:h-[40px]"
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder={t("search-placeholder")}

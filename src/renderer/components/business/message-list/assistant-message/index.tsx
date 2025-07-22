@@ -117,7 +117,11 @@ export function AssistantMessage({
           modelName={message.modelName}
         />
 
-        <MessageContent messageId={message.id} content={message.content} />
+        <MessageContent
+          messageId={message.id}
+          content={message.content}
+          isThinkBlockCollapsed={message.isThinkBlockCollapsed}
+        />
 
         <MessageStatus status={message.status} />
 

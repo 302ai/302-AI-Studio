@@ -6,6 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 import injectProcessEnvPlugin from "rollup-plugin-inject-process-env";
 import tsconfigPathsPlugin from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react";
+import babel from 'vite-plugin-babel';
 
 import { settings } from "./src/lib/electron-router-dom";
 import { main, resources } from "./package.json";
@@ -74,7 +75,11 @@ export default defineConfig({
       tsconfigPaths,
       tailwindcss(),
       react(),
-
+      babel({
+        babelConfig: {
+          plugins: ['babel-plugin-react-compiler'],
+        },
+      }),
       codeInspectorPlugin({
         bundler: "vite",
         hotKeys: ["altKey"],

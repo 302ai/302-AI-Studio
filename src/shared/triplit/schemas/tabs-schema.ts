@@ -5,7 +5,7 @@ export const tabsSchema = {
     id: S.Id({ format: "nanoid" }),
     title: S.String(),
     type: S.String({
-      enum: ["thread", "setting"],
+      enum: ["thread", "setting", "302ai-tool"],
     }),
     path: S.String({
       nullable: true,

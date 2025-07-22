@@ -1,4 +1,3 @@
-import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { fetchOpenAIModels } from "@main/api/ai";
 import { extractErrorMessage } from "@main/utils/error-utils";
 import { detectModelProvider, parseModels } from "@main/utils/models";
@@ -9,25 +8,22 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
-import {
-  generateText,
-  type ModelMessage,
-  type StreamTextResult,
-  type ToolSet,
-} from "ai";
+import OpenAI from "openai";
 import {
   BaseProviderService,
+  type ModelMessage,
+  type OpenAIStreamResponse,
   type StreamChatParams,
   type SummaryTitleParams,
 } from "./base-provider-service";
 
 export class OpenAIProviderService extends BaseProviderService {
-  protected openai: OpenAIProvider;
+  protected openai: OpenAI;
 
   constructor(provider: Provider) {
     super(provider);
 
-    this.openai = createOpenAI({
+    this.openai = new OpenAI({
       apiKey: provider.apiKey,
       baseURL: provider.baseUrl,
       fetch: createReasoningFetch(),
@@ -60,7 +56,7 @@ export class OpenAIProviderService extends BaseProviderService {
       ...updateData,
     };
 
-    this.openai = createOpenAI({
+    this.openai = new OpenAI({
       apiKey: updateData.apiKey,
       baseURL: updateData.baseUrl,
       fetch: createReasoningFetch(),
@@ -110,12 +106,10 @@ export class OpenAIProviderService extends BaseProviderService {
   async startStreamChat(
     params: StreamChatParams,
     abortController: AbortController,
-  ): Promise<StreamTextResult<ToolSet, never>> {
+  ): Promise<OpenAIStreamResponse> {
     const { messages, model: originModel } = params;
 
     try {
-      const model = this.openai(originModel.name);
-
       const isClaude = detectModelProvider(originModel.name) === "anthropic";
       logger.info("Starting stream chat", {
         tabId: params.tabId,
@@ -123,7 +117,7 @@ export class OpenAIProviderService extends BaseProviderService {
       });
 
       if (isClaude) {
-        this.openai = createOpenAI({
+        this.openai = new OpenAI({
           apiKey: this.provider.apiKey,
           baseURL: this.provider.baseUrl,
           fetch: createReasoningFetch(isClaude),
@@ -133,8 +127,9 @@ export class OpenAIProviderService extends BaseProviderService {
       const result = await this._startStreamChat(
         params,
         abortController,
-        model,
+        this.openai,
         messages as ModelMessage[],
+        originModel.name,
       );
 
       return result;
@@ -150,14 +145,13 @@ export class OpenAIProviderService extends BaseProviderService {
     const { messages, model: originModel } = params;
 
     try {
-      const model = this.openai(originModel.name);
-
       const conversationText = messages
         .map((m) => `${m.role}: ${m.content}`)
         .join("\n");
       const prompt = `You need to summarize the user's conversation into a title of no more than 10 words, with the title language matching the user's primary language, without using punctuation or other special symbols`;
-      const result = await generateText({
-        model: model,
+
+      const result = await this.openai.chat.completions.create({
+        model: originModel.name,
         messages: [
           { role: "system", content: prompt },
           { role: "user", content: conversationText },
@@ -165,7 +159,7 @@ export class OpenAIProviderService extends BaseProviderService {
       });
 
       return {
-        text: result.text,
+        text: result.choices[0]?.message?.content || "",
       };
     } catch (error) {
       logger.error("Failed to generate text:", { error });
