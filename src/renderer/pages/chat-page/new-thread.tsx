@@ -1,10 +1,16 @@
 import BlurText from "@renderer/components/business/blur-text";
-import { ChatInput } from "@renderer/components/business/chat-input";
+import {
+  ChatInput,
+  type ChatInputRef,
+} from "@renderer/components/business/chat-input";
 import { Toolbox } from "@renderer/components/business/toolbox";
 import { Label } from "@renderer/components/ui/field";
+import { useSidebar } from "@renderer/components/ui/sidebar";
+import { useChatInputFocus } from "@renderer/hooks/use-chat-input-focus";
 import { useTriplit } from "@renderer/hooks/use-triplit";
 import { cn } from "@renderer/lib/utils";
 import { motion } from "motion/react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 export function NewThread() {
@@ -12,7 +18,11 @@ export function NewThread() {
     keyPrefix: "new-thread",
   });
 
+  const chatInputRef = useRef<ChatInputRef>(null);
   const { settings } = useTriplit();
+  const { isTransitioning } = useSidebar();
+
+  useChatInputFocus(chatInputRef);
 
   const displayAppStore = settings?.[0]?.displayAppStore;
 
@@ -27,14 +37,18 @@ export function NewThread() {
         />
 
         <motion.div
-          layoutId="chat-input"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+          }}
+          layoutId={isTransitioning ? undefined : "chat-input"}
           transition={{
-            duration: 0.3,
+            duration: isTransitioning ? 0 : 0.3,
             ease: "easeInOut",
           }}
           className="mx-auto w-full"
         >
-          <ChatInput />
+          <ChatInput ref={chatInputRef} />
         </motion.div>
       </div>
 

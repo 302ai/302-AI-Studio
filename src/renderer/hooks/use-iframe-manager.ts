@@ -1,15 +1,20 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useActiveTab } from "./use-active-tab";
+import { useTriplit } from "./use-triplit";
 
 const iframeCache = new Map<string, HTMLIFrameElement>();
 
 export function useIframeManager() {
   const { activeTab } = useActiveTab();
+  const { settings } = useTriplit();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const createIframe = useCallback((subdomain: string): HTMLIFrameElement => {
+  const lang = settings?.[0]?.language;
+
+  const createIframe = useCallback((url: string): HTMLIFrameElement => {
     const iframe = document.createElement("iframe");
-    iframe.src = `https://${subdomain}.302.ai`;
+    iframe.src = url;
     iframe.className = "h-full w-full absolute top-0 left-0";
     iframe.title = "302AI Tool";
     iframe.allow = `accelerometer;
@@ -42,12 +47,12 @@ export function useIframeManager() {
   }, []);
 
   const getOrCreateIframe = useCallback(
-    (subdomain: string): HTMLIFrameElement => {
-      const cacheKey = `302ai-tool-${subdomain}`;
+    (url: string): HTMLIFrameElement => {
+      const cacheKey = url;
       let iframe = iframeCache.get(cacheKey);
 
       if (!iframe) {
-        iframe = createIframe(subdomain);
+        iframe = createIframe(url);
         iframeCache.set(cacheKey, iframe);
 
         if (containerRef.current) {
@@ -67,8 +72,8 @@ export function useIframeManager() {
   }, []);
 
   const showIframe = useCallback(
-    (subdomain: string) => {
-      const iframe = getOrCreateIframe(subdomain);
+    (url: string) => {
+      const iframe = getOrCreateIframe(url);
       iframe.style.display = "block";
     },
     [getOrCreateIframe],
@@ -86,11 +91,13 @@ export function useIframeManager() {
 
     if (activeTab?.type === "302ai-tool" && activeTab.path) {
       const subdomain = extractSubdomain(activeTab.path);
+
       if (subdomain) {
-        showIframe(subdomain);
+        const url = `https://${subdomain}.302.ai?lang=${lang}`;
+        showIframe(url);
       }
     }
-  }, [activeTab, hideAllIframes, showIframe, extractSubdomain]);
+  }, [activeTab, hideAllIframes, showIframe, extractSubdomain, lang]);
 
   const isIframeActive = activeTab?.type === "302ai-tool";
 

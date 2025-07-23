@@ -35,7 +35,8 @@ export class ToolboxService {
   private async initToolboxService() {
     try {
       const lang = await this.settingsService.getLanguage();
-      await this.updateToolList(lang);
+      const tools = await this.updateToolList(lang);
+      await this.updateToolDetailMap(tools);
     } catch (error) {
       logger.error("ToolboxService:initToolboxService error", { error });
       throw error;
@@ -49,15 +50,40 @@ export class ToolboxService {
     emitter.on(EventNames.PROVIDER_UPDATE, async ({ updateData }) => {
       if (updateData.apiType === "302ai") {
         const lang = await this.settingsService.getLanguage();
-        await this.updateToolList(lang);
+        const tools = await this.updateToolList(lang);
+        await this.updateToolDetailMap(tools);
       }
     });
   }
 
-  private async updateToolList(lang: Language) {
+  private async updateToolDetailMap(tools: CreateToolData[]) {
+    this.toolDetailMap.clear();
+
+    const _302AIProvider = await this.configService.get302AIProvider();
+    if (_302AIProvider.status !== "success") return;
+
+    const userInfo = await fetch302AIUserInfo(_302AIProvider.apiKey);
+    const uidBase64 = numberToBase64(userInfo.data.uid);
+    const toolDetail = await fetch302AIToolDetail(uidBase64);
+    for (const tool of tools) {
+      const detail = toolDetail.data.app_box_detail[`${tool.toolId}`];
+      if (detail) {
+        this.toolDetailMap.set(`${tool.toolId}`, detail.url);
+      }
+    }
+  }
+
+  private async updateToolList(lang: Language): Promise<CreateToolData[]> {
+    const langMap: Record<Language, "cn" | "en" | "jp"> = {
+      zh: "cn",
+      en: "en",
+      ja: "jp",
+    };
+    const _lang = langMap[lang];
+
     try {
-      const toolList = await fetch302AIToolList(lang);
-      const tools: CreateToolData[] = toolList.data
+      const toolList = await fetch302AIToolList(_lang);
+      const tools: CreateToolData[] = toolList
         .filter((tool) => tool.enable && ![9].includes(tool.tool_id)) // * Excluding AI Omni Toolbox(id:9)
         .reduce((acc: CreateToolData[], tool) => {
           const {
@@ -79,20 +105,7 @@ export class ToolboxService {
         }, []);
       await this.toolboxDbService.insertTools(tools);
 
-      this.toolDetailMap.clear();
-
-      const _302AIProvider = await this.configService.get302AIProvider();
-      if (_302AIProvider.status !== "success") return;
-
-      const userInfo = await fetch302AIUserInfo(_302AIProvider.apiKey);
-      const uidBase64 = numberToBase64(userInfo.data.uid);
-      const toolDetail = await fetch302AIToolDetail(uidBase64);
-      for (const tool of tools) {
-        const detail = toolDetail.data.app_box_detail[`${tool.toolId}`];
-        if (detail) {
-          this.toolDetailMap.set(`${tool.toolId}`, detail.url);
-        }
-      }
+      return tools;
     } catch (error) {
       logger.error("ToolboxService:updateToolList error", { error });
       throw error;

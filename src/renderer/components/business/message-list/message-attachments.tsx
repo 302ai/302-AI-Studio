@@ -1,4 +1,5 @@
 import { triplitClient } from "@renderer/client";
+import { PreviewModal } from "@renderer/components/business/preview-modal";
 import { Button } from "@renderer/components/ui/button";
 import { cn } from "@renderer/lib/utils";
 import logger from "@shared/logger/renderer-logger";
@@ -13,6 +14,7 @@ import {
   FileSpreadsheet,
   FileText,
 } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -30,6 +32,10 @@ export function MessageAttachments({
   const { t } = useTranslation("translation", {
     keyPrefix: "chat",
   });
+  const [previewAttachment, setPreviewAttachment] = useState<Attachment | null>(
+    null,
+  );
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const attachmentsQuery = triplitClient
     .query("attachments")
@@ -48,20 +54,27 @@ export function MessageAttachments({
 
   const handlePreview = async (attachment: Attachment) => {
     try {
-      // 优先使用文件路径直接打开
-      if (attachment.filePath) {
-        const result = await filePreviewService.previewFileByPath(
-          attachment.filePath,
-        );
-        if (!result.success) {
-          logger.error("Failed to preview file by path", {
-            error: result.error,
-          });
-          toast.error(t(result.error || "file-preview-failed"));
-        }
-      }
+      // Use in-app preview by default
+      setPreviewAttachment(attachment);
+      setIsPreviewOpen(true);
     } catch (error) {
-      logger.error("Error calling preview service:", { error });
+      logger.error("Error opening preview:", { error });
+      // Fallback to external preview
+      try {
+        if (attachment.filePath) {
+          const result = await filePreviewService.previewFileByPath(
+            attachment.filePath,
+          );
+          if (!result.success) {
+            logger.error("Failed to preview file by path", {
+              error: result.error,
+            });
+            toast.error(t(result.error || "file-preview-failed"));
+          }
+        }
+      } catch (fallbackError) {
+        logger.error("Error with fallback preview:", { fallbackError });
+      }
     }
   };
 
@@ -126,55 +139,67 @@ export function MessageAttachments({
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
-      {attachments.map((attachment) => (
-        <div key={attachment.id} className="group relative">
-          {attachment.type.startsWith("image/") && attachment.preview ? (
-            // 图片预览 - 气泡内样式
-            <Button
-              intent="plain"
-              className="hover:!bg-transparent !h-auto !w-auto !px-0 !py-0 relative cursor-pointer overflow-hidden rounded-lg border-0 bg-transparent p-0 transition-opacity [--btn-overlay:transparent]"
-              onClick={() => handlePreview(attachment)}
-              aria-label={`Preview image ${attachment.name}`}
-            >
-              <img
-                src={attachment.preview}
-                alt={attachment.name}
-                className="h-auto max-h-60 w-full rounded-lg object-cover"
-              />
-              {/* 图片信息覆盖层 */}
-              <div className="absolute right-0 bottom-0 left-0 bg-black/60 px-2 py-1 backdrop-blur-sm">
-                <div className="flex items-center gap-1 text-white text-xs">
-                  <span className="truncate">{attachment.name}</span>
-                  <span>({formatFileSize(attachment.size)})</span>
+    <>
+      <div className={cn("space-y-2", className)}>
+        {attachments.map((attachment) => (
+          <div key={attachment.id} className="group relative">
+            {attachment.type.startsWith("image/") && attachment.preview ? (
+              // 图片预览 - 气泡内样式
+              <Button
+                intent="plain"
+                className="hover:!bg-transparent !h-auto !w-auto !px-0 !py-0 relative cursor-pointer overflow-hidden rounded-lg border-0 bg-transparent p-0 transition-opacity [--btn-overlay:transparent]"
+                onClick={() => handlePreview(attachment)}
+                aria-label={`Preview image ${attachment.name}`}
+              >
+                <img
+                  src={attachment.preview}
+                  alt={attachment.name}
+                  className="h-auto max-h-60 w-full rounded-lg object-cover"
+                />
+                {/* 图片信息覆盖层 */}
+                <div className="absolute right-0 bottom-0 left-0 bg-black/60 px-2 py-1 backdrop-blur-sm">
+                  <div className="flex items-center gap-1 text-white text-xs">
+                    <span className="truncate">{attachment.name}</span>
+                    <span>({formatFileSize(attachment.size)})</span>
+                  </div>
                 </div>
-              </div>
-            </Button>
-          ) : (
-            // 非图片文件 - 气泡内样式
-            <Button
-              className={cn(
-                "flex w-full items-center gap-2 rounded-lg p-2 text-left",
-                "border border-border bg-muted/50",
-                "hover:!bg-muted/50 hover:!shadow-none cursor-pointer transition-colors",
-              )}
-              onClick={() => handlePreview(attachment)}
-              aria-label={`Preview file ${attachment.name}`}
-              intent="plain"
-            >
-              {getFileIcon(attachment)}
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-medium text-sm">
-                  {attachment.name}
+              </Button>
+            ) : (
+              // 非图片文件 - 气泡内样式
+              <Button
+                className={cn(
+                  "flex w-full items-center gap-2 rounded-lg p-2 text-left",
+                  "border border-border bg-muted/50",
+                  "hover:!bg-muted/50 hover:!shadow-none cursor-pointer transition-colors",
+                )}
+                onClick={() => handlePreview(attachment)}
+                aria-label={`Preview file ${attachment.name}`}
+                intent="plain"
+              >
+                {getFileIcon(attachment)}
+                <div className="min-w-0 flex-1">
+                  <div className="truncate font-medium text-sm">
+                    {attachment.name}
+                  </div>
+                  <div className="text-xs opacity-70">
+                    {formatFileSize(attachment.size)}
+                  </div>
                 </div>
-                <div className="text-xs opacity-70">
-                  {formatFileSize(attachment.size)}
-                </div>
-              </div>
-            </Button>
-          )}
-        </div>
-      ))}
-    </div>
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Preview Modal */}
+      <PreviewModal
+        attachment={previewAttachment}
+        isOpen={isPreviewOpen}
+        onClose={() => {
+          setIsPreviewOpen(false);
+          setPreviewAttachment(null);
+        }}
+      />
+    </>
   );
 }

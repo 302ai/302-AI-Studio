@@ -1,6 +1,5 @@
 import { betterFetch } from "@better-fetch/fetch";
 import { extractErrorMessage } from "@main/utils/error-utils";
-import type { Language } from "@shared/triplit/types";
 import { z } from "zod";
 
 const ai302UserInfoSchema = z.object({
@@ -56,19 +55,13 @@ const ai302ToolListSchema = z.object({
 
 type Ai302ToolsList = z.infer<typeof ai302ToolListSchema>;
 
-export async function fetch302AIToolList(lang: Language) {
-  const langMap: Record<Language, string> = {
-    zh: "cn",
-    en: "en",
-    ja: "jp",
-  };
-
+export async function fetch302AIToolList(lang: "cn" | "en" | "jp") {
   const { data, error } = await betterFetch<Ai302ToolsList>(
     "https://dash-api.302.ai/gpt/api/tool/list",
     {
       method: "GET",
       headers: {
-        Lang: langMap[lang],
+        Lang: lang,
       },
     },
   );
@@ -78,7 +71,28 @@ export async function fetch302AIToolList(lang: Language) {
     throw new Error(`Failed to fetch 302.AI tools list: ${errorMessage}`);
   }
 
-  return data.data;
+  const drawingRobotData = {
+    tool_id: -1,
+    tool_name:
+      lang === "cn"
+        ? "绘画机器人"
+        : lang === "jp"
+          ? "描画ロボット"
+          : "Drawing Robot",
+    tool_description:
+      lang === "cn"
+        ? "支持Midjourney、Flux、SD、Ideogram、Recraft"
+        : lang === "jp"
+          ? "Midjourney、Flux、SD、Ideogram、Recraftをサポート"
+          : "Supports Midjourney, Flux, SD, Ideogram, Recraft",
+    enable: true,
+    category_name:
+      lang === "cn" ? "机器人" : lang === "jp" ? "ロボット" : "Robots",
+    category_id: 999,
+  };
+  const tools = [drawingRobotData, ...data.data.data];
+
+  return tools;
 }
 
 const ai302ToolDetailSchema = z.object({

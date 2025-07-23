@@ -171,6 +171,7 @@ export function useShortcutsHandlers() {
       const nextTab = tabs[nextIndex];
 
       await uiService.updateActiveTabId(nextTab.id);
+      emitter.emit(EventNames.TAB_SELECT, { tabId: nextTab.id });
     } catch (error) {
       logger.error("Error switching to next tab", { error });
     }
@@ -189,6 +190,7 @@ export function useShortcutsHandlers() {
       const previousTab = tabs[previousIndex];
 
       await uiService.updateActiveTabId(previousTab.id);
+      emitter.emit(EventNames.TAB_SELECT, { tabId: previousTab.id });
     } catch (error) {
       logger.error("Error switching to previous tab", { error });
     }
@@ -212,6 +214,7 @@ export function useShortcutsHandlers() {
 
       try {
         await uiService.updateActiveTabId(targetTab.id);
+        emitter.emit(EventNames.TAB_SELECT, { tabId: targetTab.id });
       } catch (error) {
         logger.error(`Error switching to tab ${tabNumber}`, { error });
         toast.error(t("tab-switch-error", { tabNumber }));
