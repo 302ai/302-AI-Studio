@@ -21,6 +21,7 @@ import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
 import { EventNames, emitter, sendToThread } from "../event-service";
+import type { MessageService } from "../message-service";
 import type { SettingsService } from "../settings-service";
 import { AI302ProviderService } from "./302AI-provider-service/302AI-provider-service";
 import type {
@@ -43,6 +44,7 @@ export class ProviderService {
   constructor(
     @inject(TYPES.ConfigService) private configService: ConfigService,
     @inject(TYPES.ChatService) private chatService: ChatService,
+    @inject(TYPES.MessageService) private messageService: MessageService,
     @inject(TYPES.SettingsService) private settingsService: SettingsService,
   ) {
     this.init();
@@ -339,7 +341,10 @@ export class ProviderService {
         // Stream processing for OpenAI SDK with smoothing
         for await (const chunk of result) {
           if (abortController.signal.aborted) {
-            break;
+            // Explicitly throw AbortError to ensure proper handling
+            const abortError = new Error('Stream aborted by user');
+            abortError.name = 'AbortError';
+            throw abortError;
           }
           
           const delta = chunk.choices[0]?.delta?.content || "";
@@ -446,6 +451,41 @@ export class ProviderService {
     const { threadId } = params;
     const aborted = abortStream(threadId);
     logger.info("Stream chat stop requested", { threadId, aborted });
+    
+    // If we successfully aborted a stream, ensure any pending messages are updated
+    if (aborted) {
+      try {
+        // Get messages for this thread to find any pending assistant messages  
+        const messages = await this.messageService._getMessagesByThreadId(threadId);
+        const pendingAssistantMessage = messages
+          .filter((msg: Message) => msg.role === "assistant" && msg.status === "pending")
+          .pop(); // Get the last pending assistant message
+
+        if (pendingAssistantMessage) {
+          // Update the message status to "stop"
+          await this.chatService.updateMessage(pendingAssistantMessage.id, {
+            status: "stop",
+          });
+          
+          // Send status update to UI
+          sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+            threadId,
+            status: "stop",
+          });
+          
+          logger.info("Updated pending message status to stop", { 
+            threadId, 
+            messageId: pendingAssistantMessage.id 
+          });
+        }
+      } catch (error) {
+        logger.error("Failed to update pending message status on stream stop", { 
+          threadId, 
+          error 
+        });
+      }
+    }
+    
     return { success: true };
   }
 
