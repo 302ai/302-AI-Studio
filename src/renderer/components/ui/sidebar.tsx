@@ -55,6 +55,7 @@ type SidebarContextProps = {
   animationsEnabled: boolean;
   isInSettingsMode: boolean;
   setSettingsMode: (enabled: boolean) => void;
+  sidebarVisible: boolean;
   isTransitioning: boolean;
 };
 
@@ -91,9 +92,7 @@ const SidebarProvider = ({
   const [openMobile, setOpenMobile] = useState(false);
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
   const [isInSettingsMode, setIsInSettingsMode] = useState(false);
-  const [preSettingsOpenState, setPreSettingsOpenState] = useState<
-    boolean | null
-  >(null);
+
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const [internalOpenState, setInternalOpenState] = useState(defaultOpen);
@@ -139,37 +138,30 @@ const SidebarProvider = ({
   const setSettingsMode = useCallback(
     (enabled: boolean) => {
       if (enabled) {
-        // Entering settings mode - save current state
-        setPreSettingsOpenState(open);
+        // Entering settings mode - disable animations and set settings mode
+        setIsTransitioning(true);
+        setAnimationsEnabled(false);
         setIsInSettingsMode(true);
-      } else {
-        // Exiting settings mode - restore previous state without animation
-        setIsTransitioning(true); // Mark as transitioning to disable all animations
-        setIsInSettingsMode(false);
-
-        if (preSettingsOpenState !== null) {
-          // Temporarily disable animations
-          setAnimationsEnabled(false);
-
-          // Restore the original state
-          if (isMobile) {
-            setOpenMobile(preSettingsOpenState);
-          } else {
-            setOpen(preSettingsOpenState);
-          }
-
-          setTimeout(() => {
-            setAnimationsEnabled(true);
-            setIsTransitioning(false);
-          }, 100);
-
-          setPreSettingsOpenState(null);
-        } else {
+        
+        // Re-enable animations after transition
+        setTimeout(() => {
+          setAnimationsEnabled(true);
           setIsTransitioning(false);
-        }
+        }, 100);
+      } else {
+        // Exiting settings mode - disable animations during transition
+        setIsTransitioning(true);
+        setAnimationsEnabled(false);
+        setIsInSettingsMode(false);
+        
+        // Re-enable animations after transition
+        setTimeout(() => {
+          setAnimationsEnabled(true);
+          setIsTransitioning(false);
+        }, 100);
       }
     },
-    [open, isMobile, setOpen, preSettingsOpenState],
+    [],
   );
 
   useEffect(() => {
@@ -184,7 +176,11 @@ const SidebarProvider = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [toggleSidebar, shortcut]);
 
-  const state = isInSettingsMode || !open ? "collapsed" : "expanded";
+  // Keep the actual sidebar state unchanged, only control visibility
+  const state = open ? "expanded" : "collapsed";
+  
+  // Use visibility control for settings mode instead of changing state
+  const sidebarVisible = !isInSettingsMode;
 
   const contextValue = useMemo<SidebarContextProps>(
     () => ({
@@ -199,6 +195,7 @@ const SidebarProvider = ({
       animationsEnabled: animationsEnabled && !isInSettingsMode,
       isInSettingsMode,
       setSettingsMode,
+      sidebarVisible,
       isTransitioning,
     }),
     [
@@ -212,6 +209,7 @@ const SidebarProvider = ({
       animationsEnabled,
       isInSettingsMode,
       setSettingsMode,
+      sidebarVisible,
       isTransitioning,
     ],
   );
@@ -261,6 +259,7 @@ const Sidebar = ({
     isOpenOnMobile,
     setIsOpenOnMobile,
     animationsEnabled,
+    sidebarVisible,
   } = useSidebar();
 
   if (collapsible === "none") {
@@ -310,10 +309,12 @@ const Sidebar = ({
       <div
         aria-hidden="true"
         className={twMerge([
-          "w-(--sidebar-width) group-data-[sidebar-collapsible=hidden]/sidebar-container:w-0",
+          "group-data-[sidebar-collapsible=hidden]/sidebar-container:w-0",
           "group-data-[sidebar-side=right]/sidebar-container:rotate-180",
           "relative h-svh bg-transparent ease-linear",
           animationsEnabled && "transition-[width] duration-200",
+          // Conditional width for settings mode
+          sidebarVisible ? "w-(--sidebar-width)" : "w-0",
           intent === "default" &&
             "group-data-[sidebar-collapsible=dock]/sidebar-container:w-(--sidebar-width-dock)",
           intent === "float" &&
@@ -324,11 +325,13 @@ const Sidebar = ({
       />
       <div
         className={twMerge(
-          "fixed inset-y-0 z-10 hidden h-svh min-h-svh w-(--sidebar-width) bg-sidebar",
+          "fixed inset-y-0 z-10 h-svh min-h-svh bg-sidebar",
           "not-has-data-sidebar-footer:pb-2",
           "ease-linear",
           animationsEnabled && "transition-[left,right,width] duration-200",
           "md:flex",
+          // Conditional width: full width in normal mode, zero width in settings mode
+          sidebarVisible ? "w-(--sidebar-width)" : "w-0 overflow-hidden",
           side === "left" &&
             "left-0 group-data-[sidebar-collapsible=hidden]/sidebar-container:left-[calc(var(--sidebar-width)*-1)]",
           side === "right" &&

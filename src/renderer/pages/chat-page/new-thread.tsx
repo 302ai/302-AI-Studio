@@ -37,15 +37,11 @@ export function NewThread() {
         />
 
         <motion.div
-          layoutId="chat-input"
-          transition={
-            isTransitioning
-              ? { duration: 0 }
-              : {
-                  duration: 0.3,
-                  ease: "easeInOut",
-                }
-          }
+          layoutId={isTransitioning ? undefined : "chat-input"}
+          transition={{
+            duration: isTransitioning ? 0 : 0.3,
+            ease: "easeInOut",
+          }}
           className="mx-auto w-full"
         >
           <ChatInput ref={chatInputRef} />

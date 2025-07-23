@@ -42,9 +42,8 @@ export function ChatPage() {
     >
       <div
         className={cn(
-          "flex h-full flex-col py-6 ease-in-out",
+          "flex h-full flex-col py-6 transition-all duration-300 ease-in-out",
           isArtifactOpen ? "flex-[0_0_60%]" : "flex-1",
-          !isTransitioning && "transition-all duration-300", // Only add transition when not transitioning
         )}
       >
         <div
@@ -59,15 +58,11 @@ export function ChatPage() {
         </div>
 
         <motion.div
-          layoutId="chat-input"
-          transition={
-            isTransitioning
-              ? { duration: 0 }
-              : {
-                  duration: 0.3,
-                  ease: "easeInOut",
-                }
-          }
+          layoutId={isTransitioning ? undefined : "chat-input"}
+          transition={{
+            duration: isTransitioning ? 0 : 0.3,
+            ease: "easeInOut",
+          }}
           className="relative mx-auto w-full max-w-[720px] pt-4"
         >
           <ChatInput ref={chatInputRef} streaming={streaming} />
