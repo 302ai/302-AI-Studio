@@ -55,8 +55,15 @@ export class ToolboxService {
   }
 
   private async updateToolList(lang: Language) {
+    const langMap: Record<Language, "cn" | "en" | "jp"> = {
+      zh: "cn",
+      en: "en",
+      ja: "jp",
+    };
+    const _lang = langMap[lang];
+
     try {
-      const toolList = await fetch302AIToolList(lang);
+      const toolList = await fetch302AIToolList(_lang);
       const tools: CreateToolData[] = toolList
         .filter((tool) => tool.enable && ![9].includes(tool.tool_id)) // * Excluding AI Omni Toolbox(id:9)
         .reduce((acc: CreateToolData[], tool) => {
