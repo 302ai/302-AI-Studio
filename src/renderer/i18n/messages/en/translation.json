@@ -516,8 +516,8 @@
   "stop-generating": "Stop",
   "new-thread": {
     "hello-world": "Hi, are you ready to explore the world with me?",
-    "toolbox-label": "AI Tools",
-    "toolbox-button": "More Tools",
+    "toolbox-label": "AI Applications",
+    "toolbox-button": "More Applications",
     "toolbox-title": "AI Tools",
     "toolbox-search-placeholder": "Search"
   },

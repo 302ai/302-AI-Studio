@@ -12,7 +12,8 @@ import type OpenAI from "openai";
 import type { Stream } from "openai/streaming";
 
 // Use OpenAI SDK types instead of custom types
-export type OpenAIStreamResponse = Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
+export type OpenAIStreamResponse =
+  Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
 
 // Define message interface compatible with OpenAI
 export type ModelMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
@@ -90,7 +91,6 @@ export abstract class BaseProviderService {
 
   protected abstract fetchProviderModels(): Promise<CreateModelData[]>;
 
-  // Abstract method for streaming chat - to be implemented by each provider
   abstract startStreamChat(
     params: StreamChatParams,
     abortController: AbortController,
@@ -108,13 +108,16 @@ export abstract class BaseProviderService {
     try {
       logger.info(`Starting stream chat for tab ${tabId}, thread ${threadId}`);
 
-      const stream = await openaiClient.chat.completions.create({
-        model: modelName,
-        messages: modelMessages,
-        stream: true,
-      }, {
-        signal: abortController.signal,
-      });
+      const stream = await openaiClient.chat.completions.create(
+        {
+          model: modelName,
+          messages: modelMessages,
+          stream: true,
+        },
+        {
+          signal: abortController.signal,
+        },
+      );
 
       return stream;
     } catch (error) {
