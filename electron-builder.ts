@@ -99,9 +99,6 @@ export default {
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
     buildUniversalInstaller: false,
-    include: `${resources}/build/uninstaller.nsh`,
-    uninstallerIcon: `${resources}/build/icons/win-logo.ico`,
-    installerIcon: `${resources}/build/icons/win-logo.ico`,
-    deleteAppDataOnUninstall: false // We handle this manually with user choice
+    deleteAppDataOnUninstall: true
   },
 } satisfies Configuration;
