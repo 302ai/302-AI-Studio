@@ -18,12 +18,7 @@
 
   DataExists:
     ; Show custom dialog asking about user data deletion
-    MessageBox MB_YESNOCANCEL|MB_ICONQUESTION \
-      "302 AI Studio Uninstaller$\n$\nDo you want to remove all application data?$\n$\nThis includes:$\n• Chat conversations and threads$\n• Uploaded files and attachments$\n• Application settings and preferences$\n• Cached data and logs$\n$\nChoose 'Yes' to remove all data$\nChoose 'No' to keep your data$\nChoose 'Cancel' to abort uninstallation" \
-      /SD IDNO \
-      IDYES RemoveData \
-      IDNO KeepData \
-      IDCANCEL AbortUninstall
+    MessageBox MB_YESNOCANCEL|MB_ICONQUESTION "302 AI Studio Uninstaller$\n$\nDo you want to remove all application data?$\n$\nThis includes:$\n• Chat conversations and threads$\n• Uploaded files and attachments$\n• Application settings and preferences$\n• Cached data and logs$\n$\nChoose 'Yes' to remove all data$\nChoose 'No' to keep your data$\nChoose 'Cancel' to abort uninstallation" /SD IDNO IDYES RemoveData IDNO KeepData IDCANCEL AbortUninstall
     
     RemoveData:
       DetailPrint "Removing application data..."
@@ -68,8 +63,7 @@
     
     KeepData:
       DetailPrint "Application data will be preserved."
-      MessageBox MB_OK|MB_ICONINFORMATION \
-        "Your application data has been preserved.$\n$\nData location: $2$\n$\nYou can manually delete this folder later if needed."
+      MessageBox MB_OK|MB_ICONINFORMATION "Your application data has been preserved.$\n$\nData location: $2$\n$\nYou can manually delete this folder later if needed."
       Goto Continue
     
     AbortUninstall:
