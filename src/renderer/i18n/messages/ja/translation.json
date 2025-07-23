@@ -359,6 +359,12 @@
           "normal": "普通",
           "fast": "速い"
         }
+      },
+      "collapse-code-block": {
+        "label": "コードブロックの折りたたみ",
+        "switch": {
+          "label": "デフォルトでコードブロックを折りたたむ"
+        }
       }
     }
   },
@@ -527,7 +533,10 @@
   },
   "artifacts": {
     "preview": "プレビュー",
-    "code": "コード"
+    "code": "コード",
+    "lines": "行",
+    "collapse": "折りたたむ",
+    "expand": "展開"
   },
   "shortcuts": {
     "tab-not-exist": "タブ {{tabNumber}} は存在しません",

@@ -207,6 +207,8 @@ declare global {
         // Stream output settings
         setStreamSmootherEnabled: (enabled: boolean) => Promise<void>;
         setStreamSpeed: (speed: "slow" | "normal" | "fast") => Promise<void>;
+        setCollapseCodeBlock: (collapseCodeBlock: boolean) => Promise<void>;
+        setHideReason: (hideReason: boolean) => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;

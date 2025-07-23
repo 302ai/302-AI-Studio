@@ -1,3 +1,4 @@
+import { ChatSettings } from "./chat-settings";
 import { DisplayAppStore } from "./display-app-store";
 import { SearchService } from "./search-service";
 import { StreamOutput } from "./stream-output";
@@ -10,6 +11,8 @@ export function PreferenceSettings() {
       <StreamOutput />
 
       <DisplayAppStore />
+
+      <ChatSettings />
     </div>
   );
 }

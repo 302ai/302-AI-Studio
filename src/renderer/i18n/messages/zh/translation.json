@@ -359,6 +359,12 @@
           "normal": "正常",
           "fast": "快速"
         }
+      },
+      "collapse-code-block": {
+        "label": "聊天设置",
+        "switch": {
+          "label": "自动折叠代码块"
+        }
       }
     }
   },
@@ -566,7 +572,10 @@
   },
   "artifacts": {
     "preview": "预览",
-    "code": "代码"
+    "code": "代码",
+    "lines": "行",
+    "collapse": "折叠",
+    "expand": "展开"
   },
   "shortcuts": {
     "tab-not-exist": "标签页 {{tabNumber}} 不存在",

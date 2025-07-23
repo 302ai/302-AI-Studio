@@ -2,41 +2,39 @@ import { IconChevronRight } from "@intentui/icons";
 import { Button } from "@renderer/components/ui/button";
 import { useContentBlocks } from "@renderer/hooks/use-content-blocks";
 import { cn } from "@renderer/lib/utils";
+import type { Settings } from "@shared/triplit/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MarkdownRenderer } from "./markdown-renderer";
 
-const { messageService } = window.service;
-
 interface ContentBlocksProps {
   content: string;
   messageId: string;
-  isThinkBlockCollapsed: boolean;
+  settings: Settings[];
 }
 
 export function ContentBlocks({
   content,
   messageId,
-  isThinkBlockCollapsed,
+  settings,
 }: ContentBlocksProps) {
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
 
-  const [isCollapsed, setIsCollapsed] = useState(isThinkBlockCollapsed);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const hideReason = settings?.[0]?.hideReason ?? false;
 
   const { blocks } = useContentBlocks(content);
 
-  if (blocks.length === 0) {
+  if (hideReason || blocks.length === 0) {
     return null;
   }
 
   const toggleCollapse = () => {
     setIsCollapsed((prev) => !prev);
-    messageService.updateMessage(messageId, {
-      isThinkBlockCollapsed: !isCollapsed,
-    });
   };
 
   return (
@@ -85,7 +83,9 @@ export function ContentBlocks({
                   className="overflow-hidden"
                 >
                   <div className="text-muted-fg text-sm leading-relaxed">
-                    <MarkdownRenderer>{block.content}</MarkdownRenderer>
+                    <MarkdownRenderer settings={settings}>
+                      {block.content}
+                    </MarkdownRenderer>
                   </div>
                 </motion.div>
               )}

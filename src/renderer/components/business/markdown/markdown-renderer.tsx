@@ -1,4 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore any */
+
+import type { Settings } from "@shared/triplit/types";
+import { useMemo } from "react";
 import type { Components } from "react-markdown";
 import Markdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
@@ -6,7 +9,7 @@ import remarkCjkFriendly from "remark-cjk-friendly";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { visit } from "unist-util-visit";
-import { COMPONENTS } from "./markdown-components";
+import { createComponents } from "./markdown-components";
 import { MarkdownMathWrapper, processLaTeX } from "./markdown-math-wrapper";
 
 const katexOptions = {
@@ -49,21 +52,31 @@ const katexOptions = {
   ],
 };
 
-export function MarkdownRenderer({ children }: { children: string }) {
-  const components: Components = {
-    ...COMPONENTS,
-    span: ({ className, node, ...props }) => {
-      if (className === "katex") {
-        return (
-          <MarkdownMathWrapper>
-            <span className={className} {...props} />
-          </MarkdownMathWrapper>
-        );
-      }
+export function MarkdownRenderer({
+  children,
+  settings,
+}: {
+  children: string;
+  settings: Settings[];
+}) {
+  const components: Components = useMemo(() => {
+    const baseComponents = createComponents(settings);
 
-      return <span className={className} {...props} />;
-    },
-  };
+    return {
+      ...baseComponents,
+      span: ({ className, node, ...props }) => {
+        if (className === "katex") {
+          return (
+            <MarkdownMathWrapper>
+              <span className={className} {...props} />
+            </MarkdownMathWrapper>
+          );
+        }
+
+        return <span className={className} {...props} />;
+      },
+    };
+  }, [settings]);
 
   return (
     <Markdown

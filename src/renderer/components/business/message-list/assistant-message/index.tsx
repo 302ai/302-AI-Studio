@@ -2,7 +2,7 @@ import { triplitClient } from "@renderer/client";
 import { useContextMenu } from "@renderer/hooks/use-context-menu";
 import { useMessageActions } from "@renderer/hooks/use-message-actions";
 import { useMessageCopy } from "@renderer/hooks/use-message-copy";
-import type { Message } from "@shared/triplit/types";
+import type { Message, Settings } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,15 +16,16 @@ import { MessageStatus } from "./message-status";
 interface AssistantMessageProps {
   message: Message;
   handleRefreshMessage: (messageId: string) => Promise<void>;
+  settings: Settings[];
 }
 
 export function AssistantMessage({
   message,
   handleRefreshMessage,
+  settings,
 }: AssistantMessageProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { t } = useTranslation("translation", { keyPrefix: "message" });
-
   // Hooks
   const { handleCopy, handleCopySelected, getSelectedText } = useMessageCopy();
   const {
@@ -120,7 +121,7 @@ export function AssistantMessage({
         <MessageContent
           messageId={message.id}
           content={message.content}
-          isThinkBlockCollapsed={message.isThinkBlockCollapsed}
+          settings={settings}
         />
 
         <MessageStatus status={message.status} />

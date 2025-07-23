@@ -4,11 +4,18 @@
 
 import { cn } from "@renderer/lib/utils";
 import { EventNames, emitter } from "@renderer/services/event-service";
+import type { Settings } from "@shared/triplit/types";
+
 import { ScanSearch } from "lucide-react";
 import mermaid from "mermaid";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { bundledLanguages, codeToTokens } from "shiki";
+import {
+  Disclosure,
+  DisclosurePanel,
+  DisclosureTrigger,
+} from "../../ui/disclosure";
 import { ButtonWithTooltip } from "../button-with-tooltip";
 import { CopyButton } from "../copy-button";
 
@@ -16,6 +23,7 @@ interface CodeBlockProps {
   children: React.ReactNode;
   className?: string;
   language: string;
+  settings?: Settings[];
 }
 
 // 检测代码是否可预览
@@ -37,6 +45,7 @@ export function MarkdownCodeBlock({
   children,
   className,
   language,
+  settings,
   ...restProps
 }: CodeBlockProps) {
   const { t } = useTranslation("translation", {
@@ -46,6 +55,8 @@ export function MarkdownCodeBlock({
     typeof children === "string"
       ? children
       : childrenTakeAllStringContents(children);
+
+  const isDefaultExpanded = !(settings?.[0]?.collapseCodeBlock ?? false);
 
   if (language === "mermaid") {
     return <MermaidWrapper>{code}</MermaidWrapper>;
@@ -60,35 +71,49 @@ export function MarkdownCodeBlock({
 
   return (
     <div className="group/code relative my-3">
-      <Suspense
-        fallback={
-          <pre className={preClass} {...restProps}>
-            {children}
-          </pre>
-        }
-      >
-        <HighlightedPre language={language} className={preClass}>
-          {code}
-        </HighlightedPre>
+      <Disclosure defaultExpanded={isDefaultExpanded}>
+        <DisclosureTrigger className="rounded-t-xl border-border/30 border-b bg-muted/50 px-3 py-2 text-muted-fg text-xs">
+          <div className="flex w-full items-center">
+            <span className="font-medium">{language}</span>
+            <div className="ml-auto flex items-center space-x-1">
+              {canPreview && (
+                <ButtonWithTooltip
+                  title={t("preview")}
+                  onPress={() => {
+                    emitter.emit(EventNames.CODE_PREVIEW_OPEN, {
+                      code,
+                      language,
+                    });
+                  }}
+                >
+                  <ScanSearch className="h-4 w-4" />
+                </ButtonWithTooltip>
+              )}
+              <CopyButton content={code} />
+            </div>
+          </div>
+        </DisclosureTrigger>
 
-        <div className="invisible absolute top-2 right-2 flex space-x-1 opacity-0 transition-all duration-200 group-hover/code:visible group-hover/code:opacity-100">
-          {canPreview && (
-            <ButtonWithTooltip
-              title={t("preview")}
-              onPress={() => {
-                // 使用 emitter 发送事件到 chat-page
-                emitter.emit(EventNames.CODE_PREVIEW_OPEN, {
-                  code,
-                  language,
-                });
-              }}
+        <DisclosurePanel>
+          <Suspense
+            fallback={
+              <pre
+                className={cn(preClass, "rounded-t-none border-t-0")}
+                {...restProps}
+              >
+                {children}
+              </pre>
+            }
+          >
+            <HighlightedPre
+              language={language}
+              className={cn(preClass, "rounded-t-none border-t-0")}
             >
-              <ScanSearch className="h-4 w-4" />
-            </ButtonWithTooltip>
-          )}
-          <CopyButton content={code} />
-        </div>
-      </Suspense>
+              {code}
+            </HighlightedPre>
+          </Suspense>
+        </DisclosurePanel>
+      </Disclosure>
     </div>
   );
 }
@@ -188,7 +213,7 @@ const MermaidWrapper = ({ children }: { children: string }) => {
         className="flex justify-center overflow-x-auto"
         dangerouslySetInnerHTML={{ __html: svg }}
       />
-      <div className="invisible absolute top-2 right-2 opacity-0 transition-all duration-200 group-hover/mermaid:visible group-hover/mermaid:opacity-100">
+      <div className="invisible absolute top-2 right-2 opacity-0 group-hover/mermaid:visible group-hover/mermaid:opacity-100">
         <div className="rounded-lg border border-border/50 bg-background/90 shadow-lg backdrop-blur-sm">
           <CopyButton content={children} />
         </div>

@@ -358,6 +358,12 @@
           "normal": "Normal",
           "fast": "Fast"
         }
+      },
+      "collapse-code-block": {
+        "label": "Code Block Collapse",
+        "switch": {
+          "label": "Collapse code blocks automatically"
+        }
       }
     }
   },
@@ -526,7 +532,10 @@
   },
   "artifacts": {
     "preview": "Preview",
-    "code": "Code"
+    "code": "Code",
+    "lines": "lines",
+    "collapse": "Collapse",
+    "expand": "Expand"
   },
   "shortcuts": {
     "tab-not-exist": "Tab {{tabNumber}} does not exist",
