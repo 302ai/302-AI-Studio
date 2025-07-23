@@ -6,11 +6,9 @@ import {
   Download,
   ExternalLink,
   FileText,
-  Minus,
-  Plus,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -24,7 +22,9 @@ export default function TextPreview({ attachment, onClose }: TextPreviewProps) {
   const [content, setContent] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
-  const [scale, setScale] = useState(1);
+  const [contentHeight, setContentHeight] = useState(400); // Default height while calculating
+  const headerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
 
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes}B`;
@@ -32,28 +32,61 @@ export default function TextPreview({ attachment, onClose }: TextPreviewProps) {
     return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
   };
 
+  // Calculate content area height
+  useEffect(() => {
+    const calculateHeight = () => {
+      // Wait for DOM to be ready
+      setTimeout(() => {
+        const modalHeight = window.innerHeight * 0.9; // Modal max height is 90vh
+        const headerHeight = headerRef.current?.offsetHeight || 80; // Default header height
+        const footerHeight = footerRef.current?.offsetHeight || 40; // Default footer height
+        const availableHeight = modalHeight - headerHeight - footerHeight - 16; // Extra padding
+        setContentHeight(Math.max(availableHeight, 300)); // Minimum 300px
+      }, 0);
+    };
+
+    calculateHeight();
+    
+    // Recalculate when header/footer resize
+    const resizeObserver = new ResizeObserver(calculateHeight);
+    if (headerRef.current) resizeObserver.observe(headerRef.current);
+    if (footerRef.current) resizeObserver.observe(footerRef.current);
+    
+    window.addEventListener('resize', calculateHeight);
+    
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', calculateHeight);
+    };
+  }, []);
+
   const loadTextContent = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
 
+      // First, check if we have pre-processed content
+      if (attachment.fileContent) {
+        setContent(attachment.fileContent);
+        return;
+      }
+
       // Try to get parsed content from the file processing service
       try {
-        const parsedContent =
-          await window.service.fileParseService.parseFileContent({
-            id: attachment.id,
-            name: attachment.name,
-            type: attachment.type,
-            fileData: attachment.fileData || "",
-          });
+        const parsedContent = await window.service.fileParseService.parseFileContent({
+          id: attachment.id,
+          name: attachment.name,
+          type: attachment.type,
+          fileData: attachment.fileData || "",
+        });
         setContent(parsedContent);
       } catch (parseError) {
         // Fallback to base64 decode if available
         if (attachment.fileData) {
           try {
-            const decoded = atob(
-              attachment.fileData.split(",")[1] || attachment.fileData,
-            );
+            // Handle data URL format: "data:text/plain;base64,SGVsbG8gV29ybGQ="
+            const base64Data = attachment.fileData.split(",")[1] || attachment.fileData;
+            const decoded = atob(base64Data);
             setContent(decoded);
           } catch (decodeError) {
             logger.error("Failed to decode file data", { decodeError });
@@ -72,25 +105,12 @@ export default function TextPreview({ attachment, onClose }: TextPreviewProps) {
     }
   }, [attachment, t]);
 
-  const handleZoomIn = useCallback(() => {
-    setScale((prev) => Math.min(prev * 1.2, 3));
-  }, []);
-
-  const handleZoomOut = useCallback(() => {
-    setScale((prev) => Math.max(prev / 1.2, 0.5));
-  }, []);
-
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(content);
-      toast.success(t("content-copied"));
-    } catch (error) {
-      logger.error("Failed to copy to clipboard", { error });
-      toast.error(t("copy-failed"));
-    }
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(content);
+    toast.success(t("copied-to-clipboard"));
   }, [content, t]);
 
-  const handleExternalPreview = async () => {
+  const handleExternalOpen = async () => {
     try {
       if (attachment.filePath) {
         await window.service.filePreviewService.previewFileByPath(
@@ -130,147 +150,108 @@ export default function TextPreview({ attachment, onClose }: TextPreviewProps) {
       } else if ((e.ctrlKey || e.metaKey) && e.key === "c") {
         e.preventDefault();
         handleCopy();
-      } else if (e.key === "+" || e.key === "=") {
-        e.preventDefault();
-        handleZoomIn();
-      } else if (e.key === "-") {
-        e.preventDefault();
-        handleZoomOut();
-      } else if (e.key === "0") {
-        e.preventDefault();
-        setScale(1);
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, handleCopy, handleZoomIn, handleZoomOut]);
+  }, [onClose, handleCopy]);
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <FileText className="mx-auto mb-4 h-12 w-12 text-muted-fg" />
-          <div className="text-muted-fg">{t("loading-text")}</div>
-        </div>
+      <div className="flex h-[400px] items-center justify-center bg-background">
+        <div className="text-muted-fg">{t("loading-text")}</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="max-w-md space-y-4 text-center">
-          <FileText className="mx-auto h-12 w-12 text-muted-fg" />
-          <div className="text-muted-fg">{error}</div>
-          <Button onClick={handleExternalPreview} intent="primary">
-            <ExternalLink className="mr-2 h-4 w-4" />
-            {t("open-external")}
-          </Button>
-        </div>
+      <div className="flex h-[400px] flex-col items-center justify-center bg-background">
+        <FileText className="mb-2 h-12 w-12 text-muted-fg" />
+        <div className="text-muted-fg">{error}</div>
+        <Button size="sm" intent="secondary" onClick={onClose} className="mt-4">
+          {t("close")}
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full flex-col" onContextMenu={handleContextMenu} role="dialog" tabIndex={-1}>
-      {/* Toolbar */}
-      <div className="flex items-center justify-between border-border border-b bg-background px-4 py-2">
-        <div className="flex items-center gap-2 text-sm">
-          <FileText className="h-4 w-4 text-muted-fg" />
-          <span className="max-w-40 truncate" title={attachment.name}>
-            {attachment.name}
-          </span>
-          <span className="text-muted-fg">
-            ({formatFileSize(attachment.size)})
-          </span>
-        </div>
+    <div
+      className="flex h-full flex-col bg-background"
+      onContextMenu={handleContextMenu}
+      role="dialog"
+      tabIndex={-1}
+      aria-label={`${t("text-preview")}: ${attachment.name}`}
+    >
+      {/* Header */}
+      <div ref={headerRef} className="border-border border-b bg-background p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FileText className="h-5 w-5 text-muted-fg" />
+            <div>
+              <div className="font-medium">{attachment.name}</div>
+              <div className="text-muted-fg text-sm">
+                {formatFileSize((attachment.fileData || '').length)} • {t("text-file")}
+              </div>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-1">
-          <Button
-            size="sm"
-            intent="secondary"
-            onClick={handleZoomOut}
-            isDisabled={scale <= 0.5}
-            aria-label={t("zoom-out")}
-          >
-            <Minus className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              intent="secondary"
+              onClick={handleCopy}
+              aria-label={t("copy-content")}
+            >
+              <Copy className="h-4 w-4" />
+            </Button>
 
-          <span className="min-w-16 text-center text-sm">
-            {Math.round(scale * 100)}%
-          </span>
+            <Button
+              size="sm"
+              intent="secondary"
+              onClick={handleExternalOpen}
+              aria-label={t("open-external")}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
 
-          <Button
-            size="sm"
-            intent="secondary"
-            onClick={handleZoomIn}
-            isDisabled={scale >= 3}
-            aria-label={t("zoom-in")}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
+            <Button
+              size="sm"
+              intent="secondary"
+              onClick={handleDownload}
+              aria-label={t("download")}
+            >
+              <Download className="h-4 w-4" />
+            </Button>
 
-          <div className="mx-2 h-4 w-px bg-border" />
+            <div className="mx-2 h-4 w-px bg-border" />
 
-          <Button
-            size="sm"
-            intent="secondary"
-            onClick={handleCopy}
-            aria-label={t("copy-text")}
-          >
-            <Copy className="h-4 w-4" />
-          </Button>
-
-          <Button
-            size="sm"
-            intent="secondary"
-            onClick={handleExternalPreview}
-            aria-label={t("open-external")}
-          >
-            <ExternalLink className="h-4 w-4" />
-          </Button>
-
-          <Button
-            size="sm"
-            intent="secondary"
-            onClick={handleDownload}
-            aria-label={t("download")}
-          >
-            <Download className="h-4 w-4" />
-          </Button>
-
-          <div className="mx-2 h-4 w-px bg-border" />
-
-          <Button
-            size="sm"
-            intent="secondary"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Text content */}
-      <div className="flex-1 overflow-auto bg-background">
-        <div
-          style={{
-            transform: `scale(${scale})`,
-            transformOrigin: "top left",
-            minHeight: `${100 / scale}%`,
-            minWidth: `${100 / scale}%`,
-          }}
-        >
-          <div className="whitespace-pre-wrap p-4 font-mono text-sm">
-            {content}
+            <Button
+              size="sm"
+              intent="secondary"
+              onClick={onClose}
+              aria-label="Close"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>
 
+      {/* Text content */}
+      <div
+        className="overflow-auto bg-background p-4"
+        style={{ height: contentHeight }}
+      >
+        <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed">
+          {content}
+        </pre>
+      </div>
+
       {/* Help text */}
-      <div className="border-border border-t bg-background px-4 py-2 text-center text-muted-fg text-xs">
+      <div ref={footerRef} className="border-border border-t bg-background px-4 py-2 text-center text-muted-fg text-xs">
         {t("help-text.text")}
       </div>
     </div>
