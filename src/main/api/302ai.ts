@@ -62,13 +62,14 @@ export async function fetch302AIToolList(lang: Language) {
     en: "en",
     ja: "jp",
   };
+  const _lang = langMap[lang];
 
   const { data, error } = await betterFetch<Ai302ToolsList>(
     "https://dash-api.302.ai/gpt/api/tool/list",
     {
       method: "GET",
       headers: {
-        Lang: langMap[lang],
+        Lang: _lang,
       },
     },
   );
@@ -78,7 +79,28 @@ export async function fetch302AIToolList(lang: Language) {
     throw new Error(`Failed to fetch 302.AI tools list: ${errorMessage}`);
   }
 
-  return data.data;
+  const drawingRobotData = {
+    tool_id: -1,
+    tool_name:
+      _lang === "cn"
+        ? "绘画机器人"
+        : _lang === "jp"
+          ? "描画ロボット"
+          : "Drawing Robot",
+    tool_description:
+      _lang === "cn"
+        ? "支持Midjourney、Flux、SD、Ideogram、Recraft"
+        : _lang === "jp"
+          ? "Midjourney、Flux、SD、Ideogram、Recraftをサポート"
+          : "Supports Midjourney, Flux, SD, Ideogram, Recraft",
+    enable: true,
+    category_name:
+      _lang === "cn" ? "机器人" : _lang === "jp" ? "ロボット" : "Robots",
+    category_id: 999,
+  };
+  const tools = [drawingRobotData, ...data.data.data];
+
+  return tools;
 }
 
 const ai302ToolDetailSchema = z.object({

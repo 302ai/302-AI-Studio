@@ -57,7 +57,7 @@ export class ToolboxService {
   private async updateToolList(lang: Language) {
     try {
       const toolList = await fetch302AIToolList(lang);
-      const tools: CreateToolData[] = toolList.data
+      const tools: CreateToolData[] = toolList
         .filter((tool) => tool.enable && ![9].includes(tool.tool_id)) // * Excluding AI Omni Toolbox(id:9)
         .reduce((acc: CreateToolData[], tool) => {
           const {
