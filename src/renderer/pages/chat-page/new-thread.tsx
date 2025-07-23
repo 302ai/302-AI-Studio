@@ -37,6 +37,10 @@ export function NewThread() {
         />
 
         <motion.div
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+          }}
           layoutId={isTransitioning ? undefined : "chat-input"}
           transition={{
             duration: isTransitioning ? 0 : 0.3,
