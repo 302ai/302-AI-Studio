@@ -60,7 +60,7 @@ export function ChatPage() {
           }}
           className="relative mx-auto w-full max-w-[720px] pt-4"
         >
-          <ChatInput ref={chatInputRef} />
+          <ChatInput ref={chatInputRef} streaming={streaming} />
           <Button
             className={cn(
               "-top-[-5px] -translate-x-1/2 -translate-y-full absolute left-1/2 z-10",

@@ -9,7 +9,11 @@ import {
   type ChatMessage,
   convertMessagesToModelMessages,
 } from "@main/utils/message-converter";
-import { StreamSmoother, DEFAULT_SMOOTHER_CONFIG, type StreamSmootherConfig } from "@main/utils/stream-smoother";
+import {
+  DEFAULT_SMOOTHER_CONFIG,
+  StreamSmoother,
+  type StreamSmootherConfig,
+} from "@main/utils/stream-smoother";
 import logger from "@shared/logger/main-logger";
 import type {
   CreateModelData,
@@ -190,21 +194,18 @@ export class ProviderService {
     return providerInst;
   }
 
-  /**
-   * Get streaming configuration from settings
-   */
   private async getStreamConfig(): Promise<StreamSmootherConfig> {
     const enabled = await this.settingsService.getStreamSmootherEnabled();
     const speed = await this.settingsService.getStreamSpeed();
-    
+
     const speedMultipliers = {
-      slow: 0.5,    // 50% speed
-      normal: 1.0,  // 100% speed  
-      fast: 2.0,    // 200% speed
+      slow: 0.5, // 50% speed
+      normal: 1.0, // 100% speed
+      fast: 2.0, // 200% speed
     };
-    
+
     const multiplier = speedMultipliers[speed];
-    
+
     return {
       ...DEFAULT_SMOOTHER_CONFIG,
       enabled,
@@ -317,7 +318,7 @@ export class ProviderService {
           }
 
           fullContent += smoothedChunk;
-          
+
           if (assistantMessage) {
             await this.chatService.updateMessage(assistantMessage.id, {
               content: fullContent,
@@ -329,32 +330,28 @@ export class ProviderService {
             delta: smoothedChunk,
           });
         },
-        streamConfig,  // Use dynamic configuration
+        streamConfig,
+        abortController.signal,
       );
 
-      // Handle abort signal
-      abortController.signal.addEventListener('abort', () => {
+      abortController.signal.addEventListener("abort", () => {
         streamSmoother.stop();
       });
 
       try {
-        // Stream processing for OpenAI SDK with smoothing
         for await (const chunk of result) {
           if (abortController.signal.aborted) {
-            // Explicitly throw AbortError to ensure proper handling
-            const abortError = new Error('Stream aborted by user');
-            abortError.name = 'AbortError';
+            const abortError = new Error("Stream aborted by user");
+            abortError.name = "AbortError";
             throw abortError;
           }
-          
+
           const delta = chunk.choices[0]?.delta?.content || "";
           if (delta) {
-            // Add chunk to smoother instead of directly outputting
             streamSmoother.addChunk(delta);
           }
         }
 
-        // Signal completion to smoother and wait for it to finish
         if (!abortController.signal.aborted) {
           await new Promise<void>((resolve) => {
             streamSmoother.complete(() => {
@@ -362,13 +359,19 @@ export class ProviderService {
             });
           });
         }
+
+        if (abortController.signal.aborted) {
+          const abortError = new Error(
+            "Stream aborted by user after smoother completion",
+          );
+          abortError.name = "AbortError";
+          throw abortError;
+        }
       } catch (error) {
         streamSmoother.stop();
+        logger.error("Stream chat error", { threadId, error });
         throw error;
       }
-
-      // Note: OpenAI SDK streaming doesn't provide usage info in real-time
-      // Token counting would require a separate call if needed
 
       if (fullContent === "") {
         await this.chatService.updateMessage(assistantMessage.id, {
@@ -451,41 +454,49 @@ export class ProviderService {
     const { threadId } = params;
     const aborted = abortStream(threadId);
     logger.info("Stream chat stop requested", { threadId, aborted });
-    
-    // If we successfully aborted a stream, ensure any pending messages are updated
+
     if (aborted) {
       try {
-        // Get messages for this thread to find any pending assistant messages  
-        const messages = await this.messageService._getMessagesByThreadId(threadId);
+        const messages =
+          await this.messageService._getMessagesByThreadId(threadId);
         const pendingAssistantMessage = messages
-          .filter((msg: Message) => msg.role === "assistant" && msg.status === "pending")
-          .pop(); // Get the last pending assistant message
+          .filter(
+            (msg: Message) =>
+              msg.role === "assistant" && msg.status === "pending",
+          )
+          .pop();
 
         if (pendingAssistantMessage) {
-          // Update the message status to "stop"
           await this.chatService.updateMessage(pendingAssistantMessage.id, {
             status: "stop",
           });
-          
-          // Send status update to UI
           sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
             threadId,
             status: "stop",
           });
-          
-          logger.info("Updated pending message status to stop", { 
-            threadId, 
-            messageId: pendingAssistantMessage.id 
+
+          logger.info("Updated pending message status to stop", {
+            threadId,
+            messageId: pendingAssistantMessage.id,
           });
+        } else {
+          logger.warn(
+            "No pending assistant message found when stopping stream",
+            {
+              threadId,
+              messagesCount: messages.length,
+              lastMessage: messages[messages.length - 1],
+            },
+          );
         }
       } catch (error) {
-        logger.error("Failed to update pending message status on stream stop", { 
-          threadId, 
-          error 
+        logger.error("Failed to update pending message status on stream stop", {
+          threadId,
+          error,
         });
       }
     }
-    
+
     return { success: true };
   }
 
