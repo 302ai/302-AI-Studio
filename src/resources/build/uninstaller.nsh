@@ -103,27 +103,3 @@
   ; Remove from Windows Defender exclusions (if added)
   ; This is handled by Windows automatically when the program is uninstalled
 !macroend
-
-; Uninstaller language strings
-LangString UninstallDataPrompt ${LANG_ENGLISH} "Do you want to remove all application data including your conversations, settings, and uploaded files?"
-LangString UninstallDataYes ${LANG_ENGLISH} "Yes, remove all data"
-LangString UninstallDataNo ${LANG_ENGLISH} "No, keep my data"
-LangString UninstallDataCancel ${LANG_ENGLISH} "Cancel uninstallation"
-LangString UninstallDataRemoved ${LANG_ENGLISH} "Application data has been removed."
-LangString UninstallDataKept ${LANG_ENGLISH} "Application data has been preserved."
-
-; Chinese language support
-LangString UninstallDataPrompt ${LANG_SIMPCHINESE} "是否要删除所有应用数据，包括您的对话、设置和上传的文件？"
-LangString UninstallDataYes ${LANG_SIMPCHINESE} "是，删除所有数据"
-LangString UninstallDataNo ${LANG_SIMPCHINESE} "否，保留我的数据"
-LangString UninstallDataCancel ${LANG_SIMPCHINESE} "取消卸载"
-LangString UninstallDataRemoved ${LANG_SIMPCHINESE} "应用数据已删除。"
-LangString UninstallDataKept ${LANG_SIMPCHINESE} "应用数据已保留。"
-
-; Japanese language support  
-LangString UninstallDataPrompt ${LANG_JAPANESE} "会話、設定、アップロードしたファイルを含む、すべてのアプリケーションデータを削除しますか？"
-LangString UninstallDataYes ${LANG_JAPANESE} "はい、すべてのデータを削除"
-LangString UninstallDataNo ${LANG_JAPANESE} "いいえ、データを保持"
-LangString UninstallDataCancel ${LANG_JAPANESE} "アンインストールをキャンセル"
-LangString UninstallDataRemoved ${LANG_JAPANESE} "アプリケーションデータが削除されました。"
-LangString UninstallDataKept ${LANG_JAPANESE} "アプリケーションデータが保持されました。"
