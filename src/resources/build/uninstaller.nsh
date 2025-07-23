@@ -2,16 +2,16 @@
 ; Provides user option to delete application data during uninstallation
 
 !macro customUnInstallCheck
-  ; Define variables for user data paths
+  ; Define variables using register variables
   ReadRegStr $0 HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "AppData"
-  StrCpy $APPDATA_DIR "$0\302AIStudio"
-  StrCpy $USERDATA_DIR "$LOCALAPPDATA\302AIStudio"
+  StrCpy $1 "$0\302AIStudio"        ; $1 = APPDATA_DIR
+  StrCpy $2 "$LOCALAPPDATA\302AIStudio"  ; $2 = USERDATA_DIR
   
   ; Check if user data exists
-  ${If} ${FileExists} "$APPDATA_DIR\*.*"
+  ${If} ${FileExists} "$1\*.*"
     Goto DataExists
   ${EndIf}
-  ${If} ${FileExists} "$USERDATA_DIR\*.*"
+  ${If} ${FileExists} "$2\*.*"
     Goto DataExists
   ${EndIf}
   Goto NoData
@@ -29,39 +29,39 @@
       DetailPrint "Removing application data..."
       
       ; Remove Triplit database files
-      Delete "$USERDATA_DIR\triplit\db.sqlite"
-      Delete "$USERDATA_DIR\triplit\db.sqlite-wal"
-      Delete "$USERDATA_DIR\triplit\db.sqlite-shm"
-      RMDir /r "$USERDATA_DIR\triplit"
+      Delete "$2\triplit\db.sqlite"
+      Delete "$2\triplit\db.sqlite-wal"
+      Delete "$2\triplit\db.sqlite-shm"
+      RMDir /r "$2\triplit"
       
       ; Remove temporary files
-      RMDir /r "$USERDATA_DIR\temp"
+      RMDir /r "$2\temp"
       
       ; Remove log files
-      Delete "$USERDATA_DIR\logs\main.log"
-      Delete "$USERDATA_DIR\logs\*.log"
-      RMDir "$USERDATA_DIR\logs"
+      Delete "$2\logs\main.log"
+      Delete "$2\logs\*.log"
+      RMDir "$2\logs"
       
       ; Remove cache and other data
-      RMDir /r "$USERDATA_DIR\Cache"
-      RMDir /r "$USERDATA_DIR\CachedData"
-      RMDir /r "$USERDATA_DIR\Code Cache"
-      RMDir /r "$USERDATA_DIR\DawnCache"
-      RMDir /r "$USERDATA_DIR\GPUCache"
-      RMDir /r "$USERDATA_DIR\Local Storage"
-      RMDir /r "$USERDATA_DIR\Session Storage"
-      RMDir /r "$USERDATA_DIR\IndexedDB"
+      RMDir /r "$2\Cache"
+      RMDir /r "$2\CachedData"
+      RMDir /r "$2\Code Cache"
+      RMDir /r "$2\DawnCache"
+      RMDir /r "$2\GPUCache"
+      RMDir /r "$2\Local Storage"
+      RMDir /r "$2\Session Storage"
+      RMDir /r "$2\IndexedDB"
       
       ; Remove configuration files
-      Delete "$USERDATA_DIR\Preferences"
-      Delete "$USERDATA_DIR\config.json"
-      Delete "$USERDATA_DIR\storage.json"
+      Delete "$2\Preferences"
+      Delete "$2\config.json"
+      Delete "$2\storage.json"
       
       ; Remove the main user data directory if empty
-      RMDir "$USERDATA_DIR"
+      RMDir "$2"
       
       ; Remove AppData directory if it exists
-      RMDir /r "$APPDATA_DIR"
+      RMDir /r "$1"
       
       DetailPrint "Application data removed successfully."
       Goto Continue
@@ -69,7 +69,7 @@
     KeepData:
       DetailPrint "Application data will be preserved."
       MessageBox MB_OK|MB_ICONINFORMATION \
-        "Your application data has been preserved.$\n$\nData location: $USERDATA_DIR$\n$\nYou can manually delete this folder later if needed."
+        "Your application data has been preserved.$\n$\nData location: $2$\n$\nYou can manually delete this folder later if needed."
       Goto Continue
     
     AbortUninstall:
