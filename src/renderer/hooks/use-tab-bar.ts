@@ -29,6 +29,20 @@ export function useTabBar() {
 
   const [tabs, setTabs] = useState<Tab[]>([]);
 
+  const activateTabId = useCallback(
+    async (id: string) => {
+      try {
+        setActiveTabId(id);
+        setTimeout(() => {
+          emitter.emit(EventNames.TAB_SELECT, { tabId: id });
+        }, 10);
+      } catch (error) {
+        logger.error("Failed to activate tab", { error });
+      }
+    },
+    [setActiveTabId],
+  );
+
   const handleAddNewTab = useCallback(
     async (type: TabType, title?: string, params?: Record<string, string>) => {
       switch (type) {
@@ -45,7 +59,7 @@ export function useTabBar() {
               path: "/",
               isPrivate: false,
             });
-            const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+            const promises = [activateTabId(newTab.id), setActiveThreadId("")];
             await Promise.all(promises);
             logger.info("Tab created", { newTab });
           }
@@ -57,7 +71,7 @@ export function useTabBar() {
           const existingSettingTab = tabs.find((tab) => tab.type === "setting");
           if (existingSettingTab) {
             const promises = [
-              setActiveTabId(existingSettingTab.id),
+              activateTabId(existingSettingTab.id),
               setActiveThreadId(""),
             ];
             await Promise.all(promises);
@@ -68,7 +82,7 @@ export function useTabBar() {
               path: "/settings/general-settings",
               isPrivate: false,
             });
-            const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+            const promises = [activateTabId(newTab.id), setActiveThreadId("")];
             await Promise.all(promises);
           }
           break;
@@ -81,7 +95,7 @@ export function useTabBar() {
             path: `/302ai-tool/${params?.subdomain}`,
             isPrivate: false,
           });
-          const promises = [setActiveTabId(newTab.id), setActiveThreadId("")];
+          const promises = [activateTabId(newTab.id), setActiveThreadId("")];
           await Promise.all(promises);
           break;
         }
@@ -93,7 +107,7 @@ export function useTabBar() {
       emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
     },
     [
-      setActiveTabId,
+      activateTabId,
       setActiveThreadId,
       t,
       tabs,
@@ -144,15 +158,6 @@ export function useTabBar() {
 
   //   emitter.emit(EventNames.CODE_PREVIEW_CLOSE, null);
   // };
-
-  const activateTabId = async (id: string) => {
-    try {
-      setActiveTabId(id);
-      emitter.emit(EventNames.TAB_SELECT, { tabId: id });
-    } catch (error) {
-      logger.error("Failed to activate tab", { error });
-    }
-  };
 
   const handleDragEnd = async (result: DropResult) => {
     if (!result.destination) {
