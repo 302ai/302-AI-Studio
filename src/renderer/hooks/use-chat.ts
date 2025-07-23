@@ -187,6 +187,10 @@ export function useChat(scrollRef?: React.RefObject<HTMLDivElement | null>) {
       });
     } catch (err) {
       logger.error("Failed to stop stream chat", { err });
+    } finally {
+      // Defensive: ensure streaming state is reset even if server call fails
+      // This prevents the UI from getting stuck with the stop button visible
+      setStreaming(false);
     }
   }, [activeThreadId]);
 

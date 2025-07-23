@@ -132,7 +132,7 @@ class ReasoningProcessor {
       return line;
     }
 
-    logger.info("line", { line });
+    // logger.info("line", { line });
 
     const jsonStr = line.substring(6); // * remove "data: "
 
@@ -152,9 +152,6 @@ class ReasoningProcessor {
   }
 
   private isDoneMessage(jsonStr: string): boolean {
-    if (jsonStr.trim() === "[DONE]") {
-      logger.info("isDoneMessage,isDoneMessage,isDoneMessage,isDoneMessage");
-    }
     return jsonStr.trim() === "[DONE]";
   }
 

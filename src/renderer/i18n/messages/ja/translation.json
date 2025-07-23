@@ -517,8 +517,8 @@
   "stop-generating": "停止",
   "new-thread": {
     "hello-world": "やあ、僕と一緒に世界を探検する準備はできたかい？",
-    "toolbox-label": "AIツール",
-    "toolbox-button": "他のツール",
+    "toolbox-label": "AIアプリケーション",
+    "toolbox-button": "より多くのアプリケーション",
     "toolbox-title": "AIツール",
     "toolbox-search-placeholder": "検索"
   },
