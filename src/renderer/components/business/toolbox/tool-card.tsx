@@ -10,6 +10,7 @@ interface ToolCardProps {
   tool: Tool;
   className?: string;
   showDescription?: boolean;
+  tooltipPlacement?: "left" | "right" | "top" | "bottom";
 }
 
 const { toolboxService } = window.service;
@@ -18,6 +19,7 @@ export function ToolCard({
   tool,
   className,
   showDescription = true,
+  tooltipPlacement = "left",
 }: ToolCardProps) {
   const { t } = useTranslation();
   const { handleAddNewTab } = useTabBar();
@@ -38,7 +40,7 @@ export function ToolCard({
   return (
     <ButtonWithTooltip
       title={tool.name}
-      tooltipPlacement="left"
+      tooltipPlacement={tooltipPlacement}
       intent="plain"
       size="sm"
       className={cn(

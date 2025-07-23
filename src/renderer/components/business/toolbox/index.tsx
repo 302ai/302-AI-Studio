@@ -30,6 +30,7 @@ export function Toolbox() {
           key={tool.id}
           tool={tool}
           showDescription={false}
+          tooltipPlacement="top"
           className={buttonStyles({
             intent: "outline",
             className: "h-[46px]",

@@ -238,19 +238,7 @@ export class MessageService {
 
   async updatePendingMessagesToStop(): Promise<void> {
     try {
-      logger.info(
-        "MessageService: Starting to update pending messages to stop status",
-      );
-      const updatedCount =
-        await this.messageDbService.updatePendingMessagesToStop();
-      if (updatedCount > 0) {
-        logger.info(
-          "MessageService: Successfully updated pending messages to stop status",
-          { updatedCount },
-        );
-      } else {
-        logger.info("MessageService: No pending messages found to update");
-      }
+      await this.messageDbService.updatePendingMessagesToStop();
     } catch (error) {
       logger.error("MessageService: updatePendingMessagesToStop error", {
         error,

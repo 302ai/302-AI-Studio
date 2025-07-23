@@ -95,14 +95,6 @@ export class AI302ProviderService extends OpenAIProviderService {
           return true;
         });
         newMessages.push(lastMessage);
-      } else {
-        newMessages = newMessages.filter((item) => {
-          if (Array.isArray(item?.content)) {
-            return !item?.content.some((item) => item.type === "image_url");
-          }
-          return true;
-        });
-        enableVision = false;
       }
     }
 

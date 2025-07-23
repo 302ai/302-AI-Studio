@@ -195,8 +195,10 @@ export class ProviderService {
   }
 
   private async getStreamConfig(): Promise<StreamSmootherConfig> {
-    const enabled = await this.settingsService.getStreamSmootherEnabled();
-    const speed = await this.settingsService.getStreamSpeed();
+    const [enabled, speed] = await Promise.all([
+      this.settingsService.getStreamSmootherEnabled(),
+      this.settingsService.getStreamSpeed(),
+    ]);
 
     const speedMultipliers = {
       slow: 0.5, // 50% speed
@@ -286,10 +288,20 @@ export class ProviderService {
         params.messages = newMessages as ChatMessage[];
       }
 
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "pending",
+      });
+
       const result = await providerInst.startStreamChat(
         params,
         abortController,
       );
+
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "pending",
+      });
 
       assistantMessage = await this.chatService.createAssistantMessage({
         threadId,
@@ -299,10 +311,6 @@ export class ProviderService {
         modelId: model.id,
         modelName: model.name,
         isThinkBlockCollapsed: false,
-      });
-      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
-        threadId,
-        status: "pending",
       });
 
       // Get dynamic stream configuration

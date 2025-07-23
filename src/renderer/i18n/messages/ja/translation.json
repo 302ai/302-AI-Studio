@@ -533,5 +533,44 @@
     "tab-not-exist": "タブ {{tabNumber}} は存在しません",
     "tab-switch-error": "タブ {{tabNumber}} への切り替えに失敗しました"
   },
-  "toolbox-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています"
+  "toolbox-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています",
+  "preview": {
+    "zoom-in": "ズームイン",
+    "zoom-out": "ズームアウト",
+    "rotate-left": "左回転",
+    "rotate-right": "右回転",
+    "reset-zoom": "ズームリセット",
+    "download": "ダウンロード",
+    "copy-code": "コードをコピー",
+    "copy-text": "テキストをコピー",
+    "copy-content": "内容をコピー",
+    "toggle-line-numbers": "行番号の切り替え",
+    "open-external": "外部ビューアーで開く",
+    "loading": "読み込み中...",
+    "loading-code": "コードを読み込み中...",
+    "loading-document": "ドキュメントを読み込み中...",
+    "loading-audio": "音声を読み込み中...",
+    "loading-image": "画像を読み込み中...",
+    "loading-text": "テキストを読み込み中...",
+    "copy-failed": "コピーに失敗しました",
+    "copied-to-clipboard": "クリップボードにコピーしました",
+    "content-copied": "コンテンツをコピーしました",
+    "failed-to-load": "読み込みに失敗しました",
+    "failed-to-decode": "デコードに失敗しました",
+    "no-content-available": "利用可能なコンテンツがありません",
+    "document-parsing-unavailable": "ドキュメントの解析ができません。外部ビューアーをご利用ください。",
+    "file-preview-not-supported": "このファイル形式はアプリ内でプレビューできません。",
+    "close": "閉じる",
+    "text-preview": "テキストプレビュー",
+    "code-preview": "コードプレビュー",
+    "text-file": "テキストファイル",
+    "code-file": "コードファイル",
+    "help-text": {
+      "image": "マウスホイールでズーム • ドラッグで移動 • Rキーで回転 • Escキーで閉じる",
+      "audio": "スペースキーで再生/一時停止 • ← →キーでスキップ • Mキーでミュート • Escキーで閉じる",
+      "code": "Ctrl+Cでコピー • Lキーで行番号切り替え • + / -キーでズーム • Escキーで閉じる",
+      "document": "+ / -キーでズーム • 外部リンクをクリックしてシステムビューアーで開く • Escキーで閉じる",
+      "text": "Ctrl+Cでコピー • + / -キーでズーム • Escキーで閉じる"
+    }
+  }
 }

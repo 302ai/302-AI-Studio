@@ -525,6 +525,45 @@
   "attachment": {
     "file-too-large": "文件大小不能超过10MB"
   },
+  "preview": {
+    "zoom-in": "放大",
+    "zoom-out": "缩小",
+    "rotate-left": "向左旋转",
+    "rotate-right": "向右旋转",
+    "reset-zoom": "重置缩放",
+    "download": "下载",
+    "copy-code": "复制代码",
+    "copy-text": "复制文本",
+    "copy-content": "复制内容",
+    "toggle-line-numbers": "切换行号显示",
+    "open-external": "使用外部程序打开",
+    "loading": "加载中...",
+    "loading-code": "加载代码中...",
+    "loading-document": "加载文档中...",
+    "loading-audio": "加载音频中...",
+    "loading-image": "加载图片中...",
+    "loading-text": "加载文本中...",
+    "copy-failed": "复制失败",
+    "copied-to-clipboard": "已复制到剪贴板",
+    "content-copied": "内容已复制",
+    "failed-to-load": "加载失败",
+    "failed-to-decode": "解码失败",
+    "no-content-available": "无可用内容",
+    "document-parsing-unavailable": "文档解析不可用。请使用外部查看器。",
+    "file-preview-not-supported": "此文件类型无法在应用内预览。",
+    "close": "关闭",
+    "text-preview": "文本预览",
+    "code-preview": "代码预览",
+    "text-file": "文本文件",
+    "code-file": "代码文件",
+    "help-text": {
+      "image": "使用鼠标滚轮缩放 • 拖拽平移 • R 键旋转 • Esc 键关闭",
+      "audio": "空格键播放/暂停 • ← → 键跳转 • M 键静音 • Esc 键关闭",
+      "code": "Ctrl+C 复制 • L 键切换行号 • + / - 键缩放 • Esc 键关闭",
+      "document": "+ / - 键缩放 • 点击外部链接在系统查看器中打开 • Esc 键关闭",
+      "text": "Ctrl+C 复制 • + / - 键缩放 • Esc 键关闭"
+    }
+  },
   "artifacts": {
     "preview": "预览",
     "code": "代码"

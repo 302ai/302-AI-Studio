@@ -39,6 +39,14 @@ export default {
     notarize: false,
     entitlements: `${resources}/build/mac/entitlements.mac.plist`,
     entitlementsInherit: `${resources}/build/mac/entitlements.mac.plist`,
+    extendInfo: {
+      NSCameraUsageDescription: "Application requests access to the device's camera.",
+      NSDocumentsFolderUsageDescription:
+        "Application requests access to the user's Documents folder.",
+      NSDownloadsFolderUsageDescription:
+        "Application requests access to the user's Downloads folder.",
+      NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
+    },
     target: [
       {
         target: "dmg",
@@ -91,9 +99,6 @@ export default {
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
     buildUniversalInstaller: false,
-    include: `${resources}/build/uninstaller.nsh`,
-    uninstallerIcon: `${resources}/build/icons/win-logo.ico`,
-    installerIcon: `${resources}/build/icons/win-logo.ico`,
-    deleteAppDataOnUninstall: false // We handle this manually with user choice
+    deleteAppDataOnUninstall: true
   },
 } satisfies Configuration;

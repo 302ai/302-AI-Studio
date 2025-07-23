@@ -1,6 +1,5 @@
 import { Tab, TabList, Tabs } from "@renderer/components/business/setting-tabs";
 import { useSidebar } from "@renderer/components/ui/sidebar";
-import logger from "@renderer/config/logger";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -10,8 +9,6 @@ import { ModelSettings } from "./model-settings";
 import { PreferenceSettings } from "./preference-settings";
 import { ShortcutsSettings } from "./shortcuts-settings";
 
-const { uiService } = window.service;
-
 export function SettingsPage() {
   const { t } = useTranslation("translation", {
     keyPrefix: "settings",
@@ -19,7 +16,7 @@ export function SettingsPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { state, toggleSidebar } = useSidebar();
+  const { setSettingsMode } = useSidebar();
 
   const settingTabs = useMemo(
     () => [
@@ -67,19 +64,14 @@ export function SettingsPage() {
   };
 
   useEffect(() => {
-    if (state === "expanded") {
-      toggleSidebar();
-    }
+    // Enter settings mode to hide sidebar without animation
+    setSettingsMode(true);
 
     return () => {
-      uiService.getSidebarCollapsed().then((sidebarCollapsed) => {
-        logger.info("SettingsPage:sidebarCollapsed", { sidebarCollapsed });
-        if (!sidebarCollapsed) {
-          toggleSidebar();
-        }
-      });
+      // Exit settings mode to restore original sidebar state
+      setSettingsMode(false);
     };
-  }, [state, toggleSidebar]);
+  }, [setSettingsMode]);
 
   return (
     <div className="flex h-full flex-row">
