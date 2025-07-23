@@ -1,7 +1,11 @@
 import BlurText from "@renderer/components/business/blur-text";
-import { ChatInput, type ChatInputRef } from "@renderer/components/business/chat-input";
+import {
+  ChatInput,
+  type ChatInputRef,
+} from "@renderer/components/business/chat-input";
 import { Toolbox } from "@renderer/components/business/toolbox";
 import { Label } from "@renderer/components/ui/field";
+import { useSidebar } from "@renderer/components/ui/sidebar";
 import { useChatInputFocus } from "@renderer/hooks/use-chat-input-focus";
 import { useTriplit } from "@renderer/hooks/use-triplit";
 import { cn } from "@renderer/lib/utils";
@@ -16,6 +20,7 @@ export function NewThread() {
 
   const chatInputRef = useRef<ChatInputRef>(null);
   const { settings } = useTriplit();
+  const { isTransitioning } = useSidebar();
 
   useChatInputFocus(chatInputRef);
 
@@ -33,10 +38,14 @@ export function NewThread() {
 
         <motion.div
           layoutId="chat-input"
-          transition={{
-            duration: 0.3,
-            ease: "easeInOut",
-          }}
+          transition={
+            isTransitioning
+              ? { duration: 0 }
+              : {
+                  duration: 0.3,
+                  ease: "easeInOut",
+                }
+          }
           className="mx-auto w-full"
         >
           <ChatInput ref={chatInputRef} />
