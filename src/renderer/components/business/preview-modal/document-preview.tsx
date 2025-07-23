@@ -178,11 +178,12 @@ export default function DocumentPreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleZoomOut}
             isDisabled={scale <= 0.5}
             aria-label={t("zoom-out")}
           >
-            <Minus className="h-4 w-4" />
+            <Minus size={18} />
           </Button>
 
           <span className="min-w-16 text-center text-sm">
@@ -192,11 +193,12 @@ export default function DocumentPreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleZoomIn}
             isDisabled={scale >= 3}
             aria-label={t("zoom-in")}
           >
-            <Plus className="h-4 w-4" />
+            <Plus size={18} />
           </Button>
 
           <div className="mx-2 h-4 w-px bg-border" />
@@ -204,19 +206,21 @@ export default function DocumentPreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleExternalPreview}
             aria-label={t("open-external")}
           >
-            <ExternalLink className="h-4 w-4" />
+            <ExternalLink size={18} />
           </Button>
 
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleDownload}
             aria-label={t("download")}
           >
-            <Download className="h-4 w-4" />
+            <Download size={18} />
           </Button>
 
           <div className="mx-2 h-4 w-px bg-border" />
@@ -224,10 +228,11 @@ export default function DocumentPreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={onClose}
             aria-label="Close"
           >
-            <X className="h-4 w-4" />
+            <X size={18} />
           </Button>
         </div>
       </div>

@@ -176,11 +176,12 @@ export default function ImagePreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleZoomOut}
             isDisabled={scale <= 0.1}
             aria-label={t("zoom-out")}
           >
-            <ZoomOut className="h-4 w-4" />
+            <ZoomOut size={18} />
           </Button>
 
           <span className="min-w-16 text-center text-overlay-fg text-sm">
@@ -190,11 +191,12 @@ export default function ImagePreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleZoomIn}
             isDisabled={scale >= 5}
             aria-label={t("zoom-in")}
           >
-            <ZoomIn className="h-4 w-4" />
+            <ZoomIn size={18} />
           </Button>
 
           <div className="mx-2 h-4 w-px bg-border" />
@@ -202,19 +204,21 @@ export default function ImagePreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleRotateLeft}
             aria-label={t("rotate-left")}
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw size={18} />
           </Button>
 
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleRotateRight}
             aria-label={t("rotate-right")}
           >
-            <RotateCw className="h-4 w-4" />
+            <RotateCw size={18} />
           </Button>
 
           <div className="mx-2 h-4 w-px bg-border" />
@@ -222,6 +226,7 @@ export default function ImagePreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={resetTransform}
             aria-label={t("reset-zoom")}
           >
@@ -231,10 +236,11 @@ export default function ImagePreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleDownload}
             aria-label={t("download")}
           >
-            <Download className="h-4 w-4" />
+            <Download size={18} />
           </Button>
 
           <div className="mx-2 h-4 w-px bg-border" />
@@ -242,10 +248,11 @@ export default function ImagePreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={onClose}
             aria-label="Close"
           >
-            <X className="h-4 w-4" />
+            <X size={18} />
           </Button>
         </div>
       </div>

@@ -246,19 +246,21 @@ export default function AudioPreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleExternalPreview}
             aria-label={t("open-external")}
           >
-            <ExternalLink className="h-4 w-4" />
+            <ExternalLink size={18} />
           </Button>
 
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={handleDownload}
             aria-label={t("download")}
           >
-            <Download className="h-4 w-4" />
+            <Download size={18} />
           </Button>
 
           <div className="mx-2 h-4 w-px bg-border" />
@@ -266,10 +268,11 @@ export default function AudioPreview({
           <Button
             size="sm"
             intent="secondary"
+            className="!p-0 size-8"
             onClick={onClose}
             aria-label="Close"
           >
-            <X className="h-4 w-4" />
+            <X size={18} />
           </Button>
         </div>
       </div>
@@ -357,10 +360,11 @@ export default function AudioPreview({
               <Button
                 size="sm"
                 intent="secondary"
+                className="!p-0 size-8"
                 onClick={handleSkipBackward}
                 aria-label={t("help-text.audio")}
               >
-                <SkipBack className="h-4 w-4" />
+                <SkipBack size={18} />
               </Button>
 
               <Button
@@ -368,22 +372,23 @@ export default function AudioPreview({
                 intent="primary"
                 onClick={handlePlayPause}
                 aria-label={isPlaying ? t("help-text.audio") : t("help-text.audio")}
-                className="h-12 w-12 rounded-full"
+                className="!p-0 size-12 rounded-full"
               >
                 {isPlaying ? (
-                  <Pause className="h-5 w-5" />
+                  <Pause size={20} />
                 ) : (
-                  <Play className="ml-0.5 h-5 w-5" />
+                  <Play className="ml-0.5" size={20} />
                 )}
               </Button>
 
               <Button
                 size="sm"
                 intent="secondary"
+                className="!p-0 size-8"
                 onClick={handleSkipForward}
                 aria-label={t("help-text.audio")}
               >
-                <SkipForward className="h-4 w-4" />
+                <SkipForward size={18} />
               </Button>
             </div>
 
@@ -392,13 +397,14 @@ export default function AudioPreview({
               <Button
                 size="sm"
                 intent="secondary"
+                className="!p-0 size-8"
                 onClick={handleMute}
                 aria-label={isMuted ? t("help-text.audio") : t("help-text.audio")}
               >
                 {isMuted ? (
-                  <VolumeX className="h-4 w-4" />
+                  <VolumeX size={18} />
                 ) : (
-                  <Volume2 className="h-4 w-4" />
+                  <Volume2 size={18} />
                 )}
               </Button>
 

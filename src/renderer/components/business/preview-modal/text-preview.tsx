@@ -202,28 +202,31 @@ export default function TextPreview({ attachment, onClose }: TextPreviewProps) {
             <Button
               size="sm"
               intent="secondary"
+              className="!p-0 size-8"
               onClick={handleCopy}
               aria-label={t("copy-content")}
             >
-              <Copy className="h-4 w-4" />
+              <Copy size={18} />
             </Button>
 
             <Button
               size="sm"
               intent="secondary"
+              className="!p-0 size-8"
               onClick={handleExternalOpen}
               aria-label={t("open-external")}
             >
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink size={18} />
             </Button>
 
             <Button
               size="sm"
               intent="secondary"
+              className="!p-0 size-8"
               onClick={handleDownload}
               aria-label={t("download")}
             >
-              <Download className="h-4 w-4" />
+              <Download size={18} />
             </Button>
 
             <div className="mx-2 h-4 w-px bg-border" />
@@ -231,10 +234,11 @@ export default function TextPreview({ attachment, onClose }: TextPreviewProps) {
             <Button
               size="sm"
               intent="secondary"
+              className="!p-0 size-8"
               onClick={onClose}
               aria-label="Close"
             >
-              <X className="h-4 w-4" />
+              <X size={18} />
             </Button>
           </div>
         </div>
