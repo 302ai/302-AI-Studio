@@ -532,5 +532,38 @@
     "tab-not-exist": "Tab {{tabNumber}} does not exist",
     "tab-switch-error": "Failed to switch to tab {{tabNumber}}"
   },
-  "toolbox-error-msg": "The API Key of 302.AI provider is not configured or is incorrect, please reconfigure"
+  "toolbox-error-msg": "The API Key of 302.AI provider is not configured or is incorrect, please reconfigure",
+  "preview": {
+    "zoom-in": "Zoom In",
+    "zoom-out": "Zoom Out",
+    "rotate-left": "Rotate Left",
+    "rotate-right": "Rotate Right",
+    "reset-zoom": "Reset Zoom",
+    "download": "Download",
+    "copy-code": "Copy Code",
+    "copy-text": "Copy Text",
+    "toggle-line-numbers": "Toggle Line Numbers",
+    "open-external": "Open with External Viewer",
+    "loading": "Loading...",
+    "loading-code": "Loading code...",
+    "loading-document": "Loading document...",
+    "loading-audio": "Loading audio...",
+    "loading-image": "Loading image...",
+    "loading-text": "Loading text...",
+    "copy-failed": "Copy failed",
+    "copied-to-clipboard": "Copied to clipboard",
+    "content-copied": "Content copied",
+    "failed-to-load": "Failed to load",
+    "failed-to-decode": "Failed to decode",
+    "no-content-available": "No content available",
+    "document-parsing-unavailable": "Document parsing unavailable. Please use external viewer.",
+    "file-preview-not-supported": "This file type cannot be previewed in-app.",
+    "help-text": {
+      "image": "Use mouse wheel to zoom • Drag to pan • R to rotate • Esc to close",
+      "audio": "Space to play/pause • ← → to skip • M to mute • Esc to close",
+      "code": "Ctrl+C to copy • L to toggle line numbers • + / - to zoom • Esc to close",
+      "document": "+ / - to zoom • Click external link to open in system viewer • Esc to close",
+      "text": "Ctrl+C to copy • + / - to zoom • Esc to close"
+    }
+  }
 }
