@@ -90,5 +90,6 @@ export default {
     allowToChangeInstallationDirectory: true,
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
+    buildUniversalInstaller: false
   },
 } satisfies Configuration;
