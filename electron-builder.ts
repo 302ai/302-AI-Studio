@@ -26,6 +26,10 @@ export default {
 
   asarUnpack: ["**/node_modules/sharp/**/*", "**/node_modules/@img/**/*"],
 
+  electronDownload: {
+    mirror: 'https://npmmirror.com/mirrors/electron/',
+  },
+
   mac: {
     artifactName: [
       `${name}-${version}`,
@@ -39,6 +43,14 @@ export default {
     notarize: false,
     entitlements: `${resources}/build/mac/entitlements.mac.plist`,
     entitlementsInherit: `${resources}/build/mac/entitlements.mac.plist`,
+    extendInfo: {
+      NSCameraUsageDescription: "Application requests access to the device's camera.",
+      NSDocumentsFolderUsageDescription:
+        "Application requests access to the user's Documents folder.",
+      NSDownloadsFolderUsageDescription:
+        "Application requests access to the user's Downloads folder.",
+      NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
+    },
     target: [
       {
         target: "dmg",
