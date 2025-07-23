@@ -26,10 +26,6 @@ export default {
 
   asarUnpack: ["**/node_modules/sharp/**/*", "**/node_modules/@img/**/*"],
 
-  electronDownload: {
-    mirror: 'https://npmmirror.com/mirrors/electron/',
-  },
-
   mac: {
     artifactName: [
       `${name}-${version}`,
