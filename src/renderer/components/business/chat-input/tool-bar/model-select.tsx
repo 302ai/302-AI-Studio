@@ -5,6 +5,7 @@ import { Button } from "@renderer/components/ui/button";
 import { Modal } from "@renderer/components/ui/modal";
 import { SearchField } from "@renderer/components/ui/search-field";
 import { useActiveTab } from "@renderer/hooks/use-active-tab";
+import { useGlobalShortcutHandler } from "@renderer/hooks/use-global-shortcut-handler";
 import { cn } from "@renderer/lib/utils";
 import logger from "@shared/logger/renderer-logger";
 import type { Model, Provider, Tab } from "@shared/triplit/types";
@@ -310,6 +311,8 @@ export const ModelSelect = ({
     }
     return null;
   }, [selectedModelId, groupedModels]);
+
+  useGlobalShortcutHandler("toggle-model-panel", () => handleToggleOpen());
 
   return (
     <div className="relative flex h-full w-fit min-w-[130px] justify-end">
