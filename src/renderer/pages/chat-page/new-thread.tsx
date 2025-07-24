@@ -1,4 +1,3 @@
-import BlurText from "@renderer/components/business/blur-text";
 import {
   ChatInput,
   type ChatInputRef,
@@ -29,12 +28,7 @@ export function NewThread() {
   return (
     <div className="mx-auto flex h-full flex-1 flex-col items-center justify-center gap-y-4">
       <div className="flex w-[720px] flex-col gap-y-9">
-        <BlurText
-          text={t("hello-world")}
-          animateBy="letters"
-          className="justify-center text-[34px]"
-          delay={50}
-        />
+        <span className="text-center text-[34px]">{t("hello-world")}</span>
 
         <motion.div
           initial={{ opacity: 0 }}

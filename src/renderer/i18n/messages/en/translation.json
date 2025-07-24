@@ -546,7 +546,11 @@
     "tab-not-exist": "Tab {{tabNumber}} does not exist",
     "tab-switch-error": "Failed to switch to tab {{tabNumber}}"
   },
-  "toolbox-error-msg": "The API Key of 302.AI provider is not configured or is incorrect, please reconfigure",
+  "toolbox": {
+    "tool-press-error-msg": "The API Key of 302.AI provider is not configured or is incorrect, please reconfigure",
+    "tool-collection-error-msg": "Favorite application failed, please try again",
+    "favorites": "Favorites"
+  },
   "preview": {
     "zoom-in": "Zoom In",
     "zoom-out": "Zoom Out",

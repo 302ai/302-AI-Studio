@@ -586,5 +586,10 @@
     "tab-not-exist": "标签页 {{tabNumber}} 不存在",
     "tab-switch-error": "切换到标签页 {{tabNumber}} 失败"
   },
-  "toolbox-error-msg": "302.AI供应商的API Key未配置或不正确，请重新配置"
+  "toolbox": {
+    "tool-press-error-msg": "302.AI供应商的API Key未配置或不正确，请重新配置",
+    "tool-collection-error-msg": "收藏应用失败，请重新尝试",
+    "favorites-category": "收藏",
+    "favorites": "收藏"
+  }
 }

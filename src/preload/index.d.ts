@@ -255,6 +255,13 @@ declare global {
           url: string;
           errorMsg: string | null;
         }>;
+        updateToolCollection: (
+          toolId: number,
+          collected: boolean,
+        ) => Promise<{
+          isOk: boolean;
+          errorMsg: string | null;
+        }>;
       };
     };
   }

@@ -21,19 +21,14 @@ export function ToolCategoryList({ categorizedTools }: ToolCategoryListProps) {
     >
       {categorizedTools.map((category) => (
         <Disclosure
-          className="border-0"
+          className="flex flex-col gap-y-1.5 border-0"
           key={category.category}
           id={category.category}
         >
-          <DisclosureTrigger className="pt-0 pr-4">
-            <span className="flex items-center gap-x-2">
-              <span className="font-medium">{category.category}</span>
-              <span className="text-muted-fg text-xs">
-                ({category.tools.length})
-              </span>
-            </span>
+          <DisclosureTrigger className="w-[228px] rounded-[10px] px-[10px] hover:bg-hover">
+            <span className="whitespace-nowrap">{category.category}</span>
           </DisclosureTrigger>
-          <DisclosurePanel className="pr-4">
+          <DisclosurePanel>
             <div className="flex flex-col gap-y-2">
               {category.tools.map((tool) => (
                 <ToolCard key={tool.id} tool={tool} />
