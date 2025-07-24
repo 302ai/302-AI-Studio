@@ -156,7 +156,7 @@
     --destructive: oklch(0.67 0.24 25.76);
     --destructive-fg: oklch(0.98 0 0);
 
-    --border: rgba(229, 229, 229, 1);
+    --border: #D9D9D9;
     --input: #F9F9F9;
     --ring: #8E47F0;
 
@@ -248,7 +248,7 @@
     --destructive: oklch(0.61 0.25 25.9);
     --destructive-fg: oklch(0.98 0 0);
 
-    --border: oklch(0.274 0.01 67.558);
+    --border: #3D3D3D;
     --input: #1A1A1A;
     --ring: #8E47F0;
 
