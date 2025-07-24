@@ -183,7 +183,7 @@ export function ShortcutsSettings() {
 
             {shortcut.isGroup ? (
               <div className="flex items-center gap-2">
-                <div className="flex h-11 w-full flex-1 items-center rounded-[10px] border border-input bg-setting px-3 py-1 text-setting-fg text-sm">
+                <div className="flex h-11 w-full flex-1 cursor-default items-center rounded-[10px] border border-input bg-setting px-3 py-1 text-setting-fg text-sm">
                   {(() => {
                     const firstTabShortcut = shortcut.groupedShortcuts?.[0];
                     if (firstTabShortcut && firstTabShortcut.keys.length > 0) {
@@ -228,7 +228,7 @@ export function ShortcutsSettings() {
                     </Select.List>
                   </Select>
                 ) : shortcut.mode === "display" ? (
-                  <div className="flex h-11 w-full flex-1 items-center rounded-[10px] border border-input bg-setting px-3 py-1 text-setting-fg text-sm">
+                  <div className="flex h-11 w-full flex-1 cursor-default items-center rounded-[10px] border border-input bg-setting px-3 py-1 text-setting-fg text-sm">
                     {shortcut.keys.length > 0
                       ? formatShortcutLabel(shortcut.keys)
                       : t("recorder.no-shortcut")}

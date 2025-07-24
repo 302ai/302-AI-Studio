@@ -197,7 +197,7 @@ export function ShortcutRecorder({
           value.length === 0 && "text-muted-fg",
           disabled && "cursor-not-allowed opacity-50",
           isRecording && "border-primary ring-1 ring-ring",
-          !isRecording && !disabled && "cursor-pointer",
+          !isRecording && !disabled && "cursor-text",
         )}
         disabled={disabled}
       >
@@ -210,7 +210,7 @@ export function ShortcutRecorder({
               e.stopPropagation();
               handleCancel();
             }}
-            className="ml-2 font-medium text-primary text-sm hover:text-primary/80"
+            className="ml-2 cursor-pointer font-medium text-primary text-sm hover:text-primary/80"
           >
             {t("cancel")}
           </button>
@@ -223,7 +223,7 @@ export function ShortcutRecorder({
               e.stopPropagation();
               handleReset();
             }}
-            className="ml-2 font-medium text-primary text-sm hover:text-primary/80"
+            className="ml-2 cursor-pointer font-medium text-primary text-sm hover:text-primary/80"
           >
             {t("reset")}
           </button>
