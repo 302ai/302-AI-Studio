@@ -24,6 +24,8 @@ interface ShortcutSetting {
   mode: "preset" | "record" | "display";
   options: ShortcutOption[];
   hint?: string;
+  isGroup?: boolean;
+  groupedShortcuts?: ShortcutSetting[];
 }
 
 export function ShortcutsSettings() {
@@ -85,7 +87,7 @@ export function ShortcutsSettings() {
       "switch-to-tab-9": t("hints.switch-to-tab-9"),
     };
 
-    return (allShortcuts || []).map((shortcut) => ({
+    const allSettings = (allShortcuts || []).map((shortcut) => ({
       id: shortcut.id,
       action: shortcut.action,
       keys: Array.from(shortcut.keys),
@@ -94,6 +96,46 @@ export function ShortcutsSettings() {
       options: SHORTCUT_OPTIONS[shortcut.action],
       hint: shortcutHints[shortcut.action],
     }));
+
+    // Group tab switching shortcuts
+    const tabSwitchActions = [
+      "switch-to-tab-1",
+      "switch-to-tab-2",
+      "switch-to-tab-3",
+      "switch-to-tab-4",
+      "switch-to-tab-5",
+      "switch-to-tab-6",
+      "switch-to-tab-7",
+      "switch-to-tab-8",
+      "switch-to-tab-9",
+    ];
+
+    const tabSwitchSettings = allSettings.filter((setting) =>
+      tabSwitchActions.includes(setting.action),
+    );
+
+    const otherSettings = allSettings.filter(
+      (setting) => !tabSwitchActions.includes(setting.action),
+    );
+
+    // Create grouped tab switching display
+    if (tabSwitchSettings.length > 0) {
+      const groupedTabSwitch: ShortcutSetting = {
+        id: "tab-switching-group",
+        action: "switch-to-tab-1" as ShortcutAction, // Use first action as reference
+        keys: [],
+        scope: "app",
+        mode: "display",
+        options: [],
+        hint: t("hints.tab-switching-group"),
+        isGroup: true,
+        groupedShortcuts: tabSwitchSettings,
+      };
+
+      return [...otherSettings, groupedTabSwitch];
+    }
+
+    return otherSettings;
   }, [allShortcuts, t]);
 
   const handleShortcutChange = async (
@@ -134,63 +176,86 @@ export function ShortcutsSettings() {
         {shortcutSettings.map((shortcut) => (
           <div key={shortcut.id} className="flex min-w-[398px] flex-col gap-2">
             <Label className="text-label-fg">
-              {t(`actions.${shortcut.action}`)}
+              {shortcut.isGroup
+                ? t("actions.tab-switching-group")
+                : t(`actions.${shortcut.action}`)}
             </Label>
-            <div className="flex items-center gap-2">
-              {shortcut.mode === "preset" ? (
-                <Select
-                  className="flex-1"
-                  selectedKey={getSelectedOptionId(shortcut)}
-                  onSelectionChange={(optionId) =>
-                    handleShortcutChange(shortcut.action, optionId as string)
-                  }
-                >
-                  <Select.Trigger className="inset-ring-transparent h-11 rounded-[10px] bg-setting text-setting-fg transition-none hover:inset-ring-transparent" />
-                  <Select.List>
-                    {shortcut.options.map((option) => (
-                      <Select.Option
-                        key={option.id}
-                        id={option.id}
-                        className={cn(
-                          "flex cursor-pointer justify-between",
-                          "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
-                        )}
-                      >
-                        <div className="flex w-full items-center justify-between">
-                          <span>{formatShortcutLabel(option.keys)}</span>
-                        </div>
-                      </Select.Option>
-                    ))}
-                  </Select.List>
-                </Select>
-              ) : shortcut.mode === "display" ? (
+
+            {shortcut.isGroup ? (
+              <div className="flex items-center gap-2">
                 <div className="flex h-11 w-full flex-1 items-center rounded-[10px] border border-input bg-setting px-3 py-1 text-setting-fg text-sm">
-                  {shortcut.keys.length > 0
-                    ? formatShortcutLabel(shortcut.keys)
-                    : t("recorder.no-shortcut")}
+                  {(() => {
+                    const firstTabShortcut = shortcut.groupedShortcuts?.[0];
+                    if (firstTabShortcut && firstTabShortcut.keys.length > 0) {
+                      const modifierKeys = firstTabShortcut.keys.filter(
+                        (key) => !/^[1-9]$/.test(key),
+                      );
+                      if (modifierKeys.length > 0) {
+                        const formattedBase = formatShortcutLabel(modifierKeys);
+                        return `${formattedBase}+1~9`;
+                      }
+                    }
+                    return "1~9";
+                  })()}
                 </div>
-              ) : (
-                <ShortcutRecorder
-                  value={shortcut.keys}
-                  onValueChange={(keys) =>
-                    handleRecordedShortcut(shortcut.action, keys)
-                  }
-                  onRecordingChange={(isRecording) =>
-                    handleRecordingChange(shortcut.action, isRecording)
-                  }
-                  disabled={
-                    recordingAction !== null &&
-                    recordingAction !== shortcut.action
-                  }
-                  allShortcuts={shortcutSettings.map((s) => ({
-                    action: s.action,
-                    keys: s.keys,
-                  }))}
-                  onReset={() => handleResetShortcut(shortcut.action)}
-                  className="flex-1"
-                />
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                {shortcut.mode === "preset" ? (
+                  <Select
+                    className="flex-1"
+                    selectedKey={getSelectedOptionId(shortcut)}
+                    onSelectionChange={(optionId) =>
+                      handleShortcutChange(shortcut.action, optionId as string)
+                    }
+                  >
+                    <Select.Trigger className="inset-ring-transparent h-11 rounded-[10px] bg-setting text-setting-fg transition-none hover:inset-ring-transparent" />
+                    <Select.List>
+                      {shortcut.options.map((option) => (
+                        <Select.Option
+                          key={option.id}
+                          id={option.id}
+                          className={cn(
+                            "flex cursor-pointer justify-between",
+                            "[&>[data-slot='check-indicator']]:order-last [&>[data-slot='check-indicator']]:mr-0 [&>[data-slot='check-indicator']]:ml-auto",
+                          )}
+                        >
+                          <div className="flex w-full items-center justify-between">
+                            <span>{formatShortcutLabel(option.keys)}</span>
+                          </div>
+                        </Select.Option>
+                      ))}
+                    </Select.List>
+                  </Select>
+                ) : shortcut.mode === "display" ? (
+                  <div className="flex h-11 w-full flex-1 items-center rounded-[10px] border border-input bg-setting px-3 py-1 text-setting-fg text-sm">
+                    {shortcut.keys.length > 0
+                      ? formatShortcutLabel(shortcut.keys)
+                      : t("recorder.no-shortcut")}
+                  </div>
+                ) : (
+                  <ShortcutRecorder
+                    value={shortcut.keys}
+                    onValueChange={(keys) =>
+                      handleRecordedShortcut(shortcut.action, keys)
+                    }
+                    onRecordingChange={(isRecording) =>
+                      handleRecordingChange(shortcut.action, isRecording)
+                    }
+                    disabled={
+                      recordingAction !== null &&
+                      recordingAction !== shortcut.action
+                    }
+                    allShortcuts={shortcutSettings.map((s) => ({
+                      action: s.action,
+                      keys: s.keys,
+                    }))}
+                    onReset={() => handleResetShortcut(shortcut.action)}
+                    className="flex-1"
+                  />
+                )}
+              </div>
+            )}
 
             {shortcut.hint && (
               <p className="mt-1 text-left text-muted-fg text-xs">

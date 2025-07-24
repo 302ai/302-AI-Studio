@@ -274,7 +274,8 @@
         "switch-to-tab-6": "切换到标签页6",
         "switch-to-tab-7": "切换到标签页7",
         "switch-to-tab-8": "切换到标签页8",
-        "switch-to-tab-9": "切换到标签页9"
+        "switch-to-tab-9": "切换到标签页9",
+        "tab-switching-group": "快速标签页切换 (1-9)"
       },
       "hints": {
         "send-message": "选择在聊天中发送消息的方式",
@@ -309,7 +310,8 @@
         "switch-to-tab-6": "切换到标签页6",
         "switch-to-tab-7": "切换到标签页7",
         "switch-to-tab-8": "切换到标签页8",
-        "switch-to-tab-9": "切换到标签页9"
+        "switch-to-tab-9": "切换到标签页9",
+        "tab-switching-group": "快速切换到指定标签页"
       },
       "description": {
         "title": "键盘快捷键说明",

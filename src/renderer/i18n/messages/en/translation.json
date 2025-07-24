@@ -273,7 +273,8 @@
         "switch-to-tab-6": "Switch to Tab 6",
         "switch-to-tab-7": "Switch to Tab 7",
         "switch-to-tab-8": "Switch to Tab 8",
-        "switch-to-tab-9": "Switch to Tab 9"
+        "switch-to-tab-9": "Switch to Tab 9",
+        "tab-switching-group": "Quick Tab Switching (1-9)"
       },
       "hints": {
         "send-message": "Choose how to send messages in chat",
@@ -308,7 +309,8 @@
         "switch-to-tab-6": "Switch to tab 6",
         "switch-to-tab-7": "Switch to tab 7",
         "switch-to-tab-8": "Switch to tab 8",
-        "switch-to-tab-9": "Switch to tab 9"
+        "switch-to-tab-9": "Switch to tab 9",
+        "tab-switching-group": "Quickly switch to specific tabs"
       },
       "description": {
         "title": "Keyboard Shortcuts Description",
