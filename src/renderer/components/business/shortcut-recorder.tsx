@@ -27,7 +27,7 @@ const checkShortcutConflict = (
 };
 
 const hasModifierKey = (keys: string[]): boolean => {
-  const modifierKeys = ["Ctrl", "Cmd", "Alt", "Shift"];
+  const modifierKeys = ["Ctrl", "Cmd", "Alt", "Option", "Shift"];
   return keys.some((key) => modifierKeys.includes(key));
 };
 
@@ -65,7 +65,7 @@ export function ShortcutRecorder({
 
       if (event.ctrlKey) newKeys.push("Ctrl");
       if (event.metaKey) newKeys.push("Cmd");
-      if (event.altKey) newKeys.push("Alt");
+      if (event.altKey) newKeys.push("Option");
       if (event.shiftKey) newKeys.push("Shift");
 
       if (
@@ -97,7 +97,7 @@ export function ShortcutRecorder({
 
       if (event.ctrlKey) newKeys.push("Ctrl");
       if (event.metaKey) newKeys.push("Cmd");
-      if (event.altKey) newKeys.push("Alt");
+      if (event.altKey) newKeys.push("Option");
       if (event.shiftKey) newKeys.push("Shift");
 
       if (
