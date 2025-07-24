@@ -3,8 +3,8 @@ import { useActiveTab } from "@renderer/hooks/use-active-tab";
 import { useActiveThread } from "@renderer/hooks/use-active-thread";
 import { EventNames, emitter } from "@renderer/services/event-service";
 import logger from "@shared/logger/renderer-logger";
-import { useQueryOne } from "@triplit/react";
-import { useCallback, useState } from "react";
+import { useQuery, useQueryOne } from "@triplit/react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -31,54 +31,57 @@ export function usePrivacyMode() {
     .Include("provider");
   const { result: provider } = useQueryOne(triplitClient, providerQuery);
 
+  const messagesQuery = activeTab?.threadId
+    ? triplitClient.query("messages").Where("threadId", "=", activeTab.threadId)
+    : triplitClient.query("messages").Where("threadId", "=", "never-match");
+  const { results: messages, fetching } = useQuery(
+    triplitClient,
+    messagesQuery,
+  );
+
   const [privacyState, setPrivacyState] = useState<PrivacyModeState>({
     isPrivate: false,
     canToggle: true,
   });
 
-  const checkSessionStarted = useCallback(
-    async (currentThreadId: string | undefined | null) => {
-      logger.info("Checking session status", { currentThreadId });
-      if (!currentThreadId) {
-        logger.warn("No thread ID provided");
-        return false;
-      }
+  const isSessionStarted = messages && messages.length > 0;
 
-      try {
-        const messagesQuery = triplitClient
-          .query("messages")
-          .Where("threadId", "=", currentThreadId);
-        const messages = await triplitClient.fetch(messagesQuery);
-        return messages && messages.length > 0;
-      } catch (error) {
-        logger.error("Failed to check session status", { error });
-        return false;
-      }
-    },
-    [],
-  );
-
-  const updatePrivacyState = useCallback(async () => {
-    const isSessionStarted = await checkSessionStarted(activeTab?.threadId);
-    const canToggle = !isSessionStarted;
-
-    // Fix logic consistency: use same condition for reading as for writing
-    let isPrivate = false;
-    if (activeTab?.id) {
-      // If there's an active tab, use its privacy state
-      isPrivate = activeTab.isPrivate || false;
-    } else {
-      // If no active tab, use global settings
-      isPrivate = settings?.isPrivate || false;
+  useEffect(() => {
+    if (activeTab?.threadId) {
+      setPrivacyState((prev) => ({
+        ...prev,
+        canToggle: false,
+      }));
+    } else if (activeTab?.id) {
+      setPrivacyState((prev) => ({
+        ...prev,
+        canToggle: true,
+      }));
     }
+  }, [activeTab?.threadId, activeTab?.id]);
 
-    setPrivacyState({
-      isPrivate,
-      canToggle,
-    });
-  }, [checkSessionStarted, activeTab, settings?.isPrivate]);
+  const updatePrivacyState = useCallback(() => {
+    if (!fetching) {
+      const canToggle = !isSessionStarted;
 
-  // Toggle privacy mode with validation
+      let isPrivate = false;
+      if (activeTab?.id) {
+        isPrivate = activeTab.isPrivate || false;
+      } else {
+        isPrivate = settings?.isPrivate || false;
+      }
+
+      setPrivacyState({
+        isPrivate,
+        canToggle,
+      });
+    }
+  }, [fetching, isSessionStarted, activeTab, settings?.isPrivate]);
+
+  useEffect(() => {
+    updatePrivacyState();
+  }, [updatePrivacyState]);
+
   const togglePrivacyMode = useCallback(async () => {
     if (!privacyState.canToggle) {
       return false;
@@ -86,7 +89,6 @@ export function usePrivacyMode() {
 
     try {
       const newPrivacyState = !privacyState.isPrivate;
-      // Update local state immediately for consistency
       setPrivacyState((prev) => {
         return {
           ...prev,
@@ -94,7 +96,6 @@ export function usePrivacyMode() {
         };
       });
 
-      // Update active tab if exists (same logic as reading)
       if (activeTab?.id) {
         await tabService.updateTab(activeTab.id, {
           isPrivate: newPrivacyState,
@@ -103,14 +104,12 @@ export function usePrivacyMode() {
         await settingsService.setEnablePrivate(newPrivacyState);
       }
 
-      // Update active thread if exists
       if (selectedThread?.id) {
         await threadService.updateThread(selectedThread.id, {
           isPrivate: newPrivacyState,
         });
       }
 
-      // Emit event for other components
       emitter.emit(EventNames.PRIVACY_MODE_TOGGLE, {
         isPrivate: newPrivacyState,
         tabId: activeTab?.id,
