@@ -46,6 +46,10 @@ export class SettingsDbService extends BaseDbService {
       selectedModelId: "",
       streamSmootherEnabled: true,
       streamSpeed: "normal",
+      collapseCodeBlock: false,
+      hideReason: false,
+      collapseThinkBlock: false,
+      disableMarkdown: false,
     });
   }
 
@@ -247,7 +251,9 @@ export class SettingsDbService extends BaseDbService {
       const settings = await triplitClient.fetchOne(query);
       return settings?.streamSmootherEnabled ?? true;
     } catch (error) {
-      logger.error("SettingsDbService:getStreamSmootherEnabled error", { error });
+      logger.error("SettingsDbService:getStreamSmootherEnabled error", {
+        error,
+      });
       return true;
     }
   }
@@ -264,7 +270,9 @@ export class SettingsDbService extends BaseDbService {
         },
       );
     } catch (error) {
-      logger.error("SettingsDbService:setStreamSmootherEnabled error", { error });
+      logger.error("SettingsDbService:setStreamSmootherEnabled error", {
+        error,
+      });
       throw error;
     }
   }
@@ -293,6 +301,74 @@ export class SettingsDbService extends BaseDbService {
       );
     } catch (error) {
       logger.error("SettingsDbService:setStreamSpeed error", { error });
+      throw error;
+    }
+  }
+
+  async setCollapseCodeBlock(collapseCodeBlock: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.collapseCodeBlock = collapseCodeBlock;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setCollapseCodeBlock error", { error });
+      throw error;
+    }
+  }
+
+  async setHideReason(hideReason: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.hideReason = hideReason;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setHideReason error", { error });
+      throw error;
+    }
+  }
+
+  async setCollapseThinkBlock(collapseThinkBlock: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.collapseThinkBlock = collapseThinkBlock;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setCollapseThinkBlock error", { error });
+      throw error;
+    }
+  }
+
+  async setDisableMarkdown(disableMarkdown: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.disableMarkdown = disableMarkdown;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setDisableMarkdown error", { error });
       throw error;
     }
   }

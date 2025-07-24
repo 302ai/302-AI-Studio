@@ -207,6 +207,11 @@ declare global {
         // Stream output settings
         setStreamSmootherEnabled: (enabled: boolean) => Promise<void>;
         setStreamSpeed: (speed: "slow" | "normal" | "fast") => Promise<void>;
+        // Chat settings
+        setCollapseCodeBlock: (collapseCodeBlock: boolean) => Promise<void>;
+        setHideReason: (hideReason: boolean) => Promise<void>;
+        setCollapseThinkBlock: (collapseThinkBlock: boolean) => Promise<void>;
+        setDisableMarkdown: (disableMarkdown: boolean) => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;
@@ -248,6 +253,13 @@ declare global {
         getToolUrl: (toolId: number) => Promise<{
           isOk: boolean;
           url: string;
+          errorMsg: string | null;
+        }>;
+        updateToolCollection: (
+          toolId: number,
+          collected: boolean,
+        ) => Promise<{
+          isOk: boolean;
           errorMsg: string | null;
         }>;
       };

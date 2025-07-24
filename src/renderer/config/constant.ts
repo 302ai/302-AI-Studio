@@ -8,6 +8,7 @@ export const PLATFORM_KEY_MAP: Record<string, string> = {
   Cmd: isMac ? "⌘" : "Ctrl",
   Meta: isMac ? "⌘" : "Win",
   Alt: isMac ? "⌥" : "Alt",
+  Option: isMac ? "⌥" : "Alt",
   Shift: isMac ? "⇧" : "Shift",
   Control: isMac ? "⌃" : "Ctrl",
   Enter: "Enter",

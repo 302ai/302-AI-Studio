@@ -257,8 +257,9 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         <div
           className={cn(
             "relative",
-            "flex max-h-52 min-h-[126px] w-full flex-col gap-y-1 rounded-[20px] border border-[#3D3D3D] pt-2 pr-2 pb-2 pl-4",
+            "flex max-h-52 min-h-[126px] w-full flex-col gap-y-1 rounded-[20px] border pt-2 pr-2 pb-2 pl-4 ",
             "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-3 focus-within:ring-ring/20",
+            "border-[#D9D9D9] bg-[#F9F9F9] dark:border-[#3D3D3D] dark:bg-[#1A1A1A]",
           )}
           onPaste={handlePaste}
         >
@@ -269,6 +270,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
               "resize-none shadow-none ring-0 focus:ring-0",
               "min-h-[calc(7rem-var(--chat-input-toolbar-height)-9px)]",
               "outline-none",
+              "placeholder:text-sm",
             )}
             placeholder={t("input-placeholder")}
             aria-label={t("input-label")}

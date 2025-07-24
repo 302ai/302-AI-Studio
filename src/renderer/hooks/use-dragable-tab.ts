@@ -17,6 +17,10 @@ export function useDragableTab({ id }: HookParams) {
 
   const ref = useRef<HTMLDivElement>(null);
 
+  const handleTabReload = useCallback(async () => {
+    emitter.emit(EventNames.TAB_RELOAD, { tabId: id });
+  }, [id]);
+
   const handleTabClose = useCallback(async () => {
     try {
       const canClose = await confirmSwitchFromPrivate("close this tab");
@@ -88,6 +92,7 @@ export function useDragableTab({ id }: HookParams) {
   return {
     ref,
     handleTabClose,
+    handleTabReload,
     onDragStart: () => {
       setActiveTabId(id);
     },

@@ -3,7 +3,7 @@
     "input-label": "输入消息",
     "file-not-found": "文件不存在",
     "file-preview-failed": "文件预览失败",
-    "input-placeholder": "随便问问...",
+    "input-placeholder": "在这里输入消息，按Shift+Enter换行",
     "collected": "收藏",
     "send-failed": "发送消息失败",
     "tool-bar": {
@@ -274,7 +274,8 @@
         "switch-to-tab-6": "切换到标签页6",
         "switch-to-tab-7": "切换到标签页7",
         "switch-to-tab-8": "切换到标签页8",
-        "switch-to-tab-9": "切换到标签页9"
+        "switch-to-tab-9": "切换到标签页9",
+        "tab-switching-group": "快速标签页切换 (1-9)"
       },
       "hints": {
         "send-message": "选择在聊天中发送消息的方式",
@@ -309,7 +310,8 @@
         "switch-to-tab-6": "切换到标签页6",
         "switch-to-tab-7": "切换到标签页7",
         "switch-to-tab-8": "切换到标签页8",
-        "switch-to-tab-9": "切换到标签页9"
+        "switch-to-tab-9": "切换到标签页9",
+        "tab-switching-group": "快速切换到指定标签页"
       },
       "description": {
         "title": "键盘快捷键说明",
@@ -359,6 +361,15 @@
           "normal": "正常",
           "fast": "快速"
         }
+      },
+      "collapse-code-block": {
+        "label": "聊天设置",
+        "switch": {
+          "hide-code": "自动折叠代码块",
+          "hide-reason": "隐藏推理过程",
+          "collapse-think": "自动折叠推理过程",
+          "disable-markdown": "关闭markdown渲染"
+        }
       }
     }
   },
@@ -401,7 +412,8 @@
   "tab-bar": {
     "menu-item": {
       "close": "关闭",
-      "close-all": "关闭全部"
+      "close-all": "关闭全部",
+      "reload": "重新加载"
     }
   },
   "thread": {
@@ -566,11 +578,19 @@
   },
   "artifacts": {
     "preview": "预览",
-    "code": "代码"
+    "code": "代码",
+    "lines": "行",
+    "collapse": "折叠",
+    "expand": "展开"
   },
   "shortcuts": {
     "tab-not-exist": "标签页 {{tabNumber}} 不存在",
     "tab-switch-error": "切换到标签页 {{tabNumber}} 失败"
   },
-  "toolbox-error-msg": "302.AI供应商的API Key未配置或不正确，请重新配置"
+  "toolbox": {
+    "tool-press-error-msg": "302.AI供应商的API Key未配置或不正确，请重新配置",
+    "tool-collection-error-msg": "收藏应用失败，请重新尝试",
+    "favorites-category": "收藏",
+    "favorites": "收藏"
+  }
 }

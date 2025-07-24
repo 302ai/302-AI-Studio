@@ -5,8 +5,9 @@ import { schema } from "@shared/triplit/schema";
 import { TriplitClient } from "@triplit/client";
 import { Logger } from "@triplit/logger";
 import { createMainMigrationManager } from "./migrations";
-
 import { AddStreamSettingsMigration } from "./migrations/versions/1.2.0.add-stream-settings";
+import { AddUISettingsMigration } from "./migrations/versions/1.3.0.add-ui-settings";
+import { AddThinkMarkdownSettingsMigration } from "./migrations/versions/1.4.0.add-think-markdown-settings";
 
 // Create custom logger instance for triplit
 const triplitLogger = new Logger([new TriplitLogHandler(logger)]);
@@ -21,6 +22,8 @@ const migrationManager = createMainMigrationManager({
 
 // Register migrations
 migrationManager.registerMigration(new AddStreamSettingsMigration());
+migrationManager.registerMigration(new AddUISettingsMigration());
+migrationManager.registerMigration(new AddThinkMarkdownSettingsMigration());
 
 export const triplitClient = new TriplitClient({
   storage: "memory",

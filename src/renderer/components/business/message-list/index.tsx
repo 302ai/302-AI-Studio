@@ -1,14 +1,15 @@
 import { useToolBar } from "@renderer/hooks/use-tool-bar";
-import type { Message } from "@shared/triplit/types";
+import type { Message, Settings } from "@shared/triplit/types";
 import { motion } from "motion/react";
 import { AssistantMessage } from "./assistant-message";
 import { UserMessage } from "./user-message";
 
 interface MessageListProps {
   messages: Message[];
+  settings: Settings[];
 }
 
-export function MessageList({ messages }: MessageListProps) {
+export function MessageList({ messages, settings }: MessageListProps) {
   const { handleRefreshMessage } = useToolBar();
 
   if (messages.length === 0) {
@@ -30,6 +31,7 @@ export function MessageList({ messages }: MessageListProps) {
             <AssistantMessage
               message={message}
               handleRefreshMessage={handleRefreshMessage}
+              settings={settings}
             />
           )}
         </div>

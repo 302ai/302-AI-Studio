@@ -148,7 +148,7 @@ export function TabBar() {
                 />
                 <Tab
                   className="mr-1"
-                  id={id}
+                  tabId={id}
                   threadId={threadId ?? ""}
                   index={index}
                   title={type === "setting" ? t("settings.tab-title") : title}
