@@ -24,7 +24,7 @@ export const PLATFORM_KEY_MAP: Record<string, string> = {
 };
 
 function sortKeys(keys: string[]): string[] {
-  const modifierOrder = ["Ctrl", "Cmd", "Meta", "Alt", "Option", "Shift"];
+  const modifierOrder = ["Ctrl", "Cmd", "Meta", "Alt", "Shift"];
   const modifiers: string[] = [];
   const regularKeys: string[] = [];
 
