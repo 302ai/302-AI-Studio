@@ -36,7 +36,7 @@ export class ToolboxService {
   private async initToolboxService() {
     try {
       const lang = await this.settingsService.getLanguage();
-      const tools = await this.initToolList(lang);
+      const tools = await this.updateToolList(lang);
       await this.updateToolDetailMap(tools);
     } catch (error) {
       logger.error("ToolboxService:initToolboxService error", { error });
@@ -74,10 +74,7 @@ export class ToolboxService {
     }
   }
 
-  private async fetchAndProcessTools(
-    lang: Language,
-    preserveCollectedState: boolean = false,
-  ): Promise<CreateToolData[]> {
+  private async updateToolList(lang: Language): Promise<CreateToolData[]> {
     const langMap: Record<Language, "cn" | "en" | "jp"> = {
       zh: "cn",
       en: "en",
@@ -86,14 +83,11 @@ export class ToolboxService {
     const _lang = langMap[lang];
 
     try {
-      let collectedMap: Map<number, boolean> | null = null;
-      if (preserveCollectedState) {
-        collectedMap = new Map();
-        const existingTools = await this.toolboxDbService.getAllTools();
-        existingTools.forEach((tool) => {
-          collectedMap?.set(tool.toolId, tool.collected);
-        });
-      }
+      const collectedMap: Map<number, boolean> = new Map();
+      const existingTools = await this.toolboxDbService.getAllTools();
+      existingTools.forEach((tool) => {
+        collectedMap?.set(tool.toolId, tool.collected);
+      });
 
       const toolList = await fetch302AIToolList(_lang);
       const tools: CreateToolData[] = toolList
@@ -107,9 +101,7 @@ export class ToolboxService {
             category_id,
           } = tool;
 
-          const collected = preserveCollectedState
-            ? collectedMap?.get(tool_id) || false
-            : false;
+          const collected = collectedMap?.get(tool_id) || false;
 
           acc.push({
             toolId: tool_id,
@@ -128,14 +120,6 @@ export class ToolboxService {
       logger.error("ToolboxService:fetchAndProcessTools error", { error });
       throw error;
     }
-  }
-
-  private async initToolList(lang: Language): Promise<CreateToolData[]> {
-    return this.fetchAndProcessTools(lang, false);
-  }
-
-  private async updateToolList(lang: Language): Promise<CreateToolData[]> {
-    return this.fetchAndProcessTools(lang, true);
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
