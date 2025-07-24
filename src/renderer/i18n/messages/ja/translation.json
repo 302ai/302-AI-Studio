@@ -274,7 +274,8 @@
         "switch-to-tab-6": "タブ6に切り替え",
         "switch-to-tab-7": "タブ7に切り替え",
         "switch-to-tab-8": "タブ8に切り替え",
-        "switch-to-tab-9": "タブ9に切り替え"
+        "switch-to-tab-9": "タブ9に切り替え",
+        "tab-switching-group": "クイックタブ切り替え (1-9)"
       },
       "hints": {
         "send-message": "チャットでメッセージを送信する方法を選択",
@@ -309,7 +310,8 @@
         "switch-to-tab-6": "タブ6に切り替え",
         "switch-to-tab-7": "タブ7に切り替え",
         "switch-to-tab-8": "タブ8に切り替え",
-        "switch-to-tab-9": "タブ9に切り替え"
+        "switch-to-tab-9": "タブ9に切り替え",
+        "tab-switching-group": "指定のタブに素早く切り替え"
       },
       "description": {
         "title": "キーボードショートカット説明",
