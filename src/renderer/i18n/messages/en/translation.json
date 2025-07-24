@@ -4,7 +4,7 @@
     "file-not-found": "File not found",
     "file-preview-failed": "Failed to preview file",
     "collected": "Favorites",
-    "input-placeholder": "Ask anything...",
+    "input-placeholder": "Enter your message here. Shift+Enter to line break",
     "send-failed": "Failed to send message",
     "tool-bar": {
       "attach-file": "Attach file(file size cannot exceed 10MB)",

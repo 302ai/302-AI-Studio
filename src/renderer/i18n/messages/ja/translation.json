@@ -4,7 +4,7 @@
     "file-not-found": "ファイルが見つかりませんでした",
     "file-preview-failed": "ファイルのプレビューに失敗しました",
     "collected": "お気に入り",
-    "input-placeholder": "何でも聞いてみてください...",
+    "input-placeholder": "ここにメッセージを入力してください。Shift+Enterで改行",
     "send-failed": "メッセージの送信に失敗しました",
     "tool-bar": {
       "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)",
