@@ -174,8 +174,11 @@ export function ShortcutsSettings() {
     <div className="flex h-full flex-1 flex-col overflow-y-auto px-4 py-[18px]">
       <div className="mx-auto flex flex-col gap-4">
         {shortcutSettings.map((shortcut) => (
-          <div key={shortcut.id} className="flex min-w-[398px] flex-col gap-2">
-            <Label className="text-label-fg">
+          <div
+            key={shortcut.id}
+            className="flex min-w-[528px] max-w-[528px] flex-col"
+          >
+            <Label className="mb-2 text-label-fg">
               {shortcut.isGroup
                 ? t("actions.tab-switching-group")
                 : t(`actions.${shortcut.action}`)}
