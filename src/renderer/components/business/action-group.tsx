@@ -43,7 +43,7 @@ export function ActionGroup({
               "size-4",
               stared
                 ? "fill-yellow-500 text-yellow-500"
-                : "fill-[#E5E5E5] text-[#E5E5E5] dark:fill-[#5C5C5C] dark:text-[#5C5C5C]",
+                : "fill-muted-fg text-muted-fg",
             )}
           />
         </ButtonWithTooltip>
