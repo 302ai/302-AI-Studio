@@ -270,6 +270,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
               "resize-none shadow-none ring-0 focus:ring-0",
               "min-h-[calc(7rem-var(--chat-input-toolbar-height)-9px)]",
               "outline-none",
+              "placeholder:text-sm",
             )}
             placeholder={t("input-placeholder")}
             aria-label={t("input-label")}
