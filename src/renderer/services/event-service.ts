@@ -20,6 +20,7 @@ export enum EventNames {
   TAB_CLOSE = "tab:close",
   TAB_CLOSE_ALL = "tab:close-all",
   TAB_SELECT = "tab:select",
+  TAB_RELOAD = "tab:reload",
 
   // * Message events
   MESSAGE_EDIT = "message:edit",
@@ -62,6 +63,9 @@ type Events = {
     thread: Thread;
   };
   [EventNames.TAB_SELECT]: {
+    tabId: string;
+  };
+  [EventNames.TAB_RELOAD]: {
     tabId: string;
   };
   [EventNames.TAB_CLOSE]: {

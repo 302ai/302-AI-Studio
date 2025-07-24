@@ -411,7 +411,8 @@
   "tab-bar": {
     "menu-item": {
       "close": "Close",
-      "close-all": "Close All"
+      "close-all": "Close All",
+      "reload": "Reload"
     }
   },
   "thread": {

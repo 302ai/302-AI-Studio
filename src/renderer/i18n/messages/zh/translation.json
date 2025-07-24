@@ -412,7 +412,8 @@
   "tab-bar": {
     "menu-item": {
       "close": "关闭",
-      "close-all": "关闭全部"
+      "close-all": "关闭全部",
+      "reload": "重新加载"
     }
   },
   "thread": {

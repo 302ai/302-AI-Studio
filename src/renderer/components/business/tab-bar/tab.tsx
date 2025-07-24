@@ -6,14 +6,14 @@ import { useDragableTab } from "@renderer/hooks/use-dragable-tab";
 import { cn } from "@renderer/lib/utils";
 import type { TabType } from "@shared/triplit/types";
 import { useQueryOne } from "@triplit/react";
-import { CopyX, X } from "lucide-react";
+import { CopyX, RotateCw, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { ShrinkableTab } from "./shrinkable-tab";
 
 interface TabProps {
   className?: string;
-  id: string;
+  tabId: string;
   threadId: string;
   index: number;
   title: string;
@@ -27,7 +27,7 @@ const noDragRegion = { WebkitAppRegion: "no-drag" } as React.CSSProperties;
 
 export function Tab({
   className,
-  id,
+  tabId,
   threadId,
   index,
   title,
@@ -37,11 +37,14 @@ export function Tab({
   type,
   isPrivate = false,
 }: TabProps) {
-  const { t } = useTranslation();
-  const { ref, handleTabClose, handleTabCloseAll } = useDragableTab({
-    id,
-    index,
+  const { t } = useTranslation("translation", {
+    keyPrefix: "tab-bar.menu-item",
   });
+  const { ref, handleTabClose, handleTabCloseAll, handleTabReload } =
+    useDragableTab({
+      id: tabId,
+      index,
+    });
 
   const threadStatusQuery = triplitClient
     .query("threads")
@@ -54,12 +57,13 @@ export function Tab({
     .sort((a, b) => b.orderSeq - a.orderSeq)[0];
 
   const isStreaming = latestAssistantMessage?.status === "pending";
+  const isAiToolTab = type === "302ai-tool";
 
   // * The three different compression states for the tab
   const isShrinkedThree = width <= 50;
 
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={tabId} index={index}>
       {(provided, snapshot) => (
         <ContextMenu>
           <motion.div
@@ -121,13 +125,22 @@ export function Tab({
             </ContextMenu.Trigger>
           </motion.div>
           <ContextMenu.Content aria-label={`Tab options for ${title}`}>
+            {isAiToolTab && (
+              <>
+                <ContextMenu.Item onAction={handleTabReload}>
+                  <RotateCw className="mr-2 h-4 w-4" />
+                  {t("reload")}
+                </ContextMenu.Item>
+                <ContextMenu.Separator />
+              </>
+            )}
             <ContextMenu.Item onAction={handleTabClose}>
               <X className="mr-2 h-4 w-4" />
-              {t("tab-bar.menu-item.close")}
+              {t("close")}
             </ContextMenu.Item>
             <ContextMenu.Item onAction={handleTabCloseAll}>
               <CopyX className="mr-2 h-4 w-4" />
-              {t("tab-bar.menu-item.close-all")}
+              {t("close-all")}
             </ContextMenu.Item>
           </ContextMenu.Content>
         </ContextMenu>
