@@ -360,9 +360,10 @@
         }
       },
       "collapse-code-block": {
-        "label": "Code Block Collapse",
+        "label": "Chat Settings",
         "switch": {
-          "label": "Collapse code blocks automatically"
+          "hide-code": "Hide code blocks",
+          "hide-reason": "Hide reason"
         }
       }
     }

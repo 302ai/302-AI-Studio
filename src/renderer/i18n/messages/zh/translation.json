@@ -363,7 +363,8 @@
       "collapse-code-block": {
         "label": "聊天设置",
         "switch": {
-          "label": "自动折叠代码块"
+          "hide-code": "自动折叠代码块",
+          "hide-reason": "隐藏推理过程"
         }
       }
     }

@@ -57,7 +57,7 @@ export function ChatSettings() {
               onChange={handleCollapseCodeBlockChange}
             >
               <Label className="self-center">
-                {t("collapse-code-block.switch.label")}
+                {t("collapse-code-block.switch.hide-code")}
               </Label>
             </Switch>
 
@@ -68,8 +68,7 @@ export function ChatSettings() {
               onChange={handleHideReasonChange}
             >
               <Label className="self-center">
-                {/* {t("collapse-code-block.switch.label")} */}
-                隐藏推理过程
+                {t("collapse-code-block.switch.hide-reason")}
               </Label>
             </Switch>
           </>
