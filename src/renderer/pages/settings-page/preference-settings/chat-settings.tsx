@@ -14,10 +14,6 @@ export function ChatSettings() {
   const settingsQuery = triplitClient.query("settings");
   const { result } = useQueryOne(triplitClient, settingsQuery);
 
-  const handleDisplayAppStoreChange = async (value: boolean) => {
-    await settingsService.setDisplayAppStore(value);
-  };
-
   const handleCollapseCodeBlockChange = async (value: boolean) => {
     await settingsService.setCollapseCodeBlock(value);
   };
@@ -29,20 +25,6 @@ export function ChatSettings() {
   return (
     <div className="flex flex-col gap-4">
       {/* Display App Store Setting */}
-      <div className="flex flex-col gap-2">
-        <Label className="text-label-fg">{t("display-app-store.label")}</Label>
-        {result && (
-          <Switch
-            className="h-11 min-w-[398px] rounded-[10px] bg-setting px-3.5 py-2.5"
-            isSelected={result?.displayAppStore}
-            onChange={handleDisplayAppStoreChange}
-          >
-            <Label className="self-center">
-              {t("display-app-store.switch.label")}
-            </Label>
-          </Switch>
-        )}
-      </div>
 
       <div className="flex flex-col gap-2">
         <Label className="text-label-fg">
