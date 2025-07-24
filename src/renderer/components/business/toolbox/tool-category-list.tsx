@@ -5,6 +5,7 @@ import {
   DisclosureTrigger,
 } from "@renderer/components/ui/disclosure-group";
 import type { ToolCategory } from "@renderer/hooks/use-toolbox";
+import { motion } from "motion/react";
 import { ToolCard } from "./tool-card";
 
 interface ToolCategoryListProps {
@@ -21,25 +22,50 @@ export function ToolCategoryList({ categorizedTools }: ToolCategoryListProps) {
     >
       {categorizedTools.map((category) => (
         <Disclosure
-          className="border-0"
+          className="flex flex-col gap-y-1.5 border-0"
           key={category.category}
           id={category.category}
         >
-          <DisclosureTrigger className="pt-0 pr-4">
-            <span className="flex items-center gap-x-2">
-              <span className="font-medium">{category.category}</span>
-              <span className="text-muted-fg text-xs">
-                ({category.tools.length})
-              </span>
-            </span>
-          </DisclosureTrigger>
-          <DisclosurePanel className="pr-4">
-            <div className="flex flex-col gap-y-2">
-              {category.tools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} />
-              ))}
-            </div>
-          </DisclosurePanel>
+          {({ isExpanded }) => (
+            <>
+              <DisclosureTrigger className="w-[228px] rounded-[10px] px-[10px] hover:bg-hover">
+                <span className="whitespace-nowrap">{category.category}</span>
+              </DisclosureTrigger>
+              <DisclosurePanel>
+                {isExpanded && (
+                  <motion.div
+                    className="flex flex-col gap-y-2"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      hidden: {},
+                      visible: {
+                        transition: {
+                          staggerChildren: 0.1,
+                        },
+                      },
+                    }}
+                  >
+                    {category.tools.map((tool) => (
+                      <motion.div
+                        key={tool.id}
+                        variants={{
+                          hidden: { opacity: 0, x: -50 },
+                          visible: {
+                            opacity: 1,
+                            x: 0,
+                            transition: { duration: 0.3, ease: "easeOut" },
+                          },
+                        }}
+                      >
+                        <ToolCard tool={tool} />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </DisclosurePanel>
+            </>
+          )}
         </Disclosure>
       ))}
     </DisclosureGroup>

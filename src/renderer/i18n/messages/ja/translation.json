@@ -4,7 +4,7 @@
     "file-not-found": "ファイルが見つかりませんでした",
     "file-preview-failed": "ファイルのプレビューに失敗しました",
     "collected": "お気に入り",
-    "input-placeholder": "何でも聞いてみてください...",
+    "input-placeholder": "ここにメッセージを入力してください。Shift+Enterで改行",
     "send-failed": "メッセージの送信に失敗しました",
     "tool-bar": {
       "attach-file": "ファイルを添付(ファイルは10MBを超えることはできません)",
@@ -274,7 +274,8 @@
         "switch-to-tab-6": "タブ6に切り替え",
         "switch-to-tab-7": "タブ7に切り替え",
         "switch-to-tab-8": "タブ8に切り替え",
-        "switch-to-tab-9": "タブ9に切り替え"
+        "switch-to-tab-9": "タブ9に切り替え",
+        "tab-switching-group": "クイックタブ切り替え (1-9)"
       },
       "hints": {
         "send-message": "チャットでメッセージを送信する方法を選択",
@@ -309,7 +310,8 @@
         "switch-to-tab-6": "タブ6に切り替え",
         "switch-to-tab-7": "タブ7に切り替え",
         "switch-to-tab-8": "タブ8に切り替え",
-        "switch-to-tab-9": "タブ9に切り替え"
+        "switch-to-tab-9": "タブ9に切り替え",
+        "tab-switching-group": "指定のタブに素早く切り替え"
       },
       "description": {
         "title": "キーボードショートカット説明",
@@ -359,6 +361,15 @@
           "normal": "普通",
           "fast": "速い"
         }
+      },
+      "collapse-code-block": {
+        "label": "チャット設定",
+        "switch": {
+          "hide-code": "デフォルトでコードブロックを折りたたむ",
+          "hide-reason": "推論過程を非表示にする",
+          "collapse-think": "推論過程を自動で折りたたむ",
+          "disable-markdown": "markdownを無効にする"
+        }
       }
     }
   },
@@ -401,7 +412,8 @@
   "tab-bar": {
     "menu-item": {
       "close": "閉じる",
-      "close-all": "すべて閉じる"
+      "close-all": "すべて閉じる",
+      "reload": "リロード"
     }
   },
   "thread": {
@@ -527,13 +539,20 @@
   },
   "artifacts": {
     "preview": "プレビュー",
-    "code": "コード"
+    "code": "コード",
+    "lines": "行",
+    "collapse": "折りたたむ",
+    "expand": "展開"
   },
   "shortcuts": {
     "tab-not-exist": "タブ {{tabNumber}} は存在しません",
     "tab-switch-error": "タブ {{tabNumber}} への切り替えに失敗しました"
   },
-  "toolbox-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています",
+  "toolbox": {
+    "tool-press-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています",
+    "tool-collection-error-msg": "お気に入りのアプリケーションが失敗しました、もう一度やり直してください",
+    "favorites": "集める"
+  },
   "preview": {
     "zoom-in": "ズームイン",
     "zoom-out": "ズームアウト",

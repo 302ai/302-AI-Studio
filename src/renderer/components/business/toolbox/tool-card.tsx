@@ -1,65 +1,57 @@
-import { useTabBar } from "@renderer/hooks/use-tab-bar";
+import { useToolbox } from "@renderer/hooks/use-toolbox";
 import { cn } from "@renderer/lib/utils";
 import type { Tool } from "@shared/triplit/types";
-import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import { ActionGroup } from "../action-group";
 import { ButtonWithTooltip } from "../button-with-tooltip";
+import { ToolIcon } from "./tool-icon";
 
 interface ToolCardProps {
   tool: Tool;
   className?: string;
-  showDescription?: boolean;
   tooltipPlacement?: "left" | "right" | "top" | "bottom";
 }
-
-const { toolboxService } = window.service;
 
 export function ToolCard({
   tool,
   className,
-  showDescription = true,
   tooltipPlacement = "left",
 }: ToolCardProps) {
-  const { t } = useTranslation();
-  const { handleAddNewTab } = useTabBar();
-
-  const handleToolPress = useCallback(async () => {
-    const result = await toolboxService.getToolUrl(tool.toolId);
-    if (!result.isOk) {
-      toast.error(t("toolbox-error-msg"));
-      return;
-    }
-
-    const subdomain = new URL(result.url).hostname.split(".302.ai")[0];
-    await handleAddNewTab("302ai-tool", tool.name, {
-      subdomain,
-    });
-  }, [tool.toolId, handleAddNewTab, tool.name, t]);
+  const { handleToolPress, handleToolCollection } = useToolbox();
 
   return (
-    <ButtonWithTooltip
-      title={tool.name}
-      tooltipPlacement={tooltipPlacement}
-      intent="plain"
-      size="sm"
-      className={cn(
-        "flex h-[50px] max-w-[228px] flex-row justify-between gap-x-1.5 bg-bg",
-        className,
-      )}
-      onPress={handleToolPress}
-    >
-      <div className="flex w-full flex-col">
-        <div className="line-clamp-1 text-fg">{tool.name}</div>
-        <div
-          className={cn("line-clamp-1 text-muted-fg", {
-            hidden: !showDescription,
-          })}
-          title={tool.description}
-        >
-          {tool.description}
+    <div className="relative max-w-[228px]">
+      <ButtonWithTooltip
+        title={tool.name}
+        tooltipPlacement={tooltipPlacement}
+        intent="plain"
+        size="sm"
+        className={cn(
+          "flex h-[50px] w-full flex-row justify-between gap-x-1.5 bg-bg",
+          className,
+        )}
+        onPress={() => handleToolPress(tool)}
+      >
+        <div className="flex flex-row items-center gap-1.5">
+          <ToolIcon toolId={tool.toolId} />
+          <div className="flex flex-col items-start justify-start pr-7">
+            <p className="line-clamp-1 text-left text-fg text-sm">
+              {tool.name}
+            </p>
+            <p
+              className="line-clamp-1 text-left text-muted-fg text-xs"
+              title={tool.description}
+            >
+              {tool.description}
+            </p>
+          </div>
         </div>
-      </div>
-    </ButtonWithTooltip>
+      </ButtonWithTooltip>
+
+      <ActionGroup
+        onStar={() => handleToolCollection(tool.toolId, !tool.collected)}
+        stared={tool.collected}
+        className="-translate-y-1/2 absolute top-1/2 right-1"
+      />
+    </div>
   );
 }

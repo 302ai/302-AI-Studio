@@ -61,28 +61,10 @@ export function useAppShortcutListenser() {
           return;
         }
 
-        // 跨平台兼容：如果快捷键定义中有 Cmd，也尝试用 Ctrl 匹配
-        if (shortcutKeys.includes("Cmd")) {
-          const crossPlatformKeys = shortcutKeys.map((key) =>
-            key === "Cmd" ? "Ctrl" : key,
-          );
-          if (arraysEqual(crossPlatformKeys, pressedKeys)) {
-            event.preventDefault();
-            event.stopPropagation();
+        const compatibleKeyCombinations = generateCompatibleKeys(shortcutKeys);
 
-            emitter.emit(EventNames.SHORTCUT_TRIGGERED, {
-              action: shortcut.action,
-            });
-            return;
-          }
-        }
-
-        // 跨平台兼容：如果快捷键定义中有 Ctrl，也尝试用 Cmd 匹配
-        if (shortcutKeys.includes("Ctrl")) {
-          const crossPlatformKeys = shortcutKeys.map((key) =>
-            key === "Ctrl" ? "Cmd" : key,
-          );
-          if (arraysEqual(crossPlatformKeys, pressedKeys)) {
+        for (const compatibleKeys of compatibleKeyCombinations) {
+          if (arraysEqual(compatibleKeys, pressedKeys)) {
             event.preventDefault();
             event.stopPropagation();
 
@@ -112,4 +94,39 @@ function arraysEqual(a: string[], b: string[]): boolean {
   const sortedB = [...b].sort();
 
   return sortedA.every((val, index) => val === sortedB[index]);
+}
+
+function generateCompatibleKeys(keys: string[]): string[][] {
+  const combinations: string[][] = [];
+
+  const keyMappings = {
+    Cmd: ["Cmd", "Ctrl"],
+    Ctrl: ["Ctrl", "Cmd"],
+    Option: ["Option", "Alt"],
+    Alt: ["Alt", "Option"],
+  };
+
+  function generateCombinations(
+    keyIndex: number,
+    currentCombination: string[],
+  ): void {
+    if (keyIndex >= keys.length) {
+      combinations.push([...currentCombination]);
+      return;
+    }
+
+    const currentKey = keys[keyIndex];
+    const possibleKeys = keyMappings[
+      currentKey as keyof typeof keyMappings
+    ] || [currentKey];
+
+    for (const possibleKey of possibleKeys) {
+      currentCombination[keyIndex] = possibleKey;
+      generateCombinations(keyIndex + 1, currentCombination);
+    }
+  }
+
+  generateCombinations(0, new Array(keys.length));
+
+  return combinations.filter((combo) => !arraysEqual(combo, keys));
 }

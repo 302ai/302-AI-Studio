@@ -28,9 +28,15 @@ export const settingsSchema = {
     }),
     // Streaming output configuration
     streamSmootherEnabled: S.Optional(S.Boolean({ default: true })),
-    streamSpeed: S.Optional(S.String({
-      enum: ["slow", "normal", "fast"],
-      default: "normal",
-    })),
+    streamSpeed: S.Optional(
+      S.String({
+        enum: ["slow", "normal", "fast"],
+        default: "normal",
+      }),
+    ),
+    collapseCodeBlock: S.Optional(S.Boolean({ default: false })),
+    hideReason: S.Optional(S.Boolean({ default: false })),
+    collapseThinkBlock: S.Optional(S.Boolean({ default: false })),
+    disableMarkdown: S.Optional(S.Boolean({ default: false })),
   }),
 };

@@ -4,7 +4,7 @@
     "file-not-found": "File not found",
     "file-preview-failed": "Failed to preview file",
     "collected": "Favorites",
-    "input-placeholder": "Ask anything...",
+    "input-placeholder": "Enter your message here. Shift+Enter to line break",
     "send-failed": "Failed to send message",
     "tool-bar": {
       "attach-file": "Attach file(file size cannot exceed 10MB)",
@@ -273,7 +273,8 @@
         "switch-to-tab-6": "Switch to Tab 6",
         "switch-to-tab-7": "Switch to Tab 7",
         "switch-to-tab-8": "Switch to Tab 8",
-        "switch-to-tab-9": "Switch to Tab 9"
+        "switch-to-tab-9": "Switch to Tab 9",
+        "tab-switching-group": "Quick Tab Switching (1-9)"
       },
       "hints": {
         "send-message": "Choose how to send messages in chat",
@@ -308,7 +309,8 @@
         "switch-to-tab-6": "Switch to tab 6",
         "switch-to-tab-7": "Switch to tab 7",
         "switch-to-tab-8": "Switch to tab 8",
-        "switch-to-tab-9": "Switch to tab 9"
+        "switch-to-tab-9": "Switch to tab 9",
+        "tab-switching-group": "Quickly switch to specific tabs"
       },
       "description": {
         "title": "Keyboard Shortcuts Description",
@@ -358,6 +360,15 @@
           "normal": "Normal",
           "fast": "Fast"
         }
+      },
+      "collapse-code-block": {
+        "label": "Chat Settings",
+        "switch": {
+          "hide-code": "Hide code blocks",
+          "hide-reason": "Hide reason",
+          "collapse-think": "Collapse think blocks",
+          "disable-markdown": "Disable markdown rendering"
+        }
       }
     }
   },
@@ -400,7 +411,8 @@
   "tab-bar": {
     "menu-item": {
       "close": "Close",
-      "close-all": "Close All"
+      "close-all": "Close All",
+      "reload": "Reload"
     }
   },
   "thread": {
@@ -526,13 +538,20 @@
   },
   "artifacts": {
     "preview": "Preview",
-    "code": "Code"
+    "code": "Code",
+    "lines": "lines",
+    "collapse": "Collapse",
+    "expand": "Expand"
   },
   "shortcuts": {
     "tab-not-exist": "Tab {{tabNumber}} does not exist",
     "tab-switch-error": "Failed to switch to tab {{tabNumber}}"
   },
-  "toolbox-error-msg": "The API Key of 302.AI provider is not configured or is incorrect, please reconfigure",
+  "toolbox": {
+    "tool-press-error-msg": "The API Key of 302.AI provider is not configured or is incorrect, please reconfigure",
+    "tool-collection-error-msg": "Favorite application failed, please try again",
+    "favorites": "Favorites"
+  },
   "preview": {
     "zoom-in": "Zoom In",
     "zoom-out": "Zoom Out",

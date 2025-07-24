@@ -9,6 +9,7 @@ import { useSidebar } from "@renderer/components/ui/sidebar";
 import { useArtifact } from "@renderer/hooks/use-artifact";
 import { useChat } from "@renderer/hooks/use-chat";
 import { useChatInputFocus } from "@renderer/hooks/use-chat-input-focus";
+import { useTriplit } from "@renderer/hooks/use-triplit";
 import { cn } from "@renderer/lib/utils";
 import { motion } from "motion/react";
 import { useRef } from "react";
@@ -24,7 +25,7 @@ export function ChatPage() {
   const { activeThreadId, messages, streaming, stopStreamChat, handleScroll } =
     useChat(scrollRef);
   const { isArtifactOpen } = useArtifact();
-
+  const { settings } = useTriplit();
   useChatInputFocus(chatInputRef);
 
   const isWelcomeState = !activeThreadId;
@@ -54,7 +55,7 @@ export function ChatPage() {
             scrollbarGutter: "stable",
           }}
         >
-          <MessageList messages={messages} />
+          {settings && <MessageList messages={messages} settings={settings} />}
         </div>
 
         <motion.div

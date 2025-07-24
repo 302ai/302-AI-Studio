@@ -87,8 +87,12 @@ export async function fetch302AIToolList(lang: "cn" | "en" | "jp") {
           : "Supports Midjourney, Flux, SD, Ideogram, Recraft",
     enable: true,
     category_name:
-      lang === "cn" ? "机器人" : lang === "jp" ? "ロボット" : "Robots",
-    category_id: 999,
+      lang === "cn"
+        ? "图片处理"
+        : lang === "jp"
+          ? "画像処理"
+          : "Image Processing",
+    category_id: 4,
   };
   const tools = [drawingRobotData, ...data.data.data];
 
