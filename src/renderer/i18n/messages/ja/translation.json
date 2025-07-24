@@ -364,7 +364,9 @@
         "label": "チャット設定",
         "switch": {
           "hide-code": "デフォルトでコードブロックを折りたたむ",
-          "hide-reason": "推論過程を非表示にする"
+          "hide-reason": "推論過程を非表示にする",
+          "collapse-think": "推論過程を自動で折りたたむ",
+          "disable-markdown": "markdownを無効にする"
         }
       }
     }

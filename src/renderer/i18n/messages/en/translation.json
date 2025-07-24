@@ -363,7 +363,9 @@
         "label": "Chat Settings",
         "switch": {
           "hide-code": "Hide code blocks",
-          "hide-reason": "Hide reason"
+          "hide-reason": "Hide reason",
+          "collapse-think": "Collapse think blocks",
+          "disable-markdown": "Disable markdown rendering"
         }
       }
     }

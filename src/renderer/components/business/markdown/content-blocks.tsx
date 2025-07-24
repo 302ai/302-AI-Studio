@@ -4,7 +4,7 @@ import { useContentBlocks } from "@renderer/hooks/use-content-blocks";
 import { cn } from "@renderer/lib/utils";
 import type { Settings } from "@shared/triplit/types";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MarkdownRenderer } from "./markdown-renderer";
 
@@ -22,25 +22,65 @@ export function ContentBlocks({
   const { t } = useTranslation("translation", {
     keyPrefix: "message",
   });
-
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const hideReason = settings?.[0]?.hideReason ?? false;
+  const setting = settings?.[0];
+  const hideReason = setting?.hideReason ?? false;
+  const collapseThinkBlock = setting?.collapseThinkBlock ?? true;
+  const disableMarkdown = setting?.disableMarkdown ?? false;
 
   const { blocks } = useContentBlocks(content);
+
+  const [collapsedStates, setCollapsedStates] = useState<
+    Record<string, boolean>
+  >(() => {
+    if (!collapseThinkBlock) return {};
+    // 给完成的block设置折叠状态
+    const initialStates: Record<string, boolean> = {};
+    blocks.forEach((block, index) => {
+      const blockId = `${messageId}-${block.type}-${index}`;
+      if (block.isComplete) {
+        initialStates[blockId] = true;
+      }
+    });
+    return initialStates;
+  });
+
+  const previousCompleteStates = useRef<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (hideReason) return;
+    // 输出完自动折叠
+    blocks.forEach((block, index) => {
+      const blockId = `${messageId}-${block.type}-${index}`;
+      const wasComplete = previousCompleteStates.current[blockId];
+      const isNowComplete = block.isComplete;
+
+      if (!wasComplete && isNowComplete && collapseThinkBlock) {
+        setCollapsedStates((prev) => ({
+          ...prev,
+          [blockId]: true,
+        }));
+      }
+
+      previousCompleteStates.current[blockId] = isNowComplete;
+    });
+  }, [blocks, messageId, collapseThinkBlock, hideReason]);
 
   if (hideReason || blocks.length === 0) {
     return null;
   }
 
-  const toggleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
+  const toggleCollapse = (blockId: string) => {
+    setCollapsedStates((prev) => ({
+      ...prev,
+      [blockId]: !prev[blockId],
+    }));
   };
 
   return (
     <div className="mb-4">
       {blocks.map((block, index) => {
         const blockId = `${messageId}-${block.type}-${index}`;
+        const isCollapsed = collapsedStates[blockId] ?? false;
 
         return (
           <div
@@ -53,7 +93,7 @@ export function ContentBlocks({
             <Button
               intent="plain"
               size="sm"
-              onPress={toggleCollapse}
+              onPress={() => toggleCollapse(blockId)}
               className="flex h-8 w-full cursor-pointer items-center gap-2 pressed:bg-transparent text-fg text-sm hover:bg-transparent"
             >
               <div className="flex w-full items-center gap-2">
@@ -83,9 +123,13 @@ export function ContentBlocks({
                   className="overflow-hidden"
                 >
                   <div className="text-muted-fg text-sm leading-relaxed">
-                    <MarkdownRenderer settings={settings}>
-                      {block.content}
-                    </MarkdownRenderer>
+                    {disableMarkdown ? (
+                      <div className="whitespace-pre-wrap">{block.content}</div>
+                    ) : (
+                      <MarkdownRenderer settings={settings}>
+                        {block.content}
+                      </MarkdownRenderer>
+                    )}
                   </div>
                 </motion.div>
               )}

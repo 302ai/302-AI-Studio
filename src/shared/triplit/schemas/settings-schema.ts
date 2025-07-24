@@ -36,5 +36,7 @@ export const settingsSchema = {
     ),
     collapseCodeBlock: S.Optional(S.Boolean({ default: false })),
     hideReason: S.Optional(S.Boolean({ default: false })),
+    collapseThinkBlock: S.Optional(S.Boolean({ default: false })),
+    disableMarkdown: S.Optional(S.Boolean({ default: false })),
   }),
 };

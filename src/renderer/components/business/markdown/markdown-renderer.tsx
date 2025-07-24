@@ -59,6 +59,8 @@ export function MarkdownRenderer({
   children: string;
   settings: Settings[];
 }) {
+  const disableMarkdown = settings?.[0]?.disableMarkdown ?? false;
+
   const components: Components = useMemo(() => {
     const baseComponents = createComponents(settings);
 
@@ -77,6 +79,10 @@ export function MarkdownRenderer({
       },
     };
   }, [settings]);
+
+  if (disableMarkdown) {
+    return <div className="whitespace-pre-wrap">{children}</div>;
+  }
 
   return (
     <Markdown

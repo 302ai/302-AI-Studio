@@ -56,7 +56,7 @@ export function MarkdownCodeBlock({
       ? children
       : childrenTakeAllStringContents(children);
 
-  const isDefaultExpanded = !(settings?.[0]?.collapseCodeBlock ?? false);
+  const isDefaultExpanded = !settings?.[0]?.collapseCodeBlock;
 
   if (language === "mermaid") {
     return <MermaidWrapper>{code}</MermaidWrapper>;

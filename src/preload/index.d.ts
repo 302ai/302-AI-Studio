@@ -207,8 +207,11 @@ declare global {
         // Stream output settings
         setStreamSmootherEnabled: (enabled: boolean) => Promise<void>;
         setStreamSpeed: (speed: "slow" | "normal" | "fast") => Promise<void>;
+        // Chat settings
         setCollapseCodeBlock: (collapseCodeBlock: boolean) => Promise<void>;
         setHideReason: (hideReason: boolean) => Promise<void>;
+        setCollapseThinkBlock: (collapseThinkBlock: boolean) => Promise<void>;
+        setDisableMarkdown: (disableMarkdown: boolean) => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;

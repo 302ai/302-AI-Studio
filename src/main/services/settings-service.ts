@@ -261,4 +261,30 @@ export class SettingsService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setCollapseThinkBlock(
+    _event: Electron.IpcMainEvent,
+    collapseThinkBlock: boolean,
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setCollapseThinkBlock(collapseThinkBlock);
+    } catch (error) {
+      logger.error("SettingsService:setCollapseThinkBlock error", { error });
+      throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setDisableMarkdown(
+    _event: Electron.IpcMainEvent,
+    disableMarkdown: boolean,
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setDisableMarkdown(disableMarkdown);
+    } catch (error) {
+      logger.error("SettingsService:setDisableMarkdown error", { error });
+      throw error;
+    }
+  }
 }

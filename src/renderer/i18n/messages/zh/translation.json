@@ -364,7 +364,9 @@
         "label": "聊天设置",
         "switch": {
           "hide-code": "自动折叠代码块",
-          "hide-reason": "隐藏推理过程"
+          "hide-reason": "隐藏推理过程",
+          "collapse-think": "自动折叠推理过程",
+          "disable-markdown": "关闭markdown渲染"
         }
       }
     }

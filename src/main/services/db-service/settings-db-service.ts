@@ -48,6 +48,8 @@ export class SettingsDbService extends BaseDbService {
       streamSpeed: "normal",
       collapseCodeBlock: false,
       hideReason: false,
+      collapseThinkBlock: false,
+      disableMarkdown: false,
     });
   }
 
@@ -333,6 +335,40 @@ export class SettingsDbService extends BaseDbService {
       );
     } catch (error) {
       logger.error("SettingsDbService:setHideReason error", { error });
+      throw error;
+    }
+  }
+
+  async setCollapseThinkBlock(collapseThinkBlock: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.collapseThinkBlock = collapseThinkBlock;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setCollapseThinkBlock error", { error });
+      throw error;
+    }
+  }
+
+  async setDisableMarkdown(disableMarkdown: boolean) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.disableMarkdown = disableMarkdown;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setDisableMarkdown error", { error });
       throw error;
     }
   }
