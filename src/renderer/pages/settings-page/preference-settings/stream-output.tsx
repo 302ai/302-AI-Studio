@@ -41,7 +41,7 @@ export function StreamOutput() {
         label: t("speed.slow"),
       },
       {
-        key: "normal", 
+        key: "normal",
         icon: <Timer className="size-4" />,
         label: t("speed.normal"),
       },
@@ -54,7 +54,7 @@ export function StreamOutput() {
     [t],
   );
 
-  const currentSpeed = result?.streamSpeed || "normal";
+  const currentSpeed = result?.streamSpeed;
   const streamSmootherEnabled = result?.streamSmootherEnabled ?? true;
 
   useEffect(() => {
@@ -121,10 +121,14 @@ export function StreamOutput() {
                       ? "text-accent-fg"
                       : "z-1 text-secondary-fg hover:bg-hover-primary",
                   )}
-                  onMouseDown={() => handleSpeedChange(option.key as "slow" | "normal" | "fast")}
+                  onMouseDown={() =>
+                    handleSpeedChange(option.key as "slow" | "normal" | "fast")
+                  }
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      handleSpeedChange(option.key as "slow" | "normal" | "fast");
+                      handleSpeedChange(
+                        option.key as "slow" | "normal" | "fast",
+                      );
                     }
                   }}
                   aria-checked={currentSpeed === option.key}
