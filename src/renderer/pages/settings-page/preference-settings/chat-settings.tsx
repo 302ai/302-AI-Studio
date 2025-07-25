@@ -32,7 +32,7 @@ export function ChatSettings() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex min-w-[528px] max-w-[528px] flex-col gap-2">
         <Label className="text-label-fg">
           {t("collapse-code-block.label")}
         </Label>
