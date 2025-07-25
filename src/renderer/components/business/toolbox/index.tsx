@@ -40,7 +40,7 @@ export function Toolbox() {
           className={buttonStyles({
             size: "md",
             intent: "outline",
-            className: "h-[46px]",
+            className: "h-[46px] cursor-pointer",
           })}
         >
           <LayoutGrid className="h-5 w-5" />
@@ -54,7 +54,7 @@ export function Toolbox() {
           <Sheet.Header className="flex flex-col gap-y-1 px-4 pt-3 pb-[10px]">
             <Label className="mb-0">{t("toolbox-label")}</Label>
             <SearchField
-              className="h-10 rounded-[10px] bg-bg"
+              className="h-10 rounded-[10px] bg-bg shadow-none"
               aria-label="Search"
               placeholder={t("toolbox-search-placeholder")}
               value={searchQuery}

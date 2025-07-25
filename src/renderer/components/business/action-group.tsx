@@ -59,7 +59,6 @@ export function ActionGroup({
           isCircle={isCircle}
           onClick={onEdit}
         >
-          {/* <SquarePen className="size-4" /> */}
           <PenLine className="size-4" strokeWidth={1.5} />
         </ButtonWithTooltip>
       )}

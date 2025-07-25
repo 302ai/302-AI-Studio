@@ -33,7 +33,7 @@ export function ButtonWithTooltip({
         intent={intent}
         size={size}
         isCircle={isCircle}
-        className={cn("rounded-[10px]", className)}
+        className={cn("cursor-pointer rounded-[10px]", className)}
         {...rest}
       >
         {children}

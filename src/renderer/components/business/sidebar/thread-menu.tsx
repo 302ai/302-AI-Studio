@@ -142,7 +142,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
   };
 
   return (
-    <>
+    <div className="group w-full">
       <ContextMenu>
         <ContextMenu.Trigger
           className="relative w-full cursor-pointer truncate py-1.5 pr-7 text-left"
@@ -154,7 +154,7 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
         <ActionGroup
           onStar={handleCollectThread}
           stared={thread.collected}
-          className="-translate-y-1/2 absolute top-1/2 right-3"
+          className="-translate-y-1/2 absolute top-1/2 right-3 opacity-0 transition-opacity group-hover:opacity-100"
         />
 
         <ContextMenu.Content aria-label={`Thread options for ${thread.title}`}>
@@ -204,6 +204,6 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
         onOpenChange={closeModal}
         actionType={actionType(state)}
       />
-    </>
+    </div>
   );
 }

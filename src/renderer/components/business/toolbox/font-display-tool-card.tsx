@@ -20,7 +20,7 @@ export function FontDisplayToolCard({
       intent="plain"
       size="sm"
       className={cn(
-        "flex h-[44px] flex-row justify-between gap-x-1.5",
+        "flex h-[44px] cursor-pointer flex-row justify-between gap-x-1.5",
         className,
       )}
       onPress={() => handleToolPress(tool)}

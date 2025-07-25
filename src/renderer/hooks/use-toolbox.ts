@@ -1,3 +1,4 @@
+import { triplitClient } from "@renderer/client";
 import type { Tool } from "@shared/triplit/types";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,7 +19,9 @@ export function useToolbox() {
     keyPrefix: "toolbox",
   });
 
-  const { toolbox, toolboxFetching } = useTriplit();
+  const { toolbox, toolboxFetching } = useTriplit({
+    toolbox: triplitClient.query("toolbox").Order("toolId", "ASC"),
+  });
   const { handleAddNewTab } = useTabBar();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,6 +60,7 @@ export function useToolbox() {
 
     const filteredTools = toolbox.filter((tool) => {
       if (!searchQuery.trim()) return true;
+
       const query = searchQuery.toLowerCase();
       return (
         tool.name.toLowerCase().includes(query) ||
