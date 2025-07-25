@@ -373,6 +373,7 @@
       },
       "model-select": {
         "label": "新会话模型",
+        "title-model": "会话标题生成模型",
         "placeholder": "选择模型",
         "search-placeholder": "搜索模型...",
         "no-models-found": "未找到模型",

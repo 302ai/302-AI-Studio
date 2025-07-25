@@ -102,8 +102,7 @@ const TitleModelSelect = () => {
 
   return (
     <div className="flex flex-col gap-2 ">
-      {/* <Label className="text-label-fg">{t("model-select.label")}</Label> */}
-      <Label className="text-label-fg">会话标题生成模型</Label>
+      <Label className="text-label-fg">{t("model-select.title-model")}</Label>
       <div className="relative flex w-full">
         <Button
           className="group flex h-11 w-full min-w-[398px] items-center justify-between gap-2 rounded-[10px] bg-setting pressed:bg-setting px-3.5 py-2.5 hover:bg-setting"

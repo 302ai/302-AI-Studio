@@ -373,6 +373,7 @@
       },
       "model-select": {
         "label": "新会話モデル",
+        "title-model": "会話タイトル生成モデル",
         "placeholder": "モデルを選択",
         "search-placeholder": "モデルを検索...",
         "no-models-found": "モデルが見つかりません",

@@ -372,6 +372,7 @@
       },
       "model-select": {
         "label": "New Chat Model",
+        "title-model": "Chat Title Generation Model",
         "placeholder": "Select Model",
         "search-placeholder": "Search models...",
         "no-models-found": "No models found",
