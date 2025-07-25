@@ -25,10 +25,10 @@ export class ThreadService {
       this.resetThreadByProviderId(providerId);
     });
     emitter.on(EventNames.MESSAGE_ACTIONS, ({ threadId }) => {
-      this.threadDbService.updateThread(threadId);
+      this.threadDbService.updateThread(threadId, undefined, true);
     });
     emitter.on(EventNames.MESSAGE_SEND_FROM_USER, ({ threadId }) => {
-      this.threadDbService.updateThread(threadId);
+      this.threadDbService.updateThread(threadId, undefined, true);
     });
   }
 
