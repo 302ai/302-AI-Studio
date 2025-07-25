@@ -376,7 +376,7 @@
         "placeholder": "选择模型",
         "search-placeholder": "搜索模型...",
         "no-models-found": "未找到模型",
-        "use-last-model": "上一次会话使用",
+        "use-last-model": "使用上一次会话的模型",
         "use-current-chat-model": "使用和会话相同的模型"
       }
     }
