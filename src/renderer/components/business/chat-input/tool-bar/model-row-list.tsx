@@ -133,7 +133,7 @@ export const ModelRowList = memo(function ModelRowList({
             )}
             <div className="flex w-full flex-row items-center justify-between gap-2 overflow-hidden">
               <div className="flex items-center gap-x-4">
-                {item.model.id !== "use-last-model" && (
+                {!item.model.custom && (
                   <ModelIcon
                     modelName={item.model.name}
                     className="size-5 flex-shrink-0"
