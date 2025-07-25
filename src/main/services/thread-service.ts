@@ -1,4 +1,5 @@
 import { TYPES } from "@main/shared/types";
+import { extractErrorMessage } from "@main/utils/error-utils";
 import logger from "@shared/logger/main-logger";
 import type {
   CreateThreadData,
@@ -120,6 +121,35 @@ export class ThreadService {
     } catch (error) {
       logger.error("ThreadService:deleteAllThreads error", { error });
       throw error;
+    }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateThreadCollected(
+    _event: Electron.IpcMainEvent,
+    threadId: string,
+    collected: boolean,
+  ): Promise<{
+    isOk: boolean;
+    errorMsg: string | null;
+  }> {
+    try {
+      await this.threadDbService.updateThread(
+        threadId,
+        {
+          collected,
+        },
+        false,
+      );
+      return {
+        isOk: true,
+        errorMsg: null,
+      };
+    } catch (error) {
+      return {
+        isOk: false,
+        errorMsg: extractErrorMessage(error),
+      };
     }
   }
 }

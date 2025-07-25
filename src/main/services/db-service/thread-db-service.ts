@@ -21,12 +21,19 @@ export class ThreadDbService extends BaseDbService {
     await triplitClient.delete("threads", threadId);
   }
 
-  async updateThread(threadId: string, updateData?: UpdateThreadData) {
+  async updateThread(
+    threadId: string,
+    updateData?: Omit<UpdateThreadData, "updatedAt">,
+    shouldUpdateTimestamp: boolean = true,
+  ) {
     await triplitClient.update("threads", threadId, async (thread) => {
       if (updateData) {
         Object.assign(thread, updateData);
       }
-      thread.updatedAt = new Date();
+
+      if (shouldUpdateTimestamp) {
+        thread.updatedAt = new Date();
+      }
     });
   }
 

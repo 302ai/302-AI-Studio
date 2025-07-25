@@ -12,8 +12,8 @@ import type {
   Language,
   Message,
   Provider,
-  SendUserMessageParams,
   SearchService,
+  SendUserMessageParams,
   ShortcutAction,
   ShortcutScope,
   Tab,
@@ -72,6 +72,13 @@ declare global {
         ) => Promise<void>;
         getThreadById: (threadId: string) => Promise<Thread | null>;
         deleteAllThreads: () => Promise<string[]>;
+        updateThreadCollected: (
+          threadId: string,
+          collected: boolean,
+        ) => Promise<{
+          isOk: boolean;
+          errorMsg: string | null;
+        }>;
       };
       tabService: {
         insertTab: (tab: CreateTabData) => Promise<Tab>;
