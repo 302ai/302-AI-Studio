@@ -322,6 +322,16 @@ export class ProviderService {
         params.messages = newMessages as ChatMessage[];
       }
 
+      assistantMessage = await this.chatService.createAssistantMessage({
+        threadId,
+        content: "",
+        providerId: provider.id,
+        parentMessageId: userMessageId,
+        modelId: model.id,
+        modelName: model.name,
+        isThinkBlockCollapsed: false,
+      });
+
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,
         status: "pending",
@@ -335,16 +345,6 @@ export class ProviderService {
       sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
         threadId,
         status: "pending",
-      });
-
-      assistantMessage = await this.chatService.createAssistantMessage({
-        threadId,
-        content: "",
-        providerId: provider.id,
-        parentMessageId: userMessageId,
-        modelId: model.id,
-        modelName: model.name,
-        isThinkBlockCollapsed: false,
       });
 
       // Get dynamic stream configuration

@@ -105,9 +105,10 @@ export function usePrivacyMode() {
       }
 
       if (selectedThread?.id) {
-        await threadService.updateThread(selectedThread.id, {
-          isPrivate: newPrivacyState,
-        });
+        await threadService.updateThreadPrivate(
+          selectedThread.id,
+          newPrivacyState,
+        );
       }
 
       emitter.emit(EventNames.PRIVACY_MODE_TOGGLE, {

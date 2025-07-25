@@ -140,6 +140,8 @@ export class OpenAIProviderService extends BaseProviderService {
   }
 
   async summaryTitle(params: SummaryTitleParams): Promise<{
+    isOk: boolean;
+    errorMsg: string | null;
     text: string;
   }> {
     const { messages, model: originModel } = params;
@@ -159,11 +161,17 @@ export class OpenAIProviderService extends BaseProviderService {
       });
 
       return {
+        isOk: true,
+        errorMsg: null,
         text: result.choices[0]?.message?.content || "",
       };
     } catch (error) {
       logger.error("Failed to generate text:", { error });
-      throw error;
+      return {
+        isOk: false,
+        errorMsg: extractErrorMessage(error),
+        text: "",
+      };
     }
   }
 }

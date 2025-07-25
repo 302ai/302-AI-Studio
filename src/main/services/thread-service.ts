@@ -92,20 +92,6 @@ export class ThreadService {
     await this.threadDbService.updateThread(threadId, updateData);
   }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async updateThread(
-    _event: Electron.IpcMainEvent,
-    threadId: string,
-    updateData: UpdateThreadData,
-  ): Promise<void> {
-    try {
-      await this._updateThread(threadId, updateData);
-    } catch (error) {
-      logger.error("ThreadService:updateThread error", { error });
-      throw error;
-    }
-  }
-
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async getThreadById(
     _event: Electron.IpcMainEvent,
@@ -141,13 +127,9 @@ export class ThreadService {
     errorMsg: string | null;
   }> {
     try {
-      await this.threadDbService.updateThread(
-        threadId,
-        {
-          collected,
-        },
-        false,
-      );
+      await this.threadDbService.updateThread(threadId, {
+        collected,
+      });
       return {
         isOk: true,
         errorMsg: null,
@@ -158,5 +140,36 @@ export class ThreadService {
         errorMsg: extractErrorMessage(error),
       };
     }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateThreadTitle(
+    _event: Electron.IpcMainEvent,
+    threadId: string,
+    title: string,
+  ): Promise<void> {
+    await this.threadDbService.updateThread(threadId, { title }, true);
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateThreadPrivate(
+    _event: Electron.IpcMainEvent,
+    threadId: string,
+    isPrivate: boolean,
+  ): Promise<void> {
+    await this.threadDbService.updateThread(threadId, { isPrivate });
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async updateThreadModel(
+    _event: Electron.IpcMainEvent,
+    threadId: string,
+    modelId: string,
+    providerId: string,
+  ): Promise<void> {
+    await this.threadDbService.updateThread(threadId, {
+      modelId,
+      providerId,
+    });
   }
 }

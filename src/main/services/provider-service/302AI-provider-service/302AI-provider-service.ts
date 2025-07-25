@@ -158,6 +158,8 @@ export class AI302ProviderService extends OpenAIProviderService {
   }
 
   async summaryTitle(params: SummaryTitleParams): Promise<{
+    isOk: boolean;
+    errorMsg: string | null;
     text: string;
   }> {
     this.openai = new OpenAI({
@@ -166,6 +168,11 @@ export class AI302ProviderService extends OpenAIProviderService {
       fetch: ai302Fetcher(false, { enabled: false }),
     });
 
-    return await super.summaryTitle(params);
+    const result = await super.summaryTitle(params);
+    return {
+      isOk: result.isOk,
+      errorMsg: result.errorMsg,
+      text: result.text,
+    };
   }
 }

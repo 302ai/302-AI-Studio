@@ -100,10 +100,13 @@ export function useToolBar() {
       if (activeThreadId) {
         try {
           const providerId = models?.find((m) => m.id === modelId)?.providerId;
-          await threadService.updateThread(activeThreadId, {
-            modelId,
-            providerId,
-          });
+          if (providerId) {
+            await threadService.updateThreadModel(
+              activeThreadId,
+              modelId,
+              providerId,
+            );
+          }
         } catch (error) {
           logger.error("update thread error", { error });
         }

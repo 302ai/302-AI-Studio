@@ -23,7 +23,6 @@ import type {
   UpdateMessageData,
   UpdateProviderData,
   UpdateTabData,
-  UpdateThreadData,
 } from "@shared/triplit/types";
 import type { Model } from "@shared/types/model";
 
@@ -66,10 +65,6 @@ declare global {
       threadService: {
         insertThread: (thread: CreateThreadData) => Promise<Thread>;
         deleteThread: (threadId: string) => Promise<void>;
-        updateThread: (
-          threadId: string,
-          updateData: UpdateThreadData,
-        ) => Promise<void>;
         getThreadById: (threadId: string) => Promise<Thread | null>;
         deleteAllThreads: () => Promise<string[]>;
         updateThreadCollected: (
@@ -79,6 +74,16 @@ declare global {
           isOk: boolean;
           errorMsg: string | null;
         }>;
+        updateThreadTitle: (threadId: string, title: string) => Promise<void>;
+        updateThreadPrivate: (
+          threadId: string,
+          isPrivate: boolean,
+        ) => Promise<void>;
+        updateThreadModel: (
+          threadId: string,
+          modelId: string,
+          providerId: string,
+        ) => Promise<void>;
       };
       tabService: {
         insertTab: (tab: CreateTabData) => Promise<Tab>;
@@ -110,9 +115,9 @@ declare global {
           provider: Provider;
           model: { id: string; name: string };
         }) => Promise<{
-          success: boolean;
-          text?: string;
-          error?: string;
+          isOk: boolean;
+          errorMsg: string | null;
+          text: string;
         }>;
       };
       uiService: {

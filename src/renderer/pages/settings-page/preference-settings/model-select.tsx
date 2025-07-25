@@ -30,16 +30,7 @@ const ModelSelect = () => {
   const newChatModelId = setting?.newChatModelId || "";
 
   const handleModelSelect = useCallback(async (modelId: string) => {
-    if (modelId === "use-last-model") {
-      await settingsService.setNewChatModelId("use-last-model");
-      // await settingsService.updateSelectedModelId("");
-      // await settingsService.setNewChatUsesLastChatModel(true);
-    } else {
-      await settingsService.setNewChatModelId(modelId);
-      // await settingsService.updateSelectedModelId(modelId);
-      // await settingsService.setNewChatUsesLastChatModel(false);
-    }
-    // await settingsService.updateSelectedModelId(modelId);
+    await settingsService.setNewChatModelId(modelId);
   }, []);
 
   const { providers, models, isOpen, setIsOpen, handleToggleOpen } =

@@ -26,9 +26,7 @@ export function useThreadMenu(thread: Thread) {
   };
 
   const handleRename = async () => {
-    await threadService.updateThread(thread.id, {
-      title: formattedTitle,
-    });
+    await threadService.updateThreadTitle(thread.id, formattedTitle);
 
     emitter.emit(EventNames.THREAD_RENAME, {
       threadId: thread.id,

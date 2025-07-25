@@ -127,10 +127,8 @@ export function ThreadMenu({ thread }: ThreadMenuProps) {
       provider,
       model,
     });
-    if (result.success) {
-      await threadService.updateThread(thread.id, {
-        title: result.text,
-      });
+    if (result.isOk) {
+      await threadService.updateThreadTitle(thread.id, result.text);
 
       const tab = tabs?.find((t) => t.threadId === thread.id);
       if (tab) {

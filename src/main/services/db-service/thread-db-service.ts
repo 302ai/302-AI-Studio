@@ -24,7 +24,7 @@ export class ThreadDbService extends BaseDbService {
   async updateThread(
     threadId: string,
     updateData?: Omit<UpdateThreadData, "updatedAt">,
-    shouldUpdateTimestamp: boolean = true,
+    shouldUpdateTimestamp: boolean = false,
   ) {
     await triplitClient.update("threads", threadId, async (thread) => {
       if (updateData) {

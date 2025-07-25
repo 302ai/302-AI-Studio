@@ -127,6 +127,8 @@ export abstract class BaseProviderService {
   }
 
   abstract summaryTitle(params: SummaryTitleParams): Promise<{
+    isOk: boolean;
     text: string;
+    errorMsg: string | null;
   }>;
 }
