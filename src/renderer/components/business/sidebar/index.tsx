@@ -61,13 +61,11 @@ export function AppSidebar(props: AppSidebarProps) {
           }}
         >
           {searchQuery.trim() ? (
-            <div className="px-4">
-              <ThreadSearchList
-                threads={filteredThreads}
-                activeThreadId={activeThreadId}
-                onThreadClick={handleClickThread}
-              />
-            </div>
+            <ThreadSearchList
+              threads={filteredThreads}
+              activeThreadId={activeThreadId}
+              onThreadClick={handleClickThread}
+            />
           ) : (
             <SidebarDisclosureGroup
               className="gap-y-[10px]"
@@ -81,7 +79,11 @@ export function AppSidebar(props: AppSidebarProps) {
               ]}
             >
               {groupedThreads.map(({ key, label, threads }) => (
-                <SidebarDisclosure id={key} key={key}>
+                <SidebarDisclosure
+                  className="flex flex-col gap-y-1"
+                  id={key}
+                  key={key}
+                >
                   <SidebarDisclosureTrigger className="h-10 rounded-[10px] px-3">
                     <SidebarLabel className="text-label-fg">
                       {label}
@@ -90,7 +92,7 @@ export function AppSidebar(props: AppSidebarProps) {
                   <SidebarDisclosurePanel className="gap-y-1">
                     {threads.map((thread) => (
                       <SidebarItem
-                        className="flex h-10 max-w-[248px] rounded-[10px] px-0 pr-2 pl-3"
+                        className="flex h-10 max-w-[248px] rounded-[10px] px-0 pr-2 pl-3 [&_.text-muted-fg]:text-muted-fg"
                         key={thread.id}
                         isCurrent={thread.id === activeThreadId}
                         onClick={() => handleClickThread(thread.id)}

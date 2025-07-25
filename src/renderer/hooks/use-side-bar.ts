@@ -63,7 +63,7 @@ export function useSideBar() {
         key: "today",
         label: t("section.today"),
         filter: (thread: Thread) => {
-          const date = new Date(thread.createdAt);
+          const date = new Date(thread.updatedAt);
           return date >= now;
         },
       },
@@ -71,7 +71,7 @@ export function useSideBar() {
         key: "yesterday",
         label: t("section.yesterday"),
         filter: (thread: Thread) => {
-          const date = new Date(thread.createdAt);
+          const date = new Date(thread.updatedAt);
           const yesterday = new Date(now);
           yesterday.setDate(now.getDate() - 1);
           return date >= yesterday && date < now;
@@ -81,7 +81,7 @@ export function useSideBar() {
         key: "last7Days",
         label: t("section.last7Days"),
         filter: (thread: Thread) => {
-          const date = new Date(thread.createdAt);
+          const date = new Date(thread.updatedAt);
           const last7Days = new Date(now);
           const yesterday = new Date(now);
           yesterday.setDate(now.getDate() - 1);
@@ -93,7 +93,7 @@ export function useSideBar() {
         key: "last30Days",
         label: t("section.last30Days"),
         filter: (thread: Thread) => {
-          const date = new Date(thread.createdAt);
+          const date = new Date(thread.updatedAt);
           const last30Days = new Date(now);
           const last7Days = new Date(now);
           last7Days.setDate(now.getDate() - 7);
@@ -105,7 +105,7 @@ export function useSideBar() {
         key: "earlier",
         label: t("section.earlier"),
         filter: (thread: Thread) => {
-          const date = new Date(thread.createdAt);
+          const date = new Date(thread.updatedAt);
           const last30Days = new Date(now);
           last30Days.setDate(now.getDate() - 30);
           return date < last30Days;

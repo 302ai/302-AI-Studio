@@ -133,9 +133,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         try {
           // Get attachments from database using the new attachment service
           const messageAttachments =
-            await window.service.attachmentService.getAttachmentsByMessageId(
-              message.id,
-            );
+            await attachmentService.getAttachmentsByMessageId(message.id);
 
           if (!messageAttachments || messageAttachments.length === 0) {
             await clearAttachments();
@@ -174,18 +172,6 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       [clearAttachments, setAttachmentsDirectly],
     );
 
-    useEffect(() => {
-      const unsub = emitter.on(EventNames.MESSAGE_EDIT, async (msg) => {
-        setInput(msg.content);
-        setEditMessageId(msg.id);
-        await loadAttachmentsFromMessage(msg);
-      });
-
-      return () => {
-        unsub();
-      };
-    }, [setInput, loadAttachmentsFromMessage]);
-
     const handleSave = async () => {
       if (!editMessageId) return;
 
@@ -196,9 +182,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       });
 
       // Delete existing attachments for this message
-      await window.service.attachmentService.deleteAttachmentsByMessageId(
-        editMessageId,
-      );
+      await attachmentService.deleteAttachmentsByMessageId(editMessageId);
 
       // Insert new attachments if any
       if (attachments.length > 0) {
@@ -230,6 +214,16 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         setEditMessageId(null);
       }
     }, [activeThreadId]);
+
+    useEffect(() => {
+      const unsub = emitter.on(EventNames.MESSAGE_EDIT, async (msg) => {
+        setInput(msg.content);
+        setEditMessageId(msg.id);
+        await loadAttachmentsFromMessage(msg);
+      });
+
+      return () => unsub();
+    }, [setInput, loadAttachmentsFromMessage]);
 
     return (
       <div className={cn("mx-auto w-full max-w-[720px]", className)}>

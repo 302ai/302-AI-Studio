@@ -119,7 +119,7 @@ export function useChat(scrollRef?: React.RefObject<HTMLDivElement | null>) {
       data: {
         threadId: string;
         actions: {
-          type: "edit" | "delete" | "delete-single" | "delete-multiple";
+          type: "edit" | "delete" | "delete-single";
           message?: Message;
           messages?: Message[];
         };
@@ -153,22 +153,6 @@ export function useChat(scrollRef?: React.RefObject<HTMLDivElement | null>) {
             ),
           );
           break;
-
-        case "delete-multiple": {
-          if (!data.actions.messages) return;
-
-          // Delete multiple messages
-          const messageIdsToDelete = new Set(
-            data.actions.messages.map((msg) => msg.id),
-          );
-          setMessages((prevMessages) =>
-            prevMessages.filter(
-              (message) => !messageIdsToDelete.has(message.id),
-            ),
-          );
-
-          break;
-        }
 
         default: {
           fetchMessages(data.threadId);

@@ -26,6 +26,7 @@ export enum EventNames {
 
   // * Message Events
   MESSAGE_ACTIONS = "message:actions",
+  MESSAGE_SEND_FROM_USER = "message:send-from-user",
 
   // * Window Events
   WINDOW_TITLE_BAR_OVERLAY_UPDATE = "window:title-bar-overlay-update",
@@ -62,10 +63,13 @@ type Events = {
   [EventNames.MESSAGE_ACTIONS]: {
     threadId: string;
     actions: {
-      type: "edit" | "delete" | "delete-single" | "delete-multiple";
+      type: "edit" | "delete" | "delete-single";
       message?: Message;
       messages?: Message[];
     };
+  };
+  [EventNames.MESSAGE_SEND_FROM_USER]: {
+    threadId: string;
   };
   [EventNames.WINDOW_TITLE_BAR_OVERLAY_UPDATE]: null;
   [EventNames.WINDOW_MAC_FULLSCREEN_STATE_UPDATE]: {

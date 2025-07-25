@@ -135,34 +135,31 @@ const SidebarProvider = ({
     [isMobile, setOpen],
   );
 
-  const setSettingsMode = useCallback(
-    (enabled: boolean) => {
-      if (enabled) {
-        // Entering settings mode - disable animations and set settings mode
-        setIsTransitioning(true);
-        setAnimationsEnabled(false);
-        setIsInSettingsMode(true);
-        
-        // Re-enable animations after transition
-        setTimeout(() => {
-          setAnimationsEnabled(true);
-          setIsTransitioning(false);
-        }, 100);
-      } else {
-        // Exiting settings mode - disable animations during transition
-        setIsTransitioning(true);
-        setAnimationsEnabled(false);
-        setIsInSettingsMode(false);
-        
-        // Re-enable animations after transition
-        setTimeout(() => {
-          setAnimationsEnabled(true);
-          setIsTransitioning(false);
-        }, 100);
-      }
-    },
-    [],
-  );
+  const setSettingsMode = useCallback((enabled: boolean) => {
+    if (enabled) {
+      // Entering settings mode - disable animations and set settings mode
+      setIsTransitioning(true);
+      setAnimationsEnabled(false);
+      setIsInSettingsMode(true);
+
+      // Re-enable animations after transition
+      setTimeout(() => {
+        setAnimationsEnabled(true);
+        setIsTransitioning(false);
+      }, 100);
+    } else {
+      // Exiting settings mode - disable animations during transition
+      setIsTransitioning(true);
+      setAnimationsEnabled(false);
+      setIsInSettingsMode(false);
+
+      // Re-enable animations after transition
+      setTimeout(() => {
+        setAnimationsEnabled(true);
+        setIsTransitioning(false);
+      }, 100);
+    }
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -178,7 +175,7 @@ const SidebarProvider = ({
 
   // Keep the actual sidebar state unchanged, only control visibility
   const state = open ? "expanded" : "collapsed";
-  
+
   // Use visibility control for settings mode instead of changing state
   const sidebarVisible = !isInSettingsMode;
 

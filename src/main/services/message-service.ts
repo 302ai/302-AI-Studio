@@ -8,11 +8,12 @@ import logger from "@shared/logger/main-logger";
 import type {
   CreateMessageData,
   Message,
+  SendUserMessageParams,
   UpdateMessageData,
 } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
 import type { MessageDbService } from "./db-service/message-db-service";
-import { EventNames, sendToThread } from "./event-service";
+import { EventNames, sendToMain, sendToThread } from "./event-service";
 
 @injectable()
 @ServiceRegister(TYPES.MessageService)
@@ -41,17 +42,23 @@ export class MessageService {
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async insertMessage(
+  async sendUserMessage(
     _event: Electron.IpcMainEvent,
-    message: CreateMessageData,
+    message: SendUserMessageParams,
   ): Promise<Message> {
-    try {
-      const newMessage = await this.messageDbService.insertMessage(message);
-      return newMessage;
-    } catch (error) {
-      logger.error("MessageService: insertMessage error", { error });
-      throw error;
-    }
+    const userMessage: CreateMessageData = {
+      ...message,
+      role: "user",
+      tokenCount: 0,
+      status: "success",
+      isThinkBlockCollapsed: false,
+      parentMessageId: null,
+    };
+    const newMessage = await this.messageDbService.insertMessage(userMessage);
+    sendToMain(EventNames.MESSAGE_SEND_FROM_USER, {
+      threadId: message.threadId,
+    });
+    return newMessage;
   }
 
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
@@ -81,6 +88,13 @@ export class MessageService {
         messageId,
         editData,
       );
+
+      sendToMain(EventNames.MESSAGE_ACTIONS, {
+        threadId: editData.threadId,
+        actions: {
+          type: "edit",
+        },
+      });
       sendToThread(editData.threadId, EventNames.MESSAGE_ACTIONS, {
         threadId: editData.threadId,
         actions: {
@@ -108,6 +122,12 @@ export class MessageService {
       await this.messageDbService.deleteMessage(messageId);
 
       if (messageToDelete) {
+        sendToMain(EventNames.MESSAGE_ACTIONS, {
+          threadId,
+          actions: {
+            type: "delete-single",
+          },
+        });
         sendToThread(threadId, EventNames.MESSAGE_ACTIONS, {
           threadId,
           actions: {
@@ -118,36 +138,6 @@ export class MessageService {
       }
     } catch (error) {
       logger.error("MessageService: deleteMessage error", { error });
-      throw error;
-    }
-  }
-
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
-  async deleteMessagesByIds(
-    _event: Electron.IpcMainEvent,
-    messageIds: string[],
-    threadId: string,
-  ): Promise<void> {
-    try {
-      const messagesToDelete = await Promise.all(
-        messageIds.map((messageId) =>
-          this.messageDbService.getMessageById(messageId),
-        ),
-      );
-
-      await this.messageDbService.deleteMessagesByIds(messageIds);
-
-      if (messagesToDelete.length > 0) {
-        sendToThread(threadId, EventNames.MESSAGE_ACTIONS, {
-          threadId,
-          actions: {
-            type: "delete-multiple",
-            messages: messagesToDelete as Message[],
-          },
-        });
-      }
-    } catch (error) {
-      logger.error("MessageService: deleteMessagesByIds error", { error });
       throw error;
     }
   }
@@ -188,6 +178,12 @@ export class MessageService {
   ): Promise<void> {
     try {
       await this.messageDbService.deleteMessagesByThreadId(threadId);
+      sendToMain(EventNames.MESSAGE_ACTIONS, {
+        threadId,
+        actions: {
+          type: "delete",
+        },
+      });
       sendToThread(threadId, EventNames.MESSAGE_ACTIONS, {
         threadId,
         actions: {

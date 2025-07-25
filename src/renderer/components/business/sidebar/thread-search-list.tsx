@@ -19,7 +19,7 @@ export function ThreadSearchList({
         const { id } = thread;
         return (
           <SidebarItem
-            className="flex h-10 flex-1 rounded-[10px] px-0 pr-2 pl-3"
+            className="flex h-10 rounded-[10px] px-0 pr-2 pl-3 [&_.text-muted-fg]:text-muted-fg"
             key={id}
             isCurrent={id === activeThreadId}
             onClick={() => onThreadClick(id)}

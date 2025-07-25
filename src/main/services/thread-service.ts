@@ -23,6 +23,12 @@ export class ThreadService {
     emitter.on(EventNames.PROVIDER_DELETE, ({ providerId }) => {
       this.resetThreadByProviderId(providerId);
     });
+    emitter.on(EventNames.MESSAGE_ACTIONS, ({ threadId }) => {
+      this.threadDbService.updateThread(threadId);
+    });
+    emitter.on(EventNames.MESSAGE_SEND_FROM_USER, ({ threadId }) => {
+      this.threadDbService.updateThread(threadId);
+    });
   }
 
   private async resetThreadByProviderId(providerId: string) {

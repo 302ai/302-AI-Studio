@@ -12,6 +12,7 @@ import type {
   Language,
   Message,
   Provider,
+  SendUserMessageParams,
   SearchService,
   ShortcutAction,
   ShortcutScope,
@@ -124,7 +125,7 @@ declare global {
         getSidebarCollapsed: () => Promise<boolean>;
       };
       messageService: {
-        insertMessage: (message: CreateMessageData) => Promise<Message>;
+        sendUserMessage: (message: SendUserMessageParams) => Promise<Message>;
         updateMessage: (
           messageId: string,
           updateData: UpdateMessageData,

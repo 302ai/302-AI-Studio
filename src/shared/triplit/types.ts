@@ -29,6 +29,10 @@ export type UpdateThreadData = Partial<Omit<Thread, "id">>;
 export type Message = Entity<Schema, "messages">;
 export type CreateMessageData = Omit<Message, "id" | "createdAt">;
 export type UpdateMessageData = Partial<Omit<Message, "id">>;
+export type SendUserMessageParams = Omit<
+  CreateMessageData,
+  "role" | "tokenCount" | "status" | "isThinkBlockCollapsed" | "parentMessageId"
+>;
 
 // * Attachments
 export type Attachment = Entity<Schema, "attachments">;
