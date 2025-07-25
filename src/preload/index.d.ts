@@ -13,6 +13,7 @@ import type {
   Message,
   Provider,
   SearchService,
+  SendUserMessageParams,
   ShortcutAction,
   ShortcutScope,
   Tab,
@@ -71,6 +72,13 @@ declare global {
         ) => Promise<void>;
         getThreadById: (threadId: string) => Promise<Thread | null>;
         deleteAllThreads: () => Promise<string[]>;
+        updateThreadCollected: (
+          threadId: string,
+          collected: boolean,
+        ) => Promise<{
+          isOk: boolean;
+          errorMsg: string | null;
+        }>;
       };
       tabService: {
         insertTab: (tab: CreateTabData) => Promise<Tab>;
@@ -124,7 +132,7 @@ declare global {
         getSidebarCollapsed: () => Promise<boolean>;
       };
       messageService: {
-        insertMessage: (message: CreateMessageData) => Promise<Message>;
+        sendUserMessage: (message: SendUserMessageParams) => Promise<Message>;
         updateMessage: (
           messageId: string,
           updateData: UpdateMessageData,
@@ -255,6 +263,13 @@ declare global {
         getToolUrl: (toolId: number) => Promise<{
           isOk: boolean;
           url: string;
+          errorMsg: string | null;
+        }>;
+        updateToolCollection: (
+          toolId: number,
+          collected: boolean,
+        ) => Promise<{
+          isOk: boolean;
           errorMsg: string | null;
         }>;
       };

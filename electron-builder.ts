@@ -68,7 +68,7 @@ export default {
     ].join(""),
     category: "Utilities",
     synopsis: description,
-    target: ["AppImage", "deb", "pacman", "rpm"],
+    target: ["AppImage", "deb", "rpm"],
   },
 
   win: {

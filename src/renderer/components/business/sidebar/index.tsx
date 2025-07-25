@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/nursery/useUniqueElementIds: ignore */
 
 import { SidebarController } from "@renderer/components/business/sidebar/sidebar-controller";
+import { SearchField } from "@renderer/components/ui/search-field";
 import {
   Sidebar,
   SidebarContent,
@@ -12,57 +13,62 @@ import {
   SidebarInset,
   SidebarItem,
   SidebarLabel,
-  useSidebar,
 } from "@renderer/components/ui/sidebar";
-import { useGlobalShortcutHandler } from "@renderer/hooks/use-global-shortcut-handler";
+import { useSideBar } from "@renderer/hooks/use-side-bar";
 import { useThread } from "@renderer/hooks/use-thread";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SearchButton } from "./search-button";
 import { SettingButton } from "./setting-button";
 import { ThreadMenu } from "./thread-menu";
-import { ThreadSearcher } from "./thread-searcher";
+import { ThreadSearchList } from "./thread-search-list";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   children: React.ReactNode;
 }
 
 export function AppSidebar(props: AppSidebarProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation", { keyPrefix: "sidebar" });
+  const { activeThreadId, handleClickThread } = useThread();
   const {
-    activeThreadId,
+    isSidebarCollapsed,
     groupedThreads,
-    collectedThreads,
-    handleClickThread,
-  } = useThread();
-
-  const { state } = useSidebar();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const isSidebarCollapsed = state === "collapsed";
-
-  const handleSearchThread = () => {
-    setIsOpen(!isOpen);
-  };
-
-  useGlobalShortcutHandler("search", () => handleSearchThread());
+    filteredThreads,
+    searchQuery,
+    setSearchQuery,
+  } = useSideBar();
 
   return (
-    <>
-      <div className="flex h-[calc(100vh-var(--title-bar-height)+1px)] w-full flex-1 flex-row">
-        <Sidebar
-          className="mt-[calc(var(--title-bar-height)+1px)] border-none bg-sidebar"
-          {...props}
-        >
-          <div className="my-2 flex flex-row items-center justify-between gap-x-3 pr-2.5 pl-4">
-            <SearchButton onClick={handleSearchThread} />
+    <div className="flex h-[calc(100vh-var(--title-bar-height)+1px)] w-full flex-1 flex-row">
+      <Sidebar
+        className="mt-[calc(var(--title-bar-height)+1px)] border-none bg-sidebar"
+        {...props}
+      >
+        <div className="my-2 flex flex-col gap-y-3 pr-2.5 pl-4">
+          <div className="flex flex-row items-center justify-between gap-x-3">
+            <SearchField
+              className="h-10 rounded-[10px] bg-bg shadow-none"
+              placeholder={t("search.placeholder")}
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
             {!isSidebarCollapsed && <SidebarController />}
           </div>
+        </div>
 
-          <SidebarContent className="max-h-[calc(100vh-var(--title-bar-height)-52px-76px-8px)] pb-2">
-            {/* All Threads */}
+        <SidebarContent
+          className="max-h-[calc(100vh-var(--title-bar-height)-52px-76px-8px)] py-0 pr-2 pl-4"
+          style={{
+            scrollbarGutter: "stable",
+          }}
+        >
+          {searchQuery.trim() ? (
+            <ThreadSearchList
+              threads={filteredThreads}
+              activeThreadId={activeThreadId}
+              onThreadClick={handleClickThread}
+            />
+          ) : (
             <SidebarDisclosureGroup
-              className="gap-y-2"
+              className="gap-y-[10px]"
               defaultExpandedKeys={[
                 "collected",
                 "today",
@@ -72,54 +78,41 @@ export function AppSidebar(props: AppSidebarProps) {
                 "earlier",
               ]}
             >
-              {/* If there are no collected threads, the collected section will will also be displayed */}
-              {collectedThreads.length === 0 && (
-                <SidebarDisclosure id="collected" key="collected">
+              {groupedThreads.map(({ key, label, threads }) => (
+                <SidebarDisclosure
+                  className="flex flex-col gap-y-1"
+                  id={key}
+                  key={key}
+                >
                   <SidebarDisclosureTrigger className="h-10 rounded-[10px] px-3">
-                    <SidebarLabel>
-                      {t("sidebar.section.collected")}
+                    <SidebarLabel className="text-label-fg">
+                      {label}
                     </SidebarLabel>
                   </SidebarDisclosureTrigger>
-                </SidebarDisclosure>
-              )}
-
-              {groupedThreads.map(({ key, label, threads }) => (
-                <SidebarDisclosure id={key} key={key}>
-                  <SidebarDisclosureTrigger className="h-10 rounded-[10px] px-3">
-                    <SidebarLabel>{label}</SidebarLabel>
-                  </SidebarDisclosureTrigger>
-                  <SidebarDisclosurePanel>
-                    {threads.map((thread) => {
-                      const { id } = thread;
-                      return (
-                        <SidebarItem
-                          className="flex h-10 flex-1 rounded-[10px] px-0 pr-2 pl-3"
-                          key={id}
-                          isCurrent={id === activeThreadId}
-                          onClick={() => handleClickThread(id)}
-                        >
-                          <ThreadMenu thread={thread} />
-                        </SidebarItem>
-                      );
-                    })}
+                  <SidebarDisclosurePanel className="gap-y-1">
+                    {threads.map((thread) => (
+                      <SidebarItem
+                        className="flex h-10 max-w-[248px] rounded-[10px] px-0 pr-2 pl-3 [&_.text-muted-fg]:text-muted-fg"
+                        key={thread.id}
+                        isCurrent={thread.id === activeThreadId}
+                        onClick={() => handleClickThread(thread.id)}
+                      >
+                        <ThreadMenu thread={thread} />
+                      </SidebarItem>
+                    ))}
                   </SidebarDisclosurePanel>
                 </SidebarDisclosure>
               ))}
             </SidebarDisclosureGroup>
-          </SidebarContent>
+          )}
+        </SidebarContent>
 
-          <SidebarFooter className="mt-0 h-[76px] px-4">
-            <SettingButton />
-          </SidebarFooter>
-        </Sidebar>
+        <SidebarFooter className="mt-0 h-[76px] px-4">
+          <SettingButton />
+        </SidebarFooter>
+      </Sidebar>
 
-        <SidebarInset>{props.children}</SidebarInset>
-      </div>
-
-      <ThreadSearcher
-        isOpenSearcher={isOpen}
-        onOpenChange={handleSearchThread}
-      />
-    </>
+      <SidebarInset>{props.children}</SidebarInset>
+    </div>
   );
 }

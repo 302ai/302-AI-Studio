@@ -4,6 +4,7 @@ import {
   fetch302AIUserInfo,
 } from "@main/api/302ai";
 import { TYPES } from "@main/shared/types";
+import { extractErrorMessage } from "@main/utils/error-utils";
 import { numberToBase64 } from "@main/utils/utils";
 import logger from "@shared/logger/main-logger";
 import type { CreateToolData, Language } from "@shared/triplit/types";
@@ -82,9 +83,15 @@ export class ToolboxService {
     const _lang = langMap[lang];
 
     try {
+      const collectedMap: Map<number, boolean> = new Map();
+      const existingTools = await this.toolboxDbService.getAllTools();
+      existingTools.forEach((tool) => {
+        collectedMap?.set(tool.toolId, tool.collected);
+      });
+
       const toolList = await fetch302AIToolList(_lang);
       const tools: CreateToolData[] = toolList
-        .filter((tool) => tool.enable && ![9].includes(tool.tool_id)) // * Excluding AI Omni Toolbox(id:9)
+        .filter((tool) => tool.enable && ![9].includes(tool.tool_id))
         .reduce((acc: CreateToolData[], tool) => {
           const {
             tool_id,
@@ -93,21 +100,24 @@ export class ToolboxService {
             category_name,
             category_id,
           } = tool;
+
+          const collected = collectedMap?.get(tool_id) || false;
+
           acc.push({
             toolId: tool_id,
             name: tool_name,
             description: tool_description,
             category: category_name,
             categoryId: category_id,
-            collected: false,
+            collected,
           });
           return acc;
         }, []);
-      await this.toolboxDbService.insertTools(tools);
 
+      await this.toolboxDbService.insertTools(tools);
       return tools;
     } catch (error) {
-      logger.error("ToolboxService:updateToolList error", { error });
+      logger.error("ToolboxService:fetchAndProcessTools error", { error });
       throw error;
     }
   }
@@ -134,5 +144,36 @@ export class ToolboxService {
       url,
       errorMsg: null,
     };
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async updateToolCollection(
+    _event: Electron.IpcMainEvent,
+    toolId: number,
+    collected: boolean,
+  ): Promise<{
+    isOk: boolean;
+    errorMsg: string | null;
+  }> {
+    try {
+      const tool = await this.toolboxDbService.getToolByToolId(toolId);
+      if (!tool) {
+        throw new Error(`Tool with ID ${toolId} not found`);
+      }
+
+      await this.toolboxDbService.updateTool(tool.id, {
+        collected,
+      });
+
+      return {
+        isOk: true,
+        errorMsg: null,
+      };
+    } catch (error) {
+      return {
+        isOk: false,
+        errorMsg: extractErrorMessage(error),
+      };
+    }
   }
 }

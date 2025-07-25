@@ -267,18 +267,13 @@ export function useToolBar() {
         }
 
         try {
-          const userMessage = await messageService.insertMessage({
+          const userMessage = await messageService.sendUserMessage({
             threadId: currentActiveThreadId,
-            parentMessageId: null,
-            role: "user",
             content,
             orderSeq: messageToEdit.orderSeq,
-            tokenCount: content.length,
-            status: "success",
             modelId: selectedModelId,
             modelName: selectedModel.name,
             providerId: provider.id,
-            isThinkBlockCollapsed: false,
           });
 
           if (attachments && attachments.length > 0) {
@@ -328,18 +323,13 @@ export function useToolBar() {
       const nextOrderSeq = existingMessages.length + 1;
 
       // Insert user message
-      const userMessage = await messageService.insertMessage({
+      const userMessage = await messageService.sendUserMessage({
         threadId: currentActiveThreadId,
-        parentMessageId: null,
-        role: "user",
         content,
         orderSeq: nextOrderSeq,
-        tokenCount: content.length,
-        status: "success",
         modelId: selectedModelId,
         modelName: selectedModel.name,
         providerId: provider.id,
-        isThinkBlockCollapsed: false,
       });
 
       if (attachments && attachments.length > 0) {

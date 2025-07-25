@@ -82,8 +82,7 @@ export class MessageDbService extends BaseDbService {
     const query = triplitClient
       .query("messages")
       .Where("threadId", "=", threadId)
-      .Include("attachments")
-      .Order("createdAt", "ASC");
+      .Include("attachments");
 
     const messagesWithAttachments = await triplitClient.fetch(query);
 
@@ -101,36 +100,6 @@ export class MessageDbService extends BaseDbService {
       // 删除所有消息
       const deleteMessagePromises = messagesWithAttachments.map((message) =>
         tx.delete("messages", message.id),
-      );
-
-      await Promise.all([
-        ...deleteAttachmentPromises,
-        ...deleteMessagePromises,
-      ]);
-    });
-  }
-
-  async deleteMessagesByIds(messageIds: string[]): Promise<void> {
-    if (messageIds.length === 0) {
-      return;
-    }
-    const query = triplitClient
-      .query("messages")
-      .Where("id", "=", messageIds)
-      .Include("attachments");
-    const messagesWithAttachments = await triplitClient.fetch(query);
-
-    await triplitClient.transact(async (tx) => {
-      const allAttachments = messagesWithAttachments.flatMap(
-        (message) => message?.attachments || [],
-      );
-
-      const deleteAttachmentPromises = allAttachments.map((attachment) =>
-        tx.delete("attachments", attachment.id),
-      );
-
-      const deleteMessagePromises = messagesWithAttachments.map((message) =>
-        tx.delete("messages", message?.id ?? ""),
       );
 
       await Promise.all([

@@ -6,7 +6,7 @@ import { useToolbox } from "@renderer/hooks/use-toolbox";
 import { LayoutGrid } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LdrsLoader } from "../ldrs-loader";
-import { ToolCard } from "./tool-card";
+import { FontDisplayToolCard } from "./font-display-tool-card";
 import { ToolCategoryList } from "./tool-category-list";
 import { ToolSearchList } from "./tool-search-list";
 
@@ -16,7 +16,7 @@ export function Toolbox() {
   });
 
   const {
-    randomTools,
+    fontDisplayTools,
     categorizedTools,
     setSearchQuery,
     searchQuery,
@@ -25,12 +25,10 @@ export function Toolbox() {
 
   return (
     <div className="flex w-full flex-1 flex-row flex-wrap items-center gap-x-3.5 gap-y-4">
-      {randomTools.map((tool) => (
-        <ToolCard
+      {fontDisplayTools.map((tool) => (
+        <FontDisplayToolCard
           key={tool.id}
           tool={tool}
-          showDescription={false}
-          tooltipPlacement="top"
           className={buttonStyles({
             intent: "outline",
             className: "h-[46px]",
@@ -42,7 +40,7 @@ export function Toolbox() {
           className={buttonStyles({
             size: "md",
             intent: "outline",
-            className: "h-[46px]",
+            className: "h-[46px] cursor-pointer",
           })}
         >
           <LayoutGrid className="h-5 w-5" />
@@ -53,17 +51,17 @@ export function Toolbox() {
           className="!max-w-[260px] top-[calc(var(--title-bar-height)+1px)] h-[calc(100vh-var(--title-bar-height)-1px)] border-none"
           side="right"
         >
-          <Sheet.Header className="flex flex-col gap-y-2 px-4 py-3">
-            <Label>{t("toolbox-label")}</Label>
+          <Sheet.Header className="flex flex-col gap-y-1 px-4 pt-3 pb-[10px]">
+            <Label className="mb-0">{t("toolbox-label")}</Label>
             <SearchField
-              className="h-10 rounded-[10px] bg-bg"
+              className="h-10 rounded-[10px] bg-bg shadow-none"
               aria-label="Search"
               placeholder={t("toolbox-search-placeholder")}
               value={searchQuery}
               onChange={setSearchQuery}
             />
           </Sheet.Header>
-          <Sheet.Body className="flex flex-col gap-y-2 pr-2 pl-4">
+          <Sheet.Body className="flex flex-col gap-y-2 py-0 pr-2 pl-4">
             {toolboxFetching ? (
               <div className="flex h-full items-center justify-center">
                 <LdrsLoader type="waveform" size={24} />

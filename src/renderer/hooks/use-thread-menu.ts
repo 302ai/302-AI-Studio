@@ -70,9 +70,7 @@ export function useThreadMenu(thread: Thread) {
   };
 
   const handleCollectThread = async () => {
-    await threadService.updateThread(thread.id, {
-      collected: !thread.collected,
-    });
+    await threadService.updateThreadCollected(thread.id, !thread.collected);
 
     closeModal();
   };

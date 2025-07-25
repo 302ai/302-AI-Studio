@@ -16,6 +16,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { TextArea } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AttachmentList } from "./attachment-list";
@@ -132,9 +133,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         try {
           // Get attachments from database using the new attachment service
           const messageAttachments =
-            await window.service.attachmentService.getAttachmentsByMessageId(
-              message.id,
-            );
+            await attachmentService.getAttachmentsByMessageId(message.id);
 
           if (!messageAttachments || messageAttachments.length === 0) {
             await clearAttachments();
@@ -173,18 +172,6 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       [clearAttachments, setAttachmentsDirectly],
     );
 
-    useEffect(() => {
-      const unsub = emitter.on(EventNames.MESSAGE_EDIT, async (msg) => {
-        setInput(msg.content);
-        setEditMessageId(msg.id);
-        await loadAttachmentsFromMessage(msg);
-      });
-
-      return () => {
-        unsub();
-      };
-    }, [setInput, loadAttachmentsFromMessage]);
-
     const handleSave = async () => {
       if (!editMessageId) return;
 
@@ -195,9 +182,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       });
 
       // Delete existing attachments for this message
-      await window.service.attachmentService.deleteAttachmentsByMessageId(
-        editMessageId,
-      );
+      await attachmentService.deleteAttachmentsByMessageId(editMessageId);
 
       // Insert new attachments if any
       if (attachments.length > 0) {
@@ -230,6 +215,16 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       }
     }, [activeThreadId]);
 
+    useEffect(() => {
+      const unsub = emitter.on(EventNames.MESSAGE_EDIT, async (msg) => {
+        setInput(msg.content);
+        setEditMessageId(msg.id);
+        await loadAttachmentsFromMessage(msg);
+      });
+
+      return () => unsub();
+    }, [setInput, loadAttachmentsFromMessage]);
+
     return (
       <div className={cn("mx-auto w-full max-w-[720px]", className)}>
         {attachments.length > 0 && (
@@ -257,18 +252,18 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         <div
           className={cn(
             "relative",
-            "flex max-h-52 min-h-[126px] w-full flex-col gap-y-1 rounded-[20px] border pt-2 pr-2 pb-2 pl-4 ",
+            "flex max-h-52 min-h-[126px] w-full flex-col gap-y-1 rounded-[20px] border pt-2 pr-2 pb-2 pl-4",
             "focus-within:border-ring/70 focus-within:outline-hidden focus-within:ring-3 focus-within:ring-ring/20",
-            "border-[#D9D9D9] bg-[#F9F9F9] dark:border-[#3D3D3D] dark:bg-[#1A1A1A]",
+            "bg-input",
           )}
           onPaste={handlePaste}
         >
-          <textarea
+          <TextArea
             ref={textareaRef}
             className={cn(
               "w-full flex-1 rounded-none border-0 bg-transparent p-0",
+              "field-sizing-content max-h-96 min-h-[calc(7rem-var(--chat-input-toolbar-height)-9px)]",
               "resize-none shadow-none ring-0 focus:ring-0",
-              "min-h-[calc(7rem-var(--chat-input-toolbar-height)-9px)]",
               "outline-none",
               "placeholder:text-sm",
             )}

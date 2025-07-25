@@ -420,7 +420,8 @@
   "tab-bar": {
     "menu-item": {
       "close": "閉じる",
-      "close-all": "すべて閉じる"
+      "close-all": "すべて閉じる",
+      "reload": "リロード"
     }
   },
   "thread": {
@@ -555,7 +556,11 @@
     "tab-not-exist": "タブ {{tabNumber}} は存在しません",
     "tab-switch-error": "タブ {{tabNumber}} への切り替えに失敗しました"
   },
-  "toolbox-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています",
+  "toolbox": {
+    "tool-press-error-msg": "302.AIベンダーのAPI Keyが設定されていないか、間違っています",
+    "tool-collection-error-msg": "お気に入りのアプリケーションが失敗しました、もう一度やり直してください",
+    "favorites": "集める"
+  },
   "preview": {
     "zoom-in": "ズームイン",
     "zoom-out": "ズームアウト",
