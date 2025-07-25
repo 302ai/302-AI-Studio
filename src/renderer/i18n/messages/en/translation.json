@@ -375,7 +375,8 @@
         "placeholder": "Select Model",
         "search-placeholder": "Search models...",
         "no-models-found": "No models found",
-        "use-last-model": "Use Last Chat Model"
+        "use-last-model": "Use Last Chat Model",
+        "use-current-chat-model": "Use the same model as the conversation"
       }
     }
   },

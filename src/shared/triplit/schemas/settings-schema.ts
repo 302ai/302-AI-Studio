@@ -39,5 +39,6 @@ export const settingsSchema = {
     collapseThinkBlock: S.Optional(S.Boolean({ default: false })),
     disableMarkdown: S.Optional(S.Boolean({ default: false })),
     newChatModelId: S.Optional(S.String({ default: "use-last-model" })),
+    titleModelId: S.Optional(S.String({ default: "use-current-chat-model" })),
   }),
 };

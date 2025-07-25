@@ -50,6 +50,8 @@ export class SettingsDbService extends BaseDbService {
       hideReason: false,
       collapseThinkBlock: false,
       disableMarkdown: false,
+      newChatModelId: "use-last-model",
+      titleModelId: "use-current-chat-model",
     });
   }
 
@@ -406,6 +408,34 @@ export class SettingsDbService extends BaseDbService {
     } catch (error) {
       logger.error("SettingsDbService:setNewChatModelId error", { error });
       throw error;
+    }
+  }
+
+  async setTitleModelId(titleModelId: string) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.titleModelId = titleModelId;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setTitleModelId error", { error });
+      throw error;
+    }
+  }
+
+  async getTitleModelId(): Promise<string> {
+    try {
+      const query = triplitClient.query("settings");
+      const settings = await triplitClient.fetchOne(query);
+      return settings?.titleModelId ?? "use-current-chat-model";
+    } catch (error) {
+      logger.error("SettingsDbService:getTitleModelId error", { error });
+      return "use-current-chat-model";
     }
   }
 }

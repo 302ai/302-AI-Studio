@@ -317,4 +317,26 @@ export class SettingsService {
       throw error;
     }
   }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setTitleModelId(
+    _event: Electron.IpcMainEvent,
+    titleModelId: string,
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setTitleModelId(titleModelId);
+    } catch (error) {
+      logger.error("SettingsService:setTitleModelId error", { error });
+      throw error;
+    }
+  }
+
+  async getTitleModelId(): Promise<string> {
+    try {
+      return await this.settingsDbService.getTitleModelId();
+    } catch (error) {
+      logger.error("SettingsService:getTitleModelId error", { error });
+      return "use-current-chat-model";
+    }
+  }
 }

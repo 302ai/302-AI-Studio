@@ -88,4 +88,13 @@ export class ModelService {
       throw error;
     }
   }
+
+  async _getModelById(modelId: string): Promise<Model | null> {
+    try {
+      return await this.modelDbService.getModelById(modelId);
+    } catch (error) {
+      logger.error("ModelService: getModelById error", { error });
+      return null;
+    }
+  }
 }

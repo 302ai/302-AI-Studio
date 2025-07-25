@@ -3,19 +3,24 @@ import { DisplayAppStore } from "./display-app-store";
 import ModelSelect from "./model-select";
 import { SearchService } from "./search-service";
 import { StreamOutput } from "./stream-output";
+import TitleModelSelect from "./title-model-select";
 
 export function PreferenceSettings() {
   return (
-    <div className="mx-auto flex h-full flex-col gap-4 px-4 pt-[18px] ">
-      <ChatSettings />
+    <div className="flex h-full flex-1 flex-col overflow-y-auto px-4 py-[18px]">
+      <div className="mx-auto flex flex-col gap-4">
+        <ChatSettings />
 
-      <SearchService />
+        <SearchService />
 
-      <StreamOutput />
+        <StreamOutput />
 
-      <DisplayAppStore />
+        <DisplayAppStore />
 
-      <ModelSelect />
+        <ModelSelect />
+
+        <TitleModelSelect />
+      </div>
     </div>
   );
 }

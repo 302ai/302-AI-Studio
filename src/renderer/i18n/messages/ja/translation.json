@@ -376,7 +376,8 @@
         "placeholder": "モデルを選択",
         "search-placeholder": "モデルを検索...",
         "no-models-found": "モデルが見つかりません",
-        "use-last-model": "前回の会話モデルを使用"
+        "use-last-model": "前回の会話モデルを使用",
+        "use-current-chat-model": "会話と同じモデルを使用"
       }
     }
   },

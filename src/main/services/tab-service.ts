@@ -52,6 +52,10 @@ export class TabService {
     }
   }
 
+  async _updateTab(tabId: string, updateData: UpdateTabData): Promise<void> {
+    await this.tabDbService.updateTab(tabId, updateData);
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async updateTab(
     _event: Electron.IpcMainEvent,
@@ -59,7 +63,7 @@ export class TabService {
     updateData: UpdateTabData,
   ): Promise<void> {
     try {
-      await this.tabDbService.updateTab(tabId, updateData);
+      await this._updateTab(tabId, updateData);
     } catch (error) {
       logger.error("TabService:updateTab error", { error });
       throw error;

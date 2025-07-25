@@ -78,6 +78,13 @@ export class ThreadService {
     }
   }
 
+  async _updateThread(
+    threadId: string,
+    updateData: UpdateThreadData,
+  ): Promise<void> {
+    await this.threadDbService.updateThread(threadId, updateData);
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async updateThread(
     _event: Electron.IpcMainEvent,
@@ -85,7 +92,7 @@ export class ThreadService {
     updateData: UpdateThreadData,
   ): Promise<void> {
     try {
-      await this.threadDbService.updateThread(threadId, updateData);
+      await this._updateThread(threadId, updateData);
     } catch (error) {
       logger.error("ThreadService:updateThread error", { error });
       throw error;

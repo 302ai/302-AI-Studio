@@ -21,12 +21,16 @@ import type {
   Provider,
   UpdateProviderData,
 } from "@shared/triplit/types";
+import type { Model } from "@shared/types/model";
 import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
 import { EventNames, emitter, sendToThread } from "../event-service";
 import type { MessageService } from "../message-service";
+import type { ModelService } from "../model-service";
 import type { SettingsService } from "../settings-service";
+import type { TabService } from "../tab-service";
+import type { ThreadService } from "../thread-service";
 import { AI302ProviderService } from "./302AI-provider-service/302AI-provider-service";
 import type {
   BaseProviderService,
@@ -49,7 +53,10 @@ export class ProviderService {
     @inject(TYPES.ConfigService) private configService: ConfigService,
     @inject(TYPES.ChatService) private chatService: ChatService,
     @inject(TYPES.MessageService) private messageService: MessageService,
+    @inject(TYPES.ModelService) private modelService: ModelService,
     @inject(TYPES.SettingsService) private settingsService: SettingsService,
+    @inject(TYPES.ThreadService) private threadService: ThreadService,
+    @inject(TYPES.TabService) private tabService: TabService,
   ) {
     this.init();
     this.setupEventListeners();
@@ -225,6 +232,33 @@ export class ProviderService {
     return provider;
   }
 
+  private async getModelAndProviderByModelId(modelId: string): Promise<{
+    model: Model;
+    provider: Provider;
+  } | null> {
+    try {
+      const model = await this.modelService._getModelById(modelId);
+      if (!model) {
+        logger.warn("Model not found", { modelId });
+        return null;
+      }
+
+      const provider = this.providerMap.get(model.providerId);
+      if (!provider) {
+        logger.warn("Provider not found for model", {
+          modelId,
+          providerId: model.providerId,
+        });
+        return null;
+      }
+
+      return { model, provider };
+    } catch (error) {
+      logger.error("Failed to get model and provider", { modelId, error });
+      return null;
+    }
+  }
+
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
   async checkApiKey(
     _event: Electron.IpcMainEvent,
@@ -271,7 +305,7 @@ export class ProviderService {
     _event: Electron.IpcMainEvent,
     params: StreamChatParams,
   ): Promise<{ success: boolean; error?: string }> {
-    const { threadId, userMessageId, provider, model } = params;
+    const { threadId, userMessageId, provider, model, tabId } = params;
 
     let fullContent = "";
     let assistantMessage: Message | null = null;
@@ -409,6 +443,49 @@ export class ProviderService {
 
       logger.info("Stream chat completed", { threadId });
 
+      try {
+        const thread = await this.threadService._getThreadById(threadId);
+        if (thread && !thread.isPrivate) {
+          // Check if this is a new thread (first assistant message)
+          const messages =
+            await this.messageService._getMessagesByThreadId(threadId);
+          const assistantMessages = messages.filter(
+            (msg) => msg.role === "assistant",
+          );
+
+          if (assistantMessages.length === 1) {
+            // This is the first assistant message
+            const result = await this._summaryTitle({
+              messages: messages.map((msg) => ({
+                role: msg.role,
+                content: msg.content,
+                id: msg.id,
+              })),
+              provider,
+              model,
+            });
+
+            if (result.success && result.text) {
+              await this.threadService._updateThread(threadId, {
+                title: result.text,
+              });
+
+              if (tabId) {
+                await this.tabService._updateTab(tabId, {
+                  title: result.text,
+                });
+              }
+            }
+          }
+        }
+      } catch (summaryError) {
+        logger.error("Failed to generate summary title", {
+          threadId,
+          summaryError,
+        });
+        // Don't fail the entire operation if summary generation fails
+      }
+
       return {
         success: true,
       };
@@ -508,22 +585,48 @@ export class ProviderService {
     return { success: true };
   }
 
-  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
-  async summaryTitle(
-    _event: Electron.IpcMainEvent,
-    params: {
-      messages: { role: string; content: string; id?: string }[];
-      provider: Provider;
-      model: { id: string; name: string };
-    },
-  ): Promise<{
+  async _summaryTitle(params: {
+    messages: { role: string; content: string; id?: string }[];
+    provider?: Provider;
+    model?: { id: string; name: string };
+  }): Promise<{
     success: boolean;
     text?: string;
     error?: string;
   }> {
-    const { messages, provider, model } = params;
+    const { messages } = params;
 
     try {
+      const titleModelId = await this.settingsService.getTitleModelId();
+      let provider: Provider;
+      let model: { id: string; name: string };
+
+      if (titleModelId === "use-current-chat-model") {
+        if (!params.provider || !params.model) {
+          return {
+            success: false,
+            error: "Provider or model not provided for use-last-model option",
+          };
+        }
+        provider = params.provider;
+        model = params.model;
+      } else {
+        // Get model and provider by titleModelId
+        const modelAndProvider =
+          await this.getModelAndProviderByModelId(titleModelId);
+        if (!modelAndProvider) {
+          return {
+            success: false,
+            error: `Model or provider not found for titleModelId: ${titleModelId}`,
+          };
+        }
+        provider = modelAndProvider.provider;
+        model = {
+          id: modelAndProvider.model.id,
+          name: modelAndProvider.model.name,
+        };
+      }
+
       const providerInst = this.getProviderInst(provider.id);
       if (!providerInst) {
         return {
@@ -549,12 +652,36 @@ export class ProviderService {
         text: result.text,
       };
     } catch (error) {
-      logger.error("Generate text error", { providerId: provider.id, error });
+      logger.error("Generate text error", { error });
 
       return {
         success: false,
         error: extractErrorMessage(error),
       };
     }
+  }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__TWO_WAY)
+  async summaryTitle(
+    _event: Electron.IpcMainEvent,
+    params: {
+      messages: { role: string; content: string; id?: string }[];
+      provider: Provider;
+      model: { id: string; name: string };
+    },
+  ): Promise<{
+    success: boolean;
+    text?: string;
+    error?: string;
+  }> {
+    const { messages, provider, model } = params;
+
+    const result = await this._summaryTitle({
+      messages,
+      provider,
+      model,
+    });
+
+    return result;
   }
 }
