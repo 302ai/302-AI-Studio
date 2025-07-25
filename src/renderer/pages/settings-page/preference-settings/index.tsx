@@ -1,11 +1,12 @@
 import { ChatSettings } from "./chat-settings";
 import { DisplayAppStore } from "./display-app-store";
+import ModelSelect from "./model-select";
 import { SearchService } from "./search-service";
 import { StreamOutput } from "./stream-output";
 
 export function PreferenceSettings() {
   return (
-    <div className="mx-auto flex h-full flex-col gap-4 px-4 pt-[18px]">
+    <div className="mx-auto flex h-full flex-col gap-4 px-4 pt-[18px] ">
       <ChatSettings />
 
       <SearchService />
@@ -13,6 +14,8 @@ export function PreferenceSettings() {
       <StreamOutput />
 
       <DisplayAppStore />
+
+      <ModelSelect />
     </div>
   );
 }

@@ -372,4 +372,40 @@ export class SettingsDbService extends BaseDbService {
       throw error;
     }
   }
+
+  // async setNewChatUsesLastChatModel(newChatUsesLastChatModel: boolean) {
+  //   if (!this.settingsRecord) return;
+
+  //   try {
+  //     await triplitClient.update(
+  //       "settings",
+  //       this.settingsRecord.id,
+  //       async (setting) => {
+  //         setting.newChatUsesLastChatModel = newChatUsesLastChatModel;
+  //       },
+  //     );
+  //   } catch (error) {
+  //     logger.error("SettingsDbService:setNewChatUsesLastChatModel error", {
+  //       error,
+  //     });
+  //     throw error;
+  //   }
+  // }
+
+  async setNewChatModelId(newChatModelId: string) {
+    if (!this.settingsRecord) return;
+
+    try {
+      await triplitClient.update(
+        "settings",
+        this.settingsRecord.id,
+        async (setting) => {
+          setting.newChatModelId = newChatModelId;
+        },
+      );
+    } catch (error) {
+      logger.error("SettingsDbService:setNewChatModelId error", { error });
+      throw error;
+    }
+  }
 }

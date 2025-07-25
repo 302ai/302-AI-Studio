@@ -370,6 +370,13 @@
           "collapse-think": "自动折叠推理过程",
           "disable-markdown": "关闭markdown渲染"
         }
+      },
+      "model-select": {
+        "label": "新会话模型",
+        "placeholder": "选择模型",
+        "search-placeholder": "搜索模型...",
+        "no-models-found": "未找到模型",
+        "use-last-model": "上一次会话使用"
       }
     }
   },

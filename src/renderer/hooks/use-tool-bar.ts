@@ -8,7 +8,7 @@ import type {
   Thread,
 } from "@shared/triplit/types";
 import { useQuery, useQueryOne } from "@triplit/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useActiveTab } from "./use-active-tab";
@@ -51,20 +51,62 @@ export function useToolBar() {
 
   const settingsQuery = triplitClient.query("settings");
   const { result: settings } = useQueryOne(triplitClient, settingsQuery);
-  const selectedModelId = settings?.selectedModelId || "";
+
+  const newChatModelId = settings?.newChatModelId || "";
+
+  const isNewChat = !activeThreadId || !activeTab?.threadId;
+
+  const [currentNewChatModelId, setCurrentNewChatModelId] =
+    useState<string>("");
+  const [currentTabId, setCurrentTabId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isNewChat) {
+      const tabId = activeTab?.id || null;
+      if (tabId !== currentTabId) {
+        const defaultModelId =
+          newChatModelId === "use-last-model"
+            ? settings?.selectedModelId || ""
+            : newChatModelId;
+        setCurrentNewChatModelId(defaultModelId);
+        setCurrentTabId(tabId);
+      }
+    } else {
+      // 清理新会话的临时状态
+      setCurrentNewChatModelId("");
+      setCurrentTabId(null);
+    }
+  }, [
+    isNewChat,
+    activeTab?.id,
+    newChatModelId,
+    settings?.selectedModelId,
+    currentTabId,
+  ]);
+
+  // 根据是否为新会话来决定显示的模型ID
+  const selectedModelId = isNewChat
+    ? currentNewChatModelId || settings?.selectedModelId || ""
+    : settings?.selectedModelId || "";
 
   const handleModelSelect = async (modelId: string) => {
-    await settingsService.updateSelectedModelId(modelId);
+    if (isNewChat) {
+      // 对于新会话，只在当前会话期间临时记录用户的选择
+      setCurrentNewChatModelId(modelId);
+    } else {
+      // 对于已存在的会话，更新全局selectedModelId和线程模型
+      await settingsService.updateSelectedModelId(modelId);
 
-    if (activeThreadId) {
-      try {
-        const providerId = models?.find((m) => m.id === modelId)?.providerId;
-        await threadService.updateThread(activeThreadId, {
-          modelId,
-          providerId,
-        });
-      } catch (error) {
-        logger.error("update thread error", { error });
+      if (activeThreadId) {
+        try {
+          const providerId = models?.find((m) => m.id === modelId)?.providerId;
+          await threadService.updateThread(activeThreadId, {
+            modelId,
+            providerId,
+          });
+        } catch (error) {
+          logger.error("update thread error", { error });
+        }
       }
     }
   };

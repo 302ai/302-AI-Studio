@@ -212,6 +212,7 @@ declare global {
         setHideReason: (hideReason: boolean) => Promise<void>;
         setCollapseThinkBlock: (collapseThinkBlock: boolean) => Promise<void>;
         setDisableMarkdown: (disableMarkdown: boolean) => Promise<void>;
+        setNewChatModelId: (newChatModelId: string) => Promise<void>;
       };
       shortcutsService: {
         initializeGlobalShortcuts: () => Promise<void>;

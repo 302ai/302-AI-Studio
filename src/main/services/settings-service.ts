@@ -287,4 +287,34 @@ export class SettingsService {
       throw error;
     }
   }
+
+  // @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  // async setNewChatUsesLastChatModel(
+  //   _event: Electron.IpcMainEvent,
+  //   newChatUsesLastChatModel: boolean,
+  // ): Promise<void> {
+  //   try {
+  //     await this.settingsDbService.setNewChatUsesLastChatModel(
+  //       newChatUsesLastChatModel,
+  //     );
+  //   } catch (error) {
+  //     logger.error("SettingsService:setNewChatUsesLastChatModel error", {
+  //       error,
+  //     });
+  //     throw error;
+  //   }
+  // }
+
+  @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
+  async setNewChatModelId(
+    _event: Electron.IpcMainEvent,
+    newChatModelId: string,
+  ): Promise<void> {
+    try {
+      await this.settingsDbService.setNewChatModelId(newChatModelId);
+    } catch (error) {
+      logger.error("SettingsService:setNewChatModelId error", { error });
+      throw error;
+    }
+  }
 }

@@ -40,6 +40,7 @@ export const ModelRowList = memo(function ModelRowList({
     onToggleGroup?: (groupId: string) => void;
     expandedGroups?: Set<string>;
     hasSearch?: boolean;
+    showStar?: boolean;
   };
 }) {
   const {
@@ -49,6 +50,7 @@ export const ModelRowList = memo(function ModelRowList({
     onToggleGroup,
     expandedGroups,
     hasSearch,
+    showStar = true,
   } = data;
   const item = items[index];
   const { t } = useTranslation("translation", {
@@ -87,7 +89,7 @@ export const ModelRowList = memo(function ModelRowList({
     await modelService.collectModel(item.model.id, !item.model.collected);
   };
 
-  const hasCapabilities = Array.from(item.model.capabilities).some(
+  const hasCapabilities = Array.from(item.model.capabilities || []).some(
     (capability) => capability,
   );
 
@@ -131,27 +133,31 @@ export const ModelRowList = memo(function ModelRowList({
             )}
             <div className="flex w-full flex-row items-center justify-between gap-2 overflow-hidden">
               <div className="flex items-center gap-x-4">
-                <ModelIcon
-                  modelName={item.model.name}
-                  className="size-5 flex-shrink-0"
-                />
+                {item.model.id !== "use-last-model" && (
+                  <ModelIcon
+                    modelName={item.model.name}
+                    className="size-5 flex-shrink-0"
+                  />
+                )}
                 <span className="flex-1 overflow-hidden truncate text-ellipsis whitespace-nowrap ">
                   {item.model.remark || item.model.name}
                 </span>
               </div>
 
-              <Star
-                className={cn(
-                  "mr-2 size-4 flex-shrink-0 ",
-                  item.model.collected && " ",
-                )}
-                fill={starColor}
-                color={starColor}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleUpdateModel();
-                }}
-              />
+              {showStar && (
+                <Star
+                  className={cn(
+                    "mr-2 size-4 flex-shrink-0 ",
+                    item.model.collected && " ",
+                  )}
+                  fill={starColor}
+                  color={starColor}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUpdateModel();
+                  }}
+                />
+              )}
             </div>
             {hasCapabilities && (
               <Tooltip.Content
@@ -164,7 +170,7 @@ export const ModelRowList = memo(function ModelRowList({
               >
                 <div>
                   <span>{t("support")}</span>
-                  {Array.from(item.model.capabilities).map(
+                  {Array.from(item.model.capabilities || []).map(
                     (capability, index, array) => (
                       <span key={capability}>
                         {t(`${capability}`)}

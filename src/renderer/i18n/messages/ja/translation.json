@@ -370,6 +370,13 @@
           "collapse-think": "推論過程を自動で折りたたむ",
           "disable-markdown": "markdownを無効にする"
         }
+      },
+      "model-select": {
+        "label": "新会話モデル",
+        "placeholder": "モデルを選択",
+        "search-placeholder": "モデルを検索...",
+        "no-models-found": "モデルが見つかりません",
+        "use-last-model": "前回の会話モデルを使用"
       }
     }
   },

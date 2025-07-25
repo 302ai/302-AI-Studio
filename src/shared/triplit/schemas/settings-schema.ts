@@ -38,5 +38,6 @@ export const settingsSchema = {
     hideReason: S.Optional(S.Boolean({ default: false })),
     collapseThinkBlock: S.Optional(S.Boolean({ default: false })),
     disableMarkdown: S.Optional(S.Boolean({ default: false })),
+    newChatModelId: S.Optional(S.String({ default: "use-last-model" })),
   }),
 };
