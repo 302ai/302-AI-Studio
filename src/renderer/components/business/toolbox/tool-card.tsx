@@ -19,7 +19,7 @@ export function ToolCard({
   const { handleToolPress, handleToolCollection } = useToolbox();
 
   return (
-    <div className="relative max-w-[228px]">
+    <div className="group relative max-w-[228px]">
       <ButtonWithTooltip
         title={tool.name}
         tooltipPlacement={tooltipPlacement}
@@ -50,7 +50,7 @@ export function ToolCard({
       <ActionGroup
         onStar={() => handleToolCollection(tool.toolId, !tool.collected)}
         stared={tool.collected}
-        className="-translate-y-1/2 absolute top-1/2 right-1"
+        className="-translate-y-1/2 absolute top-1/2 right-1 opacity-0 transition-opacity group-hover:opacity-100"
       />
     </div>
   );
