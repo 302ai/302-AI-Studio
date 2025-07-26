@@ -1,10 +1,9 @@
-import { triplitClient } from "@renderer/client";
 import { Label } from "@renderer/components/ui/field";
 import { Select } from "@renderer/components/ui/select";
 import langs from "@renderer/i18n/langs";
 import { cn } from "@renderer/lib/utils";
+import { useLanguageSetting } from "@renderer/queries";
 import type { Language } from "@shared/triplit/types";
-import { useQueryOne } from "@triplit/react";
 import type { Key } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 
@@ -13,10 +12,8 @@ const { configService } = window.service;
 export function LanguageSelector() {
   const { t, i18n } = useTranslation();
 
-  const settingsQuery = triplitClient.query("settings");
-  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
-  const lang = settingsResult?.language ?? "zh";
-  const currentLang = langs.find((l) => l.key === lang) ?? langs[0];
+  const { data: lang } = useLanguageSetting();
+  const currentLang = langs.find((l) => l.key === (lang ?? "zh")) ?? langs[0];
 
   const handleLanguageChange = async (key: Key | null) => {
     const newLang = key?.toString() ?? "";

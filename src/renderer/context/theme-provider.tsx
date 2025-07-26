@@ -1,6 +1,5 @@
-import { triplitClient } from "@renderer/client";
+import { useThemeSetting } from "@renderer/queries";
 import type { Theme } from "@shared/triplit/types";
-import { useQueryOne } from "@triplit/react";
 import {
   createContext,
   type ReactNode,
@@ -21,9 +20,8 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const { configService } = window.service;
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const settingsQuery = triplitClient.query("settings");
-  const { result: settingsResult } = useQueryOne(triplitClient, settingsQuery);
-  const theme = settingsResult?.theme ?? "system";
+  const { data: theme } = useThemeSetting();
+  const currentTheme = theme ?? "system";
 
   const [isSystemDark, setIsSystemDark] = useState(
     window.matchMedia("(prefers-color-scheme: dark)").matches,
@@ -34,12 +32,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    configService.updateAppTheme(theme as Theme);
+    configService.updateAppTheme(currentTheme as Theme);
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const actualTheme =
-      theme === "system" ? (mediaQuery.matches ? "dark" : "light") : theme;
+      currentTheme === "system" ? (mediaQuery.matches ? "dark" : "light") : currentTheme;
 
     if (actualTheme === "dark") {
       document.documentElement.classList.add("dark");
@@ -50,7 +48,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const handleChange = async (e: MediaQueryListEvent) => {
       setIsSystemDark(e.matches);
 
-      if (theme === "system") {
+      if (currentTheme === "system") {
         if (e.matches) {
           document.documentElement.classList.add("dark");
         } else {
@@ -62,10 +60,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     mediaQuery.addEventListener("change", handleChange);
 
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme]);
+  }, [currentTheme]);
 
   return (
-    <ThemeContext value={{ theme: theme as Theme, setTheme, isSystemDark }}>
+    <ThemeContext value={{ theme: currentTheme as Theme, setTheme, isSystemDark }}>
       {children}
     </ThemeContext>
   );
