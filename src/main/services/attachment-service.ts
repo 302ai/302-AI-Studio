@@ -34,10 +34,6 @@ export class AttachmentService {
     await this.attachmentDbService.updateAttachment(attachmentId, updateData);
   }
 
-  async _deleteAttachmentsByMessageId(messageId: string): Promise<void> {
-    await this.attachmentDbService.deleteAttachmentsByMessageId(messageId);
-  }
-
   @ServiceHandler(CommunicationWay.RENDERER_TO_MAIN__ONE_WAY)
   async insertAttachments(
     _event: Electron.IpcMainEvent,

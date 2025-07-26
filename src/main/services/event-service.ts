@@ -13,6 +13,7 @@ import mitt from "mitt";
 
 export enum RendererTarget {
   ALL_WINDOWS = "all-windows",
+  THREAD = "thread",
 }
 
 export enum EventNames {
@@ -20,6 +21,13 @@ export enum EventNames {
   PROVIDER_ADD = "provider:add",
   PROVIDER_DELETE = "provider:delete",
   PROVIDER_UPDATE = "provider:update",
+
+  PROVIDER_CONVERSATION_CREATED = "provider:conversation-created",
+  PROVIDER_CONVERSATION_IN_PROGRESS = "provider:conversation-in-progress",
+  PROVIDER_CONVERSATION_COMPLETED = "provider:conversation-completed",
+  PROVIDER_CONVERSATION_FAILED = "provider:conversation-failed",
+  PROVIDER_CONVERSATION_EXPIRED = "provider:conversation-expired",
+  PROVIDER_CONVERSATION_CANCELLED = "provider:conversation-cancelled",
 
   // * Chat Events
   CHAT_STREAM_STATUS_UPDATE = "chat:stream-status-update",
@@ -54,6 +62,27 @@ type Events = {
     providerId: string;
     updateData: UpdateProviderData;
   };
+
+  [EventNames.PROVIDER_CONVERSATION_CREATED]: {
+    threadId: string;
+  };
+  [EventNames.PROVIDER_CONVERSATION_IN_PROGRESS]: {
+    threadId: string;
+    delta?: string;
+  };
+  [EventNames.PROVIDER_CONVERSATION_COMPLETED]: {
+    threadId: string;
+  };
+  [EventNames.PROVIDER_CONVERSATION_FAILED]: {
+    threadId: string;
+  };
+  [EventNames.PROVIDER_CONVERSATION_EXPIRED]: {
+    threadId: string;
+  };
+  [EventNames.PROVIDER_CONVERSATION_CANCELLED]: {
+    threadId: string;
+  };
+
   [EventNames.CHAT_STREAM_STATUS_UPDATE]: {
     threadId: string;
     status: "pending" | "success" | "error" | "stop";
@@ -114,10 +143,15 @@ export function sendToRenderer(
   type: keyof Events,
   data: Events[keyof Events],
   target: RendererTarget = RendererTarget.ALL_WINDOWS,
+  threadId?: string,
 ) {
   switch (target) {
     case RendererTarget.ALL_WINDOWS:
       sendToAllWindows(type, data);
+      break;
+    case RendererTarget.THREAD:
+      if (!threadId) return;
+      sendToThread(threadId, type, data);
       break;
     default:
       sendToAllWindows(type, data);

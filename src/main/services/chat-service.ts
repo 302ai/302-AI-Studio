@@ -11,6 +11,7 @@ import type {
   UpdateMessageData,
 } from "@shared/triplit/types";
 import { inject, injectable } from "inversify";
+import { EventNames, emitter, sendToThread } from "./event-service";
 import type { MessageService } from "./message-service";
 
 @ServiceRegister(TYPES.ChatService)
@@ -18,12 +19,59 @@ import type { MessageService } from "./message-service";
 export class ChatService {
   constructor(
     @inject(TYPES.MessageService) private messageService: MessageService,
-  ) {}
+  ) {
+    this.setupConversationEventListeners();
+  }
+
+  private setupConversationEventListeners() {
+    emitter.on(EventNames.PROVIDER_CONVERSATION_CREATED, ({ threadId }) =>
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "pending",
+      }),
+    );
+
+    emitter.on(
+      EventNames.PROVIDER_CONVERSATION_IN_PROGRESS,
+      ({ threadId, delta }) =>
+        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+          threadId,
+          delta,
+          status: "pending",
+        }),
+    );
+
+    emitter.on(EventNames.PROVIDER_CONVERSATION_COMPLETED, ({ threadId }) =>
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "success",
+      }),
+    );
+
+    emitter.on(EventNames.PROVIDER_CONVERSATION_FAILED, ({ threadId }) =>
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "error",
+      }),
+    );
+
+    emitter.on(EventNames.PROVIDER_CONVERSATION_CANCELLED, ({ threadId }) =>
+      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        threadId,
+        status: "stop",
+      }),
+    );
+  }
 
   async createAssistantMessage(
     message: Omit<
       CreateMessageData,
-      "orderSeq" | "role" | "status" | "tokenCount"
+      | "orderSeq"
+      | "role"
+      | "status"
+      | "tokenCount"
+      | "content"
+      | "isThinkBlockCollapsed"
     >,
   ): Promise<Message> {
     try {
@@ -38,6 +86,8 @@ export class ChatService {
         role: "assistant",
         status: "pending",
         tokenCount: 0,
+        content: "",
+        isThinkBlockCollapsed: false,
       });
       return newMessage;
     } catch (error) {

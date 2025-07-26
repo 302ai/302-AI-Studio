@@ -25,7 +25,7 @@ import type { Model } from "@shared/types/model";
 import { inject, injectable } from "inversify";
 import type { ChatService } from "../chat-service";
 import type { ConfigService } from "../config-service";
-import { EventNames, emitter, sendToThread } from "../event-service";
+import { EventNames, emitter, sendToMain } from "../event-service";
 import type { MessageService } from "../message-service";
 import type { ModelService } from "../model-service";
 import type { SettingsService } from "../settings-service";
@@ -324,17 +324,14 @@ export class ProviderService {
 
       assistantMessage = await this.chatService.createAssistantMessage({
         threadId,
-        content: "",
         providerId: provider.id,
         parentMessageId: userMessageId,
         modelId: model.id,
         modelName: model.name,
-        isThinkBlockCollapsed: false,
       });
 
-      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+      sendToMain(EventNames.PROVIDER_CONVERSATION_CREATED, {
         threadId,
-        status: "pending",
       });
 
       const result = await providerInst.startStreamChat(
@@ -342,9 +339,8 @@ export class ProviderService {
         abortController,
       );
 
-      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+      sendToMain(EventNames.PROVIDER_CONVERSATION_IN_PROGRESS, {
         threadId,
-        status: "pending",
       });
 
       // Get dynamic stream configuration
@@ -366,9 +362,8 @@ export class ProviderService {
               content: fullContent,
             });
           }
-          sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+          sendToMain(EventNames.PROVIDER_CONVERSATION_IN_PROGRESS, {
             threadId,
-            status: "pending",
             delta: smoothedChunk,
           });
         },
@@ -420,10 +415,8 @@ export class ProviderService {
           tokenCount: 0,
           status: "error",
         });
-        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        sendToMain(EventNames.PROVIDER_CONVERSATION_FAILED, {
           threadId,
-          status: "error",
-          userMessageId: userMessageId,
         });
         return {
           success: false,
@@ -435,10 +428,8 @@ export class ProviderService {
         tokenCount: 0,
         status: "success",
       });
-      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+      sendToMain(EventNames.PROVIDER_CONVERSATION_COMPLETED, {
         threadId,
-        status: "success",
-        userMessageId: userMessageId,
       });
 
       logger.info("Stream chat completed", { threadId });
@@ -503,10 +494,8 @@ export class ProviderService {
         await this.chatService.updateMessage(assistantMessage.id, {
           status: "stop",
         });
-        sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+        sendToMain(EventNames.PROVIDER_CONVERSATION_CANCELLED, {
           threadId,
-          status: "stop",
-          userMessageId: userMessageId,
         });
         return { success: true };
       }
@@ -516,10 +505,8 @@ export class ProviderService {
       await this.chatService.updateMessage(assistantMessage.id, {
         status: "error",
       });
-      sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+      sendToMain(EventNames.PROVIDER_CONVERSATION_FAILED, {
         threadId,
-        status: "error",
-        userMessageId: userMessageId,
       });
 
       return {
@@ -555,9 +542,8 @@ export class ProviderService {
           await this.chatService.updateMessage(pendingAssistantMessage.id, {
             status: "stop",
           });
-          sendToThread(threadId, EventNames.CHAT_STREAM_STATUS_UPDATE, {
+          sendToMain(EventNames.PROVIDER_CONVERSATION_CANCELLED, {
             threadId,
-            status: "stop",
           });
 
           logger.info("Updated pending message status to stop", {
