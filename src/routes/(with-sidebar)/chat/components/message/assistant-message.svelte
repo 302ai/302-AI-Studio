@@ -527,7 +527,7 @@
 							: "vitesse-light"}
 					/>
 				{/if}
-			{:else if part.type === "reasoning"}
+			{:else if part.type === "reasoning" && part.text.trim()}
 				<AssistantReasoningItem
 					text={part.text}
 					messageId={message.id}
