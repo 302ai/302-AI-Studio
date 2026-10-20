@@ -19,6 +19,8 @@ import {
 	smoothStream,
 	stepCountIs,
 	wrapLanguageModel,
+	type LanguageModel,
+	type ModelMessage,
 	type UIMessage,
 } from "ai";
 import dedent from "dedent";
@@ -104,6 +106,52 @@ function addDefinedParams(options: any, params: any) {
 	}
 	if (params.presencePenalty !== undefined && params.presencePenalty !== null) {
 		options.presencePenalty = params.presencePenalty;
+	}
+}
+
+// 续写拼接去重：裁掉模型续写时重复的上文末尾（最长后缀/前缀重叠，200 字符内）
+function dedupeOverlap(prev: string, next: string): string {
+	const max = Math.min(prev.length, next.length, 200);
+	for (let len = max; len > 0; len--) {
+		if (prev.endsWith(next.slice(0, len))) {
+			return next.slice(len);
+		}
+	}
+	return next;
+}
+
+// max_tokens 截断时自动续写拼接；maxRounds 轮后仍截断则返回 truncated: true
+async function generateTextWithContinuation(
+	options: {
+		model: LanguageModel;
+		prompt?: string;
+		messages?: ModelMessage[];
+		maxOutputTokens?: number;
+	},
+	maxRounds = 3,
+): Promise<{ text: string; truncated: boolean }> {
+	const { prompt, messages, ...rest } = options;
+	let history: ModelMessage[] = messages ?? [{ role: "user", content: prompt ?? "" }];
+	let fullText = "";
+	for (let round = 0; ; round++) {
+		const result = await generateText({ ...rest, messages: history });
+		if (result.finishReason !== "length" || round === maxRounds) {
+			return { text: fullText + result.text, truncated: result.finishReason === "length" };
+		}
+		fullText += dedupeOverlap(fullText, result.text);
+		if (!result.text) {
+			// 本轮无有效输出（如 thinking 块吃掉全部额度），继续轮询无意义
+			return { text: fullText, truncated: true };
+		}
+		history = [
+			...history,
+			{ role: "assistant", content: fullText },
+			{
+				role: "user",
+				content:
+					"Your previous output was cut off by the length limit. Continue exactly where you stopped. Do not repeat any previously generated text.",
+			},
+		];
 	}
 }
 
@@ -301,8 +349,16 @@ app.post("/chat/302ai", async (c) => {
 		...(isDeepSeekModel ? { thinking: { type: "enabled" as const } } : {}),
 	};
 
+	// 302ai 的 chat/completions 端点对 claude 系模型返回 Anthropic 原生格式流，OpenAI 兼容解析器无法解析，需走原生 /v1/messages
+	const isClaudeModel = /claude/i.test(model);
 	const wrapModel = wrapLanguageModel({
-		model: ai302.chatModel(model, modelOptions),
+		model: isClaudeModel
+			? createAnthropic({
+					baseURL: baseUrl || "https://api.302ai.cn/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				}).chat(model)
+			: ai302.chatModel(model, modelOptions),
 		middleware: [
 			extractReasoningMiddleware({ tagName: "think" }),
 			extractReasoningMiddleware({ tagName: "thinking" }),
@@ -372,9 +428,9 @@ app.post("/chat/302ai", async (c) => {
 		effectiveSystemPrompt = compressed.systemPrompt;
 	}
 
-	const convertedMessages = await convertToModelMessages(
-		enhanceMessagesWithFeedback(messagesToSend),
-	);
+	const convertedMessages = (
+		await convertToModelMessages(enhanceMessagesWithFeedback(messagesToSend))
+	).filter((m) => !(Array.isArray(m.content) && m.content.length === 0)); // 上游会拒绝 content 为 null 的空消息（失败回合留下的空 assistant 消息）
 
 	const baseConfig = {
 		model: wrapModel,
@@ -383,6 +439,8 @@ app.post("/chat/302ai", async (c) => {
 			"302": provider302Options,
 		},
 		...(mcpTools && Object.keys(mcpTools).length > 0 && { tools: mcpTools }),
+		// anthropic 端点必须带 max_tokens；给足上限避免长回复被截断（按实际用量计费）
+		...(isClaudeModel && maxTokens == null && { maxOutputTokens: 64000 }),
 	};
 
 	addDefinedParams(baseConfig, {
@@ -581,9 +639,9 @@ app.post("/chat/openai", async (c) => {
 		effectiveSystemPrompt = compressed.systemPrompt;
 	}
 
-	const convertedMessages = await convertToModelMessages(
-		enhanceMessagesWithFeedback(messagesToSend),
-	);
+	const convertedMessages = (
+		await convertToModelMessages(enhanceMessagesWithFeedback(messagesToSend))
+	).filter((m) => !(Array.isArray(m.content) && m.content.length === 0)); // 上游会拒绝 content 为 null 的空消息（失败回合留下的空 assistant 消息）
 
 	const streamTextOptions = {
 		model: wrapModel,
@@ -780,9 +838,9 @@ app.post("/chat/anthropic", async (c) => {
 		effectiveSystemPrompt = compressed.systemPrompt;
 	}
 
-	const convertedMessages = await convertToModelMessages(
-		enhanceMessagesWithFeedback(messagesToSend),
-	);
+	const convertedMessages = (
+		await convertToModelMessages(enhanceMessagesWithFeedback(messagesToSend))
+	).filter((m) => !(Array.isArray(m.content) && m.content.length === 0)); // 上游会拒绝 content 为 null 的空消息（失败回合留下的空 assistant 消息）
 
 	const streamTextOptions = {
 		model: wrapModel,
@@ -978,9 +1036,9 @@ app.post("/chat/gemini", async (c) => {
 		effectiveSystemPrompt = compressed.systemPrompt;
 	}
 
-	const convertedMessages = await convertToModelMessages(
-		enhanceMessagesWithFeedback(messagesToSend),
-	);
+	const convertedMessages = (
+		await convertToModelMessages(enhanceMessagesWithFeedback(messagesToSend))
+	).filter((m) => !(Array.isArray(m.content) && m.content.length === 0)); // 上游会拒绝 content 为 null 的空消息（失败回合留下的空 assistant 消息）
 
 	const streamTextOptions = {
 		model: wrapModel,
@@ -1091,13 +1149,23 @@ app.post("/generate-title", async (c) => {
 	const proxyFetch = await createProxyFetch();
 	switch (providerType) {
 		case "302ai": {
-			const openai = createOpenAICompatible({
-				name: "302.AI",
-				baseURL: baseUrl || "https://api.openai.com/v1",
-				apiKey: apiKey || "[REDACTED:sk-secret]",
-				fetch: proxyFetch,
-			});
-			languageModel = openai.chatModel(model);
+			if (/claude/i.test(model)) {
+				// 302ai 的 chat/completions 对 claude 系模型返回 Anthropic 原生格式，需走原生 /v1/messages
+				const anthropic = createAnthropic({
+					baseURL: baseUrl || "https://api.302ai.cn/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = anthropic.chat(model);
+			} else {
+				const openai = createOpenAICompatible({
+					name: "302.AI",
+					baseURL: baseUrl || "https://api.openai.com/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = openai.chatModel(model);
+			}
 			break;
 		}
 		case "openai": {
@@ -1167,9 +1235,10 @@ Return ONLY a valid JSON object in this exact format (no markdown, no code block
 {"title": "your title here", "summary": "your summary here"}`;
 		}
 
-		const { text } = await generateText({
+		const { text } = await generateTextWithContinuation({
 			model: languageModel,
 			prompt,
+			maxOutputTokens: 2048, // 302ai 上游部分模型必须带 max_tokens；opus 系思考 token 也占额度，留足余量
 		});
 
 		const { title, summary } = parseGeneratedTitleContent(text, previousSummary || "");
@@ -1213,13 +1282,23 @@ app.post("/generate-context-summary", async (c) => {
 	const proxyFetch = await createProxyFetch();
 	switch (providerType) {
 		case "302ai": {
-			const openai = createOpenAICompatible({
-				name: "302.AI",
-				baseURL: baseUrl || "https://api.302ai.com/v1",
-				apiKey: apiKey || "[REDACTED:sk-secret]",
-				fetch: proxyFetch,
-			});
-			languageModel = openai.chatModel(model);
+			if (/claude/i.test(model)) {
+				// 302ai 的 chat/completions 对 claude 系模型返回 Anthropic 原生格式，需走原生 /v1/messages
+				const anthropic = createAnthropic({
+					baseURL: baseUrl || "https://api.302ai.cn/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = anthropic.chat(model);
+			} else {
+				const openai = createOpenAICompatible({
+					name: "302.AI",
+					baseURL: baseUrl || "https://api.302ai.com/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = openai.chatModel(model);
+			}
 			break;
 		}
 		case "openai": {
@@ -1294,9 +1373,10 @@ Return ONLY a valid JSON object in this exact format (no markdown, no code block
 {"summary": "your updated summary here"}`;
 		}
 
-		const { text } = await generateText({
+		const { text } = await generateTextWithContinuation({
 			model: languageModel,
 			prompt,
+			maxOutputTokens: 2048, // 302ai 上游部分模型必须带 max_tokens；opus 系思考 token 也占额度，留足余量
 		});
 
 		// Parse JSON response with fallback handling
@@ -1366,13 +1446,23 @@ app.post("/generate-suggestions", async (c) => {
 	const proxyFetch = await createProxyFetch();
 	switch (providerType) {
 		case "302ai": {
-			const openai = createOpenAICompatible({
-				name: "302.AI",
-				baseURL: baseUrl || "https://api.openai.com/v1",
-				apiKey: apiKey || "[REDACTED:sk-secret]",
-				fetch: proxyFetch,
-			});
-			languageModel = openai.chatModel(model);
+			if (/claude/i.test(model)) {
+				// 302ai 的 chat/completions 对 claude 系模型返回 Anthropic 原生格式，需走原生 /v1/messages
+				const anthropic = createAnthropic({
+					baseURL: baseUrl || "https://api.302ai.cn/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = anthropic.chat(model);
+			} else {
+				const openai = createOpenAICompatible({
+					name: "302.AI",
+					baseURL: baseUrl || "https://api.openai.com/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = openai.chatModel(model);
+			}
 			break;
 		}
 		case "openai": {
@@ -1411,7 +1501,7 @@ app.post("/generate-suggestions", async (c) => {
 		const convertedMessages = await convertToModelMessages(
 			enhanceMessagesWithFeedback(messages),
 		);
-		const { text } = await generateText({
+		const { text } = await generateTextWithContinuation({
 			model: languageModel,
 			messages: [
 				...convertedMessages,
@@ -1420,6 +1510,7 @@ app.post("/generate-suggestions", async (c) => {
 					content: getSuggestionsPrompt(language, count),
 				},
 			],
+			maxOutputTokens: 2048, // 302ai 上游部分模型必须带 max_tokens；opus 系思考 token 也占额度，留足余量
 		});
 
 		logger.debug("[Suggestions] Received text:", text);
@@ -1511,13 +1602,23 @@ app.post("/decompose-tasks", async (c) => {
 	const configured302AIBaseUrl = baseUrl || (await providerStorage.get302AIBaseUrl());
 	switch (providerType) {
 		case "302ai": {
-			const openai = createOpenAICompatible({
-				name: "302.AI",
-				baseURL: configured302AIBaseUrl,
-				apiKey: apiKey || "[REDACTED:sk-secret]",
-				fetch: proxyFetch,
-			});
-			languageModel = openai.chatModel(model);
+			if (/claude/i.test(model)) {
+				// 302ai 的 chat/completions 对 claude 系模型返回 Anthropic 原生格式，需走原生 /v1/messages
+				const anthropic = createAnthropic({
+					baseURL: configured302AIBaseUrl || "https://api.302ai.cn/v1",
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = anthropic.chat(model);
+			} else {
+				const openai = createOpenAICompatible({
+					name: "302.AI",
+					baseURL: configured302AIBaseUrl,
+					apiKey: apiKey || "[REDACTED:sk-secret]",
+					fetch: proxyFetch,
+				});
+				languageModel = openai.chatModel(model);
+			}
 			break;
 		}
 		case "openai": {
@@ -1553,7 +1654,7 @@ app.post("/decompose-tasks", async (c) => {
 
 	// Helper function to perform task decomposition
 	const doDecompose = async (modelToUse: typeof languageModel) => {
-		const { text } = await generateText({
+		const { text } = await generateTextWithContinuation({
 			model: modelToUse,
 			messages: [
 				{
@@ -1561,6 +1662,7 @@ app.post("/decompose-tasks", async (c) => {
 					content: getTaskDecomposePrompt(count) + "\n\n用户需求：\n" + requirement,
 				},
 			],
+			maxOutputTokens: 2048, // 302ai 上游部分模型必须带 max_tokens；opus 系思考 token 也占额度，留足余量
 		});
 
 		logger.debug("[TaskDecompose] Received text:", text);
