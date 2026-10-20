@@ -4,11 +4,15 @@ import ky from "ky";
 
 const logger = createLogger("apis");
 
+// dash-api /user/v2/info：uid/sub_id 可能是数字或数字字符串；email/name/avatar 可为 null
 const ai302UserInfoSchema = type({
+	code: "number",
 	data: {
-		uid: "number",
-		user_name: "string",
-		email: "string",
+		uid: "number|string",
+		"sub_id?": "number|string|null",
+		"email?": "string|null",
+		"name?": "string|null",
+		"avatar?": "string|null",
 	},
 });
 
@@ -22,7 +26,7 @@ type Ai302UserInfo = typeof ai302UserInfoSchema.infer;
 export async function fetch302AIUserInfo(apiKey: string): Promise<Ai302UserInfo> {
 	try {
 		const response = await ky
-			.get("https://dash-api.302ai.cn/user/info", {
+			.get("https://dash-api.302ai.cn/user/v2/info", {
 				timeout: 180000,
 				retry: {
 					limit: 3,
