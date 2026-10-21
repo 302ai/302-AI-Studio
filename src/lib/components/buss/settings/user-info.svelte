@@ -5,7 +5,6 @@
 	import * as Card from "$lib/components/ui/card";
 	import { Label } from "$lib/components/ui/label/index.js";
 	import { m } from "$lib/paraglide/messages.js";
-	import { persistedProviderState } from "$lib/stores/provider-state.svelte";
 	import { userState } from "$lib/stores/user-state.svelte";
 	import { CreditCard, LogOut, RefreshCw, Wallet } from "@lucide/svelte";
 	import { toast } from "svelte-sonner";
