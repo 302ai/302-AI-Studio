@@ -186,15 +186,22 @@ $effect.root(() => {
 		}
 
 		// Apply default model based on mode
+		// Guard: only apply a model that exists in the model list, otherwise the
+		// validator effect above clears it and the two effects oscillate forever
+		const modelExists = (model: { id: string; providerId: string }) =>
+			persistedModelState.current.some(
+				(m) => m.id === model.id && m.providerId === model.providerId,
+			);
+
 		if (codeAgentState.enabled) {
 			const vibeDefault = preferencesSettings.vibeNewSessionModel;
-			if (vibeDefault) {
+			if (vibeDefault && modelExists(vibeDefault)) {
 				persistedChatParamsState.current.selectedModel = vibeDefault;
 				logger.info("Applied Vibe default model:", vibeDefault.name);
 			}
 		} else {
 			const chatDefault = preferencesSettings.newSessionModel;
-			if (chatDefault) {
+			if (chatDefault && modelExists(chatDefault)) {
 				persistedChatParamsState.current.selectedModel = chatDefault;
 				logger.info("Applied Chat default model:", chatDefault.name);
 			}
