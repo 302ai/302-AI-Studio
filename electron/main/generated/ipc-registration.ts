@@ -183,8 +183,8 @@ export function registerIpcHandlers() {
 	);
 
 	// ssoService service registration
-	ipcMain.handle("ssoService:openSsoLogin", (event, serverPort, language) =>
-		ssoService.openSsoLogin(event, serverPort, language),
+	ipcMain.handle("ssoService:openSsoLogin", (event, serverPort, language, baseUrl) =>
+		ssoService.openSsoLogin(event, serverPort, language, baseUrl),
 	);
 	ipcMain.handle("ssoService:waitForSsoCallback", (event, timeoutMs) =>
 		ssoService.waitForSsoCallback(event, timeoutMs),
