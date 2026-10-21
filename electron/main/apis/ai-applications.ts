@@ -6,9 +6,10 @@ const logger = createLogger("apis");
 
 const ai302UserInfoSchema = type({
 	data: {
-		uid: "number",
-		user_name: "string",
+		name: "string",
 		email: "string",
+		status: "number",
+		avatar: "string",
 	},
 });
 
@@ -22,7 +23,7 @@ type Ai302UserInfo = typeof ai302UserInfoSchema.infer;
 export async function fetch302AIUserInfo(apiKey: string): Promise<Ai302UserInfo> {
 	try {
 		const response = await ky
-			.get("https://dash-api.302ai.cn/user/info", {
+			.get("https://dash-api.302ai.cn/user/v2/info", {
 				timeout: 180000,
 				retry: {
 					limit: 3,
@@ -31,6 +32,8 @@ export async function fetch302AIUserInfo(apiKey: string): Promise<Ai302UserInfo>
 				},
 				headers: {
 					Authorization: `Bearer ${apiKey}`,
+					"HTTP-Referer": "https://studio.302.ai/",
+					"X-Title": "302.AI Studio",
 				},
 			})
 			.json();

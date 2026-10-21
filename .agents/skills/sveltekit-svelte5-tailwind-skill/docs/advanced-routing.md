@@ -4,7 +4,7 @@ version_anchors: ["SvelteKit@2.x"]
 authored: true
 origin: self
 adapted_from:
-    - "sveltejs/kit#4991df5 (SvelteKit advanced routing documentation)"
+  - "sveltejs/kit#4991df5 (SvelteKit advanced routing documentation)"
 last_reviewed: 2025-10-28
 summary: "Complete guide to advanced SvelteKit routing including rest parameters, optional parameters, matchers, route groups, layout breaking, encoding, and sorting"
 ---
@@ -26,7 +26,6 @@ Capture an unknown number of path segments.
 ### Example
 
 **Route structure:**
-
 ```
 src/routes/[org]/[repo]/tree/[branch]/[...file]/+page.svelte
 ```
@@ -34,7 +33,6 @@ src/routes/[org]/[repo]/tree/[branch]/[...file]/+page.svelte
 **Request:** `/sveltejs/kit/tree/main/documentation/docs/routing.md`
 
 **Parameters:**
-
 ```js
 {
 	org: 'sveltejs',
@@ -53,19 +51,17 @@ src/routes/a/[...rest]/z/+page.svelte
 ```
 
 **Matches:**
-
 - `/a/z` → `rest: undefined`
 - `/a/b/z` → `rest: 'b'`
 - `/a/b/c/z` → `rest: 'b/c'`
 
 **Validation:**
-
 ```js
 // src/routes/a/[...rest]/z/+page.js
 export function load({ params }) {
 	// Validate rest parameter
 	if (params.rest && !isValidPath(params.rest)) {
-		error(404, "Invalid path");
+		error(404, 'Invalid path');
 	}
 
 	return { path: params.rest };
@@ -91,7 +87,7 @@ src/routes/
 
 ```js
 // src/routes/marx-brothers/[...path]/+page.js
-import { error } from "@sveltejs/kit";
+import { error } from '@sveltejs/kit';
 
 export function load({ params }) {
 	error(404, `Marx brother '${params.path}' not found`);
@@ -109,7 +105,6 @@ src/routes/[[lang]]/home/+page.svelte
 ```
 
 **Matches:**
-
 - `/home` → `lang: undefined`
 - `/en/home` → `lang: 'en'`
 - `/fr/home` → `lang: 'fr'`
@@ -121,7 +116,6 @@ src/routes/[[lang]]/[[category]]/products/+page.svelte
 ```
 
 **Matches:**
-
 - `/products`
 - `/en/products`
 - `/electronics/products`
@@ -143,7 +137,6 @@ export function match(param) {
 ### Invalid Combinations
 
 ❌ **Cannot follow rest parameter:**
-
 ```
 src/routes/[...rest]/[[optional]]/+page.svelte  // INVALID
 ```
@@ -157,7 +150,6 @@ Validate route parameters with custom logic.
 ### Creating Matchers
 
 **Matcher file:**
-
 ```js
 // src/params/integer.js
 /**
@@ -171,20 +163,17 @@ export function match(param) {
 ```
 
 **Usage in route:**
-
 ```
 src/routes/blog/[id=integer]/+page.svelte
 ```
 
 **Behavior:**
-
 - `/blog/123` → ✅ Matches
 - `/blog/abc` → ❌ Doesn't match (tries other routes or returns 404)
 
 ### Common Matchers
 
 **UUID matcher:**
-
 ```js
 // src/params/uuid.js
 export function match(param) {
@@ -193,7 +182,6 @@ export function match(param) {
 ```
 
 **Date matcher:**
-
 ```js
 // src/params/date.js
 export function match(param) {
@@ -202,10 +190,9 @@ export function match(param) {
 ```
 
 **Enum matcher:**
-
 ```js
 // src/params/category.js
-const validCategories = ["electronics", "clothing", "books"];
+const validCategories = ['electronics', 'clothing', 'books'];
 
 export function match(param) {
 	return validCategories.includes(param);
@@ -216,8 +203,8 @@ export function match(param) {
 
 ```ts
 // src/params/fruit.ts
-export function match(param: string): param is "apple" | "orange" {
-	return param === "apple" || param === "orange";
+export function match(param: string): param is 'apple' | 'orange' {
+	return param === 'apple' || param === 'orange';
 }
 ```
 
@@ -232,18 +219,18 @@ export function match(param: string): param is "apple" | "orange" {
 
 ```js
 // src/params/integer.test.js
-import { match } from "./integer.js";
+import { match } from './integer.js';
 
-describe("integer matcher", () => {
-	it("matches valid integers", () => {
-		expect(match("123")).toBe(true);
-		expect(match("0")).toBe(true);
+describe('integer matcher', () => {
+	it('matches valid integers', () => {
+		expect(match('123')).toBe(true);
+		expect(match('0')).toBe(true);
 	});
 
-	it("rejects invalid integers", () => {
-		expect(match("abc")).toBe(false);
-		expect(match("12.34")).toBe(false);
-		expect(match("")).toBe(false);
+	it('rejects invalid integers', () => {
+		expect(match('abc')).toBe(false);
+		expect(match('12.34')).toBe(false);
+		expect(match('')).toBe(false);
 	});
 });
 ```
@@ -262,7 +249,6 @@ When multiple routes match a URL, SvelteKit uses specific rules to determine pri
 ### Examples
 
 **Routes:**
-
 ```
 src/routes/foo-abc/+page.svelte
 src/routes/foo-[c]/+page.svelte
@@ -272,7 +258,6 @@ src/routes/[...catchall]/+page.svelte
 ```
 
 **Sorted priority:**
-
 1. `/foo-abc` (most specific)
 2. `/foo-[c]` (specific prefix)
 3. `/[[a=x]]` (matcher)
@@ -280,7 +265,6 @@ src/routes/[...catchall]/+page.svelte
 5. `/[...catchall]` (rest parameter, lowest)
 
 **URL matches:**
-
 - `/foo-abc` → Route 1
 - `/foo-def` → Route 2
 - `/bar` → Route 4
@@ -322,14 +306,12 @@ src/routes/
 ```
 
 **URLs:**
-
 - `/dashboard` (uses (app) layout)
 - `/settings` (uses (app) layout)
 - `/about` (uses (marketing) layout)
 - `/pricing` (uses (marketing) layout)
 
 **Group characteristics:**
-
 - Don't affect URL structure
 - Can have their own `+layout.svelte`
 - Can have `+page.svelte` at group level
@@ -339,7 +321,6 @@ src/routes/
 Use `@` to skip layout levels.
 
 **Route structure:**
-
 ```
 src/routes/
 ├── (app)/
@@ -354,23 +335,18 @@ src/routes/
 ```
 
 **Without breaking out:**
-
 - Page inherits: root → (app) → item → [id] layouts
 
 **With `+page@(app).svelte`:**
-
 ```
 src/routes/(app)/item/[id]/embed/+page@(app).svelte
 ```
-
 - Page inherits: root → (app) layouts only
 
 **Reset to root:**
-
 ```
 src/routes/(app)/item/[id]/embed/+page@.svelte
 ```
-
 - Page inherits: root layout only
 
 ### Layout Breaking Options
@@ -399,7 +375,6 @@ src/routes/
 ```
 
 **Result:**
-
 - `item/+layout@.svelte` inherits from root only
 - `[id]/+layout.svelte` inherits from `item/+layout@.svelte`
 - `[id]/+page.svelte` inherits from `[id]/+layout.svelte`
@@ -407,23 +382,20 @@ src/routes/
 ### When to Use Layout Groups
 
 ✅ **Good use cases:**
-
 - Separate app and marketing sections
 - Different authentication requirements
 - Distinct navigation/UI patterns
 
 ❌ **Avoid overusing:**
-
 - Complex nesting can be hard to maintain
 - Consider composition instead (reusable components/functions)
 - Use if-statements for simple variations
 
 **Alternative approach:**
-
 ```svelte
 <!-- src/routes/nested/route/+layout@.svelte -->
 <script>
-	import ReusableLayout from "$lib/ReusableLayout.svelte";
+	import ReusableLayout from '$lib/ReusableLayout.svelte';
 	let { data, children } = $props();
 </script>
 
@@ -441,7 +413,6 @@ Use special characters in routes with encoding.
 Format: `[x+nn]` where `nn` is the hexadecimal character code.
 
 **Special characters:**
-
 - `\` → `[x+5c]`
 - `/` → `[x+2f]`
 - `:` → `[x+3a]`
@@ -461,26 +432,21 @@ Format: `[x+nn]` where `nn` is the hexadecimal character code.
 ### Examples
 
 **Smiley route:**
-
 ```
 src/routes/smileys/[x+3a]-[x+29]/+page.svelte
 ```
-
 **URL:** `/smileys/:-)`
 
 **Hash route:**
-
 ```
 src/routes/[x+23]tag/+page.svelte
 ```
-
 **URL:** `/#tag`
 
 **Finding character codes:**
-
 ```js
-":".charCodeAt(0).toString(16); // '3a'
-")".charCodeAt(0).toString(16); // '29'
+':'.charCodeAt(0).toString(16);  // '3a'
+')'.charCodeAt(0).toString(16);  // '29'
 ```
 
 ### Unicode Encoding
@@ -488,14 +454,12 @@ src/routes/[x+23]tag/+page.svelte
 Format: `[u+nnnn]` where `nnnn` is a Unicode code point (0000-10ffff).
 
 **Examples:**
-
 ```
 src/routes/[u+d83e][u+dd2a]/+page.svelte
 src/routes/🤪/+page.svelte  // Equivalent
 ```
 
 **When to use:**
-
 - Emoji in routes
 - Special Unicode characters
 - When file system doesn't support character
@@ -505,7 +469,6 @@ src/routes/🤪/+page.svelte  // Equivalent
 ```
 src/routes/[x+2e]well-known/change-password/+page.svelte
 ```
-
 **URL:** `/.well-known/change-password`
 
 **Why encode `.`:** TypeScript struggles with leading dots in directory names.
@@ -516,16 +479,16 @@ src/routes/[x+2e]well-known/change-password/+page.svelte
 
 ```js
 // src/routes/[...path]/+page.js
-import { error } from "@sveltejs/kit";
+import { error } from '@sveltejs/kit';
 
-const validPaths = ["docs", "blog", "about"];
+const validPaths = ['docs', 'blog', 'about'];
 
 export function load({ params }) {
-	const segments = params.path?.split("/") || [];
+	const segments = params.path?.split('/') || [];
 	const base = segments[0];
 
 	if (!validPaths.includes(base)) {
-		error(404, "Section not found");
+		error(404, 'Section not found');
 	}
 
 	return { segments };
@@ -538,8 +501,8 @@ export function load({ params }) {
 // src/routes/[[lang]]/shop/[[category]]/+page.js
 export function load({ params }) {
 	return {
-		lang: params.lang || "en",
-		category: params.category || "all",
+		lang: params.lang || 'en',
+		category: params.category || 'all'
 	};
 }
 ```
@@ -561,11 +524,11 @@ src/routes/
 
 ```js
 // src/routes/(authed)/+layout.server.js
-import { redirect } from "@sveltejs/kit";
+import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals }) {
 	if (!locals.user) {
-		redirect(307, "/login");
+		redirect(307, '/login');
 	}
 
 	return { user: locals.user };
@@ -590,12 +553,12 @@ src/routes/
 ```svelte
 <!-- src/routes/special/+layout.svelte -->
 <script>
-	import { page } from "$app/state";
-	import StandardLayout from "$lib/layouts/Standard.svelte";
-	import SpecialLayout from "$lib/layouts/Special.svelte";
+	import { page } from '$app/state';
+	import StandardLayout from '$lib/layouts/Standard.svelte';
+	import SpecialLayout from '$lib/layouts/Special.svelte';
 
 	let { children } = $props();
-	let useSpecial = $derived(page.url.searchParams.has("special"));
+	let useSpecial = $derived(page.url.searchParams.has('special'));
 </script>
 
 {#if useSpecial}
@@ -618,7 +581,7 @@ src/routes/
 export function load({ route }) {
 	return {
 		routeId: route.id,
-		pattern: route.pattern,
+		pattern: route.pattern
 	};
 }
 ```
@@ -628,9 +591,9 @@ export function load({ route }) {
 ```js
 // src/hooks.server.js
 export async function handle({ event, resolve }) {
-	console.log("Route:", event.route.id);
-	console.log("Params:", event.params);
-	console.log("URL:", event.url.pathname);
+	console.log('Route:', event.route.id);
+	console.log('Params:', event.params);
+	console.log('URL:', event.url.pathname);
 
 	return resolve(event);
 }
@@ -641,11 +604,11 @@ export async function handle({ event, resolve }) {
 ```js
 // src/routes/[param]/+page.js
 export function load({ params }) {
-	console.log("Parameter received:", params.param);
+	console.log('Parameter received:', params.param);
 
 	// Check if matcher is working
 	if (!params.param) {
-		console.warn("Parameter is empty");
+		console.warn('Parameter is empty');
 	}
 
 	return { param: params.param };
@@ -657,16 +620,14 @@ export function load({ params }) {
 ### Matcher Performance
 
 ❌ **Slow - database lookup:**
-
 ```js
 export async function match(param) {
 	const exists = await db.checkExists(param);
-	return exists; // WRONG - matchers must be synchronous
+	return exists;  // WRONG - matchers must be synchronous
 }
 ```
 
 ✅ **Fast - regex check:**
-
 ```js
 export function match(param) {
 	return /^[a-z0-9-]+$/.test(param);
@@ -676,7 +637,6 @@ export function match(param) {
 ### Route Organization
 
 ✅ **Good - specific routes:**
-
 ```
 src/routes/
 ├── blog/[slug]/
@@ -685,7 +645,6 @@ src/routes/
 ```
 
 ❌ **Avoid - too many catch-alls:**
-
 ```
 src/routes/
 ├── [...all]/
@@ -733,7 +692,7 @@ export function match(param) {
 ```js
 // src/routes/[[lang]]/+layout.js
 export function load({ params }) {
-	const lang = params.lang || "en";
+	const lang = params.lang || 'en';
 	return { lang, messages: translations[lang] };
 }
 ```

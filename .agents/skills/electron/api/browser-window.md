@@ -7,7 +7,6 @@ BrowserWindow API for creating and controlling application windows.
 ### Constructor Options
 
 **Basic:**
-
 - `width`, `height` - Window size
 - `minWidth`, `minHeight` - Minimum size
 - `maxWidth`, `maxHeight` - Maximum size
@@ -15,7 +14,6 @@ BrowserWindow API for creating and controlling application windows.
 - `movable` - Whether window is movable
 
 **Display:**
-
 - `show` - Show window when created
 - `frame` - Show window frame
 - `titleBarStyle` - Title bar style (macOS)
@@ -23,14 +21,12 @@ BrowserWindow API for creating and controlling application windows.
 - `opacity` - Window opacity
 
 **Behavior:**
-
 - `alwaysOnTop` - Keep window on top
 - `fullscreen` - Start fullscreen
 - `skipTaskbar` - Skip taskbar (Linux/Windows)
 - `kiosk` - Kiosk mode
 
 **webPreferences:**
-
 - `preload` - Preload script path
 - `nodeIntegration` - Enable Node.js (not recommended)
 - `contextIsolation` - Enable context isolation (recommended)
@@ -39,13 +35,11 @@ BrowserWindow API for creating and controlling application windows.
 ### Instance Methods
 
 **Content:**
-
 - `loadURL(url[, options])` - Load URL
 - `loadFile(filePath[, options])` - Load local file
 - `reload()` - Reload window
 
 **Window Control:**
-
 - `show()` - Show window
 - `hide()` - Hide window
 - `close()` - Close window
@@ -53,7 +47,6 @@ BrowserWindow API for creating and controlling application windows.
 - `blur()` - Remove focus
 
 **Size/Position:**
-
 - `setSize(width, height)` - Set size
 - `getSize()` - Get size
 - `setPosition(x, y)` - Set position
@@ -61,14 +54,12 @@ BrowserWindow API for creating and controlling application windows.
 - `center()` - Center window
 
 **State:**
-
 - `minimize()` - Minimize
 - `maximize()` - Maximize
 - `restore()` - Restore
 - `setFullScreen(flag)` - Set fullscreen
 
 **DevTools:**
-
 - `webContents.openDevTools()` - Open DevTools
 - `webContents.closeDevTools()` - Close DevTools
 

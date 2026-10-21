@@ -4,9 +4,9 @@ version_anchors: ["SvelteKit@2.x", "Svelte@5.x", "Tailwind@4.x"]
 authored: true
 origin: self
 adapted_from:
-    - "sveltejs/kit#4991df5 (SvelteKit documentation)"
-    - "sveltejs/svelte#1b2f7b0 (Svelte 5 documentation)"
-    - "tailwindlabs/tailwindcss#91694fb (Tailwind CSS v4 documentation)"
+  - "sveltejs/kit#4991df5 (SvelteKit documentation)"
+  - "sveltejs/svelte#1b2f7b0 (Svelte 5 documentation)"
+  - "tailwindlabs/tailwindcss#91694fb (Tailwind CSS v4 documentation)"
 last_reviewed: 2025-10-28
 summary: "Complete integration guide combining SvelteKit 2.x, Svelte 5 runes, and Tailwind CSS v4 including configuration strategies, component patterns, styling approaches, build optimization, and deployment"
 ---
@@ -31,33 +31,33 @@ npm install tailwindcss@next @tailwindcss/vite@next
 ### Configuration Files
 
 **vite.config.js:**
-
 ```js
-import { sveltekit } from "@sveltejs/kit/vite";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss()],
+	plugins: [
+		sveltekit(),
+		tailwindcss()
+	]
 });
 ```
 
 **svelte.config.js:**
-
 ```js
-import adapter from "@sveltejs/adapter-auto";
-import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+import adapter from '@sveltejs/adapter-auto';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 export default {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter(),
-	},
+		adapter: adapter()
+	}
 };
 ```
 
 **src/app.css:**
-
 ```css
 @import "tailwindcss";
 
@@ -69,10 +69,9 @@ export default {
 ```
 
 **src/routes/+layout.svelte:**
-
 ```svelte
 <script>
-	import "../app.css";
+	import '../app.css';
 </script>
 
 <slot />
@@ -85,23 +84,26 @@ export default {
 ```svelte
 <script>
 	let isOpen = $state(false);
-	let variant = $state("primary");
+	let variant = $state('primary');
 
 	let buttonClasses = $derived(
-		variant === "primary"
-			? "bg-blue-500 hover:bg-blue-600"
-			: variant === "secondary"
-				? "bg-gray-500 hover:bg-gray-600"
-				: "bg-red-500 hover:bg-red-600",
+		variant === 'primary' ? 'bg-blue-500 hover:bg-blue-600' :
+		variant === 'secondary' ? 'bg-gray-500 hover:bg-gray-600' :
+		'bg-red-500 hover:bg-red-600'
 	);
 </script>
 
-<button class="px-4 py-2 rounded text-white {buttonClasses}" onclick={() => (isOpen = !isOpen)}>
+<button
+	class="px-4 py-2 rounded text-white {buttonClasses}"
+	onclick={() => isOpen = !isOpen}
+>
 	Toggle
 </button>
 
 {#if isOpen}
-	<div class="mt-4 p-4 border rounded">Content</div>
+	<div class="mt-4 p-4 border rounded">
+		Content
+	</div>
 {/if}
 ```
 
@@ -112,7 +114,9 @@ export default {
 	let count = $state(0);
 
 	let statusClasses = $derived(
-		count > 10 ? "text-green-600 font-bold" : count > 5 ? "text-yellow-600" : "text-gray-600",
+		count > 10 ? 'text-green-600 font-bold' :
+		count > 5 ? 'text-yellow-600' :
+		'text-gray-600'
 	);
 </script>
 
@@ -132,28 +136,27 @@ export default {
 ```svelte
 <!-- lib/components/Button.svelte -->
 <script>
-	let { variant = "primary", size = "md", onclick, children } = $props();
+	let {
+		variant = 'primary',
+		size = 'md',
+		onclick,
+		children
+	} = $props();
 
-	let baseClasses = "inline-flex items-center justify-center rounded font-medium transition";
+	let baseClasses = 'inline-flex items-center justify-center rounded font-medium transition';
 
 	let variantClasses = $derived(
-		variant === "primary"
-			? "bg-blue-500 hover:bg-blue-600 text-white"
-			: variant === "secondary"
-				? "bg-gray-200 hover:bg-gray-300 text-gray-900"
-				: variant === "danger"
-					? "bg-red-500 hover:bg-red-600 text-white"
-					: "",
+		variant === 'primary' ? 'bg-blue-500 hover:bg-blue-600 text-white' :
+		variant === 'secondary' ? 'bg-gray-200 hover:bg-gray-300 text-gray-900' :
+		variant === 'danger' ? 'bg-red-500 hover:bg-red-600 text-white' :
+		''
 	);
 
 	let sizeClasses = $derived(
-		size === "sm"
-			? "px-3 py-1.5 text-sm"
-			: size === "md"
-				? "px-4 py-2"
-				: size === "lg"
-					? "px-6 py-3 text-lg"
-					: "",
+		size === 'sm' ? 'px-3 py-1.5 text-sm' :
+		size === 'md' ? 'px-4 py-2' :
+		size === 'lg' ? 'px-6 py-3 text-lg' :
+		''
 	);
 
 	let classes = $derived(`${baseClasses} ${variantClasses} ${sizeClasses}`);
@@ -165,10 +168,9 @@ export default {
 ```
 
 **Usage:**
-
 ```svelte
 <script>
-	import Button from "$lib/components/Button.svelte";
+	import Button from '$lib/components/Button.svelte';
 
 	let count = $state(0);
 </script>
@@ -177,7 +179,9 @@ export default {
 	Count: {count}
 </Button>
 
-<Button variant="danger" size="lg" onclick={() => (count = 0)}>Reset</Button>
+<Button variant="danger" size="lg" onclick={() => count = 0}>
+	Reset
+</Button>
 ```
 
 ### Form Components with Bindings
@@ -185,7 +189,13 @@ export default {
 ```svelte
 <!-- lib/components/Input.svelte -->
 <script>
-	let { label, value = $bindable(), error, type = "text", ...rest } = $props();
+	let {
+		label,
+		value = $bindable(),
+		error,
+		type = 'text',
+		...rest
+	} = $props();
 
 	let inputId = $props.id();
 </script>
@@ -213,20 +223,19 @@ export default {
 ```
 
 **Usage:**
-
 ```svelte
 <script>
-	import Input from "$lib/components/Input.svelte";
+	import Input from '$lib/components/Input.svelte';
 
-	let email = $state("");
-	let password = $state("");
+	let email = $state('');
+	let password = $state('');
 	let errors = $state({});
 
 	async function handleSubmit() {
 		// Validation
 		errors = {};
-		if (!email) errors.email = "Email is required";
-		if (!password) errors.password = "Password is required";
+		if (!email) errors.email = 'Email is required';
+		if (!password) errors.password = 'Password is required';
 
 		if (Object.keys(errors).length === 0) {
 			// Submit
@@ -243,9 +252,17 @@ export default {
 		placeholder="you@example.com"
 	/>
 
-	<Input label="Password" type="password" bind:value={password} error={errors.password} />
+	<Input
+		label="Password"
+		type="password"
+		bind:value={password}
+		error={errors.password}
+	/>
 
-	<button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+	<button
+		type="submit"
+		class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+	>
 		Sign In
 	</button>
 </form>
@@ -258,8 +275,8 @@ export default {
 ```svelte
 <!-- routes/+layout.svelte -->
 <script>
-	import "../app.css";
-	import { page } from "$app/state";
+	import '../app.css';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 	let mobileMenuOpen = $state(false);
@@ -271,7 +288,9 @@ export default {
 		<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex justify-between h-16">
 				<div class="flex items-center">
-					<a href="/" class="text-xl font-bold text-blue-600"> My App </a>
+					<a href="/" class="text-xl font-bold text-blue-600">
+						My App
+					</a>
 				</div>
 
 				<!-- Desktop Nav -->
@@ -293,14 +312,12 @@ export default {
 				</div>
 
 				<!-- Mobile Menu Button -->
-				<button class="md:hidden p-2" onclick={() => (mobileMenuOpen = !mobileMenuOpen)}>
+				<button
+					class="md:hidden p-2"
+					onclick={() => mobileMenuOpen = !mobileMenuOpen}
+				>
 					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M4 6h16M4 12h16M4 18h16"
-						/>
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
 					</svg>
 				</button>
 			</div>
@@ -335,7 +352,9 @@ export default {
 	<!-- Footer -->
 	<footer class="bg-white border-t mt-auto">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-			<p class="text-center text-sm text-gray-600">© 2025 My App. All rights reserved.</p>
+			<p class="text-center text-sm text-gray-600">
+				© 2025 My App. All rights reserved.
+			</p>
 		</div>
 	</footer>
 </div>
@@ -346,15 +365,15 @@ export default {
 ```svelte
 <!-- routes/dashboard/+layout.svelte -->
 <script>
-	import { page } from "$app/state";
+	import { page } from '$app/state';
 
 	let { children } = $props();
 	let sidebarOpen = $state(true);
 
 	const navItems = [
-		{ href: "/dashboard", label: "Overview", icon: "📊" },
-		{ href: "/dashboard/analytics", label: "Analytics", icon: "📈" },
-		{ href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
+		{ href: '/dashboard', label: 'Overview', icon: '📊' },
+		{ href: '/dashboard/analytics', label: 'Analytics', icon: '📈' },
+		{ href: '/dashboard/settings', label: 'Settings', icon: '⚙️' }
 	];
 </script>
 
@@ -366,7 +385,7 @@ export default {
 	>
 		<div class="p-4">
 			<button
-				onclick={() => (sidebarOpen = !sidebarOpen)}
+				onclick={() => sidebarOpen = !sidebarOpen}
 				class="text-white hover:bg-gray-800 p-2 rounded"
 			>
 				☰
@@ -401,7 +420,7 @@ export default {
 ```svelte
 <!-- routes/contact/+page.svelte -->
 <script>
-	import { enhance } from "$app/forms";
+	import { enhance } from '$app/forms';
 
 	let { form } = $props();
 	let submitting = $state(false);
@@ -422,7 +441,9 @@ export default {
 		class="space-y-6"
 	>
 		<div>
-			<label for="name" class="block text-sm font-medium text-gray-700 mb-1"> Name </label>
+			<label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+				Name
+			</label>
 			<input
 				id="name"
 				name="name"
@@ -433,7 +454,9 @@ export default {
 		</div>
 
 		<div>
-			<label for="email" class="block text-sm font-medium text-gray-700 mb-1"> Email </label>
+			<label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+				Email
+			</label>
 			<input
 				id="email"
 				name="email"
@@ -471,7 +494,7 @@ export default {
 			class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600
 				disabled:bg-gray-400 disabled:cursor-not-allowed"
 		>
-			{submitting ? "Sending..." : "Send Message"}
+			{submitting ? 'Sending...' : 'Send Message'}
 		</button>
 	</form>
 </div>
@@ -479,19 +502,19 @@ export default {
 
 ```js
 // routes/contact/+page.server.js
-import { fail } from "@sveltejs/kit";
+import { fail } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request }) => {
 		const data = await request.formData();
-		const email = data.get("email");
-		const name = data.get("name");
-		const message = data.get("message");
+		const email = data.get('email');
+		const name = data.get('name');
+		const message = data.get('message');
 
 		// Validation
-		if (!email || !email.includes("@")) {
+		if (!email || !email.includes('@')) {
 			return fail(400, {
-				errors: { email: "Valid email required" },
+				errors: { email: 'Valid email required' }
 			});
 		}
 
@@ -501,10 +524,10 @@ export const actions = {
 			return { success: true };
 		} catch (error) {
 			return fail(500, {
-				errors: { general: "Failed to send message" },
+				errors: { general: 'Failed to send message' }
 			});
 		}
-	},
+	}
 };
 ```
 
@@ -554,8 +577,8 @@ export const actions = {
 // routes/blog/[slug]/+page.server.js
 export async function load({ params }) {
 	return {
-		post: await db.getPost(params.slug), // Awaited
-		comments: db.getComments(params.slug), // Streamed
+		post: await db.getPost(params.slug),     // Awaited
+		comments: db.getComments(params.slug)     // Streamed
 	};
 }
 ```
@@ -565,7 +588,7 @@ export async function load({ params }) {
 ```svelte
 <!-- routes/posts/+page.svelte -->
 <script>
-	import { invalidate } from "$app/navigation";
+	import { invalidate } from '$app/navigation';
 
 	let { data } = $props();
 	let loading = $state(false);
@@ -574,7 +597,7 @@ export async function load({ params }) {
 		loading = true;
 		const nextPage = data.page + 1;
 		await fetch(`/api/posts?page=${nextPage}`);
-		await invalidate("/api/posts");
+		await invalidate('/api/posts');
 		loading = false;
 	}
 
@@ -585,7 +608,7 @@ export async function load({ params }) {
 			}
 		});
 
-		const trigger = document.getElementById("load-more-trigger");
+		const trigger = document.getElementById('load-more-trigger');
 		if (trigger) observer.observe(trigger);
 
 		return () => observer.disconnect();
@@ -597,15 +620,18 @@ export async function load({ params }) {
 		<article class="p-6 bg-white rounded shadow">
 			<h2 class="text-2xl font-bold mb-2">{post.title}</h2>
 			<p class="text-gray-700">{post.excerpt}</p>
-			<a href="/posts/{post.slug}" class="text-blue-500 hover:underline"> Read more </a>
+			<a
+				href="/posts/{post.slug}"
+				class="text-blue-500 hover:underline"
+			>
+				Read more
+			</a>
 		</article>
 	{/each}
 
 	<div id="load-more-trigger" class="py-8 text-center">
 		{#if loading}
-			<div
-				class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
-			></div>
+			<div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
 		{:else}
 			<p class="text-gray-500">Scroll for more</p>
 		{/if}
@@ -618,24 +644,24 @@ export async function load({ params }) {
 ```svelte
 <!-- lib/components/ThemeToggle.svelte -->
 <script>
-	import { browser } from "$app/environment";
+	import { browser } from '$app/environment';
 
 	let darkMode = $state(false);
 
 	// Initialize from localStorage
 	$effect(() => {
 		if (browser) {
-			const stored = localStorage.getItem("theme");
-			darkMode = stored === "dark";
-			document.documentElement.classList.toggle("dark", darkMode);
+			const stored = localStorage.getItem('theme');
+			darkMode = stored === 'dark';
+			document.documentElement.classList.toggle('dark', darkMode);
 		}
 	});
 
 	function toggle() {
 		darkMode = !darkMode;
 		if (browser) {
-			localStorage.setItem("theme", darkMode ? "dark" : "light");
-			document.documentElement.classList.toggle("dark", darkMode);
+			localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+			document.documentElement.classList.toggle('dark', darkMode);
 		}
 	}
 </script>
@@ -647,9 +673,7 @@ export async function load({ params }) {
 >
 	{#if darkMode}
 		<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-			<path
-				d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-			></path>
+			<path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
 		</svg>
 	{:else}
 		<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -660,12 +684,11 @@ export async function load({ params }) {
 ```
 
 **Usage in layout:**
-
 ```svelte
 <!-- routes/+layout.svelte -->
 <script>
-	import "../app.css";
-	import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+	import '../app.css';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	let { children } = $props();
 </script>
@@ -690,23 +713,23 @@ export async function load({ params }) {
 
 ```js
 // vite.config.js
-import { sveltekit } from "@sveltejs/kit/vite";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) => ({
 	plugins: [
 		sveltekit(),
 		tailwindcss({
-			optimize: mode === "production",
-		}),
+			optimize: mode === 'production'
+		})
 	],
 
 	build: {
 		cssCodeSplit: true,
-		cssMinify: "lightningcss",
-		sourcemap: mode !== "production",
-	},
+		cssMinify: 'lightningcss',
+		sourcemap: mode !== 'production'
+	}
 }));
 ```
 
@@ -740,14 +763,16 @@ export default defineConfig(({ mode }) => ({
 ```js
 // tailwind.config.js
 export default {
-	content: ["./src/**/*.{html,js,svelte,ts}"],
+	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
 			colors: {
-				primary: process.env.NODE_ENV === "production" ? "#0ea5e9" : "#ef4444", // Different color in dev
-			},
-		},
-	},
+				primary: process.env.NODE_ENV === 'production'
+					? '#0ea5e9'
+					: '#ef4444'  // Different color in dev
+			}
+		}
+	}
 };
 ```
 
@@ -755,19 +780,19 @@ export default {
 
 ```js
 // svelte.config.js
-import adapter from "@sveltejs/adapter-static";
+import adapter from '@sveltejs/adapter-static';
 
 export default {
 	kit: {
 		adapter: adapter({
-			pages: "build",
-			assets: "build",
-			precompress: true,
+			pages: 'build',
+			assets: 'build',
+			precompress: true
 		}),
 		prerender: {
-			entries: ["*"],
-		},
-	},
+			entries: ['*']
+		}
+	}
 };
 ```
 
@@ -796,7 +821,6 @@ src/
 ```
 
 This integration provides:
-
 - ✅ Full SSR with SvelteKit
 - ✅ Reactive components with Svelte 5 runes
 - ✅ Utility-first styling with Tailwind CSS v4

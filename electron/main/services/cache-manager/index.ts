@@ -28,8 +28,6 @@ const CACHE_ROOT_SUBDIR = "302-ai-studio";
  * Cache subdirectories living under the cache root.
  */
 const CACHE_SUBDIRS = {
-	REGISTRY: "plugin-registry-cache",
-	PLUGIN_DOWNLOAD: "plugin-downloads",
 	TEMP: "temp",
 } as const;
 
@@ -67,14 +65,6 @@ export class CacheManager {
 		return this.currentCacheRoot;
 	}
 
-	getRegistryCacheDir(): string {
-		return path.join(this.getCacheRoot(), CACHE_SUBDIRS.REGISTRY);
-	}
-
-	getPluginDownloadDir(): string {
-		return path.join(this.getCacheRoot(), CACHE_SUBDIRS.PLUGIN_DOWNLOAD);
-	}
-
 	getTempCacheDir(): string {
 		return path.join(this.getCacheRoot(), CACHE_SUBDIRS.TEMP);
 	}
@@ -83,11 +73,7 @@ export class CacheManager {
 	 * Ensure all cache subdirectories exist under the current cache root.
 	 */
 	private async ensureCacheDirectories(): Promise<void> {
-		const dirs = [
-			this.getRegistryCacheDir(),
-			this.getPluginDownloadDir(),
-			this.getTempCacheDir(),
-		];
+		const dirs = [this.getTempCacheDir()];
 		for (const dir of dirs) {
 			await fs.ensureDir(dir);
 		}
@@ -196,8 +182,7 @@ export class CacheManager {
 	 * Recover cache files that the old (buggy) version may have written directly
 	 * into the user-selected base directory instead of under the nested subdir.
 	 *
-	 * Moves `<base>/plugin-registry-cache`, `<base>/plugin-downloads`,
-	 * `<base>/temp` into `<base>/302-ai-studio/`. Never touches anything else
+	 * Moves `<base>/temp` into `<base>/302-ai-studio/`. Never touches anything else
 	 * in the base dir, so the user's own files are always safe.
 	 */
 	private async recoverStrayFiles(baseDir: string): Promise<void> {
@@ -391,17 +376,11 @@ export class CacheManager {
 
 	async getCacheInfo(): Promise<CacheInfo> {
 		const root = this.getCacheRoot();
-		const [registrySize, downloadsSize, tempSize] = await Promise.all([
-			this.getDirectorySize(this.getRegistryCacheDir()),
-			this.getDirectorySize(this.getPluginDownloadDir()),
-			this.getDirectorySize(this.getTempCacheDir()),
-		]);
+		const tempSize = await this.getDirectorySize(this.getTempCacheDir());
 		return {
 			path: root,
-			size: registrySize + downloadsSize + tempSize,
+			size: tempSize,
 			subdirs: {
-				registry: { path: this.getRegistryCacheDir(), size: registrySize },
-				downloads: { path: this.getPluginDownloadDir(), size: downloadsSize },
 				temp: { path: this.getTempCacheDir(), size: tempSize },
 			},
 		};
@@ -409,11 +388,7 @@ export class CacheManager {
 
 	async clearAllCache(): Promise<void> {
 		logger.info("[CacheManager] Clearing all cache");
-		const dirs = [
-			this.getRegistryCacheDir(),
-			this.getPluginDownloadDir(),
-			this.getTempCacheDir(),
-		];
+		const dirs = [this.getTempCacheDir()];
 		for (const dir of dirs) {
 			try {
 				if (await fs.pathExists(dir)) {

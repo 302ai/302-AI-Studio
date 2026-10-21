@@ -2,6 +2,7 @@
 
 **官方文档**: https://www.electronjs.org/zh/docs/latest/,
 
+
 ## Instructions
 
 This example demonstrates main process concepts and usage in Electron.
@@ -17,96 +18,96 @@ This example demonstrates main process concepts and usage in Electron.
 
 ```javascript
 // main.js
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow } = require('electron')
 
-let mainWindow;
+let mainWindow
 
 function createWindow() {
-	mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
-		webPreferences: {
-			nodeIntegration: false,
-			contextIsolation: true,
-			preload: path.join(__dirname, "preload.js"),
-		},
-	});
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
+  })
 
-	mainWindow.loadFile("index.html");
-
-	mainWindow.on("closed", () => {
-		mainWindow = null;
-	});
+  mainWindow.loadFile('index.html')
+  
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 }
 
 // App ready
 app.whenReady().then(() => {
-	createWindow();
-});
+  createWindow()
+})
 
 // macOS: Re-open window when dock icon is clicked
-app.on("activate", () => {
-	if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow();
-	}
-});
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
 
 // Quit when all windows are closed (except macOS)
-app.on("window-all-closed", () => {
-	if (process.platform !== "darwin") {
-		app.quit();
-	}
-});
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
 ```
 
 ### Example: App Events
 
 ```javascript
-const { app } = require("electron");
+const { app } = require('electron')
 
 // Before app quits
-app.on("before-quit", (event) => {
-	console.log("App is about to quit");
-});
+app.on('before-quit', (event) => {
+  console.log('App is about to quit')
+})
 
 // Will quit
-app.on("will-quit", (event) => {
-	console.log("App will quit");
-});
+app.on('will-quit', (event) => {
+  console.log('App will quit')
+})
 
 // Quit
-app.on("quit", () => {
-	console.log("App quit");
-});
+app.on('quit', () => {
+  console.log('App quit')
+})
 
 // Second instance
-app.on("second-instance", () => {
-	// Focus existing window
-	if (mainWindow) {
-		if (mainWindow.isMinimized()) mainWindow.restore();
-		mainWindow.focus();
-	}
-});
+app.on('second-instance', () => {
+  // Focus existing window
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.focus()
+  }
+})
 ```
 
 ### Example: Single Instance App
 
 ```javascript
-const { app } = require("electron");
+const { app } = require('electron')
 
-const gotTheLock = app.requestSingleInstanceLock();
+const gotTheLock = app.requestSingleInstanceLock()
 
 if (!gotTheLock) {
-	app.quit();
+  app.quit()
 } else {
-	app.on("second-instance", () => {
-		// Handle second instance
-	});
-
-	// Continue with app initialization
-	app.whenReady().then(() => {
-		createWindow();
-	});
+  app.on('second-instance', () => {
+    // Handle second instance
+  })
+  
+  // Continue with app initialization
+  app.whenReady().then(() => {
+    createWindow()
+  })
 }
 ```
 

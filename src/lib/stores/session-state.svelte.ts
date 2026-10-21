@@ -1,6 +1,6 @@
 import { PersistedState } from "$lib/hooks/persisted-state.svelte";
 import { persistedModelState } from "$lib/stores/provider-state.svelte";
-import type { Model } from "@302ai/studio-plugin-sdk";
+import type { Model } from "@shared/types";
 import type { SessionMetadata } from "@shared/storage/session";
 
 export const persistedSessionState = new PersistedState<SessionMetadata>(

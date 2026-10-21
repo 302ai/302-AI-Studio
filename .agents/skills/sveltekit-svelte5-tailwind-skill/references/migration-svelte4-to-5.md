@@ -4,8 +4,8 @@ version_anchors: ["SvelteKit@2.x", "Svelte@4.x→5.x", "Tailwind@4.x"]
 authored: true
 origin: self
 adapted_from:
-    - "sveltejs/svelte GitHub repository (Svelte 5 migration guide and breaking changes)"
-    - "Community migration experiences from SvelteKit projects"
+  - "sveltejs/svelte GitHub repository (Svelte 5 migration guide and breaking changes)"
+  - "Community migration experiences from SvelteKit projects"
 last_reviewed: 2025-10-28
 summary: "Upgrade existing SvelteKit applications from Svelte 4 to Svelte 5 with complete migration paths for stores, reactive statements, slots, events, and lifecycle hooks with testing strategies."
 ---
@@ -19,7 +19,6 @@ Svelte 5 introduces a new reactivity system with runes, replacing stores and rea
 Understand the scope and approach before starting:
 
 **Major changes in Svelte 5:**
-
 - **Runes replace stores:** `$state()`, `$derived()`, `$effect()` replace writable/derived stores
 - **Props syntax changed:** `$props()` replaces `export let`
 - **Slots become snippets:** `<slot>` replaced by `{@render children()}`
@@ -27,20 +26,17 @@ Understand the scope and approach before starting:
 - **Lifecycle changes:** `onMount()` and effects work differently
 
 **Migration philosophy:**
-
 ```
 Svelte 5 supports BOTH old and new syntax during transition period.
 You can migrate incrementally - not all at once.
 ```
 
 **Time estimates:**
-
 - Small app (10-20 components): 2-4 hours
 - Medium app (50-100 components): 1-2 days
 - Large app (200+ components): 3-5 days
 
 **Recommended approach:**
-
 1. Update dependencies
 2. Run build to identify breaking changes
 3. Fix critical errors (stores in components)
@@ -53,40 +49,34 @@ You can migrate incrementally - not all at once.
 Review and understand all breaking changes:
 
 **Reactivity system:**
-
 - [x] `export let` props → `$props()`
 - [x] Reactive statements `$:` → `$derived()` or `$effect()`
 - [x] Stores in components → Runes (`$state()`, `$derived()`)
 - [x] Component state → `$state()` instead of `let` + reassignment
 
 **Component API:**
-
 - [x] `<slot>` → `{@render children()}`
 - [x] Named slots → Named snippet props
 - [x] `$$props` → Destructured `$props()`
 - [x] `$$restProps` → Rest parameters in `$props()`
 
 **Event handling:**
-
 - [x] Event forwarding removed
 - [x] Component events → Callback props
 - [x] `createEventDispatcher` → Direct function props
 
 **Lifecycle:**
-
 - [x] `beforeUpdate` removed
 - [x] `afterUpdate` removed
 - [x] Effects timing changed
 - [x] `onMount` still works but `$effect()` recommended
 
 **Bindings:**
-
 - [x] `bind:this` syntax changed slightly
 - [x] Two-way binding requires `$bindable()`
 - [x] Store subscriptions auto-unsubscribe
 
 **TypeScript:**
-
 - [x] Component typing changed
 - [x] Props interfaces defined separately
 - [x] Event types now function types
@@ -96,7 +86,6 @@ Review and understand all breaking changes:
 Convert writable and derived stores to runes:
 
 **Writable store migration:**
-
 ```ts
 // ❌ Before (Svelte 4)
 // src/lib/stores/counter.ts
@@ -132,7 +121,6 @@ export const count = writable(0);
 ```
 
 **Derived store migration:**
-
 ```ts
 // ❌ Before (Svelte 4)
 // src/lib/stores/derived.ts
@@ -152,7 +140,6 @@ export const doubled = derived(count, $count => $count * 2);
 ```
 
 **Shared state across components (context pattern):**
-
 ```ts
 // ❌ Before (Svelte 4)
 // src/lib/stores/user.ts
@@ -209,7 +196,6 @@ export function getUserContext() {
 ```
 
 **Custom stores migration:**
-
 ```ts
 // ❌ Before (Svelte 4)
 // src/lib/stores/custom.ts
@@ -262,7 +248,6 @@ export class CounterState {
 Convert `$:` reactive statements to `$derived()`:
 
 **Simple derived values:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <script>
@@ -288,7 +273,6 @@ Convert `$:` reactive statements to `$derived()`:
 ```
 
 **Conditional derived values:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <script>
@@ -306,7 +290,6 @@ Convert `$:` reactive statements to `$derived()`:
 ```
 
 **Reactive statements with side effects:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <script>
@@ -342,7 +325,6 @@ Convert `$:` reactive statements to `$derived()`:
 ```
 
 **Complex filtering/sorting:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <script>
@@ -387,95 +369,92 @@ Convert `$:` reactive statements to `$derived()`:
 Convert slot-based composition to snippets:
 
 **Basic slot migration:**
-
 ```svelte
-<!-- ✅ After (Svelte 5) -->
-<!-- Card.svelte -->
-<script>
-	let { children } = $props();
-</script>
-
 <!-- ❌ Before (Svelte 4) -->
 <!-- Card.svelte -->
 <div class="card">
-	<slot />
+  <slot />
 </div>
 
 <!-- Usage -->
 <Card>
-	<p>Card content</p>
+  <p>Card content</p>
 </Card>
 
+<!-- ✅ After (Svelte 5) -->
+<!-- Card.svelte -->
+<script>
+  let { children } = $props();
+</script>
+
 <div class="card">
-	{@render children()}
+  {@render children()}
 </div>
 
 <!-- Usage (same) -->
 <Card>
-	<p>Card content</p>
+  <p>Card content</p>
 </Card>
 ```
 
 **Named slots migration:**
-
 ```svelte
-<!-- ✅ After (Svelte 5) -->
-<!-- Modal.svelte -->
-<script>
-	let { header, children, footer } = $props();
-</script>
-
 <!-- ❌ Before (Svelte 4) -->
 <!-- Modal.svelte -->
 <div class="modal">
-	<header>
-		<slot name="header" />
-	</header>
-	<main>
-		<slot />
-	</main>
-	<footer>
-		<slot name="footer" />
-	</footer>
+  <header>
+    <slot name="header" />
+  </header>
+  <main>
+    <slot />
+  </main>
+  <footer>
+    <slot name="footer" />
+  </footer>
 </div>
 
 <!-- Usage -->
 <Modal>
-	<h2 slot="header">Title</h2>
-	<p>Content</p>
-	<div slot="footer">
-		<button>Close</button>
-	</div>
+  <h2 slot="header">Title</h2>
+  <p>Content</p>
+  <div slot="footer">
+    <button>Close</button>
+  </div>
 </Modal>
 
+<!-- ✅ After (Svelte 5) -->
+<!-- Modal.svelte -->
+<script>
+  let { header, children, footer } = $props();
+</script>
+
 <div class="modal">
-	<header>
-		{@render header()}
-	</header>
-	<main>
-		{@render children()}
-	</main>
-	<footer>
-		{@render footer()}
-	</footer>
+  <header>
+    {@render header()}
+  </header>
+  <main>
+    {@render children()}
+  </main>
+  <footer>
+    {@render footer()}
+  </footer>
 </div>
 
 <!-- Usage -->
 <Modal>
-	{#snippet header()}
-		<h2>Title</h2>
-	{/snippet}
+  {#snippet header()}
+    <h2>Title</h2>
+  {/snippet}
 
-	<p>Content</p>
+  <p>Content</p>
 
-	{#snippet footer()}
-		<button>Close</button>
-	{/snippet}
+  {#snippet footer()}
+    <button>Close</button>
+  {/snippet}
 </Modal>
 ```
 
 **Slot props (pass data to slots):**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <!-- List.svelte -->
@@ -519,26 +498,25 @@ Convert slot-based composition to snippets:
 ```
 
 **Optional slots/snippets:**
-
 ```svelte
-<!-- ✅ After (Svelte 5) -->
-<script>
-	let { header, children } = $props();
-</script>
-
 <!-- ❌ Before (Svelte 4) -->
 <div class="card">
-	{#if $$slots.header}
-		<header><slot name="header" /></header>
-	{/if}
-	<slot />
+  {#if $$slots.header}
+    <header><slot name="header" /></header>
+  {/if}
+  <slot />
 </div>
 
+<!-- ✅ After (Svelte 5) -->
+<script>
+  let { header, children } = $props();
+</script>
+
 <div class="card">
-	{#if header}
-		<header>{@render header()}</header>
-	{/if}
-	{@render children()}
+  {#if header}
+    <header>{@render header()}</header>
+  {/if}
+  {@render children()}
 </div>
 ```
 
@@ -547,7 +525,6 @@ Convert slot-based composition to snippets:
 Migrate from event forwarding to callback props:
 
 **Component events:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <!-- Button.svelte -->
@@ -591,7 +568,6 @@ Migrate from event forwarding to callback props:
 ```
 
 **Multiple event types:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <!-- Input.svelte -->
@@ -640,22 +616,21 @@ Migrate from event forwarding to callback props:
 ```
 
 **Event forwarding removed:**
-
 ```svelte
-<!-- ✅ After (Svelte 5) -->
-<!-- Button.svelte -->
-<script>
-	let { onclick, children } = $props();
-</script>
-
 <!-- ❌ Before (Svelte 4) -->
 <!-- Button.svelte -->
 <button on:click>
-	<slot />
+  <slot />
 </button>
 
+<!-- ✅ After (Svelte 5) -->
+<!-- Button.svelte -->
+<script>
+  let { onclick, children } = $props();
+</script>
+
 <button {onclick}>
-	{@render children()}
+  {@render children()}
 </button>
 ```
 
@@ -664,7 +639,6 @@ Migrate from event forwarding to callback props:
 Migrate lifecycle hooks to effects:
 
 **onMount migration:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <script>
@@ -703,7 +677,6 @@ Migrate lifecycle hooks to effects:
 ```
 
 **beforeUpdate/afterUpdate removed:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <script>
@@ -737,7 +710,6 @@ Migrate lifecycle hooks to effects:
 ```
 
 **Cleanup in effects:**
-
 ```svelte
 <!-- ❌ Before (Svelte 4) -->
 <script>
@@ -776,58 +748,55 @@ Migrate lifecycle hooks to effects:
 Verify everything works correctly:
 
 **Component testing:**
-
 ```typescript
 // ❌ Before (Svelte 4 tests)
-import { render, fireEvent } from "@testing-library/svelte";
-import Counter from "./Counter.svelte";
+import { render, fireEvent } from '@testing-library/svelte';
+import Counter from './Counter.svelte';
 
-test("increments counter", async () => {
-	const { getByText } = render(Counter);
-	const button = getByText("+1");
+test('increments counter', async () => {
+  const { getByText } = render(Counter);
+  const button = getByText('+1');
 
-	await fireEvent.click(button);
+  await fireEvent.click(button);
 
-	expect(getByText("Count: 1")).toBeInTheDocument();
+  expect(getByText('Count: 1')).toBeInTheDocument();
 });
 
 // ✅ After (Svelte 5 tests - mostly unchanged)
-import { render, fireEvent } from "@testing-library/svelte";
-import Counter from "./Counter.svelte";
+import { render, fireEvent } from '@testing-library/svelte';
+import Counter from './Counter.svelte';
 
-test("increments counter", async () => {
-	const { getByText } = render(Counter);
-	const button = getByText("+1");
+test('increments counter', async () => {
+  const { getByText } = render(Counter);
+  const button = getByText('+1');
 
-	await fireEvent.click(button);
+  await fireEvent.click(button);
 
-	expect(getByText("Count: 1")).toBeInTheDocument();
+  expect(getByText('Count: 1')).toBeInTheDocument();
 });
 ```
 
 **Testing callback props:**
-
 ```typescript
 // Testing Svelte 5 components with callbacks
-import { render, fireEvent } from "@testing-library/svelte";
-import { vi } from "vitest";
-import Button from "./Button.svelte";
+import { render, fireEvent } from '@testing-library/svelte';
+import { vi } from 'vitest';
+import Button from './Button.svelte';
 
-test("calls onclick callback", async () => {
-	const onclick = vi.fn();
-	const { getByRole } = render(Button, {
-		props: { onclick, title: "Click me" },
-	});
+test('calls onclick callback', async () => {
+  const onclick = vi.fn();
+  const { getByRole } = render(Button, {
+    props: { onclick, title: 'Click me' }
+  });
 
-	const button = getByRole("button");
-	await fireEvent.click(button);
+  const button = getByRole('button');
+  await fireEvent.click(button);
 
-	expect(onclick).toHaveBeenCalledOnce();
+  expect(onclick).toHaveBeenCalledOnce();
 });
 ```
 
 **Manual testing checklist:**
-
 - [ ] All pages render without errors
 - [ ] Forms submit correctly
 - [ ] Client-side navigation works
@@ -843,7 +812,6 @@ test("calls onclick callback", async () => {
 Migrate incrementally for large applications:
 
 **Phase 1: Update dependencies (30 minutes)**
-
 ```bash
 # Update to latest SvelteKit 2 and Svelte 5
 npm install svelte@latest @sveltejs/kit@latest
@@ -857,7 +825,6 @@ npm run build
 ```
 
 **Phase 2: Fix critical errors (1-2 hours)**
-
 ```bash
 # Common errors to fix immediately:
 # 1. $: syntax in <script context="module"> - move to regular script
@@ -866,7 +833,6 @@ npm run build
 ```
 
 **Phase 3: Migrate by feature (1-3 days)**
-
 ```
 Priority order:
 1. Shared state (stores → context + runes)
@@ -877,7 +843,6 @@ Priority order:
 ```
 
 **Phase 4: Test thoroughly (1 day)**
-
 ```bash
 # Run all tests
 npm test
@@ -891,7 +856,6 @@ npm run build && npm run preview # Test production
 ```
 
 **Migration tracking:**
-
 ```typescript
 // Create migration-status.md in your repo
 # Migration Status
@@ -914,7 +878,6 @@ npm run build && npm run preview # Test production
 Common problems and solutions:
 
 **Issue: "$state is not defined on server"**
-
 ```svelte
 <!-- ❌ Problem: Using $state in SSR -->
 <script>
@@ -937,7 +900,6 @@ Common problems and solutions:
 ```
 
 **Issue: "Cannot access 'X' before initialization"**
-
 ```svelte
 <!-- ❌ Problem: Circular dependency in $derived -->
 <script>
@@ -953,26 +915,23 @@ Common problems and solutions:
 ```
 
 **Issue: "Children is not a function"**
-
 ```svelte
 <!-- ❌ Problem: Forgetting to render children -->
 <script>
-	let { children } = $props();
+  let { children } = $props();
 </script>
 
 <div>
-	{children}
-	<!-- Wrong! -->
+  {children} <!-- Wrong! -->
 </div>
 
 <!-- ✅ Solution: Use {@render} -->
 <div>
-	{@render children()}
+  {@render children()}
 </div>
 ```
 
 **Issue: Effects running too many times**
-
 ```svelte
 <!-- ❌ Problem: Effect depends on too many signals -->
 <script>
@@ -1002,7 +961,6 @@ Common problems and solutions:
 ```
 
 **Issue: Form actions not triggering rune updates**
-
 ```svelte
 <!-- ❌ Problem: ActionData doesn't auto-update runes -->
 <script>
@@ -1029,17 +987,16 @@ Common problems and solutions:
 
 **Should you migrate now?**
 
-| Factor               | Migrate Now             | Wait                     |
-| -------------------- | ----------------------- | ------------------------ |
-| **Project maturity** | Active development      | Stable production        |
-| **Team size**        | 1-3 developers          | Large team (>10)         |
-| **Test coverage**    | Good (>70%)             | Poor (<30%)              |
+| Factor | Migrate Now | Wait |
+|--------|-------------|------|
+| **Project maturity** | Active development | Stable production |
+| **Team size** | 1-3 developers | Large team (>10) |
+| **Test coverage** | Good (>70%) | Poor (<30%) |
 | **Breaking changes** | Few components affected | Many components affected |
-| **Svelte usage**     | Moderate                | Heavy store/slot usage   |
-| **Timeline**         | 1-2 weeks available     | Tight deadline           |
+| **Svelte usage** | Moderate | Heavy store/slot usage |
+| **Timeline** | 1-2 weeks available | Tight deadline |
 
 **Decision rule:**
-
 - **Migrate if:** In active development, good test coverage, small-medium codebase
 - **Wait if:** Production deadline within 2 weeks, poor test coverage, very large codebase
 - **Test first:** Always test in separate branch before merging

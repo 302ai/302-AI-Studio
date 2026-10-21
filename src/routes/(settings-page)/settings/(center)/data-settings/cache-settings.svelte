@@ -6,20 +6,13 @@
 	import { generalSettings } from "$lib/stores/general-settings.state.svelte";
 	import { FolderOpen, RotateCcw } from "@lucide/svelte";
 	import { createLogger } from "@shared/logger";
+	import type { CacheInfo } from "@shared/storage/general-settings";
 	import { onMount } from "svelte";
 	import { toast } from "svelte-sonner";
 
 	const logger = createLogger("ui");
 
-	let cacheInfo = $state<{
-		path: string;
-		size: number;
-		subdirs: {
-			registry: { path: string; size: number };
-			downloads: { path: string; size: number };
-			temp: { path: string; size: number };
-		};
-	} | null>(null);
+	let cacheInfo = $state<CacheInfo | null>(null);
 
 	let isMigrating = $state(false);
 

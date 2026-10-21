@@ -2,6 +2,7 @@
 
 **官方文档**: https://www.electronjs.org/zh/docs/latest/,
 
+
 ## Instructions
 
 This example demonstrates how to install Electron and set up a basic project.
@@ -30,17 +31,17 @@ pnpm add electron --save-dev
 
 ```json
 {
-	"name": "my-electron-app",
-	"version": "1.0.0",
-	"description": "My Electron app",
-	"main": "main.js",
-	"scripts": {
-		"start": "electron .",
-		"dev": "electron ."
-	},
-	"devDependencies": {
-		"electron": "^latest"
-	}
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "My Electron app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^latest"
+  }
 }
 ```
 

@@ -1,33 +1,8 @@
 export interface UserInfo {
-	uid: number;
-	user_name: string;
+	name: string;
 	email: string;
-	phone: string;
+	status: number;
 	avatar: string;
-	balance: number;
-	api_key: string;
-	has_pwd: boolean;
-	is_new_user: boolean;
-	region: number;
-	total_balance: number;
-	gpt_cost: number;
-	gpt_request_times: number;
-	invite_code: string;
-	invitation_link: string;
-	ref: string;
-	has_gift: boolean;
-	inv_switch: boolean;
-	question_switch: boolean;
-	show_questionnaire_windows: boolean;
-	to_band_phone: boolean;
-	total_earning: number;
-	today_earning: number;
-	total_app: number;
-	is_developer: number;
-	resource_area: number;
-	register_from: string;
-	/** 是否为子账户 */
-	is_sub_account: boolean;
 }
 
 export interface UserState {

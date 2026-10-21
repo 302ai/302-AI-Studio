@@ -4,7 +4,7 @@ version_anchors: ["Svelte@5.x"]
 authored: true
 origin: self
 adapted_from:
-    - "sveltejs/svelte#1b2f7b0 (Svelte 5 runes and template syntax documentation)"
+  - "sveltejs/svelte#1b2f7b0 (Svelte 5 runes and template syntax documentation)"
 last_reviewed: 2025-10-28
 summary: "Complete API reference for Svelte 5 including runes ($state, $derived, $effect, $props), template syntax, component lifecycle, and reactivity patterns"
 ---
@@ -22,7 +22,6 @@ Runes are Svelte 5's new reactive primitives, prefixed with `$`.
 Creates reactive state that triggers UI updates when changed.
 
 **Basic usage:**
-
 ```svelte
 <script>
 	let count = $state(0);
@@ -34,32 +33,31 @@ Creates reactive state that triggers UI updates when changed.
 ```
 
 **Deep reactivity:**
-
 ```js
 let user = $state({
-	name: "Alice",
+	name: 'Alice',
 	settings: {
-		theme: "dark",
-	},
+		theme: 'dark'
+	}
 });
 
 // Mutations trigger updates
-user.settings.theme = "light";
-user.name = "Bob";
+user.settings.theme = 'light';
+user.name = 'Bob';
 ```
 
 **Arrays:**
-
 ```js
-let todos = $state([{ done: false, text: "learn Svelte 5" }]);
+let todos = $state([
+	{ done: false, text: 'learn Svelte 5' }
+]);
 
 // Array methods work reactively
-todos.push({ done: false, text: "build an app" });
+todos.push({ done: false, text: 'build an app' });
 todos[0].done = true;
 ```
 
 **Class fields:**
-
 ```js
 class Counter {
 	count = $state(0);
@@ -67,18 +65,17 @@ class Counter {
 
 	increment = () => {
 		this.count++;
-	};
+	}
 }
 ```
 
 **Important:** Destructuring breaks reactivity:
-
 ```js
-let user = $state({ name: "Alice" });
-let { name } = user; // ❌ Not reactive!
+let user = $state({ name: 'Alice' });
+let { name } = user;  // ❌ Not reactive!
 
 // Use object access instead
-user.name; // ✅ Reactive
+user.name;  // ✅ Reactive
 ```
 
 ### $state.raw
@@ -87,8 +84,8 @@ For non-reactive objects. Can only be reassigned, not mutated.
 
 ```js
 let person = $state.raw({
-	name: "Heraclitus",
-	age: 49,
+	name: 'Heraclitus',
+	age: 49
 });
 
 // ❌ Has no effect
@@ -96,13 +93,12 @@ person.age += 1;
 
 // ✅ Works - full reassignment
 person = {
-	name: "Heraclitus",
-	age: 50,
+	name: 'Heraclitus',
+	age: 50
 };
 ```
 
 **When to use:**
-
 - Large arrays/objects that won't be mutated
 - Performance optimization (avoids proxy overhead)
 - Objects from external libraries
@@ -129,12 +125,14 @@ Updates UI immediately, even during async operations.
 
 ```svelte
 <script>
-	let pathname = $state("/");
+	let pathname = $state('/');
 </script>
 
 <nav>
 	<!-- Updates immediately on click, before navigation completes -->
-	<a href="/" aria-current={$state.eager(pathname) === "/" ? "page" : null}> home </a>
+	<a href="/" aria-current={$state.eager(pathname) === '/' ? 'page' : null}>
+		home
+	</a>
 </nav>
 ```
 
@@ -145,20 +143,17 @@ Updates UI immediately, even during async operations.
 Computes reactive values from other reactive sources.
 
 **Basic usage:**
-
 ```js
 let count = $state(0);
 let doubled = $derived(count * 2);
 ```
 
 **Important rules:**
-
 - No side effects allowed in $derived
 - Cannot use $state mutations
 - Automatically updates when dependencies change
 
 **Complex derivations with $derived.by:**
-
 ```js
 let numbers = $state([1, 2, 3]);
 
@@ -172,7 +167,6 @@ let total = $derived.by(() => {
 ```
 
 **Dependency tracking:**
-
 ```js
 let count = $state(0);
 let large = $derived(count > 10);
@@ -181,7 +175,6 @@ let large = $derived(count > 10);
 ```
 
 **Overriding derived values (optimistic UI):**
-
 ```js
 let { post, like } = $props();
 let likes = $derived(post.likes);
@@ -200,11 +193,8 @@ async function onclick() {
 ```
 
 **With objects and arrays:**
-
 ```js
-let items = $state([
-	/* ... */
-]);
+let items = $state([/* ... */]);
 let index = $state(0);
 
 // Mutations to `selected` affect `items`
@@ -212,11 +202,8 @@ let selected = $derived(items[index]);
 ```
 
 **Destructuring:**
-
 ```js
-function stuff() {
-	return { a: 1, b: 2, c: 3 };
-}
+function stuff() { return { a: 1, b: 2, c: 3 } }
 
 // All variables become reactive
 let { a, b, c } = $derived(stuff());
@@ -227,15 +214,14 @@ let { a, b, c } = $derived(stuff());
 Runs side effects when reactive dependencies change. Runs only in the browser.
 
 **Basic usage:**
-
 ```svelte
 <script>
 	let size = $state(50);
-	let color = $state("#ff3e00");
+	let color = $state('#ff3e00');
 	let canvas;
 
 	$effect(() => {
-		const context = canvas.getContext("2d");
+		const context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
 		// Re-runs when color or size change
@@ -248,13 +234,11 @@ Runs side effects when reactive dependencies change. Runs only in the browser.
 ```
 
 **Lifecycle:**
-
 - Runs after component mounts (after DOM is ready)
 - Runs in microtask after state changes
 - Batched (multiple changes = one effect run)
 
 **Cleanup with teardown functions:**
-
 ```js
 let count = $state(0);
 let milliseconds = $state(1000);
@@ -274,9 +258,8 @@ $effect(() => {
 ```
 
 **Dependency tracking:**
-
 ```js
-let color = $state("#ff3e00");
+let color = $state('#ff3e00');
 let size = $state(50);
 
 $effect(() => {
@@ -291,7 +274,6 @@ $effect(() => {
 ```
 
 **Object vs property dependencies:**
-
 ```js
 let state = $state({ value: 0 });
 
@@ -307,10 +289,9 @@ $effect(() => {
 ```
 
 **Conditional dependencies:**
-
 ```js
 let condition = $state(true);
-let color = $state("#ff3e00");
+let color = $state('#ff3e00');
 
 $effect(() => {
 	if (condition) {
@@ -333,7 +314,7 @@ let messages = $state([]);
 $effect.pre(() => {
 	if (!div) return;
 
-	messages.length; // Track array length
+	messages.length;  // Track array length
 
 	// Check if should autoscroll before DOM updates
 	if (div.offsetHeight + div.scrollTop > div.scrollHeight - 20) {
@@ -349,10 +330,10 @@ $effect.pre(() => {
 Tells you if code is running in a tracking context.
 
 ```js
-console.log("in setup:", $effect.tracking()); // false
+console.log('in setup:', $effect.tracking());  // false
 
 $effect(() => {
-	console.log("in effect:", $effect.tracking()); // true
+	console.log('in effect:', $effect.tracking());  // true
 });
 ```
 
@@ -378,7 +359,6 @@ destroy();
 ```
 
 **When to use:**
-
 - Creating effects outside component initialization
 - Manual effect lifecycle control
 - Library abstractions
@@ -386,7 +366,6 @@ destroy();
 ### When NOT to use $effect
 
 ❌ **Don't synchronize state:**
-
 ```js
 // BAD
 let count = $state(0);
@@ -398,7 +377,6 @@ $effect(() => {
 ```
 
 ✅ **Use $derived instead:**
-
 ```js
 // GOOD
 let count = $state(0);
@@ -406,7 +384,6 @@ let doubled = $derived(count * 2);
 ```
 
 ❌ **Don't link two-way state:**
-
 ```js
 // BAD
 let spent = $state(0);
@@ -422,7 +399,6 @@ $effect(() => {
 ```
 
 ✅ **Use callbacks or bindings:**
-
 ```js
 // GOOD
 let spent = $state(0);
@@ -440,7 +416,6 @@ function updateLeft(newLeft) {
 Receives component props.
 
 **Basic usage:**
-
 ```svelte
 <script>
 	let { adjective } = $props();
@@ -450,25 +425,21 @@ Receives component props.
 ```
 
 **Fallback values:**
-
 ```js
-let { adjective = "happy" } = $props();
+let { adjective = 'happy' } = $props();
 ```
 
 **Renaming props:**
-
 ```js
-let { super: trouper = "lights" } = $props();
+let { super: trouper = 'lights' } = $props();
 ```
 
 **Rest props:**
-
 ```js
 let { a, b, c, ...others } = $props();
 ```
 
 **Type safety (TypeScript):**
-
 ```svelte
 <script lang="ts">
 	interface Props {
@@ -481,7 +452,6 @@ let { a, b, c, ...others } = $props();
 ```
 
 **Type safety (JSDoc):**
-
 ```svelte
 <script>
 	/** @type {{ adjective: string, count?: number }} */
@@ -490,7 +460,6 @@ let { a, b, c, ...others } = $props();
 ```
 
 **Updating props:**
-
 - Can temporarily reassign props
 - Cannot mutate props (unless `$bindable`)
 - Mutations on plain objects have no effect
@@ -523,7 +492,7 @@ Makes props bindable from parent.
 ```svelte
 <!-- Parent.svelte -->
 <script>
-	let value = $state("");
+	let value = $state('');
 </script>
 
 <Child bind:value />
@@ -552,7 +521,9 @@ Generates component-unique IDs (consistent during SSR hydration).
 ### Expressions
 
 ```svelte
-<h1>{title}</h1><p>{user.name}</p><div>{1 + 1}</div>
+<h1>{title}</h1>
+<p>{user.name}</p>
+<div>{1 + 1}</div>
 ```
 
 ### Conditionals
@@ -616,7 +587,6 @@ Reusable template fragments.
 ```
 
 **With parameters:**
-
 ```svelte
 {#snippet row(item, index)}
 	<tr>
@@ -664,7 +634,9 @@ Reusable template fragments.
 ### Function Bindings (Svelte 5)
 
 ```svelte
-<input bind:value={() => value, updateValue} />
+<input
+	bind:value={() => value, updateValue}
+/>
 ```
 
 ## Lifecycle
@@ -680,7 +652,7 @@ let data = $state(loadData());
 ### After mount
 
 ```js
-import { onMount } from "svelte";
+import { onMount } from 'svelte';
 
 onMount(() => {
 	// Runs after component is in the DOM
@@ -691,7 +663,6 @@ onMount(() => {
 ```
 
 **Or with $effect:**
-
 ```js
 let mounted = $state(false);
 
@@ -730,17 +701,17 @@ $effect(() => {
 
 ```js
 // Parent.svelte
-import { setContext } from "svelte";
+import { setContext } from 'svelte';
 
-let user = $state({ name: "Alice" });
-setContext("user", user);
+let user = $state({ name: 'Alice' });
+setContext('user', user);
 ```
 
 ```js
 // Child.svelte
-import { getContext } from "svelte";
+import { getContext } from 'svelte';
 
-let user = getContext("user");
+let user = getContext('user');
 ```
 
 ### Reactive context
@@ -748,10 +719,10 @@ let user = getContext("user");
 ```js
 // Parent
 let count = $state(0);
-setContext("count", () => count);
+setContext('count', () => count);
 
 // Child
-let getCount = getContext("count");
+let getCount = getContext('count');
 let count = $derived(getCount());
 ```
 
@@ -760,17 +731,16 @@ let count = $derived(getCount());
 Svelte 5 runes replace stores, but stores still work.
 
 ```js
-import { writable, derived, readable } from "svelte/store";
+import { writable, derived, readable } from 'svelte/store';
 
 const count = writable(0);
-const doubled = derived(count, ($count) => $count * 2);
+const doubled = derived(count, $count => $count * 2);
 ```
 
 **Auto-subscription in components:**
-
 ```svelte
 <script>
-	import { count } from "./stores.js";
+	import { count } from './stores.js';
 </script>
 
 <p>{$count}</p>
@@ -790,7 +760,7 @@ const doubled = derived(count, ($count) => $count * 2);
 ```svelte
 <!-- Parent -->
 <script>
-	let value = $state("");
+	let value = $state('');
 
 	function handleChange(newValue) {
 		value = newValue;
@@ -814,7 +784,7 @@ const doubled = derived(count, ($count) => $count * 2);
 ```svelte
 <!-- Parent -->
 <script>
-	let value = $state("");
+	let value = $state('');
 </script>
 
 <Child bind:value />
@@ -863,7 +833,9 @@ Dynamic component rendering.
 Dynamic element rendering.
 
 ```svelte
-<svelte:element this={tag} class="dynamic"> Content </svelte:element>
+<svelte:element this={tag} class="dynamic">
+	Content
+</svelte:element>
 ```
 
 ### <svelte:window>
@@ -871,7 +843,10 @@ Dynamic element rendering.
 Window event listeners.
 
 ```svelte
-<svelte:window on:keydown={handleKeydown} bind:innerWidth={width} />
+<svelte:window
+	on:keydown={handleKeydown}
+	bind:innerWidth={width}
+/>
 ```
 
 ### <svelte:document>
@@ -916,8 +891,8 @@ Component compiler options.
 
 ```svelte
 <script lang="ts">
-	import type { ComponentProps } from "svelte";
-	import MyComponent from "./MyComponent.svelte";
+	import type { ComponentProps } from 'svelte';
+	import MyComponent from './MyComponent.svelte';
 
 	type Props = ComponentProps<typeof MyComponent>;
 </script>

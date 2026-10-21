@@ -1,35 +1,35 @@
 {
-	"skill_name": "sveltekit-svelte5-tailwind-skill",
-	"version": "1.0.0",
-	"created_at": "2025-10-28",
-	"distribution": "author-only",
-	"scope": "integration",
-	"description": "Comprehensive integration skill for building sites with SvelteKit 2, Svelte 5, and Tailwind CSS v4",
-	"version_targets": {
-		"sveltekit": "2.x",
-		"svelte": "5.x",
-		"tailwindcss": "4.x"
-	},
-	"collections": {
-		"references": {
-			"description": "Problem-focused curated guides",
-			"max_heading_depth": 2,
-			"indexed": false,
-			"file_count": 0
-		},
-		"docs": {
-			"description": "Comprehensive adapted documentation",
-			"max_heading_depth": 2,
-			"indexed": false,
-			"file_count": 0
-		},
-		"examples": {
-			"description": "Working integration examples",
-			"categories": ["basic", "forms", "styling", "ssr", "deployment"]
-		}
-	},
-	"metadata": {
-		"stage": "organizing",
-		"last_updated": "2025-10-28"
-	}
+  "skill_name": "sveltekit-svelte5-tailwind-skill",
+  "version": "1.0.0",
+  "created_at": "2025-10-28",
+  "distribution": "author-only",
+  "scope": "integration",
+  "description": "Comprehensive integration skill for building sites with SvelteKit 2, Svelte 5, and Tailwind CSS v4",
+  "version_targets": {
+    "sveltekit": "2.x",
+    "svelte": "5.x",
+    "tailwindcss": "4.x"
+  },
+  "collections": {
+    "references": {
+      "description": "Problem-focused curated guides",
+      "max_heading_depth": 2,
+      "indexed": false,
+      "file_count": 0
+    },
+    "docs": {
+      "description": "Comprehensive adapted documentation",
+      "max_heading_depth": 2,
+      "indexed": false,
+      "file_count": 0
+    },
+    "examples": {
+      "description": "Working integration examples",
+      "categories": ["basic", "forms", "styling", "ssr", "deployment"]
+    }
+  },
+  "metadata": {
+    "stage": "organizing",
+    "last_updated": "2025-10-28"
+  }
 }
