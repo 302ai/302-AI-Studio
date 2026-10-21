@@ -18,7 +18,7 @@ activate_skill electron
 
 ## Project Overview
 
-**302-AI-Studio** is an Electron desktop AI chat application with multi-provider support, Code Agent (Claude Code sandbox), MCP integration, plugin system, and multi-tab architecture.
+**302-AI-Studio** is an Electron desktop AI chat application with multi-provider support, Code Agent (Claude Code sandbox), MCP integration, and multi-tab architecture.
 
 - **License**: AGPL-3.0
 - **Repository**: https://github.com/302ai/302-AI-Studio-sv
@@ -88,7 +88,6 @@ Copy-paste templates:
 Deep technical details:
 
 - **Tech Stack**: [docs/references/tech-stack.md](docs/references/tech-stack.md)
-- Plugin Development: [docs/references/plugin-development-guide.md](docs/references/plugin-development-guide.md)
 - Logging System: [docs/references/logging-guide.md](docs/references/logging-guide.md)
 - Code Generation: [docs/references/code-generation-guide.md](docs/references/code-generation-guide.md)
 
@@ -116,13 +115,11 @@ src/
 └── shared/                 # Shared types/utils
 
 electron/main/
-├── services/               # IPC services (22+)
+├── services/               # IPC services (20+)
 ├── server/                 # Hono backend (port 8089)
-├── plugin-manager/         # Plugin system
 └── generated/              # Auto-generated IPC bindings
 
 docs/                       # Documentation (you are here)
-packages/plugin-sdk/        # Plugin SDK workspace
 ```
 
 ## When You're Stuck

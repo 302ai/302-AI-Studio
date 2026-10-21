@@ -71,7 +71,7 @@
 	const skillTags = $derived.by(() => {
 		const tags: string[] = [];
 		if (isBuiltin) {
-			tags.push(m.plugins_badge_builtin());
+			tags.push(m.skills_builtin());
 		}
 		if (isOpenClawBundled) {
 			tags.push(m.skills_openclaw_bundled());

@@ -7,7 +7,6 @@ export type MainProcessCategory =
 	| "services"
 	| "factories"
 	| "utils"
-	| "plugin-manager"
 	| "preload";
 
 export type RendererProcessCategory =
@@ -16,7 +15,6 @@ export type RendererProcessCategory =
 	| "state"
 	| "provider"
 	| "theme"
-	| "marketplace"
 	| "session"
 	| "apis";
 

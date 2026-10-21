@@ -55,7 +55,7 @@ import {
 } from "./provider-state.svelte";
 import { tabBarState } from "./tab-bar-state.svelte";
 
-const { broadcastService, threadService, storageService, pluginService } = window.electronAPI;
+const { broadcastService, threadService, storageService } = window.electronAPI;
 
 export interface Thread {
 	id: string;
@@ -684,70 +684,8 @@ class ChatState {
 		});
 
 		this.lastError = chatError;
-
-		// Execute error hook
-		try {
-			const errorContext = {
-				source: "send_message" as const,
-				provider: this.currentProvider || undefined,
-				model: this.selectedModel || undefined,
-				metadata: {
-					errorType: chatError.type,
-					statusCode: chatError.statusCode,
-				},
-			};
-
-			const hookResult = await pluginService.executeErrorHook(
-				{
-					message:
-						chatError.originalError instanceof Error
-							? chatError.originalError.message
-							: String(chatError.originalError),
-					stack:
-						chatError.originalError instanceof Error
-							? chatError.originalError.stack
-							: undefined,
-					name:
-						chatError.originalError instanceof Error
-							? chatError.originalError.name
-							: "Error",
-				},
-				errorContext,
-			);
-
-			if (hookResult.handled) {
-				logger.debug("Error handled by plugin hook");
-
-				// If plugin suggests custom message, use it
-				if (hookResult.message) {
-					notificationState.setError({
-						...chatError,
-						message: hookResult.message,
-					});
-				} else {
-					notificationState.setError(chatError);
-				}
-
-				// If plugin suggests retry
-				if (hookResult.retry) {
-					const retryDelay = hookResult.retryDelay || 0;
-					if (retryDelay > 0) {
-						await new Promise((resolve) => setTimeout(resolve, retryDelay));
-					}
-					await this.retryLastMessage();
-					return;
-				}
-			} else {
-				// Default error handling
-				notificationState.setError(chatError);
-				ChatErrorHandler.showErrorNotification(chatError);
-			}
-		} catch (hookError) {
-			logger.error("Error hook failed:", hookError);
-			// Fallback to default error handling
-			notificationState.setError(chatError);
-			ChatErrorHandler.showErrorNotification(chatError);
-		}
+		notificationState.setError(chatError);
+		ChatErrorHandler.showErrorNotification(chatError);
 	};
 
 	private resetError = () => {
@@ -812,56 +750,6 @@ class ChatState {
 				}
 
 				this.resetError();
-
-				// Execute before send message hook
-				try {
-					const messageContext = {
-						messages: this.messages,
-						userMessage: this.messages.at(-1),
-						model: currentModel,
-						provider: this.currentProvider!,
-						parameters: {
-							temperature: this.temperature,
-							topP: this.topP,
-							maxTokens: this.maxTokens,
-							frequencyPenalty: this.frequencyPenalty,
-							presencePenalty: this.presencePenalty,
-						},
-						options: {
-							isThinkingActive: this.isThinkingActive,
-							isOnlineSearchActive: this.isOnlineSearchActive,
-							isMCPActive: this.isMCPActive,
-							mcpServerIds: this.mcpServerIds,
-							autoParseUrl: preferencesSettings.autoParseUrl,
-							speedOptions: {
-								enabled: preferencesSettings.streamOutputEnabled,
-								speed: preferencesSettings.streamSpeed,
-							},
-						},
-					};
-
-					// Performance: Use $state.snapshot() instead of JSON.parse(JSON.stringify())
-					const serializedContext = $state.snapshot(messageContext);
-
-					const modifiedContext =
-						await pluginService.executeBeforeSendMessageHook(serializedContext);
-
-					// Check if hook cancelled the message
-					if (
-						modifiedContext &&
-						typeof modifiedContext === "object" &&
-						"stop" in modifiedContext &&
-						modifiedContext.stop === true
-					) {
-						logger.debug("Message sending cancelled by plugin hook");
-						return;
-					}
-
-					logger.debug("Before send message hook executed successfully");
-				} catch (hookError) {
-					logger.error("Before send message hook failed:", hookError);
-					// Continue with message sending even if hook fails
-				}
 
 				const codeAgentEnabled = codeAgentState.enabled;
 

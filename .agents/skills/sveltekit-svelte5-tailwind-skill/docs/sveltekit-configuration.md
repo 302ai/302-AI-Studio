@@ -4,7 +4,7 @@ version_anchors: ["SvelteKit@2.x"]
 authored: true
 origin: self
 adapted_from:
-    - "sveltejs/kit#4991df5 (SvelteKit configuration documentation)"
+  - "sveltejs/kit#4991df5 (SvelteKit configuration documentation)"
 last_reviewed: 2025-10-28
 summary: "Complete reference for configuring SvelteKit projects including svelte.config.js, vite.config.js, TypeScript setup, adapter configuration, and build options"
 ---
@@ -21,13 +21,13 @@ The primary configuration file for SvelteKit projects lives at the project root.
 
 ```js
 // svelte.config.js
-import adapter from "@sveltejs/adapter-auto";
+import adapter from '@sveltejs/adapter-auto';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		adapter: adapter(),
-	},
+		adapter: adapter()
+	}
 };
 
 export default config;
@@ -37,14 +37,14 @@ export default config;
 
 ```js
 // svelte.config.js
-import adapter from "@sveltejs/adapter-node";
-import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+import adapter from '@sveltejs/adapter-node';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	// Compiler options
 	compilerOptions: {
-		runes: true, // Enable Svelte 5 runes (default in Svelte 5)
+		runes: true  // Enable Svelte 5 runes (default in Svelte 5)
 	},
 
 	// Preprocessing
@@ -54,83 +54,83 @@ const config = {
 	kit: {
 		// Adapter for deployment
 		adapter: adapter({
-			out: "build",
-			precompress: true,
+			out: 'build',
+			precompress: true
 		}),
 
 		// Application paths
 		paths: {
-			base: "", // Base path for the app
-			assets: "", // Where static assets are served from
-			relative: true, // Use relative asset paths
+			base: '',           // Base path for the app
+			assets: '',         // Where static assets are served from
+			relative: true      // Use relative asset paths
 		},
 
 		// File locations
 		files: {
-			assets: "static",
+			assets: 'static',
 			hooks: {
-				client: "src/hooks.client",
-				server: "src/hooks.server",
-				universal: "src/hooks",
+				client: 'src/hooks.client',
+				server: 'src/hooks.server',
+				universal: 'src/hooks'
 			},
-			lib: "src/lib",
-			params: "src/params",
-			routes: "src/routes",
-			serviceWorker: "src/service-worker",
-			appTemplate: "src/app.html",
-			errorTemplate: "src/error.html",
+			lib: 'src/lib',
+			params: 'src/params',
+			routes: 'src/routes',
+			serviceWorker: 'src/service-worker',
+			appTemplate: 'src/app.html',
+			errorTemplate: 'src/error.html'
 		},
 
 		// Application ID
-		appDir: "_app",
+		appDir: '_app',
 
 		// Content Security Policy
 		csp: {
-			mode: "auto",
+			mode: 'auto',
 			directives: {
-				"script-src": ["self"],
-			},
+				'script-src': ['self']
+			}
 		},
 
 		// Environment variables
 		env: {
 			dir: process.cwd(),
-			publicPrefix: "PUBLIC_",
+			publicPrefix: 'PUBLIC_'
 		},
 
 		// Module resolution
 		alias: {
-			$components: "src/components",
-			$utils: "src/utils",
+			'$components': 'src/components',
+			'$utils': 'src/utils'
 		},
 
 		// Prerendering
 		prerender: {
 			concurrency: 10,
 			crawl: true,
-			entries: ["*"],
-			origin: "http://localhost",
+			entries: ['*'],
+			origin: 'http://localhost'
 		},
 
 		// Service worker
 		serviceWorker: {
 			register: true,
-			files: (filepath) => !/\.DS_Store/.test(filepath),
+			files: (filepath) => !/\.DS_Store/.test(filepath)
 		},
 
 		// TypeScript
 		typescript: {
 			config: (config) => {
 				return config;
-			},
+			}
 		},
 
 		// Version management
 		version: {
 			name: Date.now().toString(),
-			pollInterval: 0,
-		},
-	},
+			pollInterval: 0
+		}
+	}
 };
 
 export default config;
@@ -145,17 +145,16 @@ Adapters transform your SvelteKit app for specific deployment targets.
 Zero-configuration adapter that automatically selects the correct adapter for supported platforms.
 
 ```js
-import adapter from "@sveltejs/adapter-auto";
+import adapter from '@sveltejs/adapter-auto';
 
 export default {
 	kit: {
-		adapter: adapter(),
-	},
+		adapter: adapter()
+	}
 };
 ```
 
 **Supported platforms:**
-
 - Cloudflare Pages → `@sveltejs/adapter-cloudflare`
 - Netlify → `@sveltejs/adapter-netlify`
 - Vercel → `@sveltejs/adapter-vercel`
@@ -164,13 +163,11 @@ export default {
 - AWS via SST → `svelte-kit-sst`
 
 **When to use:**
-
 - Development and prototyping
 - Quick deployments to supported platforms
 - Projects without platform-specific configuration needs
 
 **Limitations:**
-
 - Cannot pass configuration options
 - Must install specific adapter for advanced features
 
@@ -179,26 +176,25 @@ export default {
 For standalone Node.js servers.
 
 ```js
-import adapter from "@sveltejs/adapter-node";
+import adapter from '@sveltejs/adapter-node';
 
 export default {
 	kit: {
 		adapter: adapter({
 			// Output directory
-			out: "build",
+			out: 'build',
 
 			// Precompress assets with gzip and brotli
 			precompress: true,
 
 			// Environment variable prefix
-			envPrefix: "",
-		}),
-	},
+			envPrefix: ''
+		})
+	}
 };
 ```
 
 **Environment variables:**
-
 ```bash
 # Server configuration
 PORT=3000
@@ -222,7 +218,6 @@ IDLE_TIMEOUT=60
 ```
 
 **Deployment:**
-
 ```bash
 # Build the app
 npm run build
@@ -245,50 +240,48 @@ node --env-file=.env build
 For static site generation (SSG).
 
 ```js
-import adapter from "@sveltejs/adapter-static";
+import adapter from '@sveltejs/adapter-static';
 
 export default {
 	kit: {
 		adapter: adapter({
 			// Output directories
-			pages: "build",
-			assets: "build",
+			pages: 'build',
+			assets: 'build',
 
 			// SPA fallback page
-			fallback: undefined, // Set to '200.html' for SPA mode
+			fallback: undefined,  // Set to '200.html' for SPA mode
 
 			// Precompress files
 			precompress: false,
 
 			// Strict mode (all pages must be prerendered)
-			strict: true,
-		}),
-	},
+			strict: true
+		})
+	}
 };
 ```
 
 **Root layout configuration:**
-
 ```js
 // src/routes/+layout.js
 export const prerender = true;
-export const trailingSlash = "always"; // For hosts that don't render /a.html for /a
+export const trailingSlash = 'always';  // For hosts that don't render /a.html for /a
 ```
 
 **GitHub Pages configuration:**
-
 ```js
-import adapter from "@sveltejs/adapter-static";
+import adapter from '@sveltejs/adapter-static';
 
 export default {
 	kit: {
 		adapter: adapter({
-			fallback: "404.html",
+			fallback: '404.html'
 		}),
 		paths: {
-			base: process.argv.includes("dev") ? "" : process.env.BASE_PATH,
-		},
-	},
+			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+		}
+	}
 };
 ```
 
@@ -297,7 +290,7 @@ export default {
 For Vercel deployment with edge runtime support.
 
 ```js
-import adapter from "@sveltejs/adapter-vercel";
+import adapter from '@sveltejs/adapter-vercel';
 
 export default {
 	kit: {
@@ -309,9 +302,9 @@ export default {
 			external: [],
 
 			// Split API routes into individual functions
-			split: false,
-		}),
-	},
+			split: false
+		})
+	}
 };
 ```
 
@@ -320,18 +313,18 @@ export default {
 For Cloudflare Pages and Workers.
 
 ```js
-import adapter from "@sveltejs/adapter-cloudflare";
+import adapter from '@sveltejs/adapter-cloudflare';
 
 export default {
 	kit: {
 		adapter: adapter({
 			// Routes to prerender
 			routes: {
-				include: ["/*"],
-				exclude: ["<all>"],
-			},
-		}),
-	},
+				include: ['/*'],
+				exclude: ['<all>']
+			}
+		})
+	}
 };
 ```
 
@@ -343,11 +336,11 @@ SvelteKit uses Vite as its build tool. Configuration extends standard Vite optio
 
 ```js
 // vite.config.js
-import { sveltekit } from "@sveltejs/kit/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [sveltekit()]
 });
 ```
 
@@ -355,8 +348,8 @@ export default defineConfig({
 
 ```js
 // vite.config.js
-import { sveltekit } from "@sveltejs/kit/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [sveltekit()],
@@ -366,33 +359,33 @@ export default defineConfig({
 		port: 5173,
 		host: true,
 		fs: {
-			allow: [".."],
-		},
+			allow: ['..']
+		}
 	},
 
 	// Build options
 	build: {
-		target: "es2020",
-		sourcemap: true,
+		target: 'es2020',
+		sourcemap: true
 	},
 
 	// Dependency optimization
 	optimizeDeps: {
-		include: ["some-package"],
-		exclude: ["another-package"],
+		include: ['some-package'],
+		exclude: ['another-package']
 	},
 
 	// Path resolution
 	resolve: {
 		alias: {
-			$components: "/src/components",
-		},
+			$components: '/src/components'
+		}
 	},
 
 	// CSS configuration
 	css: {
-		postcss: "./postcss.config.js",
-	},
+		postcss: './postcss.config.js'
+	}
 });
 ```
 
@@ -400,12 +393,15 @@ export default defineConfig({
 
 ```js
 // vite.config.js
-import { sveltekit } from "@sveltejs/kit/vite";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss()],
+	plugins: [
+		sveltekit(),
+		tailwindcss()
+	]
 });
 ```
 
@@ -448,14 +444,13 @@ SvelteKit generates TypeScript definitions automatically.
 ```
 
 **Corresponding svelte.config.js:**
-
 ```js
 export default {
 	kit: {
 		alias: {
-			$components: "src/components",
-		},
-	},
+			$components: 'src/components'
+		}
+	}
 };
 ```
 
@@ -467,12 +462,11 @@ Replaced at build time. Available in all code.
 
 ```js
 // Access in code
-import { PUBLIC_API_URL } from "$env/static/public";
-import { SECRET_KEY } from "$env/static/private";
+import { PUBLIC_API_URL } from '$env/static/public';
+import { SECRET_KEY } from '$env/static/private';
 ```
 
 **File structure:**
-
 ```bash
 # .env
 PUBLIC_API_URL=https://api.example.com
@@ -485,11 +479,11 @@ Available at runtime. Useful for containerized deployments.
 
 ```js
 // Access in code
-import { env } from "$env/dynamic/public";
-import { env as privateEnv } from "$env/dynamic/private";
+import { env } from '$env/dynamic/public';
+import { env as privateEnv } from '$env/dynamic/private';
 
 console.log(env.PUBLIC_API_URL);
-console.log(privateEnv.SECRET_KEY); // Server-side only
+console.log(privateEnv.SECRET_KEY);  // Server-side only
 ```
 
 ## Build Configuration
@@ -563,18 +557,18 @@ export default {
 			crawl: true,
 
 			// Entry points for prerendering
-			entries: ["*", "/sitemap.xml"],
+			entries: ['*', '/sitemap.xml'],
 
 			// Origin for absolute URLs
-			origin: "https://example.com",
+			origin: 'https://example.com',
 
 			// Handle missing pages
-			handleMissingId: "warn", // or 'ignore' or 'fail'
+			handleMissingId: 'warn',  // or 'ignore' or 'fail'
 
 			// Handle HTTP errors
-			handleHttpError: "fail", // or 'warn' or 'ignore'
-		},
-	},
+			handleHttpError: 'fail'   // or 'warn' or 'ignore'
+		}
+	}
 };
 ```
 
@@ -588,17 +582,16 @@ For serving from a subdirectory:
 export default {
 	kit: {
 		paths: {
-			base: process.env.NODE_ENV === "production" ? "/my-app" : "",
-		},
-	},
+			base: process.env.NODE_ENV === 'production' ? '/my-app' : ''
+		}
+	}
 };
 ```
 
 **Usage in code:**
-
 ```svelte
 <script>
-	import { base } from "$app/paths";
+	import { base } from '$app/paths';
 </script>
 
 <a href="{base}/about">About</a>
@@ -618,9 +611,9 @@ Use relative paths for static exports:
 export default {
 	kit: {
 		paths: {
-			relative: true,
-		},
-	},
+			relative: true
+		}
+	}
 };
 ```
 
@@ -630,25 +623,28 @@ export default {
 
 ```js
 // svelte.config.js
-import adapter from "@sveltejs/adapter-auto";
-import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+import adapter from '@sveltejs/adapter-auto';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 export default {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter(),
-	},
+		adapter: adapter()
+	}
 };
 ```
 
 ```js
 // vite.config.js
-import { sveltekit } from "@sveltejs/kit/vite";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss()],
+	plugins: [
+		sveltekit(),
+		tailwindcss()
+	]
 });
 ```
 
@@ -663,17 +659,17 @@ export default defineConfig({
 export default {
 	kit: {
 		csp: {
-			mode: "hash", // or 'nonce' or 'auto'
+			mode: 'hash',  // or 'nonce' or 'auto'
 			directives: {
-				"script-src": ["self"],
-				"style-src": ["self", "unsafe-inline"],
+				'script-src': ['self'],
+				'style-src': ['self', 'unsafe-inline']
 			},
 			reportOnly: {
-				"script-src": ["self"],
-				"report-uri": ["/csp-report"],
-			},
-		},
-	},
+				'script-src': ['self'],
+				'report-uri': ['/csp-report']
+			}
+		}
+	}
 };
 ```
 
@@ -685,8 +681,8 @@ export default {
 // vite.config.js
 export default defineConfig({
 	build: {
-		sourcemap: true,
-	},
+		sourcemap: true
+	}
 });
 ```
 
@@ -713,15 +709,15 @@ npm run check -- --watch
 
 ```js
 // svelte.config.js
-import adapter from "@sveltejs/adapter-auto";
+import adapter from '@sveltejs/adapter-auto';
 
 export default {
 	kit: {
 		adapter: adapter(),
 		files: {
-			lib: "../../packages/ui/src",
-		},
-	},
+			lib: '../../packages/ui/src'
+		}
+	}
 };
 ```
 
@@ -729,20 +725,20 @@ export default {
 
 ```js
 // svelte.config.js
-import adapter from "@sveltejs/adapter-auto";
+import adapter from '@sveltejs/adapter-auto';
 
-const dev = process.env.NODE_ENV === "development";
+const dev = process.env.NODE_ENV === 'development';
 
 export default {
 	kit: {
 		adapter: adapter(),
 		prerender: {
-			origin: dev ? "http://localhost:5173" : "https://example.com",
+			origin: dev ? 'http://localhost:5173' : 'https://example.com'
 		},
 		paths: {
-			base: dev ? "" : "/app",
-		},
-	},
+			base: dev ? '' : '/app'
+		}
+	}
 };
 ```
 
@@ -752,11 +748,11 @@ export default {
 export default {
 	kit: {
 		files: {
-			routes: "src/pages",
-			lib: "src/shared",
-			assets: "public",
-			appTemplate: "src/template.html",
-		},
-	},
+			routes: 'src/pages',
+			lib: 'src/shared',
+			assets: 'public',
+			appTemplate: 'src/template.html'
+		}
+	}
 };
 ```

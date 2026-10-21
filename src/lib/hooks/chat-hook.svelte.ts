@@ -191,61 +191,8 @@ export async function onChatFinishPostPersist(args: OnChatFinishPostPersistArgs)
 		persistedMessagesState,
 		onFinishStartTime,
 	} = args;
-	const { pluginService } = window.electronAPI;
 
 	sessionState.latestUsedModel = chatState.selectedModel ?? null;
-
-	// Execute after send message hook
-	try {
-		const lastMessage = messages[messages.length - 1];
-		const userMessage = messages[messages.length - 2]; // Assuming last is AI, second-to-last is user
-
-		if (lastMessage && userMessage && chatState.selectedModel && chatState.currentProvider) {
-			const messageContext = {
-				messages: messages,
-				userMessage: userMessage,
-				model: chatState.selectedModel,
-				provider: chatState.currentProvider,
-				parameters: {
-					temperature: chatState.temperature,
-					topP: chatState.topP,
-					maxTokens: chatState.maxTokens,
-					frequencyPenalty: chatState.frequencyPenalty,
-					presencePenalty: chatState.presencePenalty,
-				},
-				options: {
-					isThinkingActive: chatState.isThinkingActive,
-					isOnlineSearchActive: chatState.isOnlineSearchActive,
-					isMCPActive: chatState.isMCPActive,
-					mcpServerIds: chatState.mcpServerIds,
-					autoParseUrl: preferencesSettings.autoParseUrl,
-					speedOptions: {
-						enabled: preferencesSettings.streamOutputEnabled,
-						speed: preferencesSettings.streamSpeed,
-					},
-				},
-			};
-
-			const response = {
-				message: lastMessage,
-				usage: undefined,
-				model: chatState.selectedModel.id,
-				finishReason: "stop",
-				metadata: {},
-			};
-
-			// Performance: Use $state.snapshot() instead of JSON.parse(JSON.stringify())
-			// 10-50x faster and preserves Date/Map/Set types
-			const serializedContext = $state.snapshot(messageContext);
-			const serializedResponse = $state.snapshot(response);
-
-			await pluginService.executeAfterSendMessageHook(serializedContext, serializedResponse);
-			logger.debug("[ChatState] After send message hook executed successfully");
-		}
-	} catch (hookError) {
-		logger.error("[ChatState] After send message hook failed:", hookError);
-		// Continue execution even if hook fails
-	}
 
 	await afterChatFinished({
 		messages,

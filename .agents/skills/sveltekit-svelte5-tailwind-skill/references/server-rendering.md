@@ -4,7 +4,7 @@ version_anchors: ["SvelteKit@2.x", "Svelte@5.x", "Tailwind@4.x"]
 authored: true
 origin: self
 adapted_from:
-    - "sveltejs/kit repository (SSR documentation)"
+  - "sveltejs/kit repository (SSR documentation)"
 last_reviewed: 2025-10-28
 summary: "Master server-side rendering with Svelte 5 runes constraints, Tailwind CSS loading, FOUC prevention, hydration best practices, and SSR performance optimization."
 ---
@@ -18,7 +18,6 @@ SvelteKit renders pages on the server by default. Understanding how Svelte 5 run
 SvelteKit generates HTML on the server, then "hydrates" on the client.
 
 **SSR flow:**
-
 1. Server runs `+page.server.ts` load function
 2. Server renders `+page.svelte` to HTML string
 3. Server sends HTML + CSS + JavaScript to browser
@@ -27,53 +26,49 @@ SvelteKit generates HTML on the server, then "hydrates" on the client.
 6. Page becomes fully interactive
 
 **SSR benefits:**
-
 - Fast first contentful paint (FCP)
 - SEO-friendly (search engines see content)
 - Works without JavaScript
 - Better perceived performance
 
 **SSR challenges with Svelte 5:**
-
 - Most runes don't run on server
 - CSS must load before HTML renders
 - Hydration mismatches cause errors
 
 ❌ **Wrong: Client-only code in SSR component**
-
 ```svelte
 <!-- +page.svelte (renders on server) -->
 <script>
-	let count = $state(0);
-	// ERROR: $state not defined on server
+  let count = $state(0);
+  // ERROR: $state not defined on server
 
-	localStorage.setItem("count", count);
-	// ERROR: localStorage not defined on server
+  localStorage.setItem('count', count);
+  // ERROR: localStorage not defined on server
 </script>
 ```
 
 ✅ **Right: Separate server data from client state**
-
 ```ts
 // +page.server.ts (runs only on server)
 export async function load() {
-	return { initialCount: 0 };
+  return { initialCount: 0 };
 }
 ```
 
 ```svelte
 <!-- +page.svelte -->
 <script>
-	import { browser } from "$app/environment";
+  import { browser } from '$app/environment';
 
-	let { data } = $props();
-	let count = $state(data.initialCount);
+  let { data } = $props();
+  let count = $state(data.initialCount);
 
-	$effect(() => {
-		if (browser) {
-			localStorage.setItem("count", count.toString());
-		}
-	});
+  $effect(() => {
+    if (browser) {
+      localStorage.setItem('count', count.toString());
+    }
+  });
 </script>
 ```
 
@@ -83,107 +78,105 @@ Understand which runes work on the server and which don't.
 
 **Rune SSR compatibility:**
 
-| Rune          | SSR        | Behavior                          |
-| ------------- | ---------- | --------------------------------- |
-| `$state()`    | ❌ No      | Not available on server - crashes |
-| `$derived()`  | ⚠️ Partial | Runs once, doesn't re-run         |
-| `$effect()`   | ❌ No      | Skipped entirely on server        |
-| `$props()`    | ✅ Yes     | Receives data from load function  |
-| `$bindable()` | ✅ Yes     | Props work normally               |
+| Rune | SSR | Behavior |
+|------|-----|----------|
+| `$state()` | ❌ No | Not available on server - crashes |
+| `$derived()` | ⚠️ Partial | Runs once, doesn't re-run |
+| `$effect()` | ❌ No | Skipped entirely on server |
+| `$props()` | ✅ Yes | Receives data from load function |
+| `$bindable()` | ✅ Yes | Props work normally |
 
 **$state() - client-only:**
-
 ```svelte
 <script>
-	let { data } = $props();
+  let { data } = $props();
 
-	// ❌ Crashes on server
-	// let count = $state(0);
+  // ❌ Crashes on server
+  // let count = $state(0);
 
-	// ✅ Use data from load function
-	// Hydrate as $state on client
-	let count = $state(data.count);
+  // ✅ Use data from load function
+  // Hydrate as $state on client
+  let count = $state(data.count);
 </script>
 ```
 
 **$derived() - runs once on server:**
-
 ```svelte
 <script>
-	let { data } = $props();
+  let { data } = $props();
 
-	// Runs once on server for initial HTML
-	// Becomes reactive on client after hydration
-	let total = $derived(data.items.reduce((sum, item) => sum + item.price, 0));
+  // Runs once on server for initial HTML
+  // Becomes reactive on client after hydration
+  let total = $derived(
+    data.items.reduce((sum, item) => sum + item.price, 0)
+  );
 </script>
 
 <p>Total: ${total}</p>
 ```
 
 **$effect() - client-only:**
-
 ```svelte
 <script>
-	import { browser } from "$app/environment";
+  import { browser } from '$app/environment';
 
-	let count = $state(0);
+  let count = $state(0);
 
-	$effect(() => {
-		// Only runs on client after hydration
-		console.log("Effect ran:", count);
+  $effect(() => {
+    // Only runs on client after hydration
+    console.log('Effect ran:', count);
 
-		// Still guard browser APIs
-		if (browser) {
-			document.title = `Count: ${count}`;
-		}
-	});
+    // Still guard browser APIs
+    if (browser) {
+      document.title = `Count: ${count}`;
+    }
+  });
 </script>
 ```
 
 **SSR-safe pattern:**
-
 ```ts
 // +page.server.ts
 export async function load() {
-	const user = await db.user.findFirst();
-	const posts = await db.post.findMany({ where: { userId: user.id } });
+  const user = await db.user.findFirst();
+  const posts = await db.post.findMany({ where: { userId: user.id } });
 
-	return {
-		user,
-		posts,
-		timestamp: Date.now(),
-	};
+  return {
+    user,
+    posts,
+    timestamp: Date.now()
+  };
 }
 ```
 
 ```svelte
 <!-- +page.svelte -->
 <script>
-	import { browser } from "$app/environment";
+  import { browser } from '$app/environment';
 
-	let { data } = $props();
+  let { data } = $props();
 
-	// Server provides initial data
-	let posts = $state(data.posts);
-	let selectedPost = $state(null);
+  // Server provides initial data
+  let posts = $state(data.posts);
+  let selectedPost = $state(null);
 
-	// Client-only interactivity
-	function selectPost(post) {
-		selectedPost = post;
-	}
+  // Client-only interactivity
+  function selectPost(post) {
+    selectedPost = post;
+  }
 
-	// Client-only persistence
-	$effect(() => {
-		if (browser && selectedPost) {
-			localStorage.setItem("lastPost", selectedPost.id);
-		}
-	});
+  // Client-only persistence
+  $effect(() => {
+    if (browser && selectedPost) {
+      localStorage.setItem('lastPost', selectedPost.id);
+    }
+  });
 </script>
 
 {#each posts as post}
-	<article onclick={() => selectPost(post)}>
-		<h2>{post.title}</h2>
-	</article>
+  <article onclick={() => selectPost(post)}>
+    <h2>{post.title}</h2>
+  </article>
 {/each}
 ```
 
@@ -192,93 +185,89 @@ export async function load() {
 Use load functions to fetch data on the server, pass to client as props.
 
 **Server-only load function:**
-
 ```ts
 // +page.server.ts
-import { error } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	const user = locals.user; // From hooks
-	const product = await db.product.findUnique({
-		where: { id: params.id },
-	});
+  const user = locals.user; // From hooks
+  const product = await db.product.findUnique({
+    where: { id: params.id }
+  });
 
-	if (!product) {
-		throw error(404, "Product not found");
-	}
+  if (!product) {
+    throw error(404, 'Product not found');
+  }
 
-	return {
-		user,
-		product,
-		relatedProducts: await db.product.findMany({
-			where: { categoryId: product.categoryId },
-			take: 4,
-		}),
-	};
+  return {
+    user,
+    product,
+    relatedProducts: await db.product.findMany({
+      where: { categoryId: product.categoryId },
+      take: 4
+    })
+  };
 };
 ```
 
 **Universal load function (runs on server AND client):**
-
 ```ts
 // +page.ts (no .server suffix)
-import type { PageLoad } from "./$types";
+import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch, params }) => {
-	// Use SvelteKit's fetch for SSR + client compatibility
-	const response = await fetch(`/api/products/${params.id}`);
-	const product = await response.json();
+  // Use SvelteKit's fetch for SSR + client compatibility
+  const response = await fetch(`/api/products/${params.id}`);
+  const product = await response.json();
 
-	return { product };
+  return { product };
 };
 ```
 
 **Using load data in component:**
-
 ```svelte
 <!-- +page.svelte -->
 <script>
-	let { data } = $props();
+  let { data } = $props();
 
-	// Server-rendered initially
-	// Reactive on client
-	let selectedImage = $state(data.product.images[0]);
+  // Server-rendered initially
+  // Reactive on client
+  let selectedImage = $state(data.product.images[0]);
 
-	function selectImage(image) {
-		selectedImage = image;
-	}
+  function selectImage(image) {
+    selectedImage = image;
+  }
 </script>
 
 <h1>{data.product.name}</h1>
 <img src={selectedImage} alt={data.product.name} />
 
 {#each data.product.images as image}
-	<button onclick={() => selectImage(image)}>
-		<img src={image} alt="" class="h-16 w-16" />
-	</button>
+  <button onclick={() => selectImage(image)}>
+    <img src={image} alt="" class="h-16 w-16" />
+  </button>
 {/each}
 ```
 
 **Streaming data with promises:**
-
 ```ts
 // +page.server.ts
 export async function load() {
-	return {
-		// Resolved immediately (blocks SSR)
-		user: await fetchUser(),
+  return {
+    // Resolved immediately (blocks SSR)
+    user: await fetchUser(),
 
-		// Streamed (doesn't block SSR)
-		posts: fetchPosts(),
-	};
+    // Streamed (doesn't block SSR)
+    posts: fetchPosts()
+  };
 }
 ```
 
 ```svelte
 <!-- +page.svelte -->
 <script>
-	let { data } = $props();
+  let { data } = $props();
 </script>
 
 <!-- Rendered immediately -->
@@ -286,13 +275,13 @@ export async function load() {
 
 <!-- Rendered after promise resolves -->
 {#await data.posts}
-	<p>Loading posts...</p>
+  <p>Loading posts...</p>
 {:then posts}
-	{#each posts as post}
-		<article>{post.title}</article>
-	{/each}
+  {#each posts as post}
+    <article>{post.title}</article>
+  {/each}
 {:catch error}
-	<p>Error: {error.message}</p>
+  <p>Error: {error.message}</p>
 {/await}
 ```
 
@@ -301,98 +290,95 @@ export async function load() {
 Ensure Tailwind CSS loads before HTML renders to prevent flash of unstyled content.
 
 **Root layout CSS import (recommended):**
-
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-	import "../app.css"; // Loaded before any page renders
+  import '../app.css'; // Loaded before any page renders
 </script>
 
 <slot />
 ```
 
 **Why this works:**
-
 - SvelteKit includes CSS in `<head>` before body
 - Browser blocks render until CSS loads (no FOUC)
 - Works correctly in both dev and production
 
 ❌ **Wrong: Importing CSS in pages**
-
 ```svelte
 <!-- +page.svelte -->
 <script>
-	import "../app.css"; // Causes FOUC and multiple loads
+  import '../app.css'; // Causes FOUC and multiple loads
 </script>
 ```
 
 ✅ **Right: Import once in root layout**
-
 ```svelte
 <!-- +layout.svelte -->
 <script>
-	import "../app.css";
+  import '../app.css';
 </script>
 ```
 
 **Critical CSS inlining (advanced):**
-
 ```svelte
 <!-- src/app.html -->
 <head>
-	<style>
-		/* Inline critical CSS for above-the-fold content */
-		body {
-			margin: 0;
-			font-family: system-ui, sans-serif;
-		}
-		.hero {
-			min-height: 100vh;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-	</style>
-	%sveltekit.head%
+  <style>
+    /* Inline critical CSS for above-the-fold content */
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+    }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+  %sveltekit.head%
 </head>
 ```
 
 **Loading states during hydration:**
-
 ```svelte
 <script>
-	import { browser } from "$app/environment";
+  import { browser } from '$app/environment';
 
-	let hydrated = $state(false);
+  let hydrated = $state(false);
 
-	$effect(() => {
-		if (browser) {
-			hydrated = true;
-		}
-	});
+  $effect(() => {
+    if (browser) {
+      hydrated = true;
+    }
+  });
 </script>
 
 {#if !hydrated}
-	<!-- Server-rendered, no interactivity -->
-	<div class="cursor-wait">Content loading...</div>
+  <!-- Server-rendered, no interactivity -->
+  <div class="cursor-wait">
+    Content loading...
+  </div>
 {:else}
-	<!-- Fully interactive -->
-	<div class="cursor-pointer" onclick={handleClick}>Click me</div>
+  <!-- Fully interactive -->
+  <div class="cursor-pointer" onclick={handleClick}>
+    Click me
+  </div>
 {/if}
 ```
 
 **Preloading fonts to prevent FOIT:**
-
 ```svelte
 <!-- +layout.svelte -->
 <svelte:head>
-	<link
-		rel="preload"
-		href="/fonts/inter.woff2"
-		as="font"
-		type="font/woff2"
-		crossorigin="anonymous"
-	/>
+  <link
+    rel="preload"
+    href="/fonts/inter.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
 </svelte:head>
 ```
 
@@ -401,81 +387,75 @@ Ensure Tailwind CSS loads before HTML renders to prevent flash of unstyled conte
 Ensure server-rendered HTML matches client-hydrated HTML.
 
 **Hydration mismatch causes:**
-
 1. Using browser APIs directly
 2. Date/time rendering without normalization
 3. Random values
 4. Conditionals based on client-only state
 
 ❌ **Wrong: Hydration mismatch**
-
 ```svelte
 <script>
-	// Server renders nothing, client renders date
-	// MISMATCH
-	let now = new Date().toLocaleString();
+  // Server renders nothing, client renders date
+  // MISMATCH
+  let now = new Date().toLocaleString();
 </script>
 
 <p>{now}</p>
 ```
 
 ✅ **Right: Server and client match**
-
 ```svelte
 <script>
-	import { browser } from "$app/environment";
+  import { browser } from '$app/environment';
 
-	let { data } = $props(); // Server provides timestamp
-	let now = $state(data.timestamp);
+  let { data } = $props(); // Server provides timestamp
+  let now = $state(data.timestamp);
 
-	$effect(() => {
-		if (browser) {
-			// Update only after hydration
-			now = Date.now();
-		}
-	});
+  $effect(() => {
+    if (browser) {
+      // Update only after hydration
+      now = Date.now();
+    }
+  });
 </script>
 
 <p>{new Date(now).toLocaleString()}</p>
 ```
 
 **Suppressing hydration warnings:**
-
 ```svelte
 <!-- Only when intentional mismatch is acceptable -->
 <div data-sveltekit-preload-data="off">
-	{new Date().toLocaleString()}
+  {new Date().toLocaleString()}
 </div>
 ```
 
 **Client-only components:**
-
 ```svelte
 <!-- ClientOnly.svelte -->
 <script>
-	import { browser } from "$app/environment";
-	let { children } = $props();
+  import { browser } from '$app/environment';
+  let { children } = $props();
 </script>
 
 {#if browser}
-	{@render children()}
+  {@render children()}
 {/if}
 ```
 
 ```svelte
 <!-- +page.svelte -->
 <script>
-	import ClientOnly from "$components/ClientOnly.svelte";
-	import InteractiveMap from "$components/InteractiveMap.svelte";
+  import ClientOnly from '$components/ClientOnly.svelte';
+  import InteractiveMap from '$components/InteractiveMap.svelte';
 </script>
 
 <ClientOnly>
-	<InteractiveMap />
+  <InteractiveMap />
 </ClientOnly>
 ```
 
 **Testing for hydration issues:**
-
 ```bash
 # Run build
 npm run build
@@ -492,76 +472,74 @@ npm run preview
 Stream slow data without blocking initial page render.
 
 **Streaming pattern:**
-
 ```ts
 // +page.server.ts
 export async function load() {
-	return {
-		// Fast data (blocks SSR)
-		user: await db.user.findFirst(),
+  return {
+    // Fast data (blocks SSR)
+    user: await db.user.findFirst(),
 
-		// Slow data (streamed)
-		analytics: fetchAnalytics(), // Promise, not awaited
-		recommendations: fetchRecommendations(),
-	};
+    // Slow data (streamed)
+    analytics: fetchAnalytics(), // Promise, not awaited
+    recommendations: fetchRecommendations()
+  };
 }
 ```
 
 ```svelte
 <!-- +page.svelte -->
 <script>
-	let { data } = $props();
+  let { data } = $props();
 </script>
 
 <!-- Rendered immediately -->
 <header>
-	<h1>Welcome, {data.user.name}</h1>
+  <h1>Welcome, {data.user.name}</h1>
 </header>
 
 <!-- Rendered after promise resolves -->
 <aside>
-	{#await data.analytics}
-		<div class="animate-pulse">Loading analytics...</div>
-	{:then analytics}
-		<AnalyticsDashboard {analytics} />
-	{/await}
+  {#await data.analytics}
+    <div class="animate-pulse">Loading analytics...</div>
+  {:then analytics}
+    <AnalyticsDashboard {analytics} />
+  {/await}
 </aside>
 
 <main>
-	{#await data.recommendations}
-		<div class="grid grid-cols-3 gap-4">
-			{#each Array(6) as _}
-				<div class="h-48 animate-pulse bg-gray-200"></div>
-			{/each}
-		</div>
-	{:then recommendations}
-		{#each recommendations as item}
-			<ProductCard {item} />
-		{/each}
-	{/await}
+  {#await data.recommendations}
+    <div class="grid grid-cols-3 gap-4">
+      {#each Array(6) as _}
+        <div class="h-48 animate-pulse bg-gray-200"></div>
+      {/each}
+    </div>
+  {:then recommendations}
+    {#each recommendations as item}
+      <ProductCard {item} />
+    {/each}
+  {/await}
 </main>
 ```
 
 **Tailwind classes in loading states:**
-
 ```svelte
 {#await data.posts}
-	<!-- Skeleton loader with Tailwind -->
-	<div class="space-y-4">
-		{#each Array(3) as _}
-			<div class="animate-pulse space-y-2 rounded border p-4">
-				<div class="h-4 w-3/4 rounded bg-gray-300"></div>
-				<div class="h-4 w-1/2 rounded bg-gray-300"></div>
-			</div>
-		{/each}
-	</div>
+  <!-- Skeleton loader with Tailwind -->
+  <div class="space-y-4">
+    {#each Array(3) as _}
+      <div class="animate-pulse space-y-2 rounded border p-4">
+        <div class="h-4 w-3/4 rounded bg-gray-300"></div>
+        <div class="h-4 w-1/2 rounded bg-gray-300"></div>
+      </div>
+    {/each}
+  </div>
 {:then posts}
-	{#each posts as post}
-		<article class="rounded border p-4">
-			<h2 class="text-xl font-bold">{post.title}</h2>
-			<p class="text-gray-600">{post.excerpt}</p>
-		</article>
-	{/each}
+  {#each posts as post}
+    <article class="rounded border p-4">
+      <h2 class="text-xl font-bold">{post.title}</h2>
+      <p class="text-gray-600">{post.excerpt}</p>
+    </article>
+  {/each}
 {/await}
 ```
 
@@ -570,41 +548,38 @@ export async function load() {
 Organize code by where it runs.
 
 **Server-only code (`lib/server/`):**
-
 ```ts
 // src/lib/server/db.ts
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle } from 'drizzle-orm/node-postgres';
 
 export const db = drizzle(process.env.DATABASE_URL);
 ```
 
 ```ts
 // src/lib/server/auth.ts
-import { PRIVATE_API_KEY } from "$env/static/private";
+import { PRIVATE_API_KEY } from '$env/static/private';
 
 export async function verifyToken(token: string) {
-	// Server-only logic
-	return fetch("https://api.example.com/verify", {
-		headers: { Authorization: `Bearer ${PRIVATE_API_KEY}` },
-	});
+  // Server-only logic
+  return fetch('https://api.example.com/verify', {
+    headers: { 'Authorization': `Bearer ${PRIVATE_API_KEY}` }
+  });
 }
 ```
 
 **Client-friendly utilities (`lib/utils/`):**
-
 ```ts
 // src/lib/utils/format.ts
 export function formatDate(date: Date): string {
-	return date.toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	});
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 }
 ```
 
 **Component organization:**
-
 ```
 src/lib/components/
 ├── ui/              # Universal components (work on server)
@@ -618,17 +593,16 @@ src/lib/components/
 ```
 
 **Enforcing server-only imports:**
-
 ```ts
 // vite.config.js
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
-	resolve: {
-		conditions: ["browser", "module", "import"],
-	},
-	ssr: {
-		noExternal: [], // Force SSR for certain packages
-	},
+  plugins: [tailwindcss(), sveltekit()],
+  resolve: {
+    conditions: ['browser', 'module', 'import']
+  },
+  ssr: {
+    noExternal: [] // Force SSR for certain packages
+  }
 });
 ```
 
@@ -637,73 +611,73 @@ export default defineConfig({
 Optimize server-side rendering for faster Time to First Byte (TTFB).
 
 **Parallel data fetching:**
-
 ```ts
 // +page.server.ts
 export async function load() {
-	// ❌ Sequential (slow)
-	// const user = await fetchUser();
-	// const posts = await fetchPosts();
+  // ❌ Sequential (slow)
+  // const user = await fetchUser();
+  // const posts = await fetchPosts();
 
-	// ✅ Parallel (fast)
-	const [user, posts] = await Promise.all([fetchUser(), fetchPosts()]);
+  // ✅ Parallel (fast)
+  const [user, posts] = await Promise.all([
+    fetchUser(),
+    fetchPosts()
+  ]);
 
-	return { user, posts };
+  return { user, posts };
 }
 ```
 
 **Caching expensive operations:**
-
 ```ts
 // +page.server.ts
-import { setHeaders } from "@sveltejs/kit";
+import { setHeaders } from '@sveltejs/kit';
 
 export async function load({ setHeaders }) {
-	const data = await expensiveOperation();
+  const data = await expensiveOperation();
 
-	// Cache for 1 hour
-	setHeaders({
-		"cache-control": "public, max-age=3600",
-	});
+  // Cache for 1 hour
+  setHeaders({
+    'cache-control': 'public, max-age=3600'
+  });
 
-	return { data };
+  return { data };
 }
 ```
 
 **Lazy-loading components:**
-
 ```svelte
 <script>
-	let { data } = $props();
-	let showMap = $state(false);
+  let { data } = $props();
+  let showMap = $state(false);
 </script>
 
-<button onclick={() => (showMap = true)}> Show Map </button>
+<button onclick={() => showMap = true}>
+  Show Map
+</button>
 
 {#if showMap}
-	{#await import('$components/client/Map.svelte')}
-		<p>Loading map...</p>
-	{:then { default: Map }}
-		<Map location={data.location} />
-	{/await}
+  {#await import('$components/client/Map.svelte')}
+    <p>Loading map...</p>
+  {:then { default: Map }}
+    <Map location={data.location} />
+  {/await}
 {/if}
 ```
 
 **Prerendering static pages:**
-
 ```ts
 // +page.ts
 export const prerender = true;
 
 export function load() {
-	return {
-		staticContent: "This page is pre-rendered at build time",
-	};
+  return {
+    staticContent: 'This page is pre-rendered at build time'
+  };
 }
 ```
 
 **Selective SSR:**
-
 ```ts
 // +page.ts
 export const ssr = false; // Disable SSR for this page
@@ -717,61 +691,55 @@ export const ssr = true;
 **Error 1: "$state is not defined"**
 
 ❌ **Cause:**
-
 ```svelte
 <script>
-	let count = $state(0); // Used in SSR context
+  let count = $state(0); // Used in SSR context
 </script>
 ```
 
 ✅ **Fix:**
-
 ```svelte
 <script>
-	let { data } = $props();
-	let count = $state(data.count); // Hydrate from server data
+  let { data } = $props();
+  let count = $state(data.count); // Hydrate from server data
 </script>
 ```
 
 **Error 2: "localStorage is not defined"**
 
 ❌ **Cause:**
-
 ```svelte
 <script>
-	let theme = localStorage.getItem("theme"); // Runs on server
+  let theme = localStorage.getItem('theme'); // Runs on server
 </script>
 ```
 
 ✅ **Fix:**
-
 ```svelte
 <script>
-	import { browser } from "$app/environment";
+  import { browser } from '$app/environment';
 
-	let theme = $state("light");
+  let theme = $state('light');
 
-	$effect(() => {
-		if (browser) {
-			theme = localStorage.getItem("theme") || "light";
-		}
-	});
+  $effect(() => {
+    if (browser) {
+      theme = localStorage.getItem('theme') || 'light';
+    }
+  });
 </script>
 ```
 
 **Error 3: "Hydration mismatch"**
 
 ❌ **Cause:**
-
 ```svelte
 <p>{Math.random()}</p> <!-- Different on server and client -->
 ```
 
 ✅ **Fix:**
-
 ```svelte
 <script>
-	let { data } = $props();
+  let { data } = $props();
 </script>
 
 <p>{data.randomValue}</p> <!-- Consistent -->
@@ -780,20 +748,17 @@ export const ssr = true;
 **Error 4: "CSS not loading"**
 
 ❌ **Cause:**
-
 ```js
 // vite.config.js
-plugins: [sveltekit(), tailwindcss()]; // Wrong order
+plugins: [sveltekit(), tailwindcss()] // Wrong order
 ```
 
 ✅ **Fix:**
-
 ```js
-plugins: [tailwindcss(), sveltekit()]; // Correct order
+plugins: [tailwindcss(), sveltekit()] // Correct order
 ```
 
 **Debugging SSR issues:**
-
 ```bash
 # Check server-side logs
 npm run build
@@ -807,7 +772,6 @@ node build/index.js
 ```
 
 **SSR checklist:**
-
 - [ ] Load functions fetch data on server
 - [ ] No `$state()` in SSR components
 - [ ] Guard browser APIs with `if (browser)`
@@ -818,7 +782,6 @@ node build/index.js
 - [ ] Streaming used for slow data
 
 **Next steps:**
-
 - Learn data loading patterns in `data-loading.md`
 - Understand runes constraints in `svelte5-runes.md`
 - Optimize performance in `performance-optimization.md`

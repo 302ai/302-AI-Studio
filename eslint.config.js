@@ -13,13 +13,7 @@ const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
 export default defineConfig([
 	includeIgnoreFile(gitignorePath),
 	{
-		ignores: [
-			"src/routes/demo/**/*",
-			".claude/**/*",
-			".agents/**/*",
-			"packages/plugin-sdk/dist/**/*",
-			"**/*.d.ts",
-		],
+		ignores: ["src/routes/demo/**/*", ".claude/**/*", ".agents/**/*", "**/*.d.ts"],
 	},
 	js.configs.recommended,
 	...ts.configs.recommended,
@@ -44,7 +38,7 @@ export default defineConfig([
 		},
 	},
 	{
-		files: ["packages/**/*", "scripts/**/*", "vite-plugins/**/*", "forge.config.ts"],
+		files: ["scripts/**/*", "vite-plugins/**/*", "forge.config.ts"],
 		rules: {
 			"no-console": "off",
 		},

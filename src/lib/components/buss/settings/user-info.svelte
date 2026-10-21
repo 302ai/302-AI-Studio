@@ -1,19 +1,15 @@
 <script lang="ts">
 	import { SsoLogoutDialog, type SsoLogoutOptions } from "$lib/components/buss/sso-logout-dialog";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import { Badge } from "$lib/components/ui/badge";
 	import { Button } from "$lib/components/ui/button";
+	import * as Card from "$lib/components/ui/card";
 	import { Label } from "$lib/components/ui/label/index.js";
 	import { m } from "$lib/paraglide/messages.js";
 	import { userState } from "$lib/stores/user-state.svelte";
-	import { cn } from "$lib/utils.js";
-	import { Check, Copy, ExternalLink, RefreshCw } from "@lucide/svelte";
+	import { CreditCard, LogOut, RefreshCw, Wallet } from "@lucide/svelte";
 	import { toast } from "svelte-sonner";
-	import SettingInfoItem from "./setting-info-item.svelte";
 
 	let isRefreshing = $state(false);
-	let copiedField = $state<string | null>(null);
-	let copyTimeoutId: NodeJS.Timeout | null = null;
 	let showLogoutDialog = $state(false);
 
 	function handleLogoutClick() {
@@ -34,7 +30,7 @@
 		try {
 			const res = await userState.fetchUserInfo();
 			if (res.success) {
-				toast.success(m.login_success());
+				toast.success(m.refresh_success());
 			} else {
 				toast.error(res.error || "Failed to refresh");
 			}
@@ -45,32 +41,12 @@
 		}
 	}
 
-	async function copyToClipboard(text: string, field: string) {
-		try {
-			await navigator.clipboard.writeText(text);
-			toast.success(m.toast_copied_success());
-
-			copiedField = field;
-			if (copyTimeoutId) {
-				clearTimeout(copyTimeoutId);
-			}
-			copyTimeoutId = setTimeout(() => {
-				copiedField = null;
-			}, 2000);
-		} catch {
-			toast.error(m.toast_copied_failed());
-		}
+	function openBalance() {
+		window.electronAPI?.externalLinkService?.open302WebsiteLink("/dashboard/overview");
 	}
 
-	// Helper to format currency
-	function formatCurrency(val: number) {
-		return val.toFixed(2);
-	}
-
-	function openWallet() {
-		if (typeof window !== "undefined" && window.electronAPI?.externalLinkService) {
-			window.electronAPI.externalLinkService.openExternalLink("https://302.ai/charge");
-		}
+	function openRecharge() {
+		window.electronAPI?.externalLinkService?.open302WebsiteLink("/charge");
 	}
 </script>
 
@@ -78,138 +54,62 @@
 	<!-- User Info Section -->
 	<div class="gap-settings-gap flex flex-col">
 		<Label class="text-label-fg font-normal">{m.settings_user_info_label()}</Label>
-		<div
-			class="rounded-settings-item bg-settings-item-bg px-settings-item-x py-settings-item-y flex w-full items-center gap-4"
-		>
-			<!-- Avatar -->
-			<Avatar.Root class="size-12 shrink-0">
-				<Avatar.Image src={userState.userInfo.avatar} alt={userState.userInfo.user_name} />
-				<Avatar.Fallback>{userState.userInfo.user_name.slice(0, 2)}</Avatar.Fallback>
-			</Avatar.Root>
+		<Card.Root class="bg-settings-item-bg border-transparent gap-4 p-4 shadow-none">
+			<!-- Row 1: User Details & Top Actions -->
+			<div class="flex w-full items-center gap-4">
+				<!-- Avatar -->
+				<Avatar.Root class="size-12 shrink-0">
+					<Avatar.Image src={userState.userInfo.avatar} alt={userState.userInfo.name} />
+					<Avatar.Fallback>{(userState.userInfo.name || "U").slice(0, 2)}</Avatar.Fallback
+					>
+				</Avatar.Root>
 
-			<!-- User Details -->
-			<div class="flex-1 min-w-0">
-				<div class="flex items-center gap-2">
-					<div class="text-sm font-semibold truncate">{userState.userInfo.user_name}</div>
-					{#if userState.userInfo.is_developer}
-						<Badge variant="secondary" class="text-xs shrink-0"
-							>{m.settings_developer_badge()}</Badge
-						>
-					{/if}
-				</div>
-				<div class="text-sm text-muted-foreground truncate">
-					{#if userState.userInfo.email}
-						{userState.userInfo.email}
-					{:else if userState.userInfo.phone}
-						{userState.userInfo.phone}
-					{:else}
-						UID: {userState.userInfo.uid}
-					{/if}
-				</div>
-			</div>
-
-			<!-- Actions -->
-			<div class="flex gap-2 shrink-0">
-				<Button
-					variant="outline"
-					size="icon-sm"
-					onclick={handleRefresh}
-					disabled={isRefreshing}
-					class="dark:hover:bg-muted {isRefreshing ? 'animate-spin' : ''}"
-				>
-					<RefreshCw class="size-4" />
-				</Button>
-				<Button
-					variant="outline"
-					size="sm"
-					onclick={handleLogoutClick}
-					class="dark:hover:bg-muted"
-				>
-					{m.settings_logout()}
-				</Button>
-			</div>
-		</div>
-	</div>
-
-	<!-- Account Details Section - only show if there's content -->
-	{#if userState.userInfo.invite_code}
-		<div class="gap-settings-gap flex flex-col">
-			<Label class="text-label-fg font-normal">{m.settings_account_details()}</Label>
-
-			{#snippet inviteCodeAction()}
-				{#if userState.userInfo}
-					<div class="flex items-center gap-2">
-						<code
-							class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"
-						>
-							{userState.userInfo.invite_code}
-						</code>
-						<Button
-							variant="ghost"
-							size="icon-sm"
-							onclick={() =>
-								copyToClipboard(userState.userInfo!.invite_code, "invite_code")}
-							class="relative"
-						>
-							{#each [{ Icon: Check, visible: copiedField === "invite_code", id: "check" }, { Icon: Copy, visible: copiedField !== "invite_code", id: "copy" }] as { Icon, visible, id } (id)}
-								<Icon
-									class={cn(
-										"absolute inset-0 m-auto size-4 transition-all duration-200 ease-in-out",
-										visible ? "scale-100 opacity-100" : "scale-0 opacity-0",
-									)}
-								/>
-							{/each}
-						</Button>
+				<!-- User Details -->
+				<div class="flex-1 min-w-0">
+					<div class="text-sm font-semibold truncate">
+						{userState.userInfo.name}
 					</div>
-				{/if}
-			{/snippet}
-			<SettingInfoItem label={m.settings_invite_code()} action={inviteCodeAction} />
-		</div>
-	{/if}
+					<div class="text-sm text-muted-foreground truncate">
+						{userState.userInfo.email}
+					</div>
+				</div>
 
-	<!-- Balance Section - hidden for sub accounts -->
-	{#if !userState.userInfo.is_sub_account}
-		<div class="gap-settings-gap flex flex-col">
-			<div class="flex items-center justify-between">
-				<Label class="text-label-fg font-normal">{m.settings_balance_usage()}</Label>
-				<Button
-					variant="outline"
-					size="sm"
-					onclick={openWallet}
-					class="dark:hover:bg-muted gap-1.5"
-				>
-					{m.settings_recharge()}
-					<ExternalLink class="size-3.5" />
-				</Button>
+				<!-- Actions -->
+				<div class="flex items-center gap-2 shrink-0">
+					<Button
+						variant="secondary"
+						size="icon-sm"
+						onclick={handleRefresh}
+						disabled={isRefreshing}
+						class="dark:hover:bg-muted {isRefreshing ? 'animate-spin' : ''}"
+					>
+						<RefreshCw class="size-4" />
+					</Button>
+					<Button variant="secondary" size="sm" class="w-auto" onclick={openBalance}>
+						<Wallet class="size-4" />
+						<span>{m.settings_view_balance()}</span>
+					</Button>
+					<Button variant="default" size="sm" class="w-auto" onclick={openRecharge}>
+						<CreditCard class="size-4" />
+						<span>{m.settings_recharge()}</span>
+					</Button>
+				</div>
 			</div>
 
-			<SettingInfoItem
-				label={m.settings_current_balance()}
-				value="${formatCurrency(userState.userInfo.balance)}"
-				isBold
-			/>
-			<SettingInfoItem
-				label={m.settings_total_consumed()}
-				value="${formatCurrency(userState.userInfo.gpt_cost)}"
-				isBold
-			/>
-			<SettingInfoItem
-				label={m.settings_total_requests()}
-				value={String(userState.userInfo.gpt_request_times)}
-				isBold
-			/>
-			<SettingInfoItem
-				label={m.settings_total_earnings()}
-				value="${formatCurrency(userState.userInfo.total_earning)}"
-				isBold
-			/>
-		</div>
-	{/if}
+			<!-- Row 2: Logout Action -->
+			<div class="flex flex-row items-center">
+				<Button variant="destructive" size="sm" class="w-full" onclick={handleLogoutClick}>
+					<LogOut class="size-4" />
+					<span>{m.settings_logout()}</span>
+				</Button>
+			</div>
+		</Card.Root>
+	</div>
 
 	<!-- Logout Dialog -->
 	<SsoLogoutDialog
 		bind:open={showLogoutDialog}
-		userEmail={userState.userInfo?.email || userState.userInfo?.user_name || "User"}
+		userEmail={userState.userInfo.email || userState.userInfo.name || "User"}
 		onConfirm={handleLogoutConfirm}
 		onClose={handleLogoutClose}
 	/>

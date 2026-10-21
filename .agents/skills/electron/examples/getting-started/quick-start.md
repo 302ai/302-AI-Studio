@@ -2,6 +2,7 @@
 
 **官方文档**: https://www.electronjs.org/zh/docs/latest/,
 
+
 ## Instructions
 
 This example demonstrates how to create a basic Electron application.
@@ -17,36 +18,36 @@ This example demonstrates how to create a basic Electron application.
 
 ```javascript
 // main.js
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
+const { app, BrowserWindow } = require('electron')
+const path = require('path')
 
 function createWindow() {
-	const win = new BrowserWindow({
-		width: 800,
-		height: 600,
-		webPreferences: {
-			preload: path.join(__dirname, "preload.js"),
-		},
-	});
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
+  })
 
-	win.loadFile("index.html");
+  win.loadFile('index.html')
 }
 
 app.whenReady().then(() => {
-	createWindow();
+  createWindow()
 
-	app.on("activate", () => {
-		if (BrowserWindow.getAllWindows().length === 0) {
-			createWindow();
-		}
-	});
-});
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
+  })
+})
 
-app.on("window-all-closed", () => {
-	if (process.platform !== "darwin") {
-		app.quit();
-	}
-});
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
 ```
 
 ### Example: Basic index.html
@@ -54,15 +55,15 @@ app.on("window-all-closed", () => {
 ```html
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8" />
-		<title>Hello Electron</title>
-	</head>
-	<body>
-		<h1>Hello Electron!</h1>
-		<p>Welcome to Electron</p>
-		<script src="renderer.js"></script>
-	</body>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello Electron</title>
+</head>
+<body>
+  <h1>Hello Electron!</h1>
+  <p>Welcome to Electron</p>
+  <script src="renderer.js"></script>
+</body>
 </html>
 ```
 
@@ -70,27 +71,27 @@ app.on("window-all-closed", () => {
 
 ```javascript
 // preload.js
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer } = require('electron')
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
-contextBridge.exposeInMainWorld("electronAPI", {
-	openFile: () => ipcRenderer.invoke("dialog:openFile"),
-});
+contextBridge.exposeInMainWorld('electronAPI', {
+  openFile: () => ipcRenderer.invoke('dialog:openFile')
+})
 ```
 
 ### Example: Basic renderer.js
 
 ```javascript
 // renderer.js
-document.addEventListener("DOMContentLoaded", () => {
-	console.log("Renderer process loaded");
-
-	// Use exposed API from preload
-	window.electronAPI.openFile().then((result) => {
-		console.log("File selected:", result);
-	});
-});
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Renderer process loaded')
+  
+  // Use exposed API from preload
+  window.electronAPI.openFile().then(result => {
+    console.log('File selected:', result)
+  })
+})
 ```
 
 ### Key Points

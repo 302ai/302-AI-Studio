@@ -5,6 +5,7 @@ const logger = createLogger("state");
 import { applyLocale } from "$lib/i18n";
 import { getLocale } from "$lib/paraglide/runtime";
 import type {
+	CacheInfo,
 	GeneralSettingsState,
 	LanguageCode,
 	LayoutMode,
@@ -162,15 +163,7 @@ class GeneralSettingsManager {
 		return result;
 	}
 
-	async getCacheInfo(): Promise<{
-		path: string;
-		size: number;
-		subdirs: {
-			registry: { path: string; size: number };
-			downloads: { path: string; size: number };
-			temp: { path: string; size: number };
-		};
-	}> {
+	async getCacheInfo(): Promise<CacheInfo> {
 		return await generalSettingsService.getCacheInfo();
 	}
 

@@ -15,9 +15,7 @@ import { LoggerService, loggerService } from "./logger-service";
 import { McpService, mcpService } from "./mcp-service";
 import { NotificationService, notificationService } from "./notification-service";
 import { OpenClawService, openClawService } from "./openclaw-service";
-import { PluginService, pluginService } from "./plugin-service";
 import { providerService, ProviderService } from "./provider-service";
-import { RegistryService, registryService } from "./registry-service";
 import { SchedulerService, schedulerService } from "./scheduler-service";
 import { GeneralSettingsService, generalSettingsService } from "./settings-service";
 import { ShortcutService, shortcutService } from "./shortcut-service";
@@ -55,9 +53,7 @@ export {
 	McpService,
 	NotificationService,
 	OpenClawService,
-	PluginService,
 	ProviderService,
-	RegistryService,
 	SchedulerService,
 	ShortcutService,
 	SsoService,
@@ -89,9 +85,7 @@ export {
 	mcpService,
 	notificationService,
 	openClawService,
-	pluginService,
 	providerService,
-	registryService,
 	schedulerService,
 	shortcutService,
 	ssoService,

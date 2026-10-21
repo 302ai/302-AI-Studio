@@ -1,4 +1,4 @@
-import type { Model } from "@302ai/studio-plugin-sdk";
+import type { Model } from "@shared/types";
 import { createLogger } from "@shared/logger";
 
 const logger = createLogger("services");

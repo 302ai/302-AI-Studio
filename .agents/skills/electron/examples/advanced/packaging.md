@@ -2,6 +2,7 @@
 
 **官方文档**: https://www.electronjs.org/zh/docs/latest/,
 
+
 ## Instructions
 
 This example demonstrates how to package Electron applications for distribution.
@@ -29,43 +30,43 @@ npx @electron-forge/cli import
 ```json
 // package.json
 {
-	"name": "my-app",
-	"version": "1.0.0",
-	"main": ".vite/build/main.js",
-	"scripts": {
-		"start": "electron-forge start",
-		"package": "electron-forge package",
-		"make": "electron-forge make",
-		"publish": "electron-forge publish"
-	},
-	"config": {
-		"forge": {
-			"packagerConfig": {
-				"name": "My App",
-				"icon": "./assets/icon"
-			},
-			"makers": [
-				{
-					"name": "@electron-forge/maker-squirrel",
-					"config": {
-						"name": "my_app"
-					}
-				},
-				{
-					"name": "@electron-forge/maker-zip",
-					"platforms": ["darwin"]
-				},
-				{
-					"name": "@electron-forge/maker-deb",
-					"config": {}
-				},
-				{
-					"name": "@electron-forge/maker-rpm",
-					"config": {}
-				}
-			]
-		}
-	}
+  "name": "my-app",
+  "version": "1.0.0",
+  "main": ".vite/build/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "name": "My App",
+        "icon": "./assets/icon"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "my_app"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": ["darwin"]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
 }
 ```
 
@@ -74,36 +75,41 @@ npx @electron-forge/cli import
 ```json
 // package.json
 {
-	"name": "my-app",
-	"version": "1.0.0",
-	"main": "main.js",
-	"scripts": {
-		"build": "electron-builder",
-		"build:win": "electron-builder --win",
-		"build:mac": "electron-builder --mac",
-		"build:linux": "electron-builder --linux"
-	},
-	"build": {
-		"appId": "com.example.myapp",
-		"productName": "My App",
-		"directories": {
-			"output": "dist"
-		},
-		"files": ["main.js", "preload.js", "renderer/**/*", "package.json"],
-		"win": {
-			"target": "nsis",
-			"icon": "build/icon.ico"
-		},
-		"mac": {
-			"target": "dmg",
-			"icon": "build/icon.icns",
-			"category": "public.app-category.utilities"
-		},
-		"linux": {
-			"target": "AppImage",
-			"icon": "build/icon.png"
-		}
-	}
+  "name": "my-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.example.myapp",
+    "productName": "My App",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns",
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png"
+    }
+  }
 }
 ```
 

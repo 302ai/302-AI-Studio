@@ -13,28 +13,24 @@ This skill provides comprehensive guidance for building modern web applications 
 ## About This Integration Stack
 
 **SvelteKit 2** is a modern full-stack framework with:
-
 - File-based routing with layouts
 - Server-side rendering (SSR) and static site generation (SSG)
 - Form actions with progressive enhancement
 - Multiple deployment adapters (Vercel, Cloudflare, Node, static)
 
 **Svelte 5** introduces a new reactivity system with:
-
 - Runes: `$state()`, `$derived()`, `$effect()`, `$props()`
 - Simplified component authoring
 - Better TypeScript support
 - Snippets replacing slots
 
 **Tailwind CSS v4** offers:
-
 - CSS-first configuration
 - New Vite plugin architecture
 - Improved JIT performance
 - Simplified setup
 
 **Integration challenges this skill addresses:**
-
 - Configuring all three tools to work together
 - Understanding Svelte 5 runes in SSR context
 - Progressive enhancement with form actions
@@ -49,22 +45,20 @@ This skill provides comprehensive guidance for building modern web applications 
 When a user asks you to build something with this stack:
 
 1. **Research first** - Search the documentation to understand:
-    - How SvelteKit handles this use case
-    - What Svelte 5 runes patterns apply
-    - How to style with Tailwind v4
-    - Common integration pitfalls to avoid
+   - How SvelteKit handles this use case
+   - What Svelte 5 runes patterns apply
+   - How to style with Tailwind v4
+   - Common integration pitfalls to avoid
 
 2. **Then execute** - Implement the solution using the knowledge gained from documentation
 
 **Why this matters:**
-
 - This integration has specific constraints (e.g., runes don't work in SSR)
 - The documentation provides authoritative guidance on configuration
 - Researching first prevents mistakes that require rework
 - You'll implement solutions that follow best practices
 
 **Workflow:**
-
 1. User requests: "Help me build [feature] with SvelteKit/Svelte 5/Tailwind"
 2. You search documentation using the process below
 3. You understand the recommended approach
@@ -75,9 +69,7 @@ When a user asks you to build something with this stack:
 This skill includes two searchable documentation collections:
 
 ### references/ (Problem-Focused Guides)
-
 17 curated guides addressing specific integration challenges:
-
 - **Setup**: getting-started.md, project-setup.md
 - **Core Concepts**: svelte5-runes.md, routing-patterns.md, server-rendering.md, data-loading.md
 - **Forms & Styling**: forms-and-actions.md, styling-with-tailwind.md, styling-patterns.md
@@ -88,9 +80,7 @@ This skill includes two searchable documentation collections:
 - **Search System**: documentation-search-system.md
 
 ### docs/ (Comprehensive Reference)
-
 7 adapted documentation guides covering complete APIs:
-
 - sveltekit-configuration.md - Complete svelte.config.js and Vite config
 - svelte5-api-reference.md - All Svelte 5 runes and template syntax
 - tailwind-configuration.md - Tailwind v4 configuration options
@@ -108,18 +98,15 @@ This skill uses a 5-stage search process for efficient documentation lookup:
 ### Stage 0: Discover Available Documentation
 
 Find all documentation indexes:
-
 ```bash
 find . -name "index.jsonl" -type f
 ```
 
 Expected output:
-
 - `./references/index.jsonl` (17 problem-focused guides)
 - `./docs/index.jsonl` (7 comprehensive references)
 
 Sample each collection to understand its scope:
-
 ```
 Read references/index.jsonl with offset: 1, limit: 5
 Read docs/index.jsonl with offset: 1, limit: 5
@@ -130,7 +117,6 @@ Determine which collection(s) are relevant to your query.
 ### Stage 1: Load Relevant Indexes
 
 Read the complete index file(s) for your chosen collection(s):
-
 ```
 Read references/index.jsonl  # For how-to guides and troubleshooting
 Read docs/index.jsonl         # For API reference and configuration
@@ -149,7 +135,6 @@ Analyze the summaries to identify 3-4 most relevant files:
 **For errors** → references/common-issues.md, references/troubleshooting.md
 
 Consider:
-
 - Query intent (how-to vs what-is vs troubleshooting)
 - Integration-specific vs single-package questions
 - Beginner vs advanced topics
@@ -157,7 +142,6 @@ Consider:
 ### Stage 3: Get Section Details
 
 For your 3-4 candidates, read their sections.jsonl entries:
-
 ```
 Read references/sections.jsonl with offset: {index}, limit: 1
 Read docs/sections.jsonl with offset: {index}, limit: 1
@@ -170,7 +154,6 @@ Analyze the section summaries to identify which sections address your query.
 ### Stage 4: Read Targeted Sections
 
 Read only the relevant sections:
-
 ```
 Read references/getting-started.md with offset: 45, limit: 89
 Read docs/svelte5-api-reference.md with offset: 120, limit: 65
@@ -181,14 +164,12 @@ Use the offset and limit from the sections.jsonl data for precise reading.
 ### Stage 5: Synthesize and Answer
 
 Combine information from multiple sources:
-
 1. Direct answer to the user's question
 2. Code examples (complete and runnable)
 3. Integration-specific considerations
 4. File references for further reading
 
 **Example file references:**
-
 ```
 See: references/svelte5-runes.md:156-245 (Server-Side Constraints)
 See: docs/advanced-ssr.md:89-134 (SSR Load Functions)
@@ -201,7 +182,6 @@ See: docs/advanced-ssr.md:89-134 (SSR Load Functions)
 For a complete walkthrough, search references/getting-started.md
 
 Basic setup commands:
-
 ```bash
 # 1. Create SvelteKit project
 npm create svelte@latest my-app
@@ -236,7 +216,6 @@ npm run dev
 ```
 
 **Critical configuration:**
-
 - Tailwind plugin MUST come before SvelteKit plugin in vite.config.js
 - Import CSS in root +layout.svelte (not app.html)
 - Use `@next` tag for Tailwind v4 packages
@@ -298,7 +277,6 @@ For systematic troubleshooting, see references/troubleshooting.md
 ## Integration Patterns
 
 **Server + Client Component Split**
-
 ```svelte
 <!-- +page.svelte (SSR-safe) -->
 <script>
@@ -315,40 +293,39 @@ For systematic troubleshooting, see references/troubleshooting.md
 ```
 
 **Form with Progressive Enhancement**
-
 ```svelte
 <script>
-	import { enhance } from "$app/forms";
-	let { form } = $props();
-	let submitting = $state(false);
+  import { enhance } from '$app/forms';
+  let { form } = $props();
+  let submitting = $state(false);
 </script>
 
-<form
-	method="POST"
-	use:enhance={() => {
-		submitting = true;
-		return async ({ result, update }) => {
-			submitting = false;
-			await update();
-		};
-	}}
->
-	<!-- form fields -->
+<form method="POST" use:enhance={() => {
+  submitting = true;
+  return async ({ result, update }) => {
+    submitting = false;
+    await update();
+  };
+}}>
+  <!-- form fields -->
 </form>
 ```
 
 **Conditional Tailwind Classes**
-
 ```svelte
 <script>
-	let active = $state(false);
+  let active = $state(false);
 </script>
 
 <!-- ✅ GOOD: Full class names -->
-<div class:bg-blue-500={active} class:bg-gray-200={!active}>Button</div>
+<div class:bg-blue-500={active} class:bg-gray-200={!active}>
+  Button
+</div>
 
 <!-- ❌ BAD: Dynamic class parts -->
-<div class="bg-{active ? 'blue' : 'gray'}-500">Button</div>
+<div class="bg-{active ? 'blue' : 'gray'}-500">
+  Button
+</div>
 ```
 
 For complete patterns, search docs/integration-patterns.md
@@ -356,7 +333,6 @@ For complete patterns, search docs/integration-patterns.md
 ## Best Practices
 
 Search references/best-practices.md for comprehensive guidance on:
-
 - Project organization and architecture
 - Component design patterns
 - State management strategies
@@ -379,7 +355,6 @@ Search references/best-practices.md for comprehensive guidance on:
 ## Performance Optimization
 
 Search references/performance-optimization.md for:
-
 - Bundle size optimization
 - CSS purging and minification
 - Code splitting strategies
@@ -391,7 +366,6 @@ Search references/performance-optimization.md for:
 ## Version Information
 
 This skill covers:
-
 - **SvelteKit**: 2.x (latest stable)
 - **Svelte**: 5.x (with runes)
 - **Tailwind CSS**: 4.x (CSS-first configuration)
@@ -450,7 +424,6 @@ sveltekit-svelte5-tailwind-skill/
 ## Distribution Mode
 
 This skill uses **author-only** distribution:
-
 - All content is newly authored
 - No verbatim vendor documentation
 - Source materials used for reference only

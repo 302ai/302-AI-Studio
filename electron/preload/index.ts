@@ -313,28 +313,6 @@ if (process.contextIsolated) {
 					return () => ipcRenderer.removeListener("ai-applications:loading", listener);
 				},
 			},
-			plugin: {
-				onNotification: (
-					callback: (data: {
-						pluginId: string;
-						pluginName: string;
-						message: string;
-						type: "info" | "success" | "warning" | "error";
-					}) => void,
-				) => {
-					const listener = (
-						_: unknown,
-						data: {
-							pluginId: string;
-							pluginName: string;
-							message: string;
-							type: "info" | "success" | "warning" | "error";
-						},
-					) => callback(data);
-					ipcRenderer.on("plugin:notification", listener);
-					return () => ipcRenderer.removeListener("plugin:notification", listener);
-				},
-			},
 			skill: {
 				onSkillImportRequested: (callback: (data: { url: string }) => void) => {
 					const listener = (_: unknown, data: { url: string }) => callback(data);

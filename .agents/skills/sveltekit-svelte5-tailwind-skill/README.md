@@ -7,7 +7,6 @@ A comprehensive Claude skill for building modern web applications with SvelteKit
 This skill provides searchable, curated documentation for building full-stack web applications using the modern SvelteKit + Svelte 5 + Tailwind v4 stack. It addresses the unique integration challenges when using these three frameworks together, with special focus on Svelte 5's new runes system and its interaction with server-side rendering.
 
 **Integration Stack:**
-
 - **SvelteKit 2**: Full-stack framework with file-based routing, SSR/SSG, form actions, and deployment adapters
 - **Svelte 5**: Modern reactivity with runes (`$state`, `$derived`, `$effect`, `$props`)
 - **Tailwind CSS v4**: CSS-first configuration with new Vite plugin architecture
@@ -28,41 +27,34 @@ This skill provides searchable, curated documentation for building full-stack we
 Curated guides addressing specific integration challenges:
 
 **Setup & Configuration:**
-
 - `getting-started.md` - Quick start and initial setup
 - `project-setup.md` - Complete project configuration
 
 **Core Concepts:**
-
 - `svelte5-runes.md` - Svelte 5 runes system and SSR constraints
 - `routing-patterns.md` - File-based routing and layouts
 - `server-rendering.md` - SSR/SSG patterns
 - `data-loading.md` - Load functions and data flow
 
 **Forms & Styling:**
-
 - `forms-and-actions.md` - Progressive enhancement with form actions
 - `styling-with-tailwind.md` - Component styling patterns
 - `styling-patterns.md` - Advanced styling techniques
 
 **Deployment & Migration:**
-
 - `deployment-guide.md` - Platform-specific deployment (Vercel, Cloudflare, Node, static)
 - `migration-svelte4-to-5.md` - Upgrading from Svelte 4 to 5
 - `tailwind-v4-migration.md` - Upgrading from Tailwind v3 to v4
 
 **Optimization & Best Practices:**
-
 - `best-practices.md` - Architecture and conventions
 - `performance-optimization.md` - Bundle size, loading, Core Web Vitals
 
 **Troubleshooting:**
-
 - `common-issues.md` - Quick fixes for frequent problems
 - `troubleshooting.md` - Systematic debugging methodology
 
 **Search System:**
-
 - `documentation-search-system.md` - Complete search methodology
 
 ### `docs/` - Comprehensive Reference (7 files)
@@ -115,7 +107,6 @@ npm run dev
 ```
 
 **Critical Configuration Points:**
-
 - Tailwind plugin MUST come before SvelteKit plugin in `vite.config.js`
 - Import CSS in root `+layout.svelte`, not in `app.html`
 - Use `@next` tag for Tailwind v4 packages
@@ -134,13 +125,11 @@ This skill is designed to be used with Claude's research-first methodology:
 The skill uses a 5-stage search process:
 
 **Stage 0: Discover** - Find available indexes
-
 ```bash
 find . -name "index.jsonl" -type f
 ```
 
 **Stage 1: Load** - Read relevant index files
-
 ```
 Read references/index.jsonl  # For how-to guides
 Read docs/index.jsonl        # For API reference
@@ -180,21 +169,18 @@ See: `references/svelte5-runes.md` - Server-Side Constraints
 
 ```svelte
 <script>
-	import { enhance } from "$app/forms";
-	let submitting = $state(false);
+  import { enhance } from '$app/forms';
+  let submitting = $state(false);
 </script>
 
-<form
-	method="POST"
-	use:enhance={() => {
-		submitting = true;
-		return async ({ result, update }) => {
-			submitting = false;
-			await update();
-		};
-	}}
->
-	<button disabled={submitting}>Submit</button>
+<form method="POST" use:enhance={() => {
+  submitting = true;
+  return async ({ result, update }) => {
+    submitting = false;
+    await update();
+  };
+}}>
+  <button disabled={submitting}>Submit</button>
 </form>
 ```
 
@@ -235,7 +221,6 @@ For systematic troubleshooting, see `references/troubleshooting.md`.
 ## Version Information
 
 **Supported Versions:**
-
 - **SvelteKit**: 2.x (latest stable)
 - **Svelte**: 5.x (with runes)
 - **Tailwind CSS**: 4.x (CSS-first configuration)
@@ -245,14 +230,12 @@ All code examples and patterns are tested with these versions.
 ## Distribution Mode
 
 This skill uses **author-only** distribution:
-
 - All content is newly authored original work
 - No verbatim copying from vendor documentation
 - Source materials used for reference only
 - All guides cite influences via `adapted_from` frontmatter
 
 **Referenced Repositories:**
-
 - [sveltejs/kit](https://github.com/sveltejs/kit)
 - [sveltejs/svelte](https://github.com/sveltejs/svelte)
 - [tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss)
@@ -312,7 +295,6 @@ This skill was generated using the Claude Skill Builder. To report issues or sug
 ## Changelog
 
 ### v1.0.0 (2025-10-28)
-
 - Initial release
 - 17 problem-focused guides in `references/`
 - 7 comprehensive references in `docs/`

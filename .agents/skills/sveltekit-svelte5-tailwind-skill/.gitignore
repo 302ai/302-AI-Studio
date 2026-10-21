@@ -1,0 +1,16 @@
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Editor files
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Research artifacts (not part of packaged skill)
+research/
