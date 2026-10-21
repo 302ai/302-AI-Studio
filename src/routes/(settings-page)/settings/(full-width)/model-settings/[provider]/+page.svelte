@@ -236,9 +236,8 @@
 	}
 
 	function fillApiKeyFromAccount() {
-		// Prefer ssoApiKey (from SSO callback) over userInfo.api_key (from fetched account info)
 		// The SSO callback returns the actual API key that should be used
-		const apiKeyToUse = userState.ssoApiKey || userState.userInfo?.api_key;
+		const apiKeyToUse = userState.ssoApiKey;
 		if (apiKeyToUse) {
 			apiKeyInput = apiKeyToUse;
 

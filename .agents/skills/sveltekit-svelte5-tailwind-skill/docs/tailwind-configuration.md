@@ -4,7 +4,7 @@ version_anchors: ["Tailwind@4.x"]
 authored: true
 origin: self
 adapted_from:
-    - "tailwindlabs/tailwindcss#91694fb (Tailwind CSS v4 documentation and configuration)"
+  - "tailwindlabs/tailwindcss#91694fb (Tailwind CSS v4 documentation and configuration)"
 last_reviewed: 2025-10-28
 summary: "Complete configuration reference for Tailwind CSS v4 including CSS-first configuration, Vite plugin setup, content paths, theme customization, dark mode, and SvelteKit integration"
 ---
@@ -25,12 +25,15 @@ npm install tailwindcss@next @tailwindcss/vite@next
 
 ```js
 // vite.config.js
-import { sveltekit } from "@sveltejs/kit/vite";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss()],
+	plugins: [
+		sveltekit(),
+		tailwindcss()
+	]
 });
 ```
 
@@ -46,7 +49,7 @@ export default defineConfig({
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-	import "../app.css";
+	import '../app.css';
 </script>
 
 <slot />
@@ -69,7 +72,7 @@ Configure directly in CSS using `@theme` and `@plugin`.
 	--color-secondary: #8b5cf6;
 
 	--font-sans: Inter, system-ui, sans-serif;
-	--font-mono: "Fira Code", monospace;
+	--font-mono: 'Fira Code', monospace;
 
 	--breakpoint-3xl: 1920px;
 
@@ -85,17 +88,17 @@ Use `tailwind.config.js` for backwards compatibility.
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: ["./src/**/*.{html,js,svelte,ts}"],
+	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
 			colors: {
-				primary: "#3b82f6",
-				secondary: "#8b5cf6",
-			},
-		},
+				primary: '#3b82f6',
+				secondary: '#8b5cf6'
+			}
+		}
 	},
-	plugins: [],
-};
+	plugins: []
+}
 ```
 
 ## Content Configuration
@@ -105,22 +108,20 @@ export default {
 Specify where Tailwind should look for class names.
 
 **CSS-first approach:**
-
 ```css
 @source "../../lib/**/*.{html,js,svelte,ts}";
 ```
 
 **JavaScript approach:**
-
 ```js
 // tailwind.config.js
 export default {
 	content: [
-		"./src/**/*.{html,js,svelte,ts}",
-		"./src/**/*.svelte",
-		"../shared-ui/src/**/*.svelte",
-	],
-};
+		'./src/**/*.{html,js,svelte,ts}',
+		'./src/**/*.svelte',
+		'../shared-ui/src/**/*.svelte'
+	]
+}
 ```
 
 ### Content Patterns for SvelteKit
@@ -128,11 +129,11 @@ export default {
 ```js
 export default {
 	content: [
-		"./src/routes/**/*.{svelte,js,ts}", // All route files
-		"./src/lib/**/*.{svelte,js,ts}", // Library components
-		"./src/app.html", // App template
-	],
-};
+		'./src/routes/**/*.{svelte,js,ts}',    // All route files
+		'./src/lib/**/*.{svelte,js,ts}',       // Library components
+		'./src/app.html'                       // App template
+	]
+}
 ```
 
 ### Safelist Classes
@@ -142,14 +143,14 @@ Prevent specific classes from being purged.
 ```js
 export default {
 	safelist: [
-		"bg-blue-500",
-		"text-red-600",
+		'bg-blue-500',
+		'text-red-600',
 		{
 			pattern: /bg-(red|green|blue)-(100|200|300)/,
-			variants: ["hover", "focus"],
-		},
-	],
-};
+			variants: ['hover', 'focus']
+		}
+	]
+}
 ```
 
 ## Theme Customization
@@ -163,7 +164,7 @@ export default {
 	--color-accent: #f59e0b;
 
 	/* Fonts */
-	--font-display: "Playfair Display", serif;
+	--font-display: 'Playfair Display', serif;
 	--font-body: Inter, sans-serif;
 
 	/* Spacing */
@@ -195,29 +196,29 @@ export default {
 		extend: {
 			colors: {
 				brand: {
-					50: "#eff6ff",
-					100: "#dbeafe",
-					500: "#3b82f6",
-					900: "#1e3a8a",
-				},
+					50: '#eff6ff',
+					100: '#dbeafe',
+					500: '#3b82f6',
+					900: '#1e3a8a'
+				}
 			},
 			fontFamily: {
-				display: ["Playfair Display", "serif"],
-				body: ["Inter", "sans-serif"],
+				display: ['Playfair Display', 'serif'],
+				body: ['Inter', 'sans-serif']
 			},
 			spacing: {
-				18: "4.5rem",
-				88: "22rem",
+				'18': '4.5rem',
+				'88': '22rem'
 			},
 			borderRadius: {
-				"4xl": "2rem",
+				'4xl': '2rem'
 			},
 			boxShadow: {
-				"inner-lg": "inset 0 2px 4px 0 rgb(0 0 0 / 0.1)",
-			},
-		},
-	},
-};
+				'inner-lg': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.1)'
+			}
+		}
+	}
+}
 ```
 
 ## Dark Mode Configuration
@@ -227,31 +228,30 @@ export default {
 ```js
 // tailwind.config.js
 export default {
-	darkMode: "class",
-};
+	darkMode: 'class'
+}
 ```
 
 **SvelteKit implementation:**
-
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-	import { browser } from "$app/environment";
-	import { writable } from "svelte/store";
+	import { browser } from '$app/environment';
+	import { writable } from 'svelte/store';
 
 	let darkMode = writable(false);
 
 	if (browser) {
 		// Initialize from localStorage
-		darkMode.set(localStorage.getItem("theme") === "dark");
+		darkMode.set(localStorage.getItem('theme') === 'dark');
 	}
 
 	function toggleDarkMode() {
-		darkMode.update((v) => !v);
+		darkMode.update(v => !v);
 		if (browser) {
 			const newValue = !$darkMode;
-			localStorage.setItem("theme", newValue ? "dark" : "light");
-			document.documentElement.classList.toggle("dark", newValue);
+			localStorage.setItem('theme', newValue ? 'dark' : 'light');
+			document.documentElement.classList.toggle('dark', newValue);
 		}
 	}
 </script>
@@ -259,13 +259,15 @@ export default {
 <svelte:head>
 	{#if $darkMode}
 		<script>
-			document.documentElement.classList.add("dark");
+			document.documentElement.classList.add('dark');
 		</script>
 	{/if}
 </svelte:head>
 
 <div class="min-h-screen bg-white dark:bg-gray-900">
-	<button onclick={toggleDarkMode}> Toggle Dark Mode </button>
+	<button onclick={toggleDarkMode}>
+		Toggle Dark Mode
+	</button>
 
 	<slot />
 </div>
@@ -275,16 +277,16 @@ export default {
 
 ```js
 export default {
-	darkMode: "media", // Uses prefers-color-scheme
-};
+	darkMode: 'media'  // Uses prefers-color-scheme
+}
 ```
 
 ### Selector-Based Dark Mode
 
 ```js
 export default {
-	darkMode: ["selector", '[data-mode="dark"]'],
-};
+	darkMode: ['selector', '[data-mode="dark"]']
+}
 ```
 
 ## Vite Plugin Options
@@ -293,33 +295,31 @@ export default {
 
 ```js
 // vite.config.js
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
 	plugins: [
 		sveltekit(),
 		tailwindcss({
 			// Disable optimization (dev mode)
-			optimize: false,
-		}),
-	],
+			optimize: false
+		})
+	]
 });
 ```
 
 **Disable minification only:**
-
 ```js
 tailwindcss({
-	optimize: { minify: false },
-});
+	optimize: { minify: false }
+})
 ```
 
 **Production optimization:**
-
 ```js
 tailwindcss({
-	optimize: process.env.NODE_ENV === "production",
-});
+	optimize: process.env.NODE_ENV === 'production'
+})
 ```
 
 ## Plugins
@@ -332,13 +332,17 @@ npm install @tailwindcss/forms @tailwindcss/typography @tailwindcss/aspect-ratio
 
 ```js
 // tailwind.config.js
-import forms from "@tailwindcss/forms";
-import typography from "@tailwindcss/typography";
-import aspectRatio from "@tailwindcss/aspect-ratio";
+import forms from '@tailwindcss/forms';
+import typography from '@tailwindcss/typography';
+import aspectRatio from '@tailwindcss/aspect-ratio';
 
 export default {
-	plugins: [forms, typography, aspectRatio],
-};
+	plugins: [
+		forms,
+		typography,
+		aspectRatio
+	]
+}
 ```
 
 ### CSS Plugin Definition (v4)
@@ -355,27 +359,27 @@ export default {
 
 ```js
 // tailwind.config.js
-import plugin from "tailwindcss/plugin";
+import plugin from 'tailwindcss/plugin';
 
 export default {
 	plugins: [
-		plugin(function ({ addUtilities, addComponents, theme }) {
+		plugin(function({ addUtilities, addComponents, theme }) {
 			addUtilities({
-				".content-auto": {
-					"content-visibility": "auto",
-				},
+				'.content-auto': {
+					'content-visibility': 'auto'
+				}
 			});
 
 			addComponents({
-				".btn": {
-					padding: theme("spacing.4"),
-					borderRadius: theme("borderRadius.md"),
-					fontWeight: theme("fontWeight.semibold"),
-				},
+				'.btn': {
+					padding: theme('spacing.4'),
+					borderRadius: theme('borderRadius.md'),
+					fontWeight: theme('fontWeight.semibold')
+				}
 			});
-		}),
-	],
-};
+		})
+	]
+}
 ```
 
 ## Custom Utilities
@@ -383,19 +387,23 @@ export default {
 ### Arbitrary Values
 
 ```svelte
-<div class="top-[117px]" /><div class="bg-[#1da1f2]" /><div class="grid-cols-[1fr,700px,2fr]" />
+<div class="top-[117px]" />
+<div class="bg-[#1da1f2]" />
+<div class="grid-cols-[1fr,700px,2fr]" />
 ```
 
 ### Arbitrary Properties
 
 ```svelte
-<div class="[mask-type:luminance]" /><div class="[--scroll-offset:56px]" />
+<div class="[mask-type:luminance]" />
+<div class="[--scroll-offset:56px]" />
 ```
 
 ### Arbitrary Variants
 
 ```svelte
-<div class="[&:nth-child(3)]:py-0" /><div class="[&_p]:mt-4" />
+<div class="[&:nth-child(3)]:py-0" />
+<div class="[&_p]:mt-4" />
 ```
 
 ## SvelteKit-Specific Configuration
@@ -404,20 +412,20 @@ export default {
 
 ```js
 // vite.config.js
-import { sveltekit } from "@sveltejs/kit/vite";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [
 		sveltekit(),
 		tailwindcss({
-			optimize: process.env.NODE_ENV === "production",
-		}),
+			optimize: process.env.NODE_ENV === 'production'
+		})
 	],
 	css: {
-		devSourcemap: true,
-	},
+		devSourcemap: true
+	}
 });
 ```
 
@@ -448,7 +456,7 @@ export default defineConfig({
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-	import "../app.css";
+	import '../app.css';
 </script>
 
 <div class="min-h-screen bg-gray-50">
@@ -459,32 +467,34 @@ export default defineConfig({
 ### Dynamic Class Names in Svelte
 
 **Safe (always works):**
-
 ```svelte
-<div class="bg-blue-500" /><div class="text-{color}-600" /> <!-- If color is known at build time -->
+<div class="bg-blue-500" />
+<div class="text-{color}-600" />  <!-- If color is known at build time -->
 ```
 
 **Unsafe (might not work):**
-
 ```svelte
 <script>
-	let color = $state("blue");
+	let color = $state('blue');
 </script>
 
-<!-- ❌ Dynamic concatenation not detected --><div class="bg-{color}-500" />
+<!-- ❌ Dynamic concatenation not detected -->
+<div class="bg-{color}-500" />
 ```
 
 **Solution - Use safelist or complete classes:**
-
 ```svelte
 <script>
-	let color = $state("blue");
+	let color = $state('blue');
 	let classes = $derived(
-		color === "blue" ? "bg-blue-500" : color === "red" ? "bg-red-500" : "bg-gray-500",
+		color === 'blue' ? 'bg-blue-500' :
+		color === 'red' ? 'bg-red-500' :
+		'bg-gray-500'
 	);
 </script>
 
-<!-- ✅ Complete class names --><div class={classes} />
+<!-- ✅ Complete class names -->
+<div class={classes} />
 ```
 
 ## Advanced Configuration
@@ -495,12 +505,11 @@ Add prefix to all Tailwind classes.
 
 ```js
 export default {
-	prefix: "tw-",
-};
+	prefix: 'tw-'
+}
 ```
 
 **Usage:**
-
 ```svelte
 <div class="tw-flex tw-items-center tw-justify-center" />
 ```
@@ -511,16 +520,15 @@ Make all utilities `!important`.
 
 ```js
 export default {
-	important: true,
-};
+	important: true
+}
 ```
 
 **Or with selector:**
-
 ```js
 export default {
-	important: "#app",
-};
+	important: '#app'
+}
 ```
 
 ### Separator
@@ -529,12 +537,11 @@ Change the separator for variants.
 
 ```js
 export default {
-	separator: "_",
-};
+	separator: '_'
+}
 ```
 
 **Usage:**
-
 ```svelte
 <div class="hover_bg-blue-500" />
 ```
@@ -546,11 +553,11 @@ Disable specific core plugins.
 ```js
 export default {
 	corePlugins: {
-		preflight: false, // Disable base styles
+		preflight: false,  // Disable base styles
 		container: false,
-		float: false,
-	},
-};
+		float: false
+	}
+}
 ```
 
 ## PostCSS Configuration
@@ -562,26 +569,26 @@ export default {
 export default {
 	plugins: {
 		tailwindcss: {},
-		autoprefixer: {},
-	},
-};
+		autoprefixer: {}
+	}
+}
 ```
 
 ### With Additional Plugins
 
 ```js
 // postcss.config.js
-import tailwindcss from "tailwindcss";
-import autoprefixer from "autoprefixer";
-import cssnano from "cssnano";
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
 
 export default {
 	plugins: [
 		tailwindcss,
 		autoprefixer,
-		...(process.env.NODE_ENV === "production" ? [cssnano] : []),
-	],
-};
+		...(process.env.NODE_ENV === 'production' ? [cssnano] : [])
+	]
+}
 ```
 
 ## Performance Optimization
@@ -595,14 +602,14 @@ export default defineConfig({
 		sveltekit(),
 		tailwindcss({
 			optimize: {
-				minify: true,
-			},
-		}),
+				minify: true
+			}
+		})
 	],
 	build: {
 		cssCodeSplit: true,
-		cssMinify: "lightningcss",
-	},
+		cssMinify: 'lightningcss'
+	}
 });
 ```
 
@@ -611,15 +618,17 @@ export default defineConfig({
 ```js
 export default {
 	content: {
-		files: ["./src/**/*.{html,js,svelte,ts}"],
+		files: [
+			'./src/**/*.{html,js,svelte,ts}'
+		],
 		extract: {
 			// Custom extractor for Svelte
 			svelte: (content) => {
 				return content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || [];
-			},
-		},
-	},
-};
+			}
+		}
+	}
+}
 ```
 
 ## Migration from v3 to v4
@@ -642,7 +651,6 @@ npm uninstall @tailwindcss/postcss7-compat
 ```
 
 **Update Vite config:**
-
 ```js
 // Before (v3)
 export default defineConfig({
@@ -665,7 +673,6 @@ export default defineConfig({
 ```
 
 **Update CSS file:**
-
 ```css
 /* Before (v3) */
 @tailwind base;
@@ -682,16 +689,16 @@ export default defineConfig({
 
 ```js
 // vite.config.js
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === 'development';
 
 export default defineConfig({
 	plugins: [
 		sveltekit(),
 		tailwindcss({
 			optimize: !isDev,
-			minify: !isDev,
-		}),
-	],
+			minify: !isDev
+		})
+	]
 });
 ```
 
@@ -699,22 +706,22 @@ export default defineConfig({
 
 ```js
 // tailwind.config.js
-const production = process.env.NODE_ENV === "production";
+const production = process.env.NODE_ENV === 'production';
 
 export default {
-	content: ["./src/**/*.{html,js,svelte,ts}"],
+	content: [
+		'./src/**/*.{html,js,svelte,ts}'
+	],
 	theme: {
 		extend: {
-			colors: production
-				? {
-						primary: "#0ea5e9",
-					}
-				: {
-						primary: "#ef4444", // Different color in dev
-					},
-		},
-	},
-};
+			colors: production ? {
+				primary: '#0ea5e9'
+			} : {
+				primary: '#ef4444'  // Different color in dev
+			}
+		}
+	}
+}
 ```
 
 ## Troubleshooting

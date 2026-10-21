@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import type { UIMessage } from "ai";
+import type { StorageValue } from "@302ai/unstorage";
+
 // Export necessary types and functions from @302ai/unstorage
 export { prefixStorage } from "@302ai/unstorage";
 export type { StorageMeta, StorageValue } from "@302ai/unstorage";
@@ -15,38 +18,115 @@ export * from "./storage/thread";
 export * from "./storage/cloud-mode";
 export * from "./storage/openclaw";
 export * from "./types/shortcut";
-
-// Re-export plugin types from SDK
-export * from "@302ai/studio-plugin-sdk";
 export type { LogCategory, LogLevel } from "./logger/types";
 
-// Import specific types for use in this file
-import type { Model, ModelCapability, ModelType } from "@302ai/studio-plugin-sdk";
-import type { StorageValue } from "@302ai/unstorage";
+/* ============================================================================
+ * Model Types
+ * ========================================================================= */
 
-// Application-specific plugin types (not in SDK)
-export type PluginSource =
-	| { type: "marketplace"; id: string }
-	| { type: "url"; url: string }
-	| { type: "local"; path: string };
+export type ModelType = "language" | "image-generation" | "tts" | "embedding" | "rerank";
+export type ModelCapability = string;
 
-// Application-specific plugin market types (not in SDK)
-export interface PluginMarketEntry {
-	metadata: import("@302ai/studio-plugin-sdk").PluginMetadata;
-	downloadUrl: string;
-	repository: string;
-	homepage?: string;
-	icon?: string;
-	downloads: number;
-	rating: number;
-	ratingCount: number;
-	featured: boolean;
-	screenshots?: string[];
-	readme?: string;
-	changelog?: string;
-	publishedAt: Date;
-	updatedAt: Date;
+export interface Model {
+	id: string;
+	name: string;
+	remark: string;
+	providerId: string;
+	capabilities: Set<ModelCapability>;
+	type: ModelType;
+	custom: boolean;
+	enabled: boolean;
+	collected: boolean;
+	isFeatured: boolean;
+	isAddedByUser?: boolean;
+	is_custom_model?: boolean;
+	openai_compatible?: boolean;
 }
+
+export interface ModelCreateInput {
+	id: string;
+	name: string;
+	remark?: string;
+	providerId: string;
+	capabilities?: Set<ModelCapability>;
+	type?: ModelType;
+	custom?: boolean;
+	enabled?: boolean;
+	collected?: boolean;
+	isFeatured?: boolean;
+	isAddedByUser?: boolean;
+}
+
+export interface ModelUpdateInput {
+	id?: string;
+	name?: string;
+	remark?: string;
+	providerId?: string;
+	capabilities?: Set<ModelCapability>;
+	type?: ModelType;
+	custom?: boolean;
+	enabled?: boolean;
+	collected?: boolean;
+	isFeatured?: boolean;
+	isAddedByUser?: boolean;
+}
+
+/* ============================================================================
+ * Chat Message Types
+ * ========================================================================= */
+
+export interface ResultMetadata {
+	type?: string;
+	subtype?: string;
+	is_error?: boolean;
+	duration_ms?: number;
+	duration_api_ms?: number;
+	num_turns?: number;
+	content?: string;
+	session_id?: string;
+	total_cost_usd?: number;
+	uuid?: string;
+	result_files?: string[];
+}
+
+export interface MessageMetadata {
+	createdAt?: string;
+	model?: string;
+	attachments?: Array<{
+		id: string;
+		name: string;
+		type: string;
+		size: number;
+		filePath: string;
+		preview?: string;
+		textContent?: string;
+	}>;
+	fileContentPartIndex?: number;
+	feedback?: "like" | "dislike";
+	result?: ResultMetadata;
+	userPromptTemplateContent?: string;
+	userPromptTemplateVariables?: string[];
+	userPromptTemplateMap?: Record<string, string>;
+	systemPromptContent?: string;
+	systemPromptVariables?: string[];
+	systemPromptMap?: Record<string, string>;
+	isOCCronJobResult?: boolean;
+	OCCronJobRunData?: any;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type ChatTools = {};
+
+export type CustomUIDataTypes = {
+	suggestions?: string[];
+	[x: string]: unknown;
+};
+
+export type ChatMessage = UIMessage<MessageMetadata, CustomUIDataTypes, ChatTools>;
+
+/* ============================================================================
+ * Storage Types
+ * ========================================================================= */
 
 export interface StorageMetadata {
 	mtime?: Date;
@@ -81,36 +161,6 @@ export interface MigrationConfig<T extends StorageValue = StorageValue> {
 
 export interface VersionedStorageValue {
 	_version?: number;
-}
-
-// Model-related types are now exported from @302ai/studio-plugin-sdk
-
-export interface ModelCreateInput {
-	id: string;
-	name: string;
-	remark?: string;
-	providerId: string;
-	capabilities?: Set<ModelCapability>;
-	type?: ModelType;
-	custom?: boolean;
-	enabled?: boolean;
-	collected?: boolean;
-	isFeatured?: boolean;
-	isAddedByUser?: boolean;
-}
-
-export interface ModelUpdateInput {
-	id?: string;
-	name?: string;
-	remark?: string;
-	providerId?: string;
-	capabilities?: Set<ModelCapability>;
-	type?: ModelType;
-	custom?: boolean;
-	enabled?: boolean;
-	collected?: boolean;
-	isFeatured?: boolean;
-	isAddedByUser?: boolean;
 }
 
 export interface MCPServer {
@@ -151,20 +201,13 @@ export interface ThreadParmas {
 	isPrivateChatActive: boolean;
 	reasoningEffort?: ThinkingBudgetType;
 	updatedAt: Date;
-	autoSendOnLoad?: boolean; // Flag to auto-send message when thread loads (for branch and send)
-	/** Hash of the API key used when creating this thread, used to track account association */
+	autoSendOnLoad?: boolean;
 	apiKeyHash?: string;
-	/** Incremental summary for title generation, stores context from previous conversations */
 	incrementalSummary?: string;
-	/** Message ID marking the clear screen point - messages up to and including this ID are hidden */
 	clearScreenMessageId?: string;
-	/** Rolling summary for context compression, stores condensed earlier conversation */
 	contextSummary?: string;
-	/** Count of messages included in the context summary */
 	compressedMessageCount?: number;
-	/** Message ID of last message included in compression */
 	lastCompressionMessageId?: string;
-	/** Whether compression is enabled for this thread (overrides global setting) */
 	compressionEnabled?: boolean;
 }
 

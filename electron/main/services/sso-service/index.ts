@@ -20,7 +20,6 @@ export class SsoService {
 		try {
 			// Derive SSO origin from the configured API base URL (api.302ai.cn -> 302ai.cn)
 			const ssoOrigin = get302AISsoOrigin(baseUrl);
-
 			// Use local server as redirect URL with language in path (not query params)
 			// 302.AI will append ?apikey=... so we can't have query params in the redirect URL
 			const redirectUrl = `http://localhost:${serverPort}/sso/callback/${language}`;

@@ -1,5 +1,10 @@
 import type { ModelProvider } from "@shared/types";
-import { DEFAULT_302AI_BASE_URL, get302AIBaseUrlWithoutV1 } from "@shared/utils/302ai-base-url";
+import {
+	DEFAULT_302AI_BASE_URL,
+	get302AIBaseUrlWithoutV1,
+	get302WebsiteBaseDomain,
+	get302WebsiteUrl,
+} from "@shared/utils/302ai-base-url";
 import { hashApiKey } from "@shared/utils/hash";
 import { isNull, isUndefined } from "es-toolkit";
 import { StorageService } from "../storage-service";
@@ -40,6 +45,14 @@ export class ProviderStorage extends StorageService<ModelProvider[]> {
 
 	async get302AIBaseUrlWithoutV1(): Promise<string> {
 		return get302AIBaseUrlWithoutV1(await this.get302AIBaseUrl());
+	}
+
+	async get302WebsiteBaseDomain(): Promise<string> {
+		return get302WebsiteBaseDomain(await this.get302AIBaseUrl());
+	}
+
+	async get302WebsiteUrl(path: string = ""): Promise<string> {
+		return get302WebsiteUrl(path, await this.get302AIBaseUrl());
 	}
 
 	/**

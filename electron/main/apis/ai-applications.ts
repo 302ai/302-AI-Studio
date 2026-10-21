@@ -35,6 +35,8 @@ export async function fetch302AIUserInfo(apiKey: string): Promise<Ai302UserInfo>
 				},
 				headers: {
 					Authorization: `Bearer ${apiKey}`,
+					"HTTP-Referer": "https://studio.302.ai/",
+					"X-Title": "302.AI Studio",
 				},
 			})
 			.json();

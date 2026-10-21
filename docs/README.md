@@ -46,7 +46,6 @@ docs/
 ### Reference Documentation
 
 - [Tech Stack](references/tech-stack.md)
-- [Plugin Development Guide](references/plugin-development-guide.md)
 - [Logging System](references/logging-guide.md)
 - [Code Generation](references/code-generation-guide.md)
 

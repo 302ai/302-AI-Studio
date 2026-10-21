@@ -85,6 +85,8 @@ class UserStateManager {
 					isgpt: "1",
 					lang: "zh-CN",
 					tz: "Asia/Shanghai",
+					"HTTP-Referer": "https://studio.302.ai/",
+					"X-Title": "302.AI Studio",
 					origin: "https://302.ai",
 					referer: "https://302.ai/",
 				},

@@ -11,7 +11,6 @@ import path from "node:path";
 import { isMac } from "./constants";
 import { WebContentsFactory } from "./factories/web-contents-factory";
 import { registerIpcHandlers } from "./generated/ipc-registration";
-import { initializePluginSystem } from "./plugin-manager";
 import { initServer } from "./server/router";
 import {
 	appService,
@@ -212,16 +211,6 @@ async function init() {
 	} catch (error) {
 		logger.error("[Main] Failed to initialize cache manager:", error);
 		// Continue app initialization even if cache manager fails
-	}
-
-	// Initialize plugin system
-	try {
-		logger.debug("[Main] Initializing plugin system...");
-		await initializePluginSystem();
-		logger.info("[Main] Plugin system initialized successfully");
-	} catch (error) {
-		logger.error("[Main] Failed to initialize plugin system:", error);
-		// Continue app initialization even if plugin system fails
 	}
 
 	// Pre-load shortcut actions handler to avoid first-run latency

@@ -1,20 +1,95 @@
 {
 	"version": 1,
 	"skills": {
-		"create-github-pull-request-from-specification": {
+		"adversarial-reviewer": {
+			"source": "alirezarezvani/claude-skills",
+			"sourceType": "github",
+			"skillPath": "engineering-team/skills/adversarial-reviewer/SKILL.md",
+			"computedHash": "7313fc8800c2273a7c40166f216ef4e967f22f3981cdbd10a74b618fa52aa48b"
+		},
+		"architecture-blueprint-generator": {
 			"source": "github/awesome-copilot",
 			"sourceType": "github",
-			"computedHash": "2693885db375a1e4a21f66ac69761a86db30911c0a2a9fcb8bac5d9dd05eeb5c"
+			"skillPath": "skills/architecture-blueprint-generator/SKILL.md",
+			"computedHash": "9b20f13d1d96ba1c2550e1ce535f932e943c42939d3fae906a9e0d6c1bfb471a"
+		},
+		"code-review": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/code-review/SKILL.md",
+			"computedHash": "caa9a086baaf9e0f7cd71f64edfa83da6821c05e826b083221f3d02e3d6a1905"
+		},
+		"codebase-design": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/codebase-design/SKILL.md",
+			"computedHash": "5a17552cc1482f1a40124bf4e6c9dbd90ac0dbb47e71c07d47369f9e5f2ae3b5"
+		},
+		"domain-modeling": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/domain-modeling/SKILL.md",
+			"computedHash": "a11713c0ff7870efa3c331b2e273f09116158485246edc89ae5088eefd1b0b48"
 		},
 		"electron": {
-			"source": "teachingai/full-stack-skills",
+			"source": "full-stack-skills/electron-skills",
 			"sourceType": "github",
-			"computedHash": "50f22debeb01a02b8bc073e0a1bfb9ab215f724148db0df8668b8ae90544dd31"
+			"skillPath": "skills/electron/SKILL.md",
+			"computedHash": "2fa0c3292a8b844fbd9a6947e6816616be8996051e547514c95f6416f67cfc93"
+		},
+		"grill-with-docs": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/grill-with-docs/SKILL.md",
+			"computedHash": "35e62aa423aaeab6a414bcac273f56dfb17802ef2334b41b6a3b00f28196c8cf"
+		},
+		"grilling": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/productivity/grilling/SKILL.md",
+			"computedHash": "4dd886b0196bf43729d954ae326016f2bd9f5f79d892500b407c33a753362f14"
+		},
+		"handoff": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/productivity/handoff/SKILL.md",
+			"computedHash": "20e5f4afdef502637510bc5c64d27645d3c85c88df9cb006824bbb0980166319"
+		},
+		"implement": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/implement/SKILL.md",
+			"computedHash": "2139cfedf24791adbc839aaab6019cff158af1e28bfead020ec6e0ce01b3e74d"
+		},
+		"svelte5-best-practices": {
+			"source": "ejirocodes/agent-skills",
+			"sourceType": "github",
+			"skillPath": "svelte/skills/svelte5-best-practices/SKILL.md",
+			"computedHash": "bfcbba3d355aede6f6be9720f195206d4dcaa7c152787ea00c06cb4a1ac44ba4"
 		},
 		"sveltekit-svelte5-tailwind-skill": {
 			"source": "claude-skills/sveltekit-svelte5-tailwind-skill",
 			"sourceType": "github",
+			"skillPath": "SKILL.md",
 			"computedHash": "bb72a52a2c415aa8743bf3146dd615f9084e17a8a05e2198f8c3ba23a8053b8b"
+		},
+		"tdd": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/tdd/SKILL.md",
+			"computedHash": "e753a5da75292bbe59d302d89566bc2c53d0e73944da2f0e944a7578883c07d0"
+		},
+		"to-spec": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/to-spec/SKILL.md",
+			"computedHash": "3fa1a0695d4ea242fae9e569e4d22aa1788623197abb33bfadafae7315789bbf"
+		},
+		"to-tickets": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/to-tickets/SKILL.md",
+			"computedHash": "bf5e6ebcb4f1272de0c188d5b3901f265a03d1fa9935a21a7a56938e21e2e761"
 		}
 	}
 }

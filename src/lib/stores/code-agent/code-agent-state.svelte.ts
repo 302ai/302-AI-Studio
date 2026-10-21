@@ -7,8 +7,8 @@ import { mcpState } from "$lib/stores/mcp-state.svelte";
 import { persistedTabState, tabBarState } from "$lib/stores/tab-bar-state.svelte";
 import type { ChatMessage } from "$lib/types/chat";
 import { clone } from "$lib/utils/clone";
-import type { Model } from "@302ai/studio-plugin-sdk";
 import { createLogger } from "@shared/logger";
+import type { Model } from "@shared/types";
 import {
 	type AgentClass,
 	type CodeAgentCfgs,
