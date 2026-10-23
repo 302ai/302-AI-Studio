@@ -1,5 +1,7 @@
 import { browser } from "$app/environment";
+import { persistedProviderState } from "$lib/stores/provider-state.svelte";
 import { getLocale } from "$lib/paraglide/runtime";
+import { DEFAULT_302AI_BASE_URL } from "@shared/utils/302ai-base-url";
 
 export interface SsoResult {
 	success: boolean;
@@ -19,9 +21,15 @@ export async function open302SsoLogin(): Promise<SsoResult> {
 		// Get server port and current language
 		const serverPort = window.app?.serverPort ?? 8089;
 		const language = getLocale();
+		const provider = persistedProviderState.current.find((p) => p.apiType === "302ai");
+		const baseUrl = provider?.baseUrl || DEFAULT_302AI_BASE_URL;
 
 		// Open SSO login in external browser with local server callback URL
-		const openResult = await window.electronAPI.ssoService.openSsoLogin(serverPort, language);
+		const openResult = await window.electronAPI.ssoService.openSsoLogin(
+			serverPort,
+			language,
+			baseUrl,
+		);
 		if (!openResult.success) {
 			return { success: false, error: openResult.error || "Failed to open SSO login" };
 		}

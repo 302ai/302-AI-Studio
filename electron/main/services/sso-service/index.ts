@@ -1,6 +1,6 @@
 import { shell, type IpcMainInvokeEvent } from "electron";
 import { createLogger } from "@shared/logger";
-import { providerStorage } from "../storage-service/provider-storage";
+import { get302AISsoOrigin } from "@shared/utils/302ai-base-url";
 
 const logger = createLogger("services");
 
@@ -15,9 +15,11 @@ export class SsoService {
 		_event: IpcMainInvokeEvent,
 		serverPort: number,
 		language: string = "zh",
+		baseUrl: string = "",
 	): Promise<{ success: boolean; error?: string }> {
 		try {
-			const baseDomain = await providerStorage.get302WebsiteBaseDomain();
+			// Derive SSO origin from the configured API base URL (api.302ai.cn -> 302ai.cn)
+			const ssoOrigin = get302AISsoOrigin(baseUrl);
 			// Use local server as redirect URL with language in path (not query params)
 			// 302.AI will append ?apikey=... so we can't have query params in the redirect URL
 			const redirectUrl = `http://localhost:${serverPort}/sso/callback/${language}`;
@@ -28,11 +30,11 @@ export class SsoService {
 				app: "302 AI Studio",
 				name: "302 AI Studio",
 				icon: "https://file.302.ai/gpt/imgs/5b36b96aaa052387fb3ccec2a063fe1e.png",
-				weburl: `${baseDomain}/`,
+				weburl: `${ssoOrigin}/`,
 				redirecturl: redirectUrl,
 			});
 
-			const ssoUrl = `${baseDomain}/sso/login?${params.toString()}`;
+			const ssoUrl = `${ssoOrigin}/sso/login?${params.toString()}`;
 			logger.debug("Opening SSO URL:", ssoUrl);
 			await shell.openExternal(ssoUrl);
 

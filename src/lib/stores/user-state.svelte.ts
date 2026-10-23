@@ -7,6 +7,7 @@ import { PersistedState } from "$lib/hooks/persisted-state.svelte";
 import { m } from "$lib/paraglide/messages.js";
 import type { UserInfo, UserState } from "@shared/storage/user";
 import { hashApiKey } from "@shared/utils/hash";
+import { mapV2UserInfo } from "@shared/storage/user";
 
 const getDefaults = (): UserState => ({
 	token: null,
@@ -27,7 +28,10 @@ class UserStateManager {
 	}
 
 	get userInfo(): UserInfo | null {
-		return persistedUserState.current.userInfo;
+		// 持久化里可能是 v1 形状或未映射的原始 v2 形状，读取时统一规范化
+		return persistedUserState.current.userInfo
+			? mapV2UserInfo(persistedUserState.current.userInfo)
+			: null;
 	}
 
 	get isLoggedIn(): boolean {
@@ -76,6 +80,7 @@ class UserStateManager {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
+					// dash-api 这套鉴权只认裸 token，加 Bearer 前缀会报 2004 token error
 					authorization: token,
 					isgpt: "1",
 					lang: "zh-CN",
@@ -85,12 +90,14 @@ class UserStateManager {
 					origin: "https://302.ai",
 					referer: "https://302.ai/",
 				},
+				// dash-api 登录链路约定：8s 超时、不重试，失败走降级
+				signal: AbortSignal.timeout(8000),
 			});
 
 			const data = await res.json();
 			logger.info("fetchUserInfo 响应:", data);
 			if (data.code === 0 || data.code === 200) {
-				this.setUserInfo(data.data);
+				this.setUserInfo(mapV2UserInfo(data.data));
 				return { success: true };
 			} else {
 				return { success: false, error: data.msg || m.error_fetch_user_info_failed() };
